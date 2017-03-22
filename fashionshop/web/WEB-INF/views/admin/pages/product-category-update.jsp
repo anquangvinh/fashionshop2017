@@ -1,10 +1,5 @@
-<%-- 
-    Document   : product-category-update
-    Created on : Mar 3, 2017, 10:29:24 AM
-    Author     : vinh.an
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!-- Page Content -->
 <div id="page-wrapper">
     <div class="container-fluid">
