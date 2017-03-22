@@ -30,7 +30,7 @@
         <link rel="stylesheet" href="assets/js/vendors/rs-plugin/css/settings.css">
         <link rel="stylesheet" href="assets/js/vendors/select/jquery.selectBoxIt.css">
         <link rel="stylesheet" href="assets/css/subscribe-better.css">
-        <!--        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css">     -->
+        <!--<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css">     -->
         <link href="assets/css/jquery-ui.css" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="assets/plugin/owl-carousel/owl.carousel.css">
         <link rel="stylesheet" href="assets/plugin/owl-carousel/owl.theme.css">
