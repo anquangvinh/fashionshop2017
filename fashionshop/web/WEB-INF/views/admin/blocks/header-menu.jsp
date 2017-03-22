@@ -80,10 +80,10 @@
                     <a href="#"><i class="fa fa-cube fa-fw"></i> Product Category<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="admin/product/category.html"><i class="fa fa-list" aria-hidden="true"></i> List</a>
+                            <a href="admin/product-category.html"><i class="fa fa-list" aria-hidden="true"></i> List</a>
                         </li>
                         <li>
-                            <a href="admin/product/category/create.html"><i class="fa fa-plus" aria-hidden="true"></i> New</a>
+                            <a href="admin/product-category/create.html"><i class="fa fa-plus" aria-hidden="true"></i> New</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
@@ -93,10 +93,10 @@
                     <a href="#"><i class="fa fa-cubes fa-fw"></i> Product SubCategory<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="admin/product/subcategory.html"><i class="fa fa-list" aria-hidden="true"></i> List</a>
+                            <a href="admin/product-subcategory.html"><i class="fa fa-list" aria-hidden="true"></i> List</a>
                         </li>
                         <li>
-                            <a href="admin/product/subcategory/create.html"><i class="fa fa-plus" aria-hidden="true"></i> New</a>
+                            <a href="admin/product-subcategory/create.html"><i class="fa fa-plus" aria-hidden="true"></i> New</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
@@ -106,7 +106,7 @@
                     <a href="#"><i class="fa fa-diamond fa-fw"></i> Product<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="admin/product/list.html"><i class="fa fa-list" aria-hidden="true"></i> List</a>
+                            <a href="admin/product.html"><i class="fa fa-list" aria-hidden="true"></i> List</a>
                         </li>
                         <li>
                             <a href="admin/product/create.html"><i class="fa fa-plus" aria-hidden="true"></i> New</a>

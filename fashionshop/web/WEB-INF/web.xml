@@ -13,7 +13,6 @@
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>*.html</url-pattern>
     </servlet-mapping>
-    
     <!--     Cấu hình CKFinder     -->
     <servlet>
         <servlet-name>ConnectorServlet</servlet-name>
@@ -30,7 +29,6 @@
             /assets/ckfinder/core/connector/java/connector.java
         </url-pattern>
     </servlet-mapping>
-    
     <!--    Cấu hình Filter UTF-8 - Gõ tiếng việt    -->
     <filter>
         <filter-name>utf8</filter-name>
@@ -48,7 +46,6 @@
         <filter-name>utf8</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    
     <session-config>
         <session-timeout>
             30
@@ -57,4 +54,9 @@
     <welcome-file-list>
         <welcome-file>/index.html</welcome-file>
     </welcome-file-list>
+    <ejb-local-ref>
+        <ejb-ref-name>ProductStateLessBean</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>spring.ejb.ProductStateLessBeanLocal</local>
+    </ejb-local-ref>
 </web-app>
