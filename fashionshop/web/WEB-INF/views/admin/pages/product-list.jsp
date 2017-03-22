@@ -37,7 +37,7 @@
                                 <td class="text-center fs-valign-middle">${product.subCate.category.cateName} - ${product.subCate.subCateName}</td>
                                 <td class="text-center fs-valign-middle">${product.productName}</td>
                                 <td class="text-center fs-valign-middle">
-                                    <img class="responsive" style="width: 60%" src="assets/images/products/${product.subCate.category.cateName}/${product.subCate.subCateName}/${product.urlImg}" alt="${product.urlImg}"/>
+                                    <img class="responsive" style="width: 60%" src="assets/images/products/${product.urlImg}" alt="${product.urlImg}"/>
                                 </td>
                                 <td class="text-center fs-valign-middle">
                                     <fmt:formatDate pattern="dd/MM/yyyy" value="${product.postedDate}"/>
