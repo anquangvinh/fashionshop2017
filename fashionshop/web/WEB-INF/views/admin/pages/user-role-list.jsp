@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!-- Page Content -->
 <div id="page-wrapper">
@@ -19,18 +20,27 @@
                 <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
                     <thead>
                         <tr>
-                            <th>No.</th>
-                            <th>Role</th>
-                            <th>Action</th>
+                            <!--<td align="center">No</td>-->
+                            <td align="center">UserID</td>
+                            <td align="center">Email</td>
+                            <td align="center">Role Name</td>
+                            <td align="center">Action</td>
                         </tr>
                     </thead>
                     <tbody>
+                        <c:forEach items="${rlist}" var="roles">
                         <tr class="odd gradeX">
-                            <td>Internet Explorer 4.0</td>
-                            <td class="center">4</td>
-                            <td class="center">X</td>
+                            <!--<td></td>-->
+                            <td class="center" align="center">${roles.userID}</td>
+                            <td class="center" align="center">${roles.email}</td>
+                            <td class="center" align="center">${roles.role.roleName}</td>
+                            <td class="center" align="center">
+                                <a href="#" class="btn btn-primary">Add</a>
+                                <a href="#" class="btn btn-warning">Update</a>
+                            </td>
                         </tr>
-                        <tr class="even gradeC">
+                    </c:forEach>
+<!--                        <tr class="even gradeC">
                             <td>Internet Explorer 5.0</td>
                             <td class="center">5</td>
                             <td class="center">C</td>
@@ -310,7 +320,7 @@
                             <td>All others</td>
                             <td class="center">-</td>
                             <td class="center">U</td>
-                        </tr>
+                        </tr>-->
                     </tbody>
                 </table>
                 <!-- /.table-responsive -->
