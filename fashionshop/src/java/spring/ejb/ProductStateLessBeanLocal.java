@@ -17,9 +17,11 @@ import spring.entity.SubCategories;
  */
 @Local
 public interface ProductStateLessBeanLocal {
-    /* 
-     *    CATEGORY TREATMENT 
-     */
+    /*========================================================================
+     *                                                                       *
+     *                          CATEGORY TREATMENT                           *
+     *                                                                       *
+     ========================================================================*/
     List<Categories> categoryList();
 
     Categories findCategoryByID(int cateID);
@@ -30,16 +32,22 @@ public interface ProductStateLessBeanLocal {
 
     int createNewCategory(Categories newCate);
 
-    boolean updateCategory(Categories targetCate);
+    int updateCategory(Categories targetCate);
 
-    /* 
-     *    SUB-CATEGORY TREATMENT 
-     */
+    /*========================================================================
+     *                                                                       *
+     *                       SUB-CATEGORY TREATMENT                          *
+     *                                                                       *
+     ========================================================================*/
     List<SubCategories> subCategoryList();
+
+    int createNewSubCategory(SubCategories newSubCate);
     
-    /* 
-     *    PRODUCT TREATMENT 
-     */
+    /*========================================================================
+     *                                                                       *
+     *                          PRODUCT TREATMENT                            *
+     *                                                                       *
+     ========================================================================*/
     List<Products> productList();
-    
+
 }

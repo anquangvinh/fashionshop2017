@@ -18,18 +18,19 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                <table width="100%" class="table table-striped table-bordered table-hover" id="productList_dataTable">
                     <thead>
                         <tr>
-                            <th class="text-center" style="width: 7%">No</th>
-                            <th class="text-center" style="width: 15%">Category - SubCategory</th>
-                            <th class="text-center" style="width: 20%">Product</th>
-                            <th class="text-center" style="width: 15%">Image</th>
-                            <th class="text-center" style="width: 15%">Posted Date</th>
-                            <th class="text-center" >Status</th>
-                            <th class="text-center">Actions</th>
+                            <th class="text-center fs-valign-middle" style="width: 7%">No</th>
+                            <th class="text-center fs-valign-middle" style="width: 15%">Category - SubCategory</th>
+                            <th class="text-center fs-valign-middle" style="width: 20%">Product</th>
+                            <th class="text-center fs-valign-middle" style="width: 15%">Image</th>
+                            <th class="text-center fs-valign-middle" style="width: 15%">Posted Date</th>
+                            <th class="text-center fs-valign-middle" >Status</th>
+                            <th class="text-center fs-valign-middle">Actions</th>
                         </tr>
                     </thead>
+                    
                     <tbody>
                         <c:forEach items="${productList}" var="product" varStatus="No">
                             <tr class="odd gradeX">

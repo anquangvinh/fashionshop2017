@@ -23,7 +23,6 @@
                             <th class="text-center">No</th>
                             <th class="text-center">Category</th>
                             <th class="text-center">SubCategory</th>
-                            <th class="text-center">Alias </th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Actions</th>
                         </tr>
@@ -34,7 +33,6 @@
                                 <td class="text-center fs-valign-middle">${No.index + 1}</td>
                                 <td class="text-center fs-valign-middle">${subCate.category.cateName}</td>
                                 <td class="text-center fs-valign-middle">${subCate.subCateName}</td>
-                                <td class="text-center fs-valign-middle">${subCate.subCateNameNA}</td>
                                 <td class="text-center fs-valign-middle">${subCate.status}</td>
                                 <td class="text-center fs-valign-middle">
                                     <a href="#" class="btn btn-warning">Update</a>

@@ -27,10 +27,10 @@
 
         <!-- Custom CSS -->
         <link href="assets/admin/dist/css/sb-admin-2.css" rel="stylesheet">
-        
+
         <!-- Custom FASHION SHOP CSS -->
         <link href="assets/admin/dist/css/fashion_shop_custom_CSS.css" rel="stylesheet" type="text/css"/>
-        
+
         <!-- Custom FASHION SHOP JS -->
         <script src="assets/admin/dist/js/fashion_shop_custom_JS.js" type="text/javascript"></script>
         <!-- Custom Fonts -->
@@ -76,13 +76,7 @@
         <script src="assets/admin/dist/js/sb-admin-2.js"></script>
 
         <!-- Page-Level Demo Scripts - Tables - Use for reference -->
-        <script>
-            $(document).ready(function () {
-                $('#dataTables-example').DataTable({
-                    responsive: true
-                });
-            });
-        </script> 
-</body>
+        <script src="assets/admin/dist/js/fashion_shop_custom_JS.js" type="text/javascript"></script>
+    </body>
 
 </html>
