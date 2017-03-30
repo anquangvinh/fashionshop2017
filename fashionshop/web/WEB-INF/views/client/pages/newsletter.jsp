@@ -26,7 +26,7 @@
                     </div>                                  
                 </div>
             </div>
-
+                
             <div class="col-md-3 col-sm-4 checkout-steps">
                 <!-- USER-RIGHT-MENU -->
                 <jsp:include page="../blocks/user-right-menu.jsp" flush="true" />

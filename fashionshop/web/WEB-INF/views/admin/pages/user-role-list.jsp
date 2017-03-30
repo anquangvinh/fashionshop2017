@@ -35,8 +35,8 @@
                             <td class="center" align="center">${roles.email}</td>
                             <td class="center" align="center">${roles.role.roleName}</td>
                             <td class="center" align="center">
-                                <a href="#" class="btn btn-primary">Add</a>
                                 <a href="#" class="btn btn-warning">Update</a>
+                                <a href="#" class="btn btn-danger">Delete</a>
                             </td>
                         </tr>
                     </c:forEach>

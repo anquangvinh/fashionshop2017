@@ -64,4 +64,19 @@
         <ejb-ref-type>Session</ejb-ref-type>
         <local>spring.ejb.UsersStateLessBeanLocal</local>
     </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>RolesStateLessBean</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>spring.ejb.RolesStateLessBeanLocal</local>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>UsersStateLessBean</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>spring.ejb.UsersStateLessBeanLocal</local>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>RolesStateLessBean1</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>spring.ejb.RolesStateLessBeanLocal</local>
+    </ejb-local-ref>
 </web-app>
