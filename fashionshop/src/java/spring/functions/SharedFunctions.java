@@ -40,4 +40,22 @@ public class SharedFunctions {
         }
         return sb.toString();
     }
+    
+    public String encodePassword(String password){
+        StringBuilder sb = new StringBuilder();
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(password.getBytes());
+            
+            byte byteData[] = md.digest();
+            
+            //convert the byte to hex format method 1 
+            for (int i = 0; i < byteData.length; i++) {
+                sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+            }
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(SharedFunctions.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sb.toString();
+    }
 }
