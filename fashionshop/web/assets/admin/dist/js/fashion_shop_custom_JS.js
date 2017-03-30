@@ -13,17 +13,15 @@ $(document).ready(function () {
     $('#dataTables-example').DataTable({
         responsive: true
     });
-    
+
     //Bảng datatable của product-list
     $('#productList_dataTable').DataTable({
         responsive: true,
         columnDefs: [
             {"orderable": false, "targets": [1, 2, 3, 4, 5, 6]} //disable thuộc tính order của các cột 1,2,3,4,5,6
         ],
-        
         //Tạo DOM cho các component trong datatable
         dom: '<"row"<"col-sm-4"l><"#fs_product_filter.col-sm-4"><"col-sm-4"f>><"row"<"col-sm-12">t><"row"<"col-sm-6"i><"col-sm-6"p>>',
-        
         //Chức năng lọc theo Category và SubCategory
         initComplete: function () {
             this.api().columns(1).every(function () {
@@ -45,5 +43,16 @@ $(document).ready(function () {
                 });
             });
         }
+    });
+
+
+    /*    
+     * CẤU HÌNH DATEPICKER CHO BLOG
+     */
+    $("#postedDate").datepicker({
+        showAnim: "drop",
+        dateFormat: "dd-mm-yy",
+        changeMonth: true,
+        changeYear: true
     });
 });

@@ -30,9 +30,10 @@
 
         <!-- Custom FASHION SHOP CSS -->
         <link href="assets/admin/dist/css/fashion_shop_custom_CSS.css" rel="stylesheet" type="text/css"/>
-
-        <!-- Custom FASHION SHOP JS -->
-        <script src="assets/admin/dist/js/fashion_shop_custom_JS.js" type="text/javascript"></script>
+        
+        <!-- JQUERY UI CSS -->
+        <link href="assets/js/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
+        
         <!-- Custom Fonts -->
         <link href="assets/admin/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
@@ -60,7 +61,8 @@
 
         <!-- jQuery -->
         <script src="assets/admin/vendor/jquery/jquery.min.js"></script>
-
+        <script src="assets/js/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+        
         <!-- Bootstrap Core JavaScript -->
         <script src="assets/admin/vendor/bootstrap/js/bootstrap.min.js"></script>
 
