@@ -23,21 +23,21 @@
         <link href='assets/css/google-font/montserrat.css' rel='stylesheet' type='text/css'>
 
         <!-- CSS -->
+        <link rel="stylesheet" href="assets/css/fashion_shop_custom_CSS.css">
         <link rel="stylesheet" href="assets/css/font-awesome/css/font-awesome.css">
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-        <link href="assets/js/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="assets/js/vendors/isotope/isotope.css">
         <link rel="stylesheet" href="assets/js/vendors/slick/slick.css">
         <link rel="stylesheet" href="assets/js/vendors/rs-plugin/css/settings.css">
         <link rel="stylesheet" href="assets/js/vendors/select/jquery.selectBoxIt.css">
         <link rel="stylesheet" href="assets/css/subscribe-better.css">
-        <link rel="stylesheet" href="assets/css/jquery-ui.css"/>
         <link rel="stylesheet" href="assets/plugin/owl-carousel/owl.carousel.css">
         <link rel="stylesheet" href="assets/plugin/owl-carousel/owl.theme.css">
         <link rel="stylesheet" href="assets/plugin/prettyphoto/css/prettyPhoto.css">  
         <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="assets/js/jquery-ui-1.12.1/jquery-ui.min.css"/>
         
-        <script src="assets/js/jquery.js"></script>
+        <script src="assets/js/jquery-ui-1.12.1/external/jquery/jquery.js"></script>
         <script src="assets/js/fashion_shop_custom_JS.js" type="text/javascript"></script>
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -67,8 +67,6 @@
         <div id="backtotop"><i class="fa fa-chevron-up"></i></div>
 
         <!-- Javascript -->
-
-
         <script src="assets/js/bootstrap.min.js"></script>        
         <script src="assets/plugin/owl-carousel/owl.carousel.min.js"></script>
         <script src="assets/plugin/prettyphoto/js/jquery.prettyPhoto.js"></script>
