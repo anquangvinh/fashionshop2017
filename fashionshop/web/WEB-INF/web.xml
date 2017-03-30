@@ -79,4 +79,14 @@
         <ejb-ref-type>Session</ejb-ref-type>
         <local>spring.ejb.RolesStateLessBeanLocal</local>
     </ejb-local-ref>
+        <ejb-local-ref>
+        <ejb-ref-name>BlogsSB</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>spring.ejb.BlogsSBLocal</local>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>BlogCategoriesSB</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>spring.ejb.BlogCategoriesSBLocal</local>
+    </ejb-local-ref>
 </web-app>
