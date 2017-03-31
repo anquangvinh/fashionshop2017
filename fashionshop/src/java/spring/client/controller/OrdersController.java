@@ -1,19 +1,92 @@
 package spring.client.controller;
 
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import org.mvel2.Operator;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import spring.ejb.OrderStateFulBeanLocal;
+import spring.ejb.OrderStateLessBeanLocal;
+import spring.entity.Orders;
+import spring.entity.Products;
 
 @Controller
 @RequestMapping(value = "/orders/")
 public class OrdersController {
+    OrderStateFulBeanLocal orderStateFulBean = lookupOrderStateFulBeanLocal();
+    OrderStateLessBeanLocal orderStateLessBean = lookupOrderStateLessBeanLocal();
 
+    @RequestMapping(value = "product")
+    public String product(ModelMap model){
+        model.addAttribute("productList", orderStateLessBean.getAllProducts());
+        return "test/product";
+    }
+    
+    @RequestMapping(value = "addtocart/{productid}", method = RequestMethod.GET)
+    public String addtocart(@PathVariable("productid") String productid){
+        Products pro = orderStateLessBean.getProductByID(Integer.parseInt(productid));
+        if (pro != null) {
+            orderStateFulBean.addProduct(pro);
+        }
+        return "redirect:/orders/product.html";
+    }
+    
     @RequestMapping(value = "checkout")
     public String checkout() {
         return "client/pages/checkout";
     }
     
     @RequestMapping(value = "shoppingcart")
-    public String shoppingcart(){
+    public String shoppingcart(ModelMap model){
+        model.addAttribute("cartList", orderStateFulBean.showCart());
         return "client/pages/shoppingcart";
     }
+    
+    @RequestMapping(value = "deleteitemCart/{productid}", method = RequestMethod.GET)
+    public String deleteitemCart(@PathVariable("productid") String productid){
+        Products pro = orderStateFulBean.getProductInListByID(Integer.parseInt(productid));
+        if (pro != null) {
+            orderStateFulBean.deleteProduct(pro);
+        }
+        return "redirect:/orders/shoppingcart.html";
+    }
+    
+    @RequestMapping(value = "order-history")
+    public String orderhistory(ModelMap model) {
+        HashMap<Orders,Float> order_total = new HashMap<>();
+        for (Orders orders : orderStateLessBean.getOrderListByUserID(5)) {
+            order_total.put(orders, orderStateLessBean.sumTotalOrderDetail(orders.getOrderDetailList()));
+        }
+        model.addAttribute("orderList", order_total);
+        return "client/pages/order-history";
+    }
+    
+    // <editor-fold defaultstate="collapsed" desc="Look Up Beans Local">
+    private OrderStateLessBeanLocal lookupOrderStateLessBeanLocal() {
+        try {
+            Context c = new InitialContext();
+            return (OrderStateLessBeanLocal) c.lookup("java:global/fashionshop/OrderStateLessBean!spring.ejb.OrderStateLessBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
+    private OrderStateFulBeanLocal lookupOrderStateFulBeanLocal() {
+        try {
+            Context c = new InitialContext();
+            return (OrderStateFulBeanLocal) c.lookup("java:global/fashionshop/OrderStateFulBean!spring.ejb.OrderStateFulBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }// </editor-fold>
 }

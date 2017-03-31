@@ -119,7 +119,17 @@
                     <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Orders<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="admin/orders/list.html">List</a>
+                            <a href="admin/orders/list.html"><i class="fa fa-list" aria-hidden="true"></i> List</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+                
+                <li>
+                    <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Discount<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="admin/orders/discountlist.html"><i class="fa fa-list" aria-hidden="true"></i> List</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
