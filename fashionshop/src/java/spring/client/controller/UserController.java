@@ -65,8 +65,7 @@ public class UserController {
             }
         }
         try {
-//            Date date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-            newUser.setRegistrationDate(new Date()); //coi lại hàm date này sao ko new Date(); mà lại phải xài String date = new....
+            newUser.setRegistrationDate(new Date());
             newUser.setStatus(Short.parseShort("1"));
             newUser.setRole(rolesStateLessBean.findRoles(3));
         } catch (Exception ex) {
