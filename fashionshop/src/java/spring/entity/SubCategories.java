@@ -5,6 +5,7 @@
  */
 package spring.entity;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-public class SubCategories {
+public class SubCategories implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
