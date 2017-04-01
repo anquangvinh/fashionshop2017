@@ -93,7 +93,7 @@
                                 });
                             </script>
                             <div class="form-group">
-                                <label>Date</label>
+                                <label>Date</label
                                 <form:input path="postedDate" cssClass="form-control" />
 
                                 <!--Error Message-->
@@ -126,10 +126,10 @@
                                 <label>Status</label>
                                 <div>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="1" checked>Enable
+                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="0" checked>Enable
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="2">Disable
+                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="1">Disable
                                     </label>
                                 </div>
 

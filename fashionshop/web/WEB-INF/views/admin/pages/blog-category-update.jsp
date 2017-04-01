@@ -30,10 +30,10 @@
                             <label>Status</label>
                             <div>
                                 <label class="radio-inline">
-                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="option1" checked>Visible
+                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="0" checked>Enable
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="option2">Invisible
+                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="1">Disable
                                 </label>
                             </div>
 
