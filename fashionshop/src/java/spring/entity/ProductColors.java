@@ -27,6 +27,9 @@ public class ProductColors {
     @OneToMany(mappedBy = "color")
     private List<SizesByColor> sizeList;
     
+    @OneToMany(mappedBy = "productColor")
+    private List<ProductSubImgs> ProductSubImgsList;
+    
     @ManyToOne
     @JoinColumn(name = "productID")
     private Products product;
@@ -85,6 +88,14 @@ public class ProductColors {
 
     public void setProduct(Products product) {
         this.product = product;
+    }
+
+    public List<ProductSubImgs> getProductSubImgsList() {
+        return ProductSubImgsList;
+    }
+
+    public void setProductSubImgsList(List<ProductSubImgs> ProductSubImgsList) {
+        this.ProductSubImgsList = ProductSubImgsList;
     }
     
     

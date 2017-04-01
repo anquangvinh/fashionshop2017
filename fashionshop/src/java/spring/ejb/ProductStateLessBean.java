@@ -28,9 +28,11 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
         return em;
     }
 
-    /* 
-     *    CATEGORY TREATMENT 
-     */
+    /*========================================================================
+     *                                                                       *
+     *                          CATEGORY TREATMENT                           *
+     *                                                                       *
+     ========================================================================*/
     @Override
     public List<Categories> categoryList() {
         Query q = getEntityManager().createQuery("SELECT c FROM Categories c", Categories.class);
@@ -44,9 +46,13 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
 
     @Override
     public Categories findCategoryByName(String cateName) {
-        Query q = getEntityManager().createQuery("SELECT c FROM Categories c WHERE c.cateName = :cateName", Categories.class);
-        q.setParameter("cateName", cateName);
-        return (Categories) q.getSingleResult();
+        try {
+            Query q = getEntityManager().createQuery("SELECT c FROM Categories c WHERE c.cateName LIKE :cateName", Categories.class);
+            q.setParameter("cateName", cateName);
+            return (Categories) q.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -77,27 +83,70 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
     }
 
     @Override
-    public boolean updateCategory(Categories targetCate) {
-        try {
-            getEntityManager().merge(targetCate);
-            return true;
-        } catch (Exception e) {
-            return false;
+    public int updateCategory(Categories targetCate) {
+        int errorCode; // = 1; => update thành công, = 0; => update bị lỗi, = 2 => update trùng với tên trước đó.
+        Categories oldCate = findCategoryByID(targetCate.getCateID());
+        Categories cate = findCategoryByName(targetCate.getCateName());
+        if (oldCate.getCateName().equalsIgnoreCase(targetCate.getCateName())) {
+            try {
+                getEntityManager().merge(targetCate);
+                errorCode = 1;
+            } catch (Exception e) {
+                errorCode = 0;
+            }
+        } else {
+            if (cate != null) {
+                errorCode = 2;
+            } else {
+                try {
+                    getEntityManager().merge(targetCate);
+                    errorCode = 1;
+                } catch (Exception e) {
+                    errorCode = 0;
+                }
+            }
+
         }
+        return errorCode;
     }
 
-    /* 
-     *    SUB-CATEGORY TREATMENT 
-     */
+    /*=======================================================================
+    *                                                                       *
+    *                       SUB-CATEGORY TREATMENT                          *
+    *                                                                       *
+    ========================================================================*/
     @Override
     public List<SubCategories> subCategoryList() {
         Query q = getEntityManager().createQuery("SELECT sc FROM SubCategories sc", SubCategories.class);
         return q.getResultList();
     }
+
+    @Override
+    public int createNewSubCategory(SubCategories newSubCate){
+        int errorCode;
+        
+        List<SubCategories> listSubCateByCategory = newSubCate.getCategory().getSubCateList();
+//        int count = 0;
+//        for (SubCategories subCate : listSubCateByCategory) {
+//            if(subCate.getSubCateName().equalsIgnoreCase(newSubCate.getSubCateName())){
+//                count++;
+//                break;
+//            }
+//        }
+//
+//        if(count == 0) { //=> Chưa có SubCategory trong Category đó.
+//            errorCode = 1;
+//        } else {//=> đã có SubCategory trong Category đó rồi.
+//            errorCode = 2;
+//        }
+        return listSubCateByCategory.size();
+    }
     
-    /* 
-     *    PRODUCT TREATMENT 
-     */
+    /*========================================================================
+     *                                                                       *
+     *                          PRODUCT TREATMENT                            *
+     *                                                                       *
+     ========================================================================*/
     @Override
     public List<Products> productList() {
         Query q = getEntityManager().createQuery("SELECT p FROM Products p ORDER BY p.productID DESC", Products.class);

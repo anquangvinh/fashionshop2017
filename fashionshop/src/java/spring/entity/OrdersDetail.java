@@ -5,6 +5,7 @@
  */
 package spring.entity;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,7 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class OrdersDetail {
+public class OrdersDetail implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer ordersDetailID;
@@ -33,6 +34,10 @@ public class OrdersDetail {
     @ManyToOne
     @JoinColumn(name = "sizeID")
     private SizesByColor size;
+    
+    public double getTotalPrice() {
+        return price*quantity;
+    }
 
     public Integer getOrdersDetailID() {
         return ordersDetailID;

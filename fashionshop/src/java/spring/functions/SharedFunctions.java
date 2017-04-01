@@ -17,9 +17,10 @@ import org.springframework.stereotype.Component;
 public class SharedFunctions {
 
     public String changeText(String text) {
+        text = text.toLowerCase();
         String temp = Normalizer.normalize(text, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-        return pattern.matcher(temp).replaceAll("").replaceAll("Đ", "D").replaceAll("đ", "d").replaceAll(" ", "-");
+        return pattern.matcher(temp).replaceAll("").replaceAll("đ", "d").replaceAll(" ", "-");
     }
     
     public String encodePassword(String password){

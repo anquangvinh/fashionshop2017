@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!-- BREADCRUMBS -->
 <jsp:include page="../blocks/breadcrumbs.jsp" flush="true" />
@@ -10,84 +11,69 @@
         <div class="row">
             <div class="col-md-12 col-sm-12">
                 <table class="cart-table">
-                    <tr>
-                        <th>Remove</th>
-                        <th>Product Image</th>
-                        <th>Product Name</th>
-                        <th>Edit</th>
-                        <th>Quantity</th>
-                        <th>Unit Price</th>
-                        <th>Subtotal</th>
-                    </tr>
-                    <tr>
-                        <td><i class="fa fa-trash-o"></i></td>
-                        <td><img src="assets/images/products/fashion/5.jpg" class="img-responsive" alt=""/></td>
-                        <td>
-                            <h4><a href="./single-product.html">Product fashion</a></h4>
-                            <p>Size: M</p>
-                            <p>Color: White</p>
-                        </td>
-                        <td><i class="fa fa-edit"></i></td>
-                        <td>
-                            <select>
-                                <option>01</option>
-                                <option>02</option>
-                                <option>03</option>
-                            </select>
-                        </td>
-                        <td>
-                            <div class="item-price">$ 99.00</div>
-                        </td>
-                        <td>
-                            <div class="item-price">$ 99.00</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><i class="fa fa-trash-o"></i></td>
-                        <td><img src="assets/images/products/fashion/5.jpg" class="img-responsive" alt=""/></td>
-                        <td>
-                            <h4><a href="./single-product.html">Product fashion</a></h4>
-                            <p>Size: M</p>
-                            <p>Color: White</p>
-                        </td>
-                        <td><i class="fa fa-edit"></i></td>
-                        <td>
-                            <select>
-                                <option>01</option>
-                                <option>02</option>
-                                <option>03</option>
-                            </select>
-                        </td>
-                        <td>
-                            <div class="item-price">$ 99.00</div>
-                        </td>
-                        <td>
-                            <div class="item-price">$ 99.00</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><i class="fa fa-trash-o"></i></td>
-                        <td><img src="assets/images/products/fashion/5.jpg" class="img-responsive" alt=""/></td>
-                        <td>
-                            <h4><a href="./single-product.html">Product fashion</a></h4>
-                            <p>Size: M</p>
-                            <p>Color: White</p>
-                        </td>
-                        <td><i class="fa fa-edit"></i></td>
-                        <td>
-                            <select>
-                                <option>01</option>
-                                <option>02</option>
-                                <option>03</option>
-                            </select>
-                        </td>
-                        <td>
-                            <div class="item-price">$ 99.00</div>
-                        </td>
-                        <td>
-                            <div class="item-price">$ 99.00</div>
-                        </td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>Product Image</th>
+                            <th>Product Name</th>
+                            <!--<th>Edit</th>-->
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Subtotal</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${cartList}" var="item">
+                            <tr>
+                                <td><img src="assets/images/products/fashion/5.jpg" class="img-responsive" alt=""/></td>
+                                <td>
+                                    <h4><a href="./single-product.html">${item.productName}</a></h4>
+                                    <p>Size: M</p>
+                                    <p>Color: White</p>
+                                </td>
+                                <!--<td><i class="fa fa-edit"></i></td>-->
+                                <td>
+                                    <select>
+                                        <option>01</option>
+                                        <option>02</option>
+                                        <option>03</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <div class="item-price">${item.price}</div>
+                                </td>
+                                <td>
+                                    <div class="item-price">$ 99.00</div>
+                                </td>
+                                <td><a href="orders/deleteitemCart.html?productid=${item.productID}"><i class="fa fa-trash-o"></i></a></td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+
+
+                    <!--                                <tr>
+                                                        <td><i class="fa fa-trash-o"></i></td>
+                                                        <td><img src="assets/images/products/fashion/5.jpg" class="img-responsive" alt=""/></td>
+                                                        <td>
+                                                            <h4><a href="./single-product.html">Product fashion</a></h4>
+                                                            <p>Size: M</p>
+                                                            <p>Color: White</p>
+                                                        </td>
+                                                        <td><i class="fa fa-edit"></i></td>
+                                                        <td>
+                                                            <select>
+                                                                <option>01</option>
+                                                                <option>02</option>
+                                                                <option>03</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <div class="item-price">$ 99.00</div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="item-price">$ 99.00</div>
+                                                        </td>
+                                                    </tr>-->
                 </table>
                 <div class="table-btn">
                     <a href="#" class="btn-black pull-left">Continue Shopping</a>
@@ -95,33 +81,33 @@
                 </div>
                 <div class="clearfix space20"></div>
                 <div class="row shipping-info-wrap">
-                    <div class="col-md-4 col-sm-4 col-xs-12">
-                        <div class="shipping">
-                            <h2>Estimate Shipping and Tax</h2>
-                            <div class="shipping-form">
-                                <form id="shipping-zip-form">
-                                    <p>Enter your destination to get a shipping estimate.</p>
-                                    <ul class="form-list">
-                                        <li>
-                                            <label class="required"><em>*</em>Country</label>
-                                            <input class="input-text" type="text">
-                                        </li>
-                                        <li>
-                                            <label>State/Province</label>
-                                            <input class="input-text" type="text">
-                                        </li>
-                                        <li>
-                                            <label>Zip/Postal Code</label>
-                                            <input class="input-text" type="text">
-                                        </li>
-                                    </ul>
-                                    <div class="buttons-set">
-                                        <button type="button" class="btn-black"><span><span>Get a Quote</span></span></button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    <!--                                <div class="col-md-4 col-sm-4 col-xs-12">
+                                                        <div class="shipping">
+                                                            <h2>Estimate Shipping and Tax</h2>
+                                                            <div class="shipping-form">
+                                                                <form id="shipping-zip-form">
+                                                                    <p>Enter your destination to get a shipping estimate.</p>
+                                                                    <ul class="form-list">
+                                                                        <li>
+                                                                            <label class="required"><em>*</em>Country</label>
+                                                                            <input class="input-text" type="text">
+                                                                        </li>
+                                                                        <li>
+                                                                            <label>State/Province</label>
+                                                                            <input class="input-text" type="text">
+                                                                        </li>
+                                                                        <li>
+                                                                            <label>Zip/Postal Code</label>
+                                                                            <input class="input-text" type="text">
+                                                                        </li>
+                                                                    </ul>
+                                                                    <div class="buttons-set">
+                                                                        <button type="button" class="btn-black"><span><span>Get a Quote</span></span></button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>-->
                     <div class="col-md-4 col-sm-4 col-xs-12">
                         <form id="discount-coupon-form">
                             <div class="discount">
@@ -165,7 +151,7 @@
                             </table>
                             <ul class="checkout-types">
                                 <li class="space10"><button type="button" class="btn-color">Proceed to checkout</button></li>
-                                <li><a href="#">Checkout with Multiple Addresses</a></li>
+                                <!--<li><a href="#">Checkout with Multiple Addresses</a></li>-->
                             </ul>
                         </div>
                     </div>

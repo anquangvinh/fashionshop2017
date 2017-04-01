@@ -1,7 +1,12 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!-- BREADCRUMBS -->
 <jsp:include page="../blocks/breadcrumbs.jsp" flush="true"/>
-
+<style>
+    .ui-datepicker {
+        height: auto !important;
+        width: 19em;
+    }
+</style>
 <!-- MY ACCOUNT -->
 <div class="account-wrap">
     <div class="container">
@@ -73,8 +78,7 @@
                                 <li class="col-md-6 col-sm-12">  
                                     <label>Gender</label>
                                     <br>
-                                    <div style="border: 1px solid #aaa; width: 100%;height: 42px;line-height: 40px;padding: 0 20px; margin-bottom: 20px;" class="text-center
-                                         ">
+                                    <div class="text-center fs-login-gender">
                                         <label>
                                             <input type="radio" name="optradio" checked>Male 
                                         </label>
@@ -100,7 +104,7 @@
 
                                 <li class="col-md-12 col-sm-12">
                                     <label>Avatar <em>*</em></label>
-                                    <input type="file" class="input-text" style="border: none; line-height: 0; padding-left: 0">
+                                    <input type="file" class="input-text fs-login-file-input">
                                 </li>
                             </ul>
                             <div class="buttons-set">
