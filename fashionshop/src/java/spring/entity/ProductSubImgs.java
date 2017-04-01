@@ -18,4 +18,38 @@ public class ProductSubImgs {
     private Integer colorID;
     private String urlImg;
     private Short status;
+
+    public Integer getSubImgID() {
+        return subImgID;
+    }
+
+    public void setSubImgID(Integer subImgID) {
+        this.subImgID = subImgID;
+    }
+
+    public Integer getColorID() {
+        return colorID;
+    }
+
+    public void setColorID(Integer colorID) {
+        this.colorID = colorID;
+    }
+
+    public String getUrlImg() {
+        return urlImg;
+    }
+
+    public void setUrlImg(String urlImg) {
+        this.urlImg = urlImg;
+    }
+
+    public Short getStatus() {
+        return status;
+    }
+
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+    
+    
 }
