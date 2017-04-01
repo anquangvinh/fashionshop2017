@@ -9,15 +9,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class ProductSubImgs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer subImgID;
-    private Integer colorID;
+    //private Integer colorID;
     private String urlImg;
     private Short status;
+
+    @ManyToOne
+    @JoinColumn(name = "colorID")
+    private ProductColors productColor;
 
     public Integer getSubImgID() {
         return subImgID;
@@ -25,14 +31,6 @@ public class ProductSubImgs {
 
     public void setSubImgID(Integer subImgID) {
         this.subImgID = subImgID;
-    }
-
-    public Integer getColorID() {
-        return colorID;
-    }
-
-    public void setColorID(Integer colorID) {
-        this.colorID = colorID;
     }
 
     public String getUrlImg() {
@@ -49,6 +47,14 @@ public class ProductSubImgs {
 
     public void setStatus(Short status) {
         this.status = status;
+    }
+
+    public ProductColors getProductColor() {
+        return productColor;
+    }
+
+    public void setProductColor(ProductColors productColor) {
+        this.productColor = productColor;
     }
     
     
