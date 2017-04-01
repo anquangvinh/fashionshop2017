@@ -60,11 +60,6 @@
         <local>spring.ejb.ProductStateLessBeanLocal</local>
     </ejb-local-ref>
     <ejb-local-ref>
-        <ejb-ref-name>UsersStateLessBean1</ejb-ref-name>
-        <ejb-ref-type>Session</ejb-ref-type>
-        <local>spring.ejb.UsersStateLessBeanLocal</local>
-    </ejb-local-ref>
-    <ejb-local-ref>
         <ejb-ref-name>RolesStateLessBean</ejb-ref-name>
         <ejb-ref-type>Session</ejb-ref-type>
         <local>spring.ejb.RolesStateLessBeanLocal</local>
@@ -75,11 +70,6 @@
         <local>spring.ejb.UsersStateLessBeanLocal</local>
     </ejb-local-ref>
     <ejb-local-ref>
-        <ejb-ref-name>RolesStateLessBean1</ejb-ref-name>
-        <ejb-ref-type>Session</ejb-ref-type>
-        <local>spring.ejb.RolesStateLessBeanLocal</local>
-    </ejb-local-ref>
-        <ejb-local-ref>
         <ejb-ref-name>BlogsSB</ejb-ref-name>
         <ejb-ref-type>Session</ejb-ref-type>
         <local>spring.ejb.BlogsSBLocal</local>
@@ -88,5 +78,15 @@
         <ejb-ref-name>BlogCategoriesSB</ejb-ref-name>
         <ejb-ref-type>Session</ejb-ref-type>
         <local>spring.ejb.BlogCategoriesSBLocal</local>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>OrderStateLessBean</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>spring.ejb.OrderStateLessBeanLocal</local>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>OrderStateFulBean</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>spring.ejb.OrderStateFulBeanLocal</local>
     </ejb-local-ref>
 </web-app>

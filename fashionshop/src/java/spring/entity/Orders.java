@@ -5,6 +5,7 @@
  */
 package spring.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
@@ -18,7 +19,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-public class Orders {
+public class Orders implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer ordersID;
@@ -41,7 +42,7 @@ public class Orders {
     
     @OneToMany(mappedBy = "order")
     private List<OrdersDetail> orderDetailList;
-
+    
     public Integer getOrdersID() {
         return ordersID;
     }
