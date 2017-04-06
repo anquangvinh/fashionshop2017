@@ -41,7 +41,7 @@ public class BlogCategoriesSB implements BlogCategoriesSBLocal {
                 em.persist(newBlogCate);
                 errorCode = 0;  //add mới thành công
             } catch (Exception e) {
-                errorCode = 1;  //Lỗi đã xảy ra
+                errorCode = 1;  //Lỗi đã xảy ra.
             }
         }
         return errorCode;
@@ -62,5 +62,13 @@ public class BlogCategoriesSB implements BlogCategoriesSBLocal {
         q.setParameter("blogCateName", blogCateName);
         int count = q.getResultList().size();
         return count;
+    }
+
+    @Override
+    public void deleteBlogCategory(int blogCateID) {
+        BlogCategories targetBlogCategory = em.find(BlogCategories.class, blogCateID);
+        if(targetBlogCategory != null){
+            em.remove(targetBlogCategory);        
+        }
     }
 }

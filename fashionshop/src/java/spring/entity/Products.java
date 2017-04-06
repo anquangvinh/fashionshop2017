@@ -5,6 +5,8 @@
  */
 package spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +22,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 public class Products implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer productID;
@@ -32,20 +35,28 @@ public class Products implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date postedDate;
     private Integer productViews;
-    private Integer productPurchases;
     private Short status;
-    
+
     @OneToMany(mappedBy = "product")
+    @JsonManagedReference
     private List<OrdersDetail> ordersDetailList;
     
     @ManyToOne
+    @JoinColumn(name = "cateID")
+    @JsonBackReference
+    private Categories category;
+    
+    @ManyToOne
     @JoinColumn(name = "subCateID")
+    @JsonBackReference
     private SubCategories subCate;
-    
+
     @OneToMany(mappedBy = "product")
+    @JsonManagedReference
     private List<ProductColors> productColorList;
-    
+
     @OneToMany(mappedBy = "product")
+    @JsonManagedReference
     private List<WishList> wishList;
 
     public Integer getProductID() {
@@ -120,14 +131,6 @@ public class Products implements Serializable {
         this.productViews = productViews;
     }
 
-    public Integer getProductPurchases() {
-        return productPurchases;
-    }
-
-    public void setProductPurchases(Integer productPurchases) {
-        this.productPurchases = productPurchases;
-    }
-
     public Short getStatus() {
         return status;
     }
@@ -167,6 +170,12 @@ public class Products implements Serializable {
     public void setWishList(List<WishList> wishList) {
         this.wishList = wishList;
     }
-    
-    
+
+    public Categories getCategory() {
+        return category;
+    }
+
+    public void setCategory(Categories category) {
+        this.category = category;
+    }
 }

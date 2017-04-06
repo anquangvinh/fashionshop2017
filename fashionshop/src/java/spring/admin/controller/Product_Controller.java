@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import spring.ejb.ProductStateLessBeanLocal;
 import spring.entity.Categories;
@@ -128,29 +129,67 @@ public class Product_Controller {
     }
 
     @RequestMapping(value = "product-subcategory/create", method = RequestMethod.POST)
-    public String productSubCateAdd(ModelMap model, @ModelAttribute("subCategory") SubCategories newSubCategory, RedirectAttributes flashAttr) {
+    public String productSubCateAdd(ModelMap model,
+            @RequestParam("category.cateID") Integer cateID,
+            @ModelAttribute("subCategory") SubCategories newSubCategory,
+            RedirectAttributes flashAttr) {
         newSubCategory.setSubCateNameNA(shareFunc.changeText(newSubCategory.getSubCateName()));
+        Categories cate = productStateLessBean.findCategoryByID(cateID);
         int errorCode = productStateLessBean.createNewSubCategory(newSubCategory);
-//        if (errorCode == 1) {
-//            flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
-//                    + "<strong>Success!</strong> Create New SubCategory Successfully!.\n"
-//                    + "</div>");
-//            return "redirect:/admin/product-subcategory/create.html";
-//        } else {
-//            model.addAttribute("error", "<div class=\"alert alert-danger\">\n"
-//                    + "<strong>Danger!</strong> Already have this SubCategory in that Category!.\n"
-//                    + "</div>");
-//            SubCategories subCategory = new SubCategories();
-//            model.addAttribute("subCategory", subCategory);
-//            return "admin/pages/product-subcategory-add";
-//        }
-            model.addAttribute("error", errorCode);
+        if (errorCode == 1) {
+            flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
+                    + "<strong>Success!</strong> Create New SubCategory Successfully!.\n"
+                    + "</div>");
+            return "redirect:/admin/product-subcategory/create.html";
+        } else if (errorCode == 2) {
+            model.addAttribute("error", "<div class=\"alert alert-danger\">\n"
+                    + "<strong>Danger!</strong> Already have SubCategory<b>\"" + newSubCategory.getSubCateName() + "\"</b> in <b>\"" + cate.getCateName() + "\"</b>!.\n"
+                    + "</div>");
+            model.addAttribute("subCategory", newSubCategory);
             return "admin/pages/product-subcategory-add";
+        } else {
+            flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
+                    + "<strong>Error! </strong> Error was happened!.\n"
+                    + "</div>");
+            return "redirect:/admin/product-subcategory/create.html";
+        }
     }
 
-    @RequestMapping(value = "product-subcategory/{subCateNameNA}-{subCateID}")
-    public String productSubCateUpdate() {
+    @RequestMapping(value = "product-subcategory/{subCateNameNA}-{subCateID}", method = RequestMethod.GET)
+    public String productSubCateUpdate(ModelMap model,
+            @PathVariable("subCateID") Integer subCateID) {
+        SubCategories targetSubCategory = productStateLessBean.findSubCategoryByID(subCateID);
+        model.addAttribute("targetSubCategory", targetSubCategory);
         return "admin/pages/product-subcategory-update";
+    }
+
+    @RequestMapping(value = "product-subcategory/{subCateNameNA}-{subCateID}", method = RequestMethod.POST)
+    public String productSubCateUpdate(ModelMap model,
+            @PathVariable("subCateID") Integer subCateID,
+            @RequestParam("category.cateID") Integer cateID,
+            RedirectAttributes flashAttr,
+            @ModelAttribute("targetSubCategory") SubCategories targetSubCategory) {
+        SubCategories oldCategory = productStateLessBean.findSubCategoryByID(subCateID);
+        targetSubCategory.setSubCateNameNA(shareFunc.changeText(targetSubCategory.getSubCateName()));
+        Categories cate = productStateLessBean.findCategoryByID(cateID);
+
+        int errorCode = productStateLessBean.updateSubCategory(targetSubCategory);
+        if (errorCode == 1) {
+            flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
+                    + "<strong>Success!</strong> Update SubCategory Successfully!.\n"
+                    + "</div>");
+            return "redirect:/admin/product-subcategory/"+ targetSubCategory.getSubCateNameNA()+ "-" + subCateID +".html";
+        } else if (errorCode == 2) {
+            flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
+                    + "<strong>Danger!</strong> Already have SubCategory<b>\"" + targetSubCategory.getSubCateName() + "\"</b> in <b>\"" + cate.getCateName() + "\"</b>!.\n"
+                    + "</div>");
+            return "redirect:/admin/product-subcategory/"+ oldCategory.getSubCateNameNA()+ "-" + subCateID +".html";
+        } else {
+            flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
+                    + "<strong>Error! </strong> Error was happened!.\n"
+                    + "</div>");
+            return "redirect:/admin/product-subcategory/"+ oldCategory.getSubCateNameNA()+ "-" + subCateID +".html";
+        }
     }
 
     /*========================================================================
@@ -160,7 +199,7 @@ public class Product_Controller {
      ========================================================================*/
     @RequestMapping(value = "product")
     public String productList(ModelMap model) {
-        model.addAttribute("productList", productStateLessBean.productList());
+        model.addAttribute("productList", productStateLessBean.productList("admin"));
         return "admin/pages/product-list";
     }
 
