@@ -139,7 +139,7 @@ public class Blog_Controller {
 
     }
 
-    //Chuẩn bị dữ liệu cho selectbox blogcategory
+    //Chuẩn bị dữ liệu cho selectbox blogcategory.
     @ModelAttribute("blogcategory")
     public List<BlogCategories> getAllCategories() {
         return categoriesSB.getBlogCategoriesList();
