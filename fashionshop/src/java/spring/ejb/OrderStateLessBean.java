@@ -57,23 +57,6 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
     }
 
     @Override
-    public List<Products> getAllProducts() {
-        EntityManager em = getEntityManager();
-        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Products.class));
-            Query q = em.createQuery(cq);
-            if (!false) {
-                q.setMaxResults(10);
-                q.setFirstResult(0);
-            }
-            return q.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
-    @Override
     public Products getProductByID(int productID) {
         return getEntityManager().find(Products.class, productID);
     }
@@ -144,4 +127,45 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
         Query q = getEntityManager().createQuery("SELECT d FROM DiscountVoucher d", DiscountVoucher.class);
         return q.getResultList();
     }
+
+    @Override
+    public DiscountVoucher getDiscountVoucherByID(String discountVoucherID) {
+        return getEntityManager().find(DiscountVoucher.class, discountVoucherID);
+    }
+
+    @Override
+    public int createDiscountVoucher(DiscountVoucher newDiscountVoucher) {
+        int checkError;
+        if (getDiscountVoucherByID(newDiscountVoucher.getVoucherID()) != null) {
+            checkError = 2;
+        }else{
+            try {
+                getEntityManager().persist(newDiscountVoucher);
+                checkError = 1;
+            } catch (Exception e) {
+                checkError = 0;
+            }
+        }
+        return checkError;
+    }
+
+    @Override
+    public int updateDiscountVoucher(DiscountVoucher targetDiscountVoucher) {
+        int checkError;
+        DiscountVoucher oldDiscountVoucher = getDiscountVoucherByID(targetDiscountVoucher.getVoucherID());
+        if (oldDiscountVoucher != null) {
+            targetDiscountVoucher.setOrdersList(oldDiscountVoucher.getOrdersList());
+            try {
+                getEntityManager().merge(targetDiscountVoucher);
+                checkError = 1;
+            } catch (Exception e) {
+                checkError = 0;
+            }
+        }else{
+            checkError = 2;
+        }
+        return checkError;
+    }
+    
+    
 }

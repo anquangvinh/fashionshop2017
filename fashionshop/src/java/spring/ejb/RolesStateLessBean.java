@@ -5,10 +5,13 @@
  */
 package spring.ejb;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import spring.entity.Roles;
+import spring.entity.Users;
 
 /**
  *
@@ -16,29 +19,76 @@ import spring.entity.Roles;
  */
 @Stateless
 public class RolesStateLessBean implements RolesStateLessBeanLocal {
-    @PersistenceContext(unitName = "Final_ProjectPU")
+
+    @PersistenceContext
     private EntityManager em;
 
     public EntityManager getEm() {
         return em;
     }
-    
+
     @Override
-    public Roles findRoles(Integer roleID) { 
+    public Roles findRoles(int roleID) {
         return getEm().find(Roles.class, roleID);
     }
 
     @Override
-    public boolean addRoles(Roles roles) {
+    public int addRoles(Roles roles) {
+        int error;
+        Roles findRN = findRoleName(roles.getRoleName());
+        if (findRN != null) {
+            error = 2; // RoleName trùng
+        } else {
+            try {
+                getEm().persist(roles);
+                error = 1; // insert role thành công
+            } catch (Exception e) {
+                error = 0; // xảy ra lỗi 
+            }
+        }
+        return error;
+    }
+
+    @Override
+    public Roles findRoleName(String roleName) {
+        Query q = getEm().createQuery("SELECT r FROM Roles r WHERE r.roleName = :roleName",Roles.class);
+        q.setParameter("roleName", roleName);
         try {
-            em.persist(roles);
+            return (Roles) q.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean editRoles(Users user, Roles role, int roleID) {
+        try {
+            Users u = new Users();
+            Roles r = new Roles();
+            u.setUserID(user.getUserID());
+            r.setRoleID(roleID);
+            u.setRole(r);
+            u.setEmail(user.getEmail());
+            u.setPassword(user.getPassword());
+            u.setFirstName(user.getFirstName());
+            u.setLastName(user.getLastName());
+            u.setAvatar(user.getAvatar());
+            u.setGender(user.getGender());
+            u.setBirthday(user.getBirthday());
+            u.setRegistrationDate(user.getRegistrationDate());
+            u.setStatus(user.getStatus());
+            getEm().merge(u);
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
+    @Override
+    public List<Roles> getRole() {
+        Query q = getEm().createQuery("SELECT r FROM Roles r", Roles.class);
+        return q.getResultList();
+    }
     
     
-
 }

@@ -5,6 +5,7 @@
  */
 package spring.ejb;
 
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Local;
 import spring.entity.Products;
@@ -15,9 +16,9 @@ import spring.entity.Products;
  */
 @Local
 public interface OrderStateFulBeanLocal {
-    void addProduct(Products product);
+    void addProduct(int productID, int quantity);
     boolean deleteProduct(Products product);
-    List<Products> showCart();
+    HashMap<Integer, Integer> showCart();
     Products getProductInListByID(int id);
     void completePurchase();
 }

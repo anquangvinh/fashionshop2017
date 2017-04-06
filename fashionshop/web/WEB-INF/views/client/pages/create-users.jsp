@@ -19,7 +19,7 @@
                 <div id="account-id">
                     <h4 class="account-title"><span class="fa fa-chevron-right"></span>Create User</h4>                                                                  
                     <div class="account-form">
-                        <form:form id="shipping-zip-form" method="post" action="user/create-user.html" modelAttribute="users" enctype="multipart/form-data">                                           
+                        <form:form id="shipping-zip-form" method="post" action="#" modelAttribute="users" enctype="multipart/form-data">                                           
                             <ul class="form-list row">
                                 <li class="col-md-4 col-md-6 revicon-info-circled">
                                     <label>Email <em>*</em><label>

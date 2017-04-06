@@ -34,10 +34,12 @@
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
+                    </thead>
+                    <tbody>
                         <c:forEach items="${blogsList}" var="blogs">
                             <tr>
                                 <td>${blogs.blogID}</td>
-                   
+
                                 <td>
                                     ${blogs.blogCategory.blogCateName}
                                 </td>  
@@ -50,10 +52,15 @@
                                     <fmt:formatDate pattern="dd/MM/YYYY" value="${blogs.postedDate}"/>
                                 </td>
                                 <td>${blogs.blogViews}</td>
-                                <td>${blogs.status}</td>
                                 <td>
-                                    <button>Add</button>
-                                    <button>Delete</button>
+                                    <select class="btn btn-info">
+                                        <option value="0">Enable</option>
+                                        <option value="1">Disable</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <a href="admin/blog/category/edit/${cate.cateID}.html" class="btn btn-primary">Update</a>
+                                    <a href="admin/blog/delete/${cate.cateID}.html" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn xóa ?!')">Delete</a>
                                 </td>
                             </tr>
                         </c:forEach>

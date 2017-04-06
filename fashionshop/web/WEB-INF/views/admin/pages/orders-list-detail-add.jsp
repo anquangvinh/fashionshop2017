@@ -43,7 +43,7 @@
                         <button type="submit" class="btn btn-success">Create</button>
                         <button type="reset" class="btn btn-default">Reset</button>
                     </form:form>
-                    <form role="form">
+<!--                    <form role="form">
                         <div class="form-group">
                             <label>Category</label>
                             <select class="form-control">
@@ -70,7 +70,7 @@
                             <label>Product</label>
                             <input class="form-control" placeholder="Enter Product Name">
 
-                            <!--Error Message-->
+                            Error Message
                             <p class="help-block">Error Message will be here!!!</p>
                         </div>
 
@@ -89,7 +89,7 @@
 
                         <button type="submit" class="btn btn-success">Create</button>
                         <button type="reset" class="btn btn-default">Reset</button>
-                    </form>
+                    </form>-->
                 </div>
             </div>
             <!-- /.col-lg-12 -->

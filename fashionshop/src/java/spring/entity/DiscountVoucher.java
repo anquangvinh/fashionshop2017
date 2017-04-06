@@ -24,6 +24,10 @@ public class DiscountVoucher implements Serializable {
     @JsonManagedReference
     private List<Orders> ordersList;
 
+    public short getPercent(){
+        return (short)(discount*100);
+    }
+    
     public String getVoucherID() {
         return voucherID;
     }
