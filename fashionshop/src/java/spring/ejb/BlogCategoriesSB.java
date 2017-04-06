@@ -63,4 +63,12 @@ public class BlogCategoriesSB implements BlogCategoriesSBLocal {
         int count = q.getResultList().size();
         return count;
     }
+
+    @Override
+    public void deleteBlogCategory(int blogCateID) {
+        BlogCategories targetBlogCategory = em.find(BlogCategories.class, blogCateID);
+        if(targetBlogCategory != null){
+            em.remove(targetBlogCategory);        
+        }
+    }
 }

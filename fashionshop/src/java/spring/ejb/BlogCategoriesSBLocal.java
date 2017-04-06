@@ -22,4 +22,6 @@ public interface BlogCategoriesSBLocal {
     boolean updateCategories(BlogCategories cate);
     
     int findCategoriesByName(String blogCateName);
+    
+    void deleteBlogCategory(int blogCateID);
 }
