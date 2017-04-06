@@ -10,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import spring.entity.UserAddresses;
 import spring.entity.Users;
 
 /**
@@ -19,40 +20,117 @@ import spring.entity.Users;
 @Stateless
 public class UsersStateLessBean implements UsersStateLessBeanLocal {
 
-    @PersistenceContext(unitName = "Final_ProjectPU")
+    @PersistenceContext
     private EntityManager em;
+
+    public EntityManager getEm() {
+        return em;
+    }
+
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
 
     @Override
     public List<Users> getAllUsers() {
-        return em.createQuery("SELECT u FROM Users u", Users.class).getResultList();
+        return getEm().createQuery("SELECT u FROM Users u", Users.class).getResultList();
     }
 
     @Override
-    public int findEmail(String email){
-        Query q = em.createQuery("SELECT u FROM Users u WHERE u.email = :email" , Users.class);
+    public Users findUserByEmail(String email) {
+        Query q = getEm().createQuery("SELECT u FROM Users u WHERE u.email = :email", Users.class);
         q.setParameter("email", email);
-        int fid = q.getResultList().size();
-        return fid;
+        try {
+            return (Users) q.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
+
     @Override
-    public int addUsers(Users users) {
-        int errorCode;
-        if(findEmail(users.getEmail()) == 1){
-            errorCode = 2; //email tồn tại
+    public void addUserAddress(UserAddresses newUserAddress) {
+        getEm().persist(newUserAddress);
+    }
+
+    @Override
+    public int addUsers(Users users, String phone, String address) {
+        int error;
+        Users findE = findUserByEmail(users.getEmail());
+        if (findE != null) {
+            error = 2; //email tồn tại
         } else {
             try {
-                em.persist(users);
-                errorCode = 0;  //add mới thành công
+                getEm().persist(users);
+
+                if (!"".equals(phone) && !"".equals(address)) {
+                    getEm().flush();
+
+                    UserAddresses newUserAddress = new UserAddresses();
+                    newUserAddress.setUser(users);
+                    newUserAddress.setAddress(address);
+                    newUserAddress.setPhoneNumber(phone);
+
+                    addUserAddress(newUserAddress);
+                }else if(phone.equals("") || address.equals("")){
+                    String ee = "Input phone and Address";
+                    error = 3;
+                }
+
+                error = 1;  //add mới thành công
             } catch (Exception e) {
-                errorCode = 1;  //Lỗi đã xảy ra
+                error = 0;  //Lỗi đã xảy ra
             }
         }
-        return errorCode;
+        return error;
     }
 
     @Override
-    public Users getUserID(String userID) {
-       return em.find(Users.class, userID);
+    public Users getUserByID(int userID) {
+        return em.find(Users.class, userID);
     }
 
+    @Override
+    public boolean updateStatusUser(int userID, short status) {
+        Users targetUser = getUserByID(userID);
+        
+        if(targetUser == null){
+            return false;
+        }
+        
+        targetUser.setStatus(status);
+        getEm().merge(targetUser);
+        
+        return true; 
+    }
+
+    @Override
+    public int updateUser(Users user, String repass) {
+        int error;
+        Users findEmail = findUserByEmail(user.getEmail());
+        if(findEmail != null){
+            error = 2; // email đã có
+        }
+        try {
+            if(repass.equals("")){
+                String a = "Input Repass";
+                error = 3; 
+            }else{
+                if(repass.equals(user.getPassword())){
+                }
+                getEm().merge(user);
+                error = 1;
+            }
+        } catch (Exception e) {
+            error = 0;
+        }
+        return error;
+    }
+
+    
+    @Override
+    public boolean login(String email, String pass, int roleID) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
 }

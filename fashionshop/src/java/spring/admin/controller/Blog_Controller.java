@@ -34,67 +34,87 @@ import spring.functions.SharedFunctions;
 
 @Controller
 @RequestMapping(value = "/admin/blog/")
-public class Blog_Controller { 
+public class Blog_Controller {
+
     UsersStateLessBeanLocal usersStateLessBean = lookupUsersStateLessBeanLocal();
     BlogCategoriesSBLocal blogCategoriesSB = lookupBlogCategoriesSBLocal();
-    
+
     @Autowired
     SharedFunctions shareFunc;
 
     @Autowired
     ServletContext app;
-    
+
     BlogCategoriesSBLocal categoriesSB = lookupBlogCategoriesSBLocal();
     BlogsSBLocal blogsSB = lookupBlogsSBLocal();
-    
+
     UsersStateLessBeanLocal userSB = lookupUsersStateLessBeanLocal();
-   
 
     @RequestMapping(value = "category")
     public String blogCateList(ModelMap model) {
 //        List<Blogs> blogListByCategory = blogsSB.getListBlogsByCategory(blogCateID);
 //        model.addAttribute("blogListByCategory", blogListByCategory);
 //        return "admin/pages/blog-category-list";
-          List<BlogCategories> blogCategoriesList = categoriesSB.getBlogCategoriesList();
+        List<BlogCategories> blogCategoriesList = categoriesSB.getBlogCategoriesList();
         model.addAttribute("blogCategoriesList", blogCategoriesList);
         return "admin/pages/blog-category-list";
     }
-    
-    @RequestMapping(value = "category/create")
-    public String blogCateAdd() {
+
+    @RequestMapping(value = "category/create", method = RequestMethod.GET)
+    public String blogCateAdd(ModelMap model) {
+        BlogCategories categories = new BlogCategories();
+        model.addAttribute("categories", categories);
         return "admin/pages/blog-category-add";
     }
-    
+
+    @RequestMapping(value = "category/create", method = RequestMethod.POST)
+    public String blogCateAdd(@ModelAttribute("categories") BlogCategories newBlogCate,
+            RedirectAttributes redirectAttr, ModelMap model) {
+        newBlogCate.setBlogCateNameNA(shareFunc.changeText(newBlogCate.getBlogCateName()));
+        int checkError = categoriesSB.addNewBlogCategories(newBlogCate);
+        if (checkError == 2) {
+            model.addAttribute("error", "<div class=\"col-md-12  alert alert-danger\">Blog Category Name existed!.</div>");
+            model.addAttribute("categories", newBlogCate);
+            return "admin/pages/blog-category-add";
+        } else if (checkError == 0){
+            redirectAttr.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-success\">Create New Categories Successfully!</div>");
+            return "redirect:/admin/blog/category/create.html";
+        }else{
+            redirectAttr.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-danger\">Create New Categories FAILED!. Error was happened!</div>");
+            return "redirect:/admin/blog/category/create.html";
+        }
+    }
+
     @RequestMapping(value = "category/edit")
     public String blogCateUpdate() {
         return "admin/pages/blog-category-update";
     }
-    
+
     @RequestMapping(value = "list/{blogCateID}")
     public String blogList(@PathVariable("blogCateID") Integer blogCateID, ModelMap model) {
         List<Blogs> getBlogsListByCate = blogsSB.getListBlogsByCategory(blogCateID);
         model.addAttribute("blogsList", getBlogsListByCate);
         return "admin/pages/blog-list";
     }
-    
+
     @RequestMapping(value = "list")
     public String blogList(ModelMap model) {
         model.addAttribute("blogsList", blogsSB.getAllBlogs());
         return "admin/pages/blog-list";
     }
-    
+
     @RequestMapping(value = "create", method = RequestMethod.GET)
     public String blogAdd(ModelMap model) {
         Blogs newBlogs = new Blogs();
         model.addAttribute("newBlogs", newBlogs);
         return "admin/pages/blog-add";
     }
-    
-     @RequestMapping(value = "create", method = RequestMethod.POST)
+
+    @RequestMapping(value = "create", method = RequestMethod.POST)
     public String blogAdd(@ModelAttribute("newBlogs") Blogs newBlogs,
             @RequestParam("upImage") MultipartFile image,
-            RedirectAttributes redirectAttr){
-        
+            RedirectAttributes redirectAttr) {
+
         newBlogs.setBlogTitleNA(shareFunc.changeText(newBlogs.getBlogTitle()));
         try {
             if (image.isEmpty()) {
@@ -107,8 +127,8 @@ public class Blog_Controller {
         } catch (IOException | IllegalStateException ex) {
             Logger.getLogger(Blog_Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        if(blogsSB.blogAdd(newBlogs)) {
+
+        if (blogsSB.blogAdd(newBlogs)) {
             redirectAttr.addFlashAttribute("status", "<div class=\"col-md-12  alert alert-success\">Create New Blogs Successfully!</div>");
         } else {
             redirectAttr.addFlashAttribute("status", "<div class=\"col-md-12  alert alert-danger\">Create New Blogs FAILED!. Error was happened!</div>");
@@ -116,22 +136,21 @@ public class Blog_Controller {
         Blogs blogs = new Blogs();
         redirectAttr.addFlashAttribute("blogs", blogs);
         return "redirect:/admin/pages/create.html";
- 
+
     }
-    
-    //Chuẩn bị dữ liệu cho selectbox blogcategory
+
+    //Chuẩn bị dữ liệu cho selectbox blogcategory.
     @ModelAttribute("blogcategory")
-    public List<BlogCategories> getAllCategories(){
+    public List<BlogCategories> getAllCategories() {
         return categoriesSB.getBlogCategoriesList();
     }
-    
+
     //Chuẩn bị dữ liệu cho selectbox user
     @ModelAttribute("user")
-    public List<Users> getAllUserss(){
+    public List<Users> getAllUserss() {
         return userSB.getAllUsers();
     }
-    
-    
+
     @RequestMapping(value = "edit")
     public String blogUpdate() {
         return "admin/pages/blog-update";
@@ -167,7 +186,4 @@ public class Blog_Controller {
         }
     }
 
-   
-    
 }
-

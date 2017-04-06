@@ -11,7 +11,7 @@ import spring.entity.BlogCategories;
 
 /**
  *
- * @author Phan
+ * @author Phan.
  */
 @Local
 public interface BlogCategoriesSBLocal {
@@ -22,4 +22,6 @@ public interface BlogCategoriesSBLocal {
     boolean updateCategories(BlogCategories cate);
     
     int findCategoriesByName(String blogCateName);
+    
+    void deleteBlogCategory(int blogCateID);
 }

@@ -5,6 +5,9 @@
  */
 package spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
@@ -19,7 +22,7 @@ import javax.persistence.TemporalType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-public class Users {
+public class Users implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userID;
@@ -32,24 +35,30 @@ public class Users {
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date birthday;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     private Date registrationDate;
     private Short status;
     
     @ManyToOne
     @JoinColumn(name = "roleID")
+    @JsonBackReference
     private Roles role;
     
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<Blogs> blogList;
     
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<Orders> ordersList;
     
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<UserAddresses> userAddressList;
     
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<WishList> wishList;
 
     public Integer getUserID() {

@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import spring.entity.Categories;
+import spring.entity.ProductColors;
 import spring.entity.Products;
 import spring.entity.SubCategories;
 
@@ -38,7 +39,7 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
         Query q = getEntityManager().createQuery("SELECT c FROM Categories c", Categories.class);
         return q.getResultList();
     }
-
+    
     @Override
     public Categories findCategoryByID(int cateID) {
         return getEntityManager().find(Categories.class, cateID);
@@ -111,10 +112,10 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
     }
 
     /*=======================================================================
-    *                                                                       *
-    *                       SUB-CATEGORY TREATMENT                          *
-    *                                                                       *
-    ========================================================================*/
+     *                                                                       *
+     *                       SUB-CATEGORY TREATMENT                          *
+     *                                                                       *
+     ========================================================================*/
     @Override
     public List<SubCategories> subCategoryList() {
         Query q = getEntityManager().createQuery("SELECT sc FROM SubCategories sc", SubCategories.class);
@@ -122,34 +123,108 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
     }
 
     @Override
-    public int createNewSubCategory(SubCategories newSubCate){
-        int errorCode;
-        
-        List<SubCategories> listSubCateByCategory = newSubCate.getCategory().getSubCateList();
-//        int count = 0;
-//        for (SubCategories subCate : listSubCateByCategory) {
-//            if(subCate.getSubCateName().equalsIgnoreCase(newSubCate.getSubCateName())){
-//                count++;
-//                break;
-//            }
-//        }
-//
-//        if(count == 0) { //=> Chưa có SubCategory trong Category đó.
-//            errorCode = 1;
-//        } else {//=> đã có SubCategory trong Category đó rồi.
-//            errorCode = 2;
-//        }
-        return listSubCateByCategory.size();
+    public SubCategories findSubCategoryByID(int subCateID) {
+        return getEntityManager().find(SubCategories.class, subCateID);
     }
-    
+
+    @Override
+    public int createNewSubCategory(SubCategories newSubCate) {
+        int errorCode;
+
+        Query q = getEntityManager().createQuery("SELECT sc FROM SubCategories sc WHERE sc.category.cateID = :cateID AND sc.subCateName LIKE :newSubCateName", SubCategories.class);
+        q.setParameter("cateID", newSubCate.getCategory().getCateID());
+        q.setParameter("newSubCateName", newSubCate.getSubCateName());
+
+        int count = q.getResultList().size();
+        if (count == 1) { //=> đã có SubCategory trong Category đó rồi.
+            errorCode = 2;
+        } else {//=> Chưa có SubCategory trong Category đó.
+            try {
+                getEntityManager().persist(newSubCate);
+                errorCode = 1;
+            } catch (Exception e) {
+                errorCode = 0;
+            }
+        }
+        return errorCode;
+    }
+
+    @Override
+    public int updateSubCategory(SubCategories targetSubCategory) {
+        int errorCode;
+        SubCategories oldSubCate = getEntityManager().find(SubCategories.class, targetSubCategory.getSubCateID());
+
+        Query q = getEntityManager().createQuery("SELECT sc FROM SubCategories sc WHERE sc.category.cateID = :cateID AND sc.subCateName LIKE :targetSubCateName", SubCategories.class);
+        q.setParameter("cateID", targetSubCategory.getCategory().getCateID());
+        q.setParameter("targetSubCateName", targetSubCategory.getSubCateName());
+        int count = q.getResultList().size();
+        if (count == 1) { //=> trùng
+            if ((oldSubCate.getCategory().getCateID() == targetSubCategory.getCategory().getCateID()) && oldSubCate.getSubCateName().equalsIgnoreCase(targetSubCategory.getSubCateName())) {
+                try {
+                    getEntityManager().merge(targetSubCategory);
+                    errorCode = 1; //Update thành công.
+                } catch (Exception e) {
+                    errorCode = 0; //Update bị lỗi.
+                }
+            } else {
+                errorCode = 2; //bị trùng
+            }
+        } else { //=> ko bị trùng
+            try {
+                getEntityManager().merge(targetSubCategory);
+                errorCode = 1; //Update thành công.
+            } catch (Exception e) {
+                errorCode = 0; //Update bị lỗi.
+            }
+        }
+        return errorCode;
+    }
+
     /*========================================================================
      *                                                                       *
      *                          PRODUCT TREATMENT                            *
      *                                                                       *
      ========================================================================*/
     @Override
-    public List<Products> productList() {
-        Query q = getEntityManager().createQuery("SELECT p FROM Products p ORDER BY p.productID DESC", Products.class);
+    public List<Products> productList(String role) {
+        Query q;
+        if(role.equals("client")){
+            q = getEntityManager().createQuery("SELECT p FROM Products p WHERE p.status = 1 ORDER BY p.productID DESC", Products.class);
+        } else {
+            q = getEntityManager().createQuery("SELECT p FROM Products p ORDER BY p.productID DESC", Products.class);
+        }
+        
         return q.getResultList();
+    }
+    
+    @Override
+    public Products findProductByID(int productID){
+        return getEntityManager().find(Products.class, productID);
+    }
+    
+    @Override
+    public List<Object> getTop3ProductBestSeller(){
+        String sql = "SELECT p.productID, p.productName, p.productNameNA, p.price, p.urlImg, sum(od.quantity) as tongsoluong "
+                + "FROM OrdersDetail od JOIN od.product p "
+                + "WHERE p.status = 1 "
+                + "GROUP BY p.productID, p.productName, p.productNameNA, p.price, p.urlImg "
+                + "ORDER BY tongsoluong DESC";
+        Query q = getEntityManager().createQuery(sql).setMaxResults(3);
+        
+        return q.getResultList();
+    }
+    
+    @Override
+    public List<Products> getTop3ProductMostViewed(){
+        String sql = "SELECT p FROM Products p WHERE p.status = 1 ORDER BY p.productViews DESC";
+        Query q = getEntityManager().createQuery(sql, Products.class).setMaxResults(3);
+        
+        return q.getResultList();
+    }
+    
+    @Override
+    public ProductColors findProductColorByColorID(int colorID){
+        ProductColors productColor = getEntityManager().find(ProductColors.class, colorID);
+        return productColor;
     }
 }

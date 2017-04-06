@@ -5,6 +5,8 @@
  */
 package spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Categories {
+public class Categories implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cateID;
@@ -22,6 +24,11 @@ public class Categories {
     private Short status;
     
     @OneToMany(mappedBy = "category")
+    @JsonManagedReference
+    private List<Products> productList;
+    
+    @OneToMany(mappedBy = "category")
+    @JsonManagedReference
     private List<SubCategories> subCateList;
 
     public Integer getCateID() {
@@ -63,6 +70,12 @@ public class Categories {
     public void setSubCateList(List<SubCategories> subCateList) {
         this.subCateList = subCateList;
     }
-    
-    
+
+    public List<Products> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Products> productList) {
+        this.productList = productList;
+    }
 }

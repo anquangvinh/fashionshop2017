@@ -442,6 +442,7 @@ h5.heading2 span {
     color: #333;
     text-transform: capitalize;
     margin: 10px 0 6px;
+    height: 38px;
 }
 
 .product-title a {
@@ -3018,7 +3019,11 @@ footer {
 .sync2 .synced .item{
     opacity: 1;
 }
-.sync1 .item img, .sync2 .item img{
+.sync1 .item img{
+    max-width: 100%;
+}
+
+.sync2 .item img{
     max-width: 100%;
 }
 

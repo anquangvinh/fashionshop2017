@@ -5,6 +5,8 @@
  */
 package spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,9 +16,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-public class Blogs {
+public class Blogs implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer blogID;
@@ -25,6 +28,7 @@ public class Blogs {
     private String blogSummary;
     private String blogImg;
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "dd-MM-YYYY")
     private Date postedDate;
     private String content;
     private Integer blogViews;
@@ -32,10 +36,12 @@ public class Blogs {
     
     @ManyToOne
     @JoinColumn(name = "blogCateID")
+    @JsonBackReference
     private BlogCategories blogCategory;
     
     @ManyToOne
     @JoinColumn(name = "userID")
+    @JsonBackReference
     private Users user;
 
     public Integer getBlogID() {

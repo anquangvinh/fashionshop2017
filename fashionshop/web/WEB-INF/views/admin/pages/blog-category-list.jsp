@@ -28,17 +28,18 @@
                         <c:forEach items="${blogCategoriesList}" var="blogscate">
                             <tr>
                                 <td>${blogscate.blogCateID}</td>
-                               <td>
-                                  <a href="admin/blog/list/${blogscate.blogCateID}.html">${blogscate.blogCateName}</a>
+                                <td>
+                                    <a href="admin/blog/list/${blogscate.blogCateID}.html">${blogscate.blogCateName}</a>
                                 </td>  
                                 <td>${blogscate.status}</td>
                                 <td>
-                                  <button>Add</button>
+                                    <button>Add</button>
+                                    <a href="admin/category/delete/${cate.cateID}.html" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn xóa ?!')">Delete</a>
                                 </td>
-                        </tr>
-                    </c:forEach>
+                            </tr>
+                        </c:forEach>
 
-                    </tbody>
+                        </tbody>
                 </table>
                 <!-- /.table-responsive -->
             </div>
