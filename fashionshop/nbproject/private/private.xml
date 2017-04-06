@@ -5,10 +5,16 @@
         <group name="Spring">
             <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/web/WEB-INF/views/client/pages/index.jsp</file>
         </group>
-        <group/>
         <group name="fashionshop2017"/>
         <group name="project">
             <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/web/WEB-INF/views/admin/pages/blog-add.jsp</file>
+        </group>
+        <group>
+            <file>file:/D:/FPT%20APTECH%20ACCP/Final%20Project/Git/fashionshop2017/fashionshop/src/java/spring/ejb/OrderStateFulBean.java</file>
+            <file>file:/D:/FPT%20APTECH%20ACCP/Final%20Project/Git/fashionshop2017/fashionshop/src/java/spring/ejb/OrderStateLessBeanLocal.java</file>
+            <file>file:/D:/FPT%20APTECH%20ACCP/Final%20Project/Git/fashionshop2017/fashionshop/src/java/spring/client/controller/OrdersController.java</file>
+            <file>file:/D:/FPT%20APTECH%20ACCP/Final%20Project/Git/fashionshop2017/fashionshop/src/java/spring/ejb/OrderStateFulBeanLocal.java</file>
+            <file>file:/D:/FPT%20APTECH%20ACCP/Final%20Project/Git/fashionshop2017/fashionshop/src/java/spring/ejb/OrderStateLessBean.java</file>
         </group>
     </open-files>
 </project-private>
