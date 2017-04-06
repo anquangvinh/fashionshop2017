@@ -5,6 +5,7 @@
  */
 package spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
@@ -20,6 +21,7 @@ public class DiscountVoucher implements Serializable {
     private String description;
     
     @OneToMany(mappedBy = "voucher")
+    @JsonManagedReference
     private List<Orders> ordersList;
 
     public String getVoucherID() {

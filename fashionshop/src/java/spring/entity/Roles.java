@@ -5,6 +5,7 @@
  */
 package spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
@@ -22,6 +23,7 @@ public class Roles implements Serializable {
     private String roleName;
 
     @OneToMany(mappedBy = "role")
+    @JsonManagedReference
     private List<Users> userList;
 
     public Integer getRoleID() {

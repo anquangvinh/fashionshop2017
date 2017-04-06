@@ -1,3 +1,4 @@
+/* CSS FOR REGISTER FORM */
 .fs-login-gender {
     border: 1px solid #aaa;
     width: 100%;
@@ -11,4 +12,61 @@
     border: none !important;
     line-height: 0 !important;
     padding-left: 0 !important;
+}
+
+/* CSS FOR PRODUCT: COLOR IMG, SIZE.... */
+.item-colors img {
+    display: inline-block !important;
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+    box-shadow: 0 4px 8px 0 rgb(193, 188, 188), 0 6px 20px 0 rgb(193, 188, 188);
+    cursor:pointer;
+}
+
+.fs-product-color img {
+    width: 30px;
+    height: 30px;
+    cursor:pointer;
+}
+
+.item-colors img:hover{
+    box-shadow: 0 0 8px rgba(20, 10, 0, 1);
+}
+
+.fs-product-color-border {
+    border: 2px solid #ccc;
+    padding: 2px;
+    float: left;
+    margin-right: 10px;
+}
+
+.fs-product-color-border:hover {
+    border-color: #000; 
+}
+
+.fs-clear-fix {
+    clear:both;
+}
+
+.fs-product-selected {
+    border-color: #000 !important; 
+}
+
+.fs-product-size {
+    margin-bottom: 55px;
+}
+
+.fs-particular-size {
+    min-width: 35px;
+    height: 35px;
+    border: 2px solid #ccc;
+    padding: 2px;
+    float: left;
+    margin-right: 13px;
+    text-align: center;
+    line-height: 28px;
+    font-size: 15px;
+    font-weight: 400;
+    cursor: pointer;
 }

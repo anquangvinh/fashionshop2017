@@ -5,6 +5,7 @@
  */
 package spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,6 +24,7 @@ public class UserAddresses implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "userID")
+    @JsonBackReference
     private Users user;
 
     public Integer getAddressID() {

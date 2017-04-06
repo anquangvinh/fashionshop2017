@@ -8,6 +8,7 @@ package spring.ejb;
 import java.util.List;
 import javax.ejb.Local;
 import spring.entity.Categories;
+import spring.entity.ProductColors;
 import spring.entity.Products;
 import spring.entity.SubCategories;
 
@@ -22,6 +23,7 @@ public interface ProductStateLessBeanLocal {
      *                          CATEGORY TREATMENT                           *
      *                                                                       *
      ========================================================================*/
+
     List<Categories> categoryList();
 
     Categories findCategoryByID(int cateID);
@@ -41,13 +43,24 @@ public interface ProductStateLessBeanLocal {
      ========================================================================*/
     List<SubCategories> subCategoryList();
 
+    SubCategories findSubCategoryByID(int subCateID);
+
     int createNewSubCategory(SubCategories newSubCate);
-    
+
+    int updateSubCategory(SubCategories targetSubCategory);
+
     /*========================================================================
      *                                                                       *
      *                          PRODUCT TREATMENT                            *
      *                                                                       *
      ========================================================================*/
-    List<Products> productList();
-
+    List<Products> productList(String role);
+    
+    Products findProductByID(int productID);
+    
+    List<Object> getTop3ProductBestSeller();
+    
+    List<Products> getTop3ProductMostViewed();
+    
+    ProductColors findProductColorByColorID(int colorID);
 }

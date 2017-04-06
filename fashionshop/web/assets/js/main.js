@@ -118,10 +118,10 @@ $(document).ready(function () {
     });
 
     // SUBSCRIBE NEWSLETTER
-    $(".subscribe-me").subscribeBetter({
-        trigger: "onload",
-        delay: 300
-    });
+//    $(".subscribe-me").subscribeBetter({
+//        trigger: "onload",
+//        delay: 300
+//    });
 
     // PRODUCTS CAROUSEL
     $('.product-carousel').slick({
@@ -280,12 +280,12 @@ $(document).ready(function () {
     });
 
     //TWITTERFEED
-    $('#twitterfeed').tweecool({
-        //change "envato" to your username
-        username: 'envato',
-        profile_image: false,
-        limit: 2
-    });
+//    $('#twitterfeed').tweecool({
+//        //change "envato" to your username
+//        username: 'envato',
+//        profile_image: false,
+//        limit: 2
+//    });
 
 
 
@@ -512,7 +512,7 @@ $(document).ready(function () {
         var found = false;
         for (var i in sync2visible) {
             if (num === sync2visible[i]) {
-                var found = true;
+                found = true;
             }
         }
 
