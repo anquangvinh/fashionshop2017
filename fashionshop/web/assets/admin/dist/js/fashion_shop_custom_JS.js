@@ -55,4 +55,21 @@ $(document).ready(function () {
         changeMonth: true,
         changeYear: true
     });
+    
+    /* 
+     * AJAX - EVENT ONCHANGE SELECT USER "STATUS" 
+     */
+    $(".fs-select-user-status").on("change", function(){
+        var status = $(this).val();
+        var userID = $(this).attr("fs-user");
+
+        $.ajax({
+            url : "admin/user/updateStatus.html",
+            method: "POST",
+            data: {userID: userID, status: status},
+            success: function(response){
+                alert(response);
+            }
+        });
+    });
 });

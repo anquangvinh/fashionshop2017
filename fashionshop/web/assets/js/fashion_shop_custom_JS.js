@@ -10,7 +10,7 @@ $(document).ready(function () {
     /* USER JS AREA */
     /* REGISTER FORM */
     $("#txtBirthday").datepicker({
-        dateFormat: "dd-mm-yy",
+        dateFormat: "dd/mm/yy",
         showAnim: "drop",
         changeMonth: true,
         changeYear: true
@@ -235,3 +235,4 @@ $(document).ready(function () {
         $(this).addClass("fs-product-selected");
     });
 });
+
