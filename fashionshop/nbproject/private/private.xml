@@ -2,5 +2,19 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group name="Spring">
+            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/web/WEB-INF/views/client/pages/index.jsp</file>
+        </group>
+        <group name="project">
+            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/web/WEB-INF/views/admin/pages/blog-add.jsp</file>
+        </group>
+        <group/>
+        <group name="fashionshop2017">
+            <file>file:/D:/PJ/fashionshop2017/fashionshop/web/assets/admin/dist/js/fashion_shop_custom_JS.js</file>
+            <file>file:/D:/PJ/fashionshop2017/fashionshop/src/java/spring/ejb/UsersStateLessBean.java</file>
+            <file>file:/D:/PJ/fashionshop2017/fashionshop/src/java/spring/ejb/UsersStateLessBeanLocal.java</file>
+            <file>file:/D:/PJ/fashionshop2017/fashionshop/web/WEB-INF/views/admin/pages/user-list.jsp</file>
+            <file>file:/D:/PJ/fashionshop2017/fashionshop/src/java/spring/admin/controller/User_Controller.java</file>
+        </group>
     </open-files>
 </project-private>
