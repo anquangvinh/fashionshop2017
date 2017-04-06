@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!-- Page Content -->
 <div id="page-wrapper">
     <div class="container-fluid">
@@ -17,31 +18,29 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="col-lg-6">
-                    <form role="form">
+                    <form:form role="form">
                         <div class="form-group">
                             <label>Category</label>
-                            <input class="form-control" placeholder="Enter Blog Category Name">
-
+                            <form:input class="form-control" path="blogCateName"/>
                             <!--Error Message-->
                             <p class="help-block">Error Message will be here!!!</p>
                         </div>
-
                         <div class="form-group">
                             <label>Status</label>
                             <div>
                                 <label class="radio-inline">
-                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="0" checked>Enable
+                                    <form:radiobutton path="status" value="0" id="rdoEnable" label="Enable" />
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="1">Disable
+                                    <form:radiobutton path="status" value="1" id="rdoDisable" label="Disable" />
                                 </label>
                             </div>
 
                         </div>
 
-                        <button type="submit" class="btn btn-warning">Update</button>
-                        <button type="reset" class="btn btn-default">Reset</button>
-                    </form>
+                                    <form:button type="submit" class="btn btn-warning">Update</form:button>
+                                    <form:button type="reset" class="btn btn-default">Reset</form:button>
+                    </form:form>
                 </div>
             </div>
             <!-- /.col-lg-12 -->

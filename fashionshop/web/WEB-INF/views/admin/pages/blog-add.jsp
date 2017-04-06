@@ -2,13 +2,7 @@
 <%@taglib uri="http://ckeditor.com" prefix="ckeditor" %>
 <%@taglib uri="http://cksource.com/ckfinder" prefix="ckfinder" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<script>
-    $(function () {
-        $("#postedDate").datepicker({
-            dateFormat: "dd/mm/yy"
-        });
-    });
-</script>
+
 <!-- Page Content -->
 <div id="page-wrapper">
     <div class="container-fluid">
@@ -29,44 +23,38 @@
             <form:form action="admin/blog/create.html" method="POST" modelAttribute="newBlogs" enctype="multipart/form-data">
                 <div class="col-lg-12">
                     <div class="col-lg-6">
-                        <form role="form">
-
-                            <div class="form-group">
-                                <label>Categories</label>
-                                <form:select path="blogCategory.blogCateID" cssClass="form-control">
-                                    <form:option value="0"> Please Select </form:option>
-                                    <form:options items="${blogcategory}" itemValue="blogCateID" itemLabel="blogCateName" />
-                                </form:select>
+                        <div class="form-group">
+                            <label>Categories</label>
+                            <form:select path="blogCategory.blogCateID" cssClass="form-control">
+                                <form:option value="0"> Please Select </form:option>
+                                <form:options items="${blogcategory}" itemValue="blogCateID" itemLabel="blogCateName" />
+                            </form:select>
+                        </div>
+                        <div class="form-group">
+                            <label>User name</label>
+                            <form:select path="user.userID" cssClass="form-control">
+                                <form:option value="0"> Please Select </form:option>
+                                <form:options items="${user}" itemValue="userID" itemLabel="firstName" />
+                            </form:select>
+                        </div>
+                        <div class="form-group">
+                            <label>Title</label>                   
+                            <form:input path="blogTitle" cssClass="form-control" />
+                            <!--Error Message-->
+                            <div style="color:red; margin-top: 10px;">
+                                <form:errors path="blogTitle"/>
                             </div>
-
-                            <div class="form-group">
-                                <label>User name</label>
-                                <form:select path="user.userID" cssClass="form-control">
-                                    <form:option value="0"> Please Select </form:option>
-                                    <form:options items="${user}" itemValue="userID" itemLabel="firstName" />
-                                </form:select>
+                        </div>
+                        <div class="form-group">
+                            <label>Summary</label>
+                            <form:input path="blogSummary" cssClass="form-control" />
+                            <!--Error Message-->
+                            <div style="color:red; margin-top: 10px;">
+                                <form:errors path="blogSummary"/>
                             </div>
-
-                            <div class="form-group">
-                                <label>Title</label>
-                                <form:input path="blogTitle" cssClass="form-control" />
-
-                                <!--Error Message-->
-                                <div style="color:red; margin-top: 10px;">
-                                    <form:errors path="blogTitle"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Summary</label>
-                                <form:input path="blogSummary" cssClass="form-control" />
-                                <!--Error Message-->
-                                <div style="color:red; margin-top: 10px;">
-                                    <form:errors path="blogSummary"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
+                        </div>
+                        <div class="form-group">
+                            <div>
                                 <label>Image</label>
                                 <input type="file" id="upImage" name="upImage">
                             </div>
@@ -92,55 +80,54 @@
                                     }
                                 });
                             </script>
-                            <div class="form-group">
-                                <label>Date</label
-                                <form:input path="postedDate" cssClass="form-control" />
+                        </div>
+                        <br/>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <form:input path="postedDate" cssClass="form-control" />
+                            <!--Error Message-->
+                            <div style="color:red; margin-top: 10px;">
+                                <form:errors path="postedDate"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Content</label>
+                            <br/>
+                            <!--CKEditor-->
+                            <form action="getContent" method="get">
+                                <textarea cols="80" id="editor1" name="editor1" rows="10"></textarea>				
+                            </form>
+                            <ckfinder:setupCKEditor basePath="assets/ckfinder/" editor="editor1" />
+                            <ckeditor:replace replace="editor1" basePath="assets/ckeditor/" />
+                            <!--Error Message-->
+                            <div style="color:red; margin-top: 10px;">
+                                <form:errors path="content"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>BlogView</label>
+                            <form:input path="blogViews" cssClass="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <div>
+                                <label class="radio-inline">
+                                    <form:radiobutton path="status" value="0" id="rdoEnable" label="Enable" />
+                                    <!--                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="0" checked>Enable-->
+                                </label>
+                                <label class="radio-inline">
+                                    <form:radiobutton path="status" value="1" id="rdoDisable" label="Disable" />
+                                    <!--                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="1">Disable-->
+                                </label>
 
-                                <!--Error Message-->
-                                <div style="color:red; margin-top: 10px;">
-                                    <form:errors path="postedDate"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Content</label>
-                                <br>
-                                <!--CKEditor-->
-                                <form action="getContent" method="get">
-                                    <textarea cols="80" id="editor1" name="editor1" rows="10"></textarea>				
-                                    <!--                                    <input type="submit" value="Submit" />-->
-                                </form>
-                                <ckfinder:setupCKEditor basePath="assets/ckfinder/" editor="editor1" />
-                                <ckeditor:replace replace="editor1" basePath="assets/ckeditor/" />
-                                <!--Error Message-->
-                                <div style="color:red; margin-top: 10px;">
-                                    <form:errors path="content"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>BlogView</label>
-                                <form:input path="blogViews" cssClass="form-control" />
-                                <!--Error Message-->
-                                <p class="help-block">Error Message will be here!!!</p>
-                            </div>
-                            <div class="form-group">
-                                <label>Status</label>
-                                <div>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="0" checked>Enable
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="1">Disable
-                                    </label>
-                                </div>
 
                             </div>
-                            ${status}
-
-                           <button type="submit" class="btn btn-success" style="width: 30%">Create</button>
-                            <button type="reset" class="btn btn-default" style="width: 30%">Reset</button>
-                        </form>
+                        </div>
+                        ${status}
+                        <form:button type="submit" class="btn btn-success" style="width: 30%">Create</form:button>
+                        <form:button type="reset" class="btn btn-default">Reset</form:button>
+                        </div>
                     </div>
-                </div>
             </form:form>
             <!-- /.col-lg-12 -->
         </div>
