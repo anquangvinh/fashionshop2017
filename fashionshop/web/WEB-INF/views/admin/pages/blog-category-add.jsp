@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!-- Page Content -->
 <div id="page-wrapper">
     <div class="container-fluid">
@@ -16,32 +17,35 @@
 
         <div class="row">
             <div class="col-lg-12">
+                <div>
+                    ${error}
                 <div class="col-lg-6">
-                    <form role="form">
+                    <form:form action="admin/blog/category/create.html" method="POST" modelAttribute="categories" enctype="multipart/form-data">
                         <div class="form-group">
-                            <label>Category</label>
-                            <input class="form-control" placeholder="Enter Blog Category Name">
-
+                            <label for="blogCateName">Category Name</label>
+                             <form:input path="blogCateName" cssClass="form-control" placeholder="Enter Blog Category Name" />
                             <!--Error Message-->
-                            <p class="help-block">Error Message will be here!!!</p>
+                            <form:errors path="blogCateName"/>
                         </div>
-
                         <div class="form-group">
                             <label>Status</label>
                             <div>
-                                <label class="radio-inline">
-                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="option1" checked>Visible
+<!--                                <label class="radio-inline">
+                                    <input type="radio" name="radioEnable" id="optionsRadiosInline1" value="0" checked>Enable
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="option2">Invisible
-                                </label>
+                                    <input type="radio" name="radioDisable" id="optionsRadiosInline2" value="1">Disable
+                                </label>-->
+                                <form:radiobutton path="status" value="0" checked="checked"/>Enable
+                                <form:radiobutton path="status" value="1"/>Disable
                             </div>
 
                         </div>
-
-                        <button type="submit" class="btn btn-success">Create</button>
-                        <button type="reset" class="btn btn-default">Reset</button>
-                    </form>
+                        <div>
+                            <button type="submit" class="btn btn-success">Create</button>
+                            <button type="reset" class="btn btn-default">Reset</button>
+                        </div>
+                    </form:form>
                 </div>
             </div>
             <!-- /.col-lg-12 -->
