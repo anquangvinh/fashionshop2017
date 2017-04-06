@@ -30,15 +30,14 @@
         <link rel="stylesheet" href="assets/js/vendors/slick/slick.css">
         <link rel="stylesheet" href="assets/js/vendors/rs-plugin/css/settings.css">
         <link rel="stylesheet" href="assets/js/vendors/select/jquery.selectBoxIt.css">
-        <link rel="stylesheet" href="assets/css/subscribe-better.css">
+<!--        <link rel="stylesheet" href="assets/css/subscribe-better.css">-->
         <link rel="stylesheet" href="assets/plugin/owl-carousel/owl.carousel.css">
         <link rel="stylesheet" href="assets/plugin/owl-carousel/owl.theme.css">
         <link rel="stylesheet" href="assets/plugin/prettyphoto/css/prettyPhoto.css">  
         <link rel="stylesheet" href="assets/css/style.css">
         <link rel="stylesheet" href="assets/js/jquery-ui-1.12.1/jquery-ui.min.css"/>
+
         
-        <script src="assets/js/jquery-ui-1.12.1/external/jquery/jquery.js"></script>
-        <script src="assets/js/fashion_shop_custom_JS.js" type="text/javascript"></script>
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -67,21 +66,22 @@
         <div id="backtotop"><i class="fa fa-chevron-up"></i></div>
 
         <!-- Javascript -->
+        <script src="assets/js/jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+        <script src="assets/js/fashion_shop_custom_JS.js" type="text/javascript"></script>
         <script src="assets/js/bootstrap.min.js"></script>        
         <script src="assets/plugin/owl-carousel/owl.carousel.min.js"></script>
         <script src="assets/plugin/prettyphoto/js/jquery.prettyPhoto.js"></script>
         <script src="assets/js/bs-navbar.js"></script>
         <script src="assets/js/vendors/isotope/isotope.pkgd.js"></script>
         <script src="assets/js/vendors/slick/slick.min.js"></script>
-        <script src="assets/js/vendors/tweets/tweecool.min.js"></script>
+<!--        <script src="assets/js/vendors/tweets/tweecool.min.js"></script>-->
         <script src="assets/js/vendors/rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
         <script src="assets/js/vendors/rs-plugin/js/jquery.themepunch.tools.min.js"></script>
         <script src="assets/js/jquery.sticky.js"></script>
-        <script src="assets/js/jquery.subscribe-better.js"></script>
+<!--        <script src="assets/js/jquery.subscribe-better.js"></script>-->
         <script src="assets/js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
         <script src="assets/js/royalslider/jquery.royalslider.min.js"></script>
         <script src="assets/js/vendors/select/jquery.selectBoxIt.min.js"></script>
         <script src="assets/js/main.js"></script>
-
     </body>
 </html>

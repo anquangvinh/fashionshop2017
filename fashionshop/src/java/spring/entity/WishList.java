@@ -5,6 +5,7 @@
  */
 package spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,10 +22,12 @@ public class WishList implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "userID")
+    @JsonBackReference
     private Users user;
     
     @ManyToOne
     @JoinColumn(name = "productID")
+    @JsonBackReference
     private Products product;
 
     public Integer getWishID() {

@@ -5,6 +5,9 @@
  */
 package spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-public class ProductColors {
+public class ProductColors implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer colorID;
@@ -23,15 +27,18 @@ public class ProductColors {
     private String colorNA;
     private String urlColorImg;
     private Short status;
-    
+
     @OneToMany(mappedBy = "color")
+    @JsonManagedReference
     private List<SizesByColor> sizeList;
-    
+
     @OneToMany(mappedBy = "productColor")
+    @JsonManagedReference
     private List<ProductSubImgs> ProductSubImgsList;
-    
+
     @ManyToOne
     @JoinColumn(name = "productID")
+    @JsonBackReference
     private Products product;
 
     public Integer getColorID() {
@@ -97,6 +104,5 @@ public class ProductColors {
     public void setProductSubImgsList(List<ProductSubImgs> ProductSubImgsList) {
         this.ProductSubImgsList = ProductSubImgsList;
     }
-    
-    
+
 }
