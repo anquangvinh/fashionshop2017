@@ -5,8 +5,10 @@
  */
 package spring.ejb;
 
+import java.util.List;
 import javax.ejb.Local;
 import spring.entity.Roles;
+import spring.entity.Users;
 
 /**
  *
@@ -15,8 +17,13 @@ import spring.entity.Roles;
 @Local
 public interface RolesStateLessBeanLocal {
 
-    Roles findRoles(Integer roleID);
+    Roles findRoles(int roleID);
 
-    boolean addRoles(Roles roles);
+    int addRoles(Roles roles);
+
+    Roles findRoleName(String roleName);
+
+    boolean editRoles(Users user ,Roles role, int roleID);
     
+    List<Roles> getRole();
 }

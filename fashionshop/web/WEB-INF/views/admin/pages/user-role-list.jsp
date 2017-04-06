@@ -35,6 +35,7 @@
                             <td class="center" align="center">${roles.email}</td>
                             <td class="center" align="center">${roles.role.roleName}</td>
                             <td class="center" align="center">
+                                <!--<a href="admin/user/role/edit/</${roles.userID}/</${roles.role.roleID}.html" class="btn btn-warning">Update</a>-->
                                 <a href="#" class="btn btn-warning">Update</a>
                                 <a href="#" class="btn btn-danger">Delete</a>
                             </td>

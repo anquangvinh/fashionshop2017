@@ -5,28 +5,16 @@
         <group name="Spring">
             <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/web/WEB-INF/views/client/pages/index.jsp</file>
         </group>
-        <group/>
-        <group name="fashionshop2017"/>
         <group name="project">
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/SizesByColor.java</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/Orders.java</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/functions/SharedFunctions.java</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/web/WEB-INF/web.xml</file>
             <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/web/WEB-INF/views/admin/pages/blog-add.jsp</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/OrdersDetail.java</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/BlogCategories.java</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/web/assets/admin/dist/js/fashion_shop_custom_JS.js</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/WishList.java</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/Products.java</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/Users.java</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/UserAddresses.java</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/DiscountVoucher.java</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/SubCategories.java</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/Categories.java</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/Roles.java</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/ProductSubImgs.java</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/ProductColors.java</file>
-            <file>file:/G:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/Blogs.java</file>
+        </group>
+        <group/>
+        <group name="fashionshop2017">
+            <file>file:/D:/PJ/fashionshop2017/fashionshop/web/assets/admin/dist/js/fashion_shop_custom_JS.js</file>
+            <file>file:/D:/PJ/fashionshop2017/fashionshop/src/java/spring/ejb/UsersStateLessBean.java</file>
+            <file>file:/D:/PJ/fashionshop2017/fashionshop/src/java/spring/ejb/UsersStateLessBeanLocal.java</file>
+            <file>file:/D:/PJ/fashionshop2017/fashionshop/web/WEB-INF/views/admin/pages/user-list.jsp</file>
+            <file>file:/D:/PJ/fashionshop2017/fashionshop/src/java/spring/admin/controller/User_Controller.java</file>
         </group>
     </open-files>
 </project-private>

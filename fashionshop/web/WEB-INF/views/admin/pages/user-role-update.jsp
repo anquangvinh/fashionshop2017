@@ -21,11 +21,9 @@
                         <div class="form-group">
                             <label>Role</label>
                             <input class="form-control" placeholder="Enter Role Name">
-
-                            <!--Error Message-->
+                            Error Message
                             <p class="help-block">Error Message will be here!!!</p>
                         </div>
-
                         <button type="submit" class="btn btn-warning">Update</button>
                         <button type="reset" class="btn btn-default">Reset</button>
                     </form>

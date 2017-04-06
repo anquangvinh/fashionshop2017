@@ -16,11 +16,11 @@
                             <ul class="form-list row">
                                 <li class="col-md-6 col-sm-6">
                                     <label >Password <em>*</em></label>
-                                    <input required type="text" class="input-text">
+                                    <input required name="password" type="text" class="input-text">
                                 </li>
                                 <li class="col-md-6 col-sm-6">
                                     <label> Password Confirm <em>*</em></label>
-                                    <input required type="text" class="input-text">
+                                    <input required name="repassword" type="text" class="input-text">
                                 </li>                                               
                             </ul>
                             <div class="buttons-set">

@@ -8,7 +8,7 @@
 
 $(document).ready(function () {
     $("#txtBirthday").datepicker({
-        dateFormat: "dd-mm-yy",
+        dateFormat: "dd/mm/yy",
         showAnim: "drop",
         changeMonth: true,
         changeYear: true
@@ -21,6 +21,6 @@ $(document).ready(function () {
             $(this).parents("#fs-form-area").addClass('col-sm-9 col-md-9').removeClass('col-sm-8 col-md-8');
             $("#account-create-new").show("drop", {direction: "up"}, 2000);
         });
-
     });
 });
+
