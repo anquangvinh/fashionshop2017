@@ -11,7 +11,7 @@ import spring.entity.BlogCategories;
 
 /**
  *
- * @author Phan
+ * @author Phan.
  */
 @Local
 public interface BlogCategoriesSBLocal {

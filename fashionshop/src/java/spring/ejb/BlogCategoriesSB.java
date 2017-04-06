@@ -41,7 +41,7 @@ public class BlogCategoriesSB implements BlogCategoriesSBLocal {
                 em.persist(newBlogCate);
                 errorCode = 0;  //add mới thành công
             } catch (Exception e) {
-                errorCode = 1;  //Lỗi đã xảy ra
+                errorCode = 1;  //Lỗi đã xảy ra.
             }
         }
         return errorCode;
