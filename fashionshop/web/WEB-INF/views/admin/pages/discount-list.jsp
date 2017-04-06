@@ -18,11 +18,14 @@
 
         <div class="row">
             <div class="col-lg-12">
+                <div>
+                    ${error}
+                </div>
                 <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
                     <thead>
                         <tr>
-                            <th>Voucher ID</th>
-                            <th>Discount</th>
+                            <th>Voucher Code</th>
+                            <th>Discount Percent</th>
                             <th>Quantity</th>
                             <th>Discription</th>
                             <th>Action</th>
@@ -32,11 +35,11 @@
                         <c:forEach items="${discountList}" var="discount">
                             <tr class="odd gradeX">
                                 <td align="center">${discount.voucherID}</td>
-                                <td align="center">${discount.discount}</td>
+                                <td align="center">${discount.getPercent()}</td>
                                 <td align="center">${discount.quantity}</td>
                                 <td align="center">${discount.description}</td>
                                 <td align="center">
-                                    <a href="#" type="button" class="btn btn-primary">Update</a>
+                                    <a href="admin/orders/discountupdate/${discount.voucherID}.html" type="button" class="btn btn-primary">Update</a>
                                 </td>
                             </tr>
                         </c:forEach>
