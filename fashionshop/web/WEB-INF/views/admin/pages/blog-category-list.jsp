@@ -33,8 +33,11 @@
                                 </td>  
                                 <td>${blogscate.status}</td>
                                 <td>
-                                    <button>Add</button>
-                                    <a href="admin/category/delete/${cate.cateID}.html" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn xóa ?!')">Delete</a>
+                                    <a href="http://localhost:39356/fashionshop/admin/blog/category/create.html" class="btn btn-primary">Create</a>
+                                    <select class="btn btn-info">
+                                        <option value="0">Enable</option>
+                                        <option value="1">Disable</option>
+                                    </select>
                                 </td>
                             </tr>
                         </c:forEach>

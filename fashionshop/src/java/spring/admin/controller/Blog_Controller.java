@@ -89,6 +89,10 @@ public class Blog_Controller {
     public String blogCateUpdate() {
         return "admin/pages/blog-category-update";
     }
+    
+    
+    
+    
 
     @RequestMapping(value = "list/{blogCateID}")
     public String blogList(@PathVariable("blogCateID") Integer blogCateID, ModelMap model) {
