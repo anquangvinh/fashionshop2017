@@ -5,6 +5,7 @@
  */
 package spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Entity;
@@ -35,10 +36,12 @@ public class Blogs implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "blogCateID")
+    @JsonBackReference
     private BlogCategories blogCategory;
     
     @ManyToOne
     @JoinColumn(name = "userID")
+    @JsonBackReference
     private Users user;
 
     public Integer getBlogID() {

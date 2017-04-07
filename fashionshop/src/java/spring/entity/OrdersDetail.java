@@ -5,6 +5,7 @@
  */
 package spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,14 +26,17 @@ public class OrdersDetail implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "ordersID")
+    @JsonBackReference
     private Orders order;
     
     @ManyToOne
     @JoinColumn(name = "productID")
+    @JsonBackReference
     private Products product;
     
     @ManyToOne
     @JoinColumn(name = "sizeID")
+    @JsonBackReference
     private SizesByColor size;
     
     public double getTotalPrice() {

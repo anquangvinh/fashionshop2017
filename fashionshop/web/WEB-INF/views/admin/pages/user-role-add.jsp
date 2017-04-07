@@ -15,11 +15,11 @@
             <!-- /.col-lg-12 -->
         </div>
         <!-- /.row -->
-        ${status}
         <div class="row">
             <div class="col-lg-12">
                 <div class="col-lg-6">
                     <form:form action="admin/user/role/create.html" method="post" modelAttribute="role">
+                        ${error}
                         <div class="form-group">
                             <label>Role Name:</label>
                             <form:input cssClass="form-control" path="roleName" />

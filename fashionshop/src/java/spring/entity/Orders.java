@@ -5,6 +5,8 @@
  */
 package spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -34,13 +36,16 @@ public class Orders implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "userID")
+    @JsonBackReference
     private Users user;
     
     @ManyToOne
     @JoinColumn(name = "voucherID")
+    @JsonBackReference
     private DiscountVoucher voucher;
     
     @OneToMany(mappedBy = "order")
+    @JsonManagedReference
     private List<OrdersDetail> orderDetailList;
     
     public Integer getOrdersID() {

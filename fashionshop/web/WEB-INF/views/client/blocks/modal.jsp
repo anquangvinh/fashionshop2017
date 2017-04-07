@@ -2,23 +2,35 @@
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <i class="fa fa-times"></i>
+            </button>
             <div class="row">
                 <div class="col-md-5 col-sm-6">
-                    <div class="owl-carousel sync1">
-                        <div class="item"> <img src="assets/images/products/single/1-small.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/2-small.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/3-small.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/4-small.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/1-small.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/2-small.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/3-small.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/4-small.jpg" alt=""> </div>
-                    </div>
+                    <div class="owl-carousel sync1 fs-main-product-img">
 
-                    <div class="owl-carousel sync2">
+                        <div class="item">
+                            <img src="assets/images/products/single/1.jpg" alt="">
+                        </div>         
+                        <div class="item">
+                            <img src="assets/images/products/single/2.jpg" alt="">
+                        </div>
+                        <div class="item"> <img src="assets/images/products/single/3.jpg" alt=""> </div>
+                        <div class="item"> <img src="assets/images/products/single/4.jpg" alt=""> </div>
                         <div class="item"> <img src="assets/images/products/single/1.jpg" alt=""> </div>
                         <div class="item"> <img src="assets/images/products/single/2.jpg" alt=""> </div>
+                        <div class="item"> <img src="assets/images/products/single/3.jpg" alt=""> </div>
+                        <div class="item"> <img src="assets/images/products/single/4.jpg" alt=""> </div>
+
+                    </div>
+
+                    <div class="owl-carousel sync2 fs-main-product-img">
+                        <div class="item">
+                            <img src="assets/images/products/single/1.jpg" alt="">
+                        </div>
+                        <div class="item">
+                            <img src="assets/images/products/single/2.jpg" alt="">
+                        </div>
                         <div class="item"> <img src="assets/images/products/single/3.jpg" alt=""> </div>
                         <div class="item"> <img src="assets/images/products/single/4.jpg" alt=""> </div>
                         <div class="item"> <img src="assets/images/products/single/1.jpg" alt=""> </div>
@@ -28,45 +40,36 @@
                     </div>
                 </div>
                 <div class="col-md-7 col-sm-6">
-                    <div class="product-single">
+                    <div class="product-single fs-modal-product">
                         <div class="ps-header">
-                            <span class="badge offer">-50%</span>
-                            <h3>Product fashion</h3>
-                            <div class="ratings-wrap">
-                                <div class="ratings">
-                                    <span class="act fa fa-star"></span>
-                                    <span class="act fa fa-star"></span>
-                                    <span class="act fa fa-star"></span>
-                                    <span class="act fa fa-star"></span>
-                                    <span class="act fa fa-star"></span>
-                                </div>
-                                <em>(6 reviews)</em>
-                            </div>
-                            <div class="ps-price"><span>$ 200.00</span> $ 99.00</div>
+                            <h3 class="fs-product-name">Product Fashion</h3>
+                            <div class="ps-price fs-product-price">$ 99.00</div>
                         </div>
 
                         <div class="ps-stock">
                             Available: <a href="#">In Stock</a>
                         </div>
                         <div class="sep"></div>
-                        <div class="ps-color">
+                        <div class="ps-color fs-product-color">
                             <p>Color<span>*</span></p>
-                            <a class="black" href="#" onclick="return false;"></a>
-                            <a class="red" href="#" onclick="return false;"></a>
-                            <a class="yellow" href="#" onclick="return false;"></a>
-                            <a class="darkgrey" href="#" onclick="return false;"></a>
-                            <a class="litebrown" href="#" onclick="return false;"></a>
+                            
+                            <div class="fs-product-color-border">
+                                <img fs-color="${color.colorID}" src="assets/images/products/colors/" class="img-responsive" alt="" title=""/>     
+                            </div>
+                            
                         </div>
+                        <div class="fs-clear-fix"></div>
                         <div class="space10"></div>
                         <div class="row select-wraps">
                             <div class="col-md-7 col-sm-7">
                                 <p>Size<span>*</span></p>
-                                <select>
-                                    <option>XL</option>
-                                    <option>XXL</option>
-                                    <option>XXXL</option>
-                                </select>
+                                <div id="fs-product-size">
+                                    
+                                    <div class="fs-particular-size" fs-size="">s</div>
+                                    
+                                </div>
                             </div>
+                            
                             <div class="col-md-5 col-sm-5">
                                 <p>Quantity<span>*</span></p>
                                 <select>

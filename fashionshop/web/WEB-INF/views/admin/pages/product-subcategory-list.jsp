@@ -35,7 +35,7 @@
                                 <td class="text-center fs-valign-middle">${subCate.subCateName}</td>
                                 <td class="text-center fs-valign-middle">${subCate.status}</td>
                                 <td class="text-center fs-valign-middle">
-                                    <a href="#" class="btn btn-warning">Update</a>
+                                    <a href="admin/product-subcategory/${subCate.subCateNameNA}-${subCate.subCateID}.html" class="btn btn-warning">Update</a>
                                     <a href="#" class="btn btn-danger">Delete</a>
                                 </td>
                             </tr>

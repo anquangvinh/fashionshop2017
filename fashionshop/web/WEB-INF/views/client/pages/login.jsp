@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!-- BREADCRUMBS -->
 <jsp:include page="../blocks/breadcrumbs.jsp" flush="true"/>
 <style>
@@ -14,6 +15,7 @@
             <div class="col-sm-8 col-md-8" id="fs-form-area">
                 <!-- HTML -->
                 <div id="account-id">
+                    ${error}
                     <h4 class="account-title">
                         <span class="fa fa-chevron-right"></span>Login
                     </h4>                                                                  
@@ -53,64 +55,65 @@
                 <div id="account-create-new">
                     <h4 class="account-title"><span class="fa fa-chevron-right"></span>Create New Account</h4>                                                                  
                     <div class="account-form">
-                        <form class="form-login">                                        
+                        <form:form class="form-login" method="POST" action="user/register.html" modelAttribute="users" enctype="multipart/form-data">      
+                            ${ee}
                             <ul class="form-list row">
                                 <li class="col-md-12 col-sm-12">
                                     <label>Email <em>*</em></label>
-                                    <input required type="text" class="input-text">
+                                    <form:input path="email" cssClass="input-text"/>
                                 </li>
                                 <li class="col-md-6 col-sm-12">
                                     <label>Password <em>*</em></label>
-                                    <input required type="password" class="input-text">
+                                    <form:password path="password" cssClass="input-text" id="password" />
                                 </li> 
                                 <li class="col-md-6 col-sm-12">
                                     <label>Retype Password <em>*</em></label>
-                                    <input required type="password" class="input-text">
+                                    <input type="password" name="Repassword" class="input-text" id="Repassword" />
                                 </li>
                                 <li class="col-md-6 col-sm-12">
                                     <label>First Name <em>*</em></label>
-                                    <input required type="text" class="input-text">
+                                    <form:input path="firstName" cssClass="input-text" />
                                 </li>
                                 <li class="col-md-6 col-sm-12">
                                     <label>LastName <em>*</em></label>
-                                    <input required type="text" class="input-text">
+                                    <form:input path="lastName" cssClass="input-text" />
                                 </li>
                                 <li class="col-md-6 col-sm-12">  
                                     <label>Gender</label>
                                     <br>
                                     <div class="text-center fs-login-gender">
                                         <label>
-                                            <input type="radio" name="optradio" checked>Male 
+                                            <form:radiobutton path="gender" value="1" checked="checked" />Male 
                                         </label>
                                         &nbsp;&nbsp;&nbsp;
                                         <label>
-                                            <input type="radio" name="optradio">Female 
+                                            <form:radiobutton path="gender" value="0" />Female 
                                         </label>
                                     </div>
                                 </li>
                                 <li class="col-md-6 col-sm-12">  
                                     <label>Birthday</label>
-                                    <input required type="text" id="txtBirthday" class="input-text">
+                                    <form:input path="birthday" id="txtBirthday" cssClass="input-text" />
                                 </li>
                                 <li class="col-md-12 col-sm-12">
                                     <label>Phone <em>*</em></label>
-                                    <input required type="text" class="input-text">
+                                    <input type="text" name="phoneNumber" />
                                 </li>
 
                                 <li class="col-md-12 col-sm-12">
                                     <label>Address <em>*</em></label>
-                                    <input required type="text" class="input-text">
+                                    <input type="text" name="address" />
                                 </li>
 
                                 <li class="col-md-12 col-sm-12">
                                     <label>Avatar <em>*</em></label>
-                                    <input type="file" class="input-text fs-login-file-input">
+                                    <input type="file" id="upImage" name="upImage" class="input-text fs-login-file-input">
                                 </li>
                             </ul>
                             <div class="buttons-set">
                                 <button class="btn-black" type="submit"><span>Create Account</span></button>
                             </div>
-                        </form>
+                        </form:form>
                     </div>                                    
                 </div>
             </div>

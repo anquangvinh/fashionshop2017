@@ -5,6 +5,7 @@
  */
 package spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
@@ -23,6 +24,7 @@ public class BlogCategories implements Serializable {
     private Short status;
     
     @OneToMany(mappedBy = "blogCategory")
+    @JsonManagedReference
     private List<Blogs> blogList;
 
     public Integer getBlogCateID() {
