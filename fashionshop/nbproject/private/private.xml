@@ -2,6 +2,12 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group name="project"/>
+        <group name="project">
+            <file>file:/C:/Users/Phan/Documents/NetBeansProjects/fashionshop2017/fashionshop/src/java/spring/admin/controller/Blog_Controller.java</file>
+            <file>file:/C:/Users/Phan/Documents/NetBeansProjects/fashionshop2017/fashionshop/src/java/spring/ejb/BlogCategoriesSB.java</file>
+            <file>file:/C:/Users/Phan/Documents/NetBeansProjects/fashionshop2017/fashionshop/web/WEB-INF/views/admin/pages/blog-list.jsp</file>
+            <file>file:/C:/Users/Phan/Documents/NetBeansProjects/fashionshop2017/fashionshop/src/java/spring/ejb/BlogCategoriesSBLocal.java</file>
+            <file>file:/C:/Users/Phan/Documents/NetBeansProjects/fashionshop2017/fashionshop/web/WEB-INF/views/admin/pages/blog-category-list.jsp</file>
+        </group>
     </open-files>
 </project-private>
