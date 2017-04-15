@@ -232,8 +232,10 @@
                                     <div class="overlay-rmore fa fa-search quickview fs-product-modal" 
                                          fs-product="${product.productID}" 
                                          fs-product-modal-color="${product.productColorList[0].colorID}" 
-                                         data-toggle="modal" 
-                                         data-target="#myModal"></div>
+                                         data-toggle="modal" >
+<!--                                         data-target="#productModal"-->
+                                         
+                                    </div>
                                     <div class="product-overlay">
                                         <a href="#" class="addcart fa fa-shopping-cart"></a>
                                         <a href="#" class="compare fa fa-signal"></a>
@@ -385,8 +387,8 @@
                                 <div class="overlay-rmore fa fa-search quickview fs-product-modal" 
                                      fs-product="${ltp.productID}" 
                                      fs-product-modal-color="${ltp.productColorList[0].colorID}" 
-                                     data-toggle="modal" 
-                                     data-target="#myModal"></div>
+                                     data-toggle="modal" ></div>
+<!--                                     data-target="#productModal"-->
                                 <div class="product-overlay">
                                     <a href="#" class="addcart fa fa-shopping-cart"></a>
                                     <a href="#" class="compare fa fa-signal"></a>

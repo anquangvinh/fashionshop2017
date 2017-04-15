@@ -29,8 +29,15 @@ public class ProductController {
 
     ProductStateLessBeanLocal productStateLessBean = lookupProductStateLessBeanLocal();
 
-    @RequestMapping(value = "/category-list")
-    public String categorylist() {
+    @RequestMapping(value = "/{cateID}-{categoryNameNA}")
+    public String categorylist(ModelMap model,
+                                @PathVariable("cateID") Integer cateID) {
+        List<Products> productsListByCate = productStateLessBean.getProductByCategory(cateID);
+        if(productsListByCate != null){
+            model.addAttribute("productsList", productsListByCate);
+        } else {
+            //đưa về trang lỗi.
+        }
         return "client/pages/categories-list";
     }
 
@@ -71,7 +78,7 @@ public class ProductController {
 
     @ResponseBody
     @RequestMapping(value = "/ajax/findProduct", method = RequestMethod.POST)
-    public String getProductByID(ModelMap model, @RequestParam("productID") Integer productID) {
+    public String getProductByID(@RequestParam("productID") Integer productID) {
         Products targetProduct = productStateLessBean.findProductByID(productID);
 
         try {
@@ -79,14 +86,14 @@ public class ProductController {
             String result = mapper.writeValueAsString(targetProduct);
             return result;
         } catch (Exception e) {
-            return "Error!";
+            return "Error!" + e.getMessage();
         }
 
     }
 
     @ResponseBody
     @RequestMapping(value = "/ajax/color", method = RequestMethod.POST)
-    public String getInforByColorID(ModelMap model, @RequestParam("colorID") Integer colorID) {
+    public String getInforByColorID(@RequestParam("colorID") Integer colorID) {
         ProductColors color = productStateLessBean.findProductColorByColorID(colorID);
         
         try {
@@ -97,7 +104,7 @@ public class ProductController {
             return ""+e.getMessage();
         }
     }
-
+      
     private ProductStateLessBeanLocal lookupProductStateLessBeanLocal() {
         try {
             Context c = new InitialContext();
