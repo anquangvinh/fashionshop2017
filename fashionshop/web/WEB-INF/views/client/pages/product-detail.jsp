@@ -35,7 +35,7 @@
                                 <div class="ps-price"><h1>$ ${targetProduct.price}0</h1></div>
                             </div>
                             <div class="ps-stock">
-                                Available: <a href="#">In Stock</a>
+                                Availability: <a href="#">In Stock</a>
                             </div>
                             <div class="sep"></div>
                             <div class="ps-color fs-product-color">
@@ -49,26 +49,38 @@
                             <div class="fs-clear-fix"></div>
                             <div class="space10"></div>
                             <div class="row select-wraps">
-                                <div class="col-md-7 col-sm-7">
-                                    <p>Size<span>*</span></p>
+                                <div class="col-md-7 col-xs-7">
+                                    <p style="margin-bottom: 8px">Size<span>*</span></p>
 
                                     <div id="fs-product-size">
                                         <c:forEach items="${targetColor.sizeList}" var="size">
                                             <c:if test="${size.status != 0}">
-                                                <div class="fs-particular-size" fs-size="${size.sizeID}">${size.productSize}</div>
+                                                <div class="fs-particular-size" 
+                                                     fs-product="${targetProduct.productID}" 
+                                                     fs-size="${size.sizeID}">
+                                                    ${size.productSize}
+                                                </div>
                                             </c:if>
                                         </c:forEach>
                                     </div>
                                 </div>
-                                <div class="col-md-5 col-sm-5">
-                                    <p>Quantity<span>*</span></p>
-                                    <select>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
-                                    </select>
+                                <div class="col-md-4 col-xs-5 col-lg-3">
+                                    <p style="margin-bottom: 8px !important;">Quantity<span>*</span></p>
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-danger fs-btn-number fs-btn-quantity-minus" data-type="minus" disabled>
+                                                <span class="glyphicon glyphicon-minus"></span>
+                                            </button>
+                                        </span>
+                                        
+                                        <input type="text" name="" class="form-control fs-input-number text-center" value="1" min="1" max="10">
+                                        
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-success fs-btn-number fs-btn-quantity-plus" data-type="plus" >
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </button>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="space20"></div>
@@ -82,7 +94,7 @@
                             </div>
                             <div class="space20"></div>
                             <div class="sep"></div>
-                            <a class="addtobag" href="#">Add to Bag</a>
+                            <a class="addtobag" id="fs-product-detail-add-to-cart" href="index.html">Add to Bag</a>
                         </div>
                     </div>
                 </div>
@@ -90,9 +102,16 @@
                 <div role="tabpanel">
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Product Description</a></li>
-                        <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Customer Review</a></li>
-                        <!--<li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Product Tags</a></li>-->
+                        <li role="presentation" class="active">
+                            <a href="#home" aria-controls="home" role="tab" data-toggle="tab">
+                                Product Description
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">
+                                Customer Review
+                            </a>
+                        </li>
                     </ul>
                     <!-- Tab panes -->
                     <div class="tab-content">
@@ -143,14 +162,6 @@
                                 </form>
                             </div>
                         </div>
-                        <!--                        <div role="tabpanel" class="tab-pane" id="messages">
-                                                    <p>Add Your Tags:</p>
-                                                    <form class="form-tags">
-                                                        <input type="text"><br>
-                                                        <span>Use spaces to separate tags. Use single quotes (') for phrases.</span><br>
-                                                        <button type="submit" class="btn-black">Add Tag</button>
-                                                    </form>
-                                                </div>-->
                     </div>
                 </div>
                 <div class="clearfix space40"></div>
