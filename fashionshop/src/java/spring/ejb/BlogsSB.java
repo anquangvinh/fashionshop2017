@@ -49,4 +49,11 @@ public class BlogsSB implements BlogsSBLocal {
         }
     }
 
+    @Override
+    public Blogs findBlogsByID(int id) {
+        Query q = em.createQuery("SELECT b FROM Blogs b WHERE b.blogID = :blogID", Blogs.class);
+        q.setParameter("blogID", id);
+        return (Blogs) q.getSingleResult();
+    }
+
 }

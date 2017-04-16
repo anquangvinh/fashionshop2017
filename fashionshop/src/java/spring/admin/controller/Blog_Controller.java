@@ -7,6 +7,9 @@ package spring.admin.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -155,8 +158,18 @@ public class Blog_Controller {
         return userSB.getAllUsers();
     }
 
-    @RequestMapping(value = "edit")
-    public String blogUpdate() {
+    @RequestMapping(value = "edit/{blogID}", method = RequestMethod.GET)
+    public String blogUpdate(@PathVariable("blogID") Integer blogID,
+            ModelMap model) {
+        Blogs targetBlogs = blogsSB.findBlogsByID(blogID);
+        
+        //Change normal date to string
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        Date date = targetBlogs.getPostedDate();
+        String formattedDate = dateFormat.format(date);
+        model.addAttribute("formattedDate", formattedDate);
+        model.addAttribute("targetBlogs", targetBlogs);
+        
         return "admin/pages/blog-update";
     }
 

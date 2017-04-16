@@ -27,7 +27,7 @@ public class OrdersController {
 
     @RequestMapping(value = "producttest")
     public String product(ModelMap model){
-        model.addAttribute("productList", productStateLessBean.productList());
+        //model.addAttribute("productList", productStateLessBean.productList());
         return "client/pages/product";
     }
     
