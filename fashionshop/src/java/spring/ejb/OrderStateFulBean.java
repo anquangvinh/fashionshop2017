@@ -6,18 +6,25 @@
 package spring.ejb;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import spring.entity.CartLineInfo;
+import spring.entity.DiscountVoucher;
+import spring.entity.Orders;
 import spring.entity.OrdersDetail;
 import spring.entity.Products;
+import spring.entity.Users;
 
 /**
  *
@@ -25,67 +32,84 @@ import spring.entity.Products;
  */
 @Stateful
 public class OrderStateFulBean implements OrderStateFulBeanLocal {
+    @EJB
+    private OrderStateLessBeanLocal orderStateLessBean;
+    @EJB
+    private ProductStateLessBeanLocal productStateLessBean;
+    
+    
     @PersistenceContext
     private EntityManager em;
     
-    private HashMap<Integer,Integer> productList;
-//    private List<Products> productList;
-//
-//    public List<Products> getProductList() {
-//        return productList;
-//    }
-//
-//    public void setProductList(List<Products> productList) {
-//        this.productList = productList;
-//    }
+    public EntityManager getEntityManager() {
+        return em;
+    }
+    
+    private DiscountVoucher discountVoucher;
+    private List<CartLineInfo> cart;
+    private Users users;
     
     @PostConstruct
     private void init(){
-//        productList = new ArrayList<>();
-        productList = new HashMap<>();
+        cart = new ArrayList<>();
     }
 
     @Override
     public void addProduct(int productID, int quantity) {
-        productList.put(productID, quantity);
+        CartLineInfo cartLineInfo = new CartLineInfo();
+        cartLineInfo.setProduct(productStateLessBean.findProductByID(productID));
+        cartLineInfo.setQuantity(quantity);
+        cart.add(cartLineInfo);
     }
 
     @Override
-    public boolean deleteProduct(Products product) {
-        productList.remove(product);
-        return false;
+    public boolean deleteProduct(CartLineInfo cartLineInfo) {
+        cart.remove(cartLineInfo);
+        return true;
     }
 
     @Override
-    public HashMap<Integer, Integer> showCart() {
-        return productList;
+    public List<CartLineInfo> showCart() {
+        return cart;
     }
 
     @Override
-    public Products getProductInListByID(int id) {
-//        for (Products pro : productList) {
-//            if (pro.getProductID().equals(id)) {
-//                return pro;
-//            }
-//        }
+    public CartLineInfo getProductInListByID(int id) {
+        for (CartLineInfo cartLineInfo : cart) {
+            if (cartLineInfo.getProduct().getProductID().equals(id)) {
+                return cartLineInfo;
+            }
+        }
         return null;
     }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void completePurchase() {
-//        for (Products pro : productList) {
-//            try {
-//                OrdersDetail ordersDetail = new OrdersDetail();
-//                ordersDetail.setOrdersDetailID(1);
-//                ordersDetail.setPrice(pro.getPrice());
-//                ordersDetail.setQuantity(10);
-//                em.persist(ordersDetail);
-//            } catch (Exception ex) {
-//                Logger.getLogger(OrderStateFulBean.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-//        productList.clear();
+    public int completePurchase(Orders orders) {
+        int checkError;
+        try {
+            getEntityManager().persist(orders);
+            for (CartLineInfo cartLineInfo : cart) {
+                OrdersDetail ordersDetail = new OrdersDetail();
+                ordersDetail.setOrder(orders);
+                ordersDetail.setProduct(cartLineInfo.getProduct());
+                ordersDetail.setSize(cartLineInfo.getSizesByColor());
+                ordersDetail.setProductDiscount(cartLineInfo.getProduct().getProductDiscount());
+                ordersDetail.setQuantity(cartLineInfo.getQuantity());
+                ordersDetail.setPrice(cartLineInfo.getProduct().getPrice());
+                ordersDetail.setStatus(Short.parseShort("0"));
+                getEntityManager().persist(ordersDetail);
+            }
+            checkError = 1;
+        } catch (Exception e) {
+            checkError = 0;
+        }
+//        orders.setOrdersDate(new Date());
+//        orders.setReceiverFirstName(users.getFirstName());
+//        orders.setReceiverLastName(users.getLastName());
+//        orders.setPhoneNumber(null);
+        cart = new ArrayList<>();
+        return checkError;
     }
     
 }
