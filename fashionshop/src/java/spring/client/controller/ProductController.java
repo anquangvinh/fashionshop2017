@@ -29,7 +29,7 @@ public class ProductController {
 
     ProductStateLessBeanLocal productStateLessBean = lookupProductStateLessBeanLocal();
 
-    @RequestMapping(value = "/{cateID}-{categoryNameNA}")
+    @RequestMapping(value = "/category/{cateID}-{categoryNameNA}")
     public String categorylist(ModelMap model,
                                 @PathVariable("cateID") Integer cateID) {
         List<Products> productsListByCate = productStateLessBean.getProductByCategory(cateID);
@@ -46,7 +46,7 @@ public class ProductController {
         return "client/pages/categories-grid";
     }
 
-    @RequestMapping(value = "/{productID}-{colorID:[0-9]+}-{symbolicName:[A-Za-z0-9-]+}")
+    @RequestMapping(value = "/{productID}-{colorID:[0-9]+}-{productNameNA:[A-Za-z0-9-]+}")
     public String productdetail(ModelMap model,
             @PathVariable("productID") Integer productID,
             @PathVariable("colorID") Integer colorID
