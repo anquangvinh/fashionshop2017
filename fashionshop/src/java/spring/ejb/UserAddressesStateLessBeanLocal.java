@@ -25,7 +25,7 @@ public interface UserAddressesStateLessBeanLocal {
     
     UserAddresses findPhone(String phone);
     
-    int editAddressUser(UserAddresses userAddresses);
+    int editAddressUser(UserAddresses userAddresses, int userID);
     
     Users findUserID(int userID);
     

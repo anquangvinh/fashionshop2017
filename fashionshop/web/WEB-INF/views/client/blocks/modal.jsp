@@ -1,84 +1,64 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-ku">
         <div class="modal-content">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                 <i class="fa fa-times"></i>
             </button>
             <div class="row">
-                <div class="col-md-5 col-sm-6">
+                <div class="col-md-5 col-sm-6" id="fs-product-modal-slide-img">
                     <div class="owl-carousel sync1 fs-main-product-img">
-
-                        <div class="item">
-                            <img src="assets/images/products/single/1.jpg" alt="">
-                        </div>         
-                        <div class="item">
-                            <img src="assets/images/products/single/2.jpg" alt="">
-                        </div>
-                        <div class="item"> <img src="assets/images/products/single/3.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/4.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/1.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/2.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/3.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/4.jpg" alt=""> </div>
 
                     </div>
 
                     <div class="owl-carousel sync2 fs-main-product-img">
-                        <div class="item">
-                            <img src="assets/images/products/single/1.jpg" alt="">
-                        </div>
-                        <div class="item">
-                            <img src="assets/images/products/single/2.jpg" alt="">
-                        </div>
-                        <div class="item"> <img src="assets/images/products/single/3.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/4.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/1.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/2.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/3.jpg" alt=""> </div>
-                        <div class="item"> <img src="assets/images/products/single/4.jpg" alt=""> </div>
+
                     </div>
                 </div>
                 <div class="col-md-7 col-sm-6">
                     <div class="product-single fs-modal-product">
                         <div class="ps-header">
-                            <h3 class="fs-product-name">Product Fashion</h3>
-                            <div class="ps-price fs-product-price">$ 99.00</div>
+                            <h3 class="fs-product-name"></h3>
+                            <div class="ps-price fs-product-price"></div>
                         </div>
 
                         <div class="ps-stock">
                             Available: <a href="#">In Stock</a>
                         </div>
                         <div class="sep"></div>
-                        <div class="ps-color fs-product-color">
-                            <p>Color<span>*</span></p>
-                            
-                            <div class="fs-product-color-border">
-                                <img fs-color="${color.colorID}" src="assets/images/products/colors/" class="img-responsive" alt="" title=""/>     
+                        <div class="ps-color fs-product-modal-color">
+                            <p>Color<span>*</span></p>                         
+                            <div class="fs-product-modal-color-border">
+
                             </div>
-                            
                         </div>
                         <div class="fs-clear-fix"></div>
                         <div class="space10"></div>
                         <div class="row select-wraps">
-                            <div class="col-md-7 col-sm-7">
+                            <div class="col-md-7 col-xs-7">
                                 <p>Size<span>*</span></p>
-                                <div id="fs-product-size">
-                                    
-                                    <div class="fs-particular-size" fs-size="">s</div>
-                                    
+                                <div id="fs-product-modal-size">
+
                                 </div>
                             </div>
-                            
-                            <div class="col-md-5 col-sm-5">
-                                <p>Quantity<span>*</span></p>
-                                <select>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select>
+
+                            <div class="col-md-4 col-xs-5 col-lg-4">
+                                <p style="margin-bottom: 8px !important;">Quantity<span>*</span></p>
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-danger fs-modal-btn-number fs-modal-btn-quantity-minus" data-type="minus" disabled>
+                                            <span class="glyphicon glyphicon-minus"></span>
+                                        </button>
+                                    </span>
+
+                                    <input type="text" name="" class="form-control fs-modal-input-number text-center" value="1" min="1" max="10">
+
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-success fs-modal-btn-number fs-modal-btn-quantity-plus" data-type="plus" >
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                        </button>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="space20"></div>
@@ -92,8 +72,8 @@
                         </div>
                         <div class="space20"></div>
                         <div class="sep"></div>
-                        <a class="btn-color" href="#">Add to Bag</a>
-                        <a class="btn-black" href="#">Go to Details</a>
+                        <a class="fs-modal-btn-addtobag" href="#">Add to Bag</a>
+                        <a class="fs-product-modal-link-to-detail" href="#">Go to Details</a>
                     </div>
                 </div>
             </div>

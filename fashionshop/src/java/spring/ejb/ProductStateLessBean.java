@@ -6,6 +6,7 @@
 package spring.ejb;
 
 import java.util.List;
+import java.util.Objects;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -159,7 +160,7 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
         q.setParameter("targetSubCateName", targetSubCategory.getSubCateName());
         int count = q.getResultList().size();
         if (count == 1) { //=> trùng
-            if ((oldSubCate.getCategory().getCateID() == targetSubCategory.getCategory().getCateID()) && oldSubCate.getSubCateName().equalsIgnoreCase(targetSubCategory.getSubCateName())) {
+            if ((Objects.equals(oldSubCate.getCategory().getCateID(), targetSubCategory.getCategory().getCateID())) && oldSubCate.getSubCateName().equalsIgnoreCase(targetSubCategory.getSubCateName())) {
                 try {
                     getEntityManager().merge(targetSubCategory);
                     errorCode = 1; //Update thành công.
@@ -200,6 +201,17 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
     @Override
     public Products findProductByID(int productID){
         return getEntityManager().find(Products.class, productID);
+    }
+    
+    @Override
+    public List<Products> getProductByCategory(int cateID){
+        Categories cate = findCategoryByID(cateID);
+        if(cate != null){
+            List<Products> productsListByCategory = cate.getProductList();
+            return productsListByCategory;
+        } else {
+            return null;
+        }   
     }
     
     @Override
