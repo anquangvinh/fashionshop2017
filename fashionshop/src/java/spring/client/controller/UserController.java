@@ -9,6 +9,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -29,6 +30,7 @@ import spring.functions.SharedFunctions;
 @Controller
 @RequestMapping(value = "/user/")
 public class UserController {
+
     UserAddressesStateLessBeanLocal userAddressesStateLessBean = lookupUserAddressesStateLessBeanLocal();
     RolesStateLessBeanLocal rolesStateLessBean = lookupRolesStateLessBeanLocal();
     UsersStateLessBeanLocal usersStateLessBean = lookupUsersStateLessBeanLocal();
@@ -45,13 +47,29 @@ public class UserController {
         return "client/pages/login";
     }
 
+    @RequestMapping(value = "login", method = RequestMethod.POST)
+    public String login(ModelMap model,
+            @RequestParam("email") String email, @RequestParam("password") String password,
+            HttpSession session, RedirectAttributes redirectAttributes) {
+        int error = usersStateLessBean.checkLoginUser(email, sharedFunc.encodePassword(password));
+        if(error == 1){
+            redirectAttributes.addFlashAttribute("error", "ok"); // sửa lại thông báo
+            session.setAttribute("email", email);  
+        }else if(error == 2){
+            redirectAttributes.addFlashAttribute("error", "sai email");
+        }else{
+            redirectAttributes.addFlashAttribute("error", "sai pass");
+        }
+        return "redirect:/user/login.html";
+    }
+
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public String createUser(@ModelAttribute("users") Users newUser,
             @RequestParam("upImage") MultipartFile image,
             @RequestParam("phoneNumber") String phoneNumber,
             @RequestParam("address") String address,
             RedirectAttributes redirectAttributes,
-            ModelMap model) {
+            ModelMap model, HttpSession session) {
         newUser.setPassword(sharedFunc.encodePassword(newUser.getPassword()));
         if (image.isEmpty()) {
             newUser.setAvatar("default_user.jpg");
@@ -75,94 +93,100 @@ public class UserController {
         }
 
         int error = usersStateLessBean.addUsers(newUser, phoneNumber, address);
-
-        if (error == 1) {
+        if (error == 3) {
+            model.addAttribute("ee", "Input Phone and Address or blank ");
+            return "redirect:/user/register.html";
+        } else if (error == 1) {
             redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-5  alert alert-success\">Create New User Successfully!</div>");
-            
+            session.setAttribute("email", newUser.getEmail());
         } else if (error == 0) {
             redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-5  alert alert-danger\">FAILED!. Error was happened!</div>");
         } else if (error == 2) {
             redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-5  alert alert-danger\">FAILED!. Users Exitsted!</div>");
-        }else if(error == 3){
-           model.addAttribute("ee","Input Phone and Address or blank ");
-           return "redirect:/user/register.html";
         }
 
         return "redirect:/user/login.html";
     }
 
-    @RequestMapping(value = "change-password/{userID}" , method = RequestMethod.GET)
-    public String changePass(@PathVariable("userID") Integer userID,
-           ModelMap model) {
-        Users users = usersStateLessBean.getUserByID(userID);
-        model.addAttribute(users);
+    @RequestMapping(value = "change-password", method = RequestMethod.GET)
+    public String changePass(ModelMap model) {
+        
         return "client/pages/changepassword";
     }
-    
-    @RequestMapping(value = "change-password/{userID}")
+
+    @RequestMapping(value = "change-password")
     public String changePass(@RequestParam("password") String password,
-            @RequestParam("passwords") String passwords, @PathVariable("userID") Integer userID,
+            @RequestParam("repassword") String repassword, @RequestParam("userID") Integer userID,
             RedirectAttributes redirectAttributes) {
-        Users users = usersStateLessBean.getUserByID(userID);
-        users.setPassword(sharedFunc.encodePassword(users.getPassword()));
-        int error = usersStateLessBean.updateUser(users, passwords);
-        
-        if(error == 3){
-            redirectAttributes.addFlashAttribute("error", "Input Repass");
-        }else if(error == 1){
-            redirectAttributes.addFlashAttribute("error", "Save");
+        Users user = usersStateLessBean.getUserByID(userID);
+        int error = usersStateLessBean.updateUser(user, sharedFunc.encodePassword(repassword));
+        if(error == 2){
+            redirectAttributes.addFlashAttribute("error", "OK");
+        }else if(error == 3){
+            redirectAttributes.addFlashAttribute("error", "giữ cũ");
+        }else if(error == 4){
+            redirectAttributes.addFlashAttribute("error", "hãy nhập pass thay đổi");
         }
-        return "redirect:/user/change-password/" + userID + ".html";
+        return "redirect:/user/change-password.html";
     }
 
-    @RequestMapping(value = "address-book/{userID}", method = RequestMethod.GET)
-    public String addressbook(ModelMap model, @PathVariable("userID") Integer userID) {
-        Users userAddresses = userAddressesStateLessBean.findUserID(userID);
-//        model.addAttribute(userAddresses, "userAddresses");
+    @RequestMapping(value = "address-add/{userID}", method = RequestMethod.GET)
+    public String addressAdd() {
+        return "client/pages/address-user-add";
+    }
+
+    @RequestMapping(value = "address-book", method = RequestMethod.GET)
+    public String addressbook() {
+//        ModelMap model, @PathVariable("userID") Integer userID
+//        Users userAddresses = userAddressesStateLessBean.findUserID(userID);
+//        model.addAttribute("userAddresses", userAddresses);
         return "client/pages/address-book";
     }
-    
-    @RequestMapping(value = "address-book/{userID}", method = RequestMethod.POST)
-    public String addressbook(ModelMap model, @ModelAttribute("userAddresses") UserAddresses userAddresses,
-            RedirectAttributes redirectAttributes, @PathVariable("userID") int userID){
-        int error;
-        error = userAddressesStateLessBean.addAddressUser(userAddresses, userID);
-        if(error == 2){
-            redirectAttributes.addFlashAttribute("error", "Trùng");
-        }else if(error == 3){
-            redirectAttributes.addFlashAttribute("error", "thiếu");
-        }else if(error == 1){
-            redirectAttributes.addFlashAttribute("error", "ok");
-        }else if(error == 0){
-            redirectAttributes.addFlashAttribute("error", "lỗi");
-        }
-//        model.addAttribute(userAddresses, "ua");
-        return "redirect:/user/address-book/" + userID +".html";
-    }
 
-    @RequestMapping(value = "account-information/{userID}", method = RequestMethod.GET)
-    public String accountinfo(ModelMap model, @PathVariable("userID") int userID) {
-        Users user = usersStateLessBean.getUserByID(userID);
-        model.addAttribute(user);
+//    @RequestMapping(value = "address-book/{userID}", method = RequestMethod.POST)
+//    public String addressbook(ModelMap model, @ModelAttribute("userAddresses") UserAddresses userAddresses,
+//            RedirectAttributes redirectAttributes, @RequestParam("userID") int userID) {
+//        int error;
+//        error = userAddressesStateLessBean.editAddressUser(userAddresses, userID);
+//        if (error == 2) {
+//            redirectAttributes.addFlashAttribute("error", "Trùng");
+//        } else if (error == 3) {
+//            redirectAttributes.addFlashAttribute("error", "thiếu");
+//        } else if (error == 1) {
+//            redirectAttributes.addFlashAttribute("error", "ok");
+//        } else if (error == 0) {
+//            redirectAttributes.addFlashAttribute("error", "lỗi");
+//        }
+////        model.addAttribute(userAddresses, "ua");
+//        return "redirect:/user/address-book/" + userID + ".html";
+//    }
+
+    @RequestMapping(value = "account-information", method = RequestMethod.GET)
+    public String accountinfo() {
+//        ModelMap model, @PathVariable("userID") int userID
+//        Users user = usersStateLessBean.getUserByID(userID);
+//        model.addAttribute("user",user);
+
         return "client/pages/account-information";
     }
 
-    @RequestMapping(value = "account-information/{userID}", method = RequestMethod.POST)
-    public String accountinfo(@PathVariable("userID") int userID ,
-            @ModelAttribute("user") Users user, @RequestParam("repass") String repass,
-            RedirectAttributes redirectAttributes) {
-        int error = usersStateLessBean.updateUser(user, repass);
-        if(error == 1){
-            redirectAttributes.addFlashAttribute("error", "thành công");
-        }else if(error == 2){
-            redirectAttributes.addFlashAttribute("error","trùng email" );
-        }else if(error == 3){
-            repass = user.getPassword();
-        }else if(error == 0){
-            redirectAttributes.addFlashAttribute("error", "lỗi");
-        }
-        return "redirect:/user/account-information/" + userID + ".html";
-    } 
+//    @RequestMapping(value = "account-information/{userID}", method = RequestMethod.POST)
+//    public String accountinfo(@PathVariable("userID") int userID,
+//            @ModelAttribute("user") Users user, @RequestParam("repass") String repass,
+//            RedirectAttributes redirectAttributes) {
+//        int error = usersStateLessBean.updateUser(user, repass);
+//        if (error == 1) {
+//            redirectAttributes.addFlashAttribute("error", "thành công");
+//        } else if (error == 2) {
+//            redirectAttributes.addFlashAttribute("error", "trùng email");
+//        } else if (error == 3) {
+//            repass = user.getPassword();
+//        } else if (error == 0) {
+//            redirectAttributes.addFlashAttribute("error", "lỗi");
+//        }
+//        return "redirect:/user/account-information/" + userID + ".html";
+//    }
+
     @RequestMapping(value = "order-history")
     public String orderhistory() {
         return "client/pages/order-history";

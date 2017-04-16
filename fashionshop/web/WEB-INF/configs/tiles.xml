@@ -15,4 +15,5 @@
         <put-attribute name="content" value="/WEB-INF/views/admin/pages/{1}.jsp" />
     </definition>
     
+    <definition name="admin/login" template="/WEB-INF/views/admin/login.jsp"/>
 </tiles-definitions>

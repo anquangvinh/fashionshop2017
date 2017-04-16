@@ -1,4 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!-- PAGE HEADER -->
 <jsp:include page="../blocks/page-header.jsp" flush="true"/>
 
@@ -141,213 +143,33 @@
                 </div>
                 <div class="space50"></div>
                 <div class="row products-list">
-                    <div class="col-md-12 col-sm-12">
-                        <div class="product-item">
-                            <div class="item-thumb col-md-4 col-sm-4">
-                                <img src="assets/images/products/fashion/4.jpg" class="img-responsive" alt=""/>
-                                <div class="overlay-rmore fa fa-search quickview" data-toggle="modal" data-target="#myModal"></div>
-                                <div class="product-overlay">
-                                    <a href="#" class="addcart fa fa-shopping-cart"></a>
-                                    <a href="#" class="compare fa fa-signal"></a>
-                                    <a href="#" class="likeitem fa fa-heart-o"></a>
+                    <c:forEach items="${productsList}" var="product">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="product-item">
+                                <div class="item-thumb col-md-4 col-sm-4">
+                                    <img src="assets/images/products/${product.urlImg}" class="img-responsive" alt="${product.urlImg}"/>
+                                    <div class="overlay-rmore fa fa-search quickview" data-toggle="modal" data-target="#myModal"></div>
+                                    <div class="product-overlay">
+                                        <a href="#" class="addcart fa fa-shopping-cart"></a>
+                                        <a href="#" class="compare fa fa-signal"></a>
+                                        <a href="#" class="likeitem fa fa-heart-o"></a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="product-info col-md-8 col-sm-8">
-                                <h4 class="product-title"><a href="./single-product.html">Product fashion</a></h4>
-                                <span class="product-price">$99.00 <em>- Pre order</em></span>
-                                <div class="item-colors">
-                                    <a href="#" class="brown"></a>
-                                    <a href="#" class="white"></a>
-                                    <a href="#" class="litebrown"></a>
+                                <div class="product-info col-md-8 col-sm-8">
+                                    <h4 class="product-title"><a href="./single-product.html">${product.productName}</a></h4>
+                                    <span class="product-price">$ ${product.price}0 </span>
+                                    <div class="item-colors">
+                                        <a href="#" class="brown"></a>
+                                        <a href="#" class="white"></a>
+                                        <a href="#" class="litebrown"></a>
+                                    </div>
+                                    <p>
+                                        ${product.productDescription}
+                                    </p>
                                 </div>
-                                <p>Nam placerat sem lacus, ut vestibulum enim pulvinar vitae. Sed sodales, tortor et auctor volutpat, nisl est sollicitudin ex, nec sollicitudin risus odio mollis ligula. Suspendisse eget augue purus. Proin a mauris ac arcu volutpat mattis ac eu odio. Fusce at porttitor orci, nec accumsan nunc. Quisque tempor massa turpis, a congue mauris fermentum in. Vivamus molestie ac elit nec semper. Aenean dolor ipsum, aliquam vitae mi iaculis, congue finibus magna. Curabitur a ornare mi. Nulla convallis, lorem et elementum commodo, nisi ligula rhoncus velit, vitae placerat lacus augue vulputate ex.</p>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12">
-                        <div class="product-item">
-                            <div class="item-thumb col-md-4 col-sm-4">
-                                <img src="assets/images/products/fashion/5.jpg" class="img-responsive" alt=""/>
-                                <div class="overlay-rmore fa fa-search quickview" data-toggle="modal" data-target="#myModal"></div>
-                                <div class="product-overlay">
-                                    <a href="#" class="addcart fa fa-shopping-cart"></a>
-                                    <a href="#" class="compare fa fa-signal"></a>
-                                    <a href="#" class="likeitem fa fa-heart-o"></a>
-                                </div>
-                            </div>
-                            <div class="product-info col-md-8 col-sm-8">
-                                <h4 class="product-title"><a href="./single-product.html">Product fashion</a></h4>
-                                <span class="product-price">$99.00 <em>- Pre order</em></span>
-                                <div class="item-colors">
-                                    <a href="#" class="brown"></a>
-                                    <a href="#" class="white"></a>
-                                    <a href="#" class="litebrown"></a>
-                                </div>
-                                <p>Nam placerat sem lacus, ut vestibulum enim pulvinar vitae. Sed sodales, tortor et auctor volutpat, nisl est sollicitudin ex, nec sollicitudin risus odio mollis ligula. Suspendisse eget augue purus. Proin a mauris ac arcu volutpat mattis ac eu odio. Fusce at porttitor orci, nec accumsan nunc. Quisque tempor massa turpis, a congue mauris fermentum in. Vivamus molestie ac elit nec semper. Aenean dolor ipsum, aliquam vitae mi iaculis, congue finibus magna. Curabitur a ornare mi. Nulla convallis, lorem et elementum commodo, nisi ligula rhoncus velit, vitae placerat lacus augue vulputate ex.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12">
-                        <div class="product-item">
-                            <div class="item-thumb col-md-4 col-sm-4">
-                                <img src="assets/images/products/fashion/6.jpg" class="img-responsive" alt=""/>
-                                <div class="overlay-rmore fa fa-search quickview" data-toggle="modal" data-target="#myModal"></div>
-                                <div class="product-overlay">
-                                    <a href="#" class="addcart fa fa-shopping-cart"></a>
-                                    <a href="#" class="compare fa fa-signal"></a>
-                                    <a href="#" class="likeitem fa fa-heart-o"></a>
-                                </div>
-                            </div>
-                            <div class="product-info col-md-8 col-sm-8">
-                                <h4 class="product-title"><a href="./single-product.html">Product fashion</a></h4>
-                                <span class="product-price">$99.00 <em>- Pre order</em></span>
-                                <div class="item-colors">
-                                    <a href="#" class="brown"></a>
-                                    <a href="#" class="white"></a>
-                                    <a href="#" class="litebrown"></a>
-                                </div>
-                                <p>Nam placerat sem lacus, ut vestibulum enim pulvinar vitae. Sed sodales, tortor et auctor volutpat, nisl est sollicitudin ex, nec sollicitudin risus odio mollis ligula. Suspendisse eget augue purus. Proin a mauris ac arcu volutpat mattis ac eu odio. Fusce at porttitor orci, nec accumsan nunc. Quisque tempor massa turpis, a congue mauris fermentum in. Vivamus molestie ac elit nec semper. Aenean dolor ipsum, aliquam vitae mi iaculis, congue finibus magna. Curabitur a ornare mi. Nulla convallis, lorem et elementum commodo, nisi ligula rhoncus velit, vitae placerat lacus augue vulputate ex.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12">
-                        <div class="product-item">
-                            <div class="item-thumb col-md-4 col-sm-4">
-                                <img src="assets/images/products/fashion/7.jpg" class="img-responsive" alt=""/>
-                                <div class="overlay-rmore fa fa-search quickview" data-toggle="modal" data-target="#myModal"></div>
-                                <div class="product-overlay">
-                                    <a href="#" class="addcart fa fa-shopping-cart"></a>
-                                    <a href="#" class="compare fa fa-signal"></a>
-                                    <a href="#" class="likeitem fa fa-heart-o"></a>
-                                </div>
-                            </div>
-                            <div class="product-info col-md-8 col-sm-8">
-                                <h4 class="product-title"><a href="./single-product.html">Product fashion</a></h4>
-                                <span class="product-price">$99.00 <em>- Pre order</em></span>
-                                <div class="item-colors">
-                                    <a href="#" class="brown"></a>
-                                    <a href="#" class="white"></a>
-                                    <a href="#" class="litebrown"></a>
-                                </div>
-                                <p>Nam placerat sem lacus, ut vestibulum enim pulvinar vitae. Sed sodales, tortor et auctor volutpat, nisl est sollicitudin ex, nec sollicitudin risus odio mollis ligula. Suspendisse eget augue purus. Proin a mauris ac arcu volutpat mattis ac eu odio. Fusce at porttitor orci, nec accumsan nunc. Quisque tempor massa turpis, a congue mauris fermentum in. Vivamus molestie ac elit nec semper. Aenean dolor ipsum, aliquam vitae mi iaculis, congue finibus magna. Curabitur a ornare mi. Nulla convallis, lorem et elementum commodo, nisi ligula rhoncus velit, vitae placerat lacus augue vulputate ex.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12">
-                        <div class="product-item">
-                            <div class="item-thumb col-md-4 col-sm-4">
-                                <img src="assets/images/products/fashion/8.jpg" class="img-responsive" alt=""/>
-                                <div class="overlay-rmore fa fa-search quickview" data-toggle="modal" data-target="#myModal"></div>
-                                <div class="product-overlay">
-                                    <a href="#" class="addcart fa fa-shopping-cart"></a>
-                                    <a href="#" class="compare fa fa-signal"></a>
-                                    <a href="#" class="likeitem fa fa-heart-o"></a>
-                                </div>
-                            </div>
-                            <div class="product-info col-md-8 col-sm-8">
-                                <h4 class="product-title"><a href="./single-product.html">Product fashion</a></h4>
-                                <span class="product-price">$99.00 <em>- Pre order</em></span>
-                                <div class="item-colors">
-                                    <a href="#" class="brown"></a>
-                                    <a href="#" class="white"></a>
-                                    <a href="#" class="litebrown"></a>
-                                </div>
-                                <p>Nam placerat sem lacus, ut vestibulum enim pulvinar vitae. Sed sodales, tortor et auctor volutpat, nisl est sollicitudin ex, nec sollicitudin risus odio mollis ligula. Suspendisse eget augue purus. Proin a mauris ac arcu volutpat mattis ac eu odio. Fusce at porttitor orci, nec accumsan nunc. Quisque tempor massa turpis, a congue mauris fermentum in. Vivamus molestie ac elit nec semper. Aenean dolor ipsum, aliquam vitae mi iaculis, congue finibus magna. Curabitur a ornare mi. Nulla convallis, lorem et elementum commodo, nisi ligula rhoncus velit, vitae placerat lacus augue vulputate ex.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12">
-                        <div class="product-item">
-                            <div class="item-thumb col-md-4 col-sm-4">
-                                <img src="assets/images/products/fashion/9.jpg" class="img-responsive" alt=""/>
-                                <div class="overlay-rmore fa fa-search quickview" data-toggle="modal" data-target="#myModal"></div>
-                                <div class="product-overlay">
-                                    <a href="#" class="addcart fa fa-shopping-cart"></a>
-                                    <a href="#" class="compare fa fa-signal"></a>
-                                    <a href="#" class="likeitem fa fa-heart-o"></a>
-                                </div>
-                            </div>
-                            <div class="product-info col-md-8 col-sm-8">
-                                <h4 class="product-title"><a href="./single-product.html">Product fashion</a></h4>
-                                <span class="product-price">$99.00 <em>- Pre order</em></span>
-                                <div class="item-colors">
-                                    <a href="#" class="brown"></a>
-                                    <a href="#" class="white"></a>
-                                    <a href="#" class="litebrown"></a>
-                                </div>
-                                <p>Nam placerat sem lacus, ut vestibulum enim pulvinar vitae. Sed sodales, tortor et auctor volutpat, nisl est sollicitudin ex, nec sollicitudin risus odio mollis ligula. Suspendisse eget augue purus. Proin a mauris ac arcu volutpat mattis ac eu odio. Fusce at porttitor orci, nec accumsan nunc. Quisque tempor massa turpis, a congue mauris fermentum in. Vivamus molestie ac elit nec semper. Aenean dolor ipsum, aliquam vitae mi iaculis, congue finibus magna. Curabitur a ornare mi. Nulla convallis, lorem et elementum commodo, nisi ligula rhoncus velit, vitae placerat lacus augue vulputate ex.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12">
-                        <div class="product-item">
-                            <div class="item-thumb col-md-4 col-sm-4">
-                                <img src="assets/images/products/fashion/10.jpg" class="img-responsive" alt=""/>
-                                <div class="overlay-rmore fa fa-search quickview" data-toggle="modal" data-target="#myModal"></div>
-                                <div class="product-overlay">
-                                    <a href="#" class="addcart fa fa-shopping-cart"></a>
-                                    <a href="#" class="compare fa fa-signal"></a>
-                                    <a href="#" class="likeitem fa fa-heart-o"></a>
-                                </div>
-                            </div>
-                            <div class="product-info col-md-8 col-sm-8">
-                                <h4 class="product-title"><a href="./single-product.html">Product fashion</a></h4>
-                                <span class="product-price">$99.00 <em>- Pre order</em></span>
-                                <div class="item-colors">
-                                    <a href="#" class="brown"></a>
-                                    <a href="#" class="white"></a>
-                                    <a href="#" class="litebrown"></a>
-                                </div>
-                                <p>Nam placerat sem lacus, ut vestibulum enim pulvinar vitae. Sed sodales, tortor et auctor volutpat, nisl est sollicitudin ex, nec sollicitudin risus odio mollis ligula. Suspendisse eget augue purus. Proin a mauris ac arcu volutpat mattis ac eu odio. Fusce at porttitor orci, nec accumsan nunc. Quisque tempor massa turpis, a congue mauris fermentum in. Vivamus molestie ac elit nec semper. Aenean dolor ipsum, aliquam vitae mi iaculis, congue finibus magna. Curabitur a ornare mi. Nulla convallis, lorem et elementum commodo, nisi ligula rhoncus velit, vitae placerat lacus augue vulputate ex.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12">
-                        <div class="product-item">
-                            <div class="item-thumb col-md-4 col-sm-4">
-                                <img src="assets/images/products/fashion/11.jpg" class="img-responsive" alt=""/>
-                                <div class="overlay-rmore fa fa-search quickview" data-toggle="modal" data-target="#myModal"></div>
-                                <div class="product-overlay">
-                                    <a href="#" class="addcart fa fa-shopping-cart"></a>
-                                    <a href="#" class="compare fa fa-signal"></a>
-                                    <a href="#" class="likeitem fa fa-heart-o"></a>
-                                </div>
-                            </div>
-                            <div class="product-info col-md-8 col-sm-8">
-                                <h4 class="product-title"><a href="./single-product.html">Product fashion</a></h4>
-                                <span class="product-price">$99.00 <em>- Pre order</em></span>
-                                <div class="item-colors">
-                                    <a href="#" class="brown"></a>
-                                    <a href="#" class="white"></a>
-                                    <a href="#" class="litebrown"></a>
-                                </div>
-                                <p>Nam placerat sem lacus, ut vestibulum enim pulvinar vitae. Sed sodales, tortor et auctor volutpat, nisl est sollicitudin ex, nec sollicitudin risus odio mollis ligula. Suspendisse eget augue purus. Proin a mauris ac arcu volutpat mattis ac eu odio. Fusce at porttitor orci, nec accumsan nunc. Quisque tempor massa turpis, a congue mauris fermentum in. Vivamus molestie ac elit nec semper. Aenean dolor ipsum, aliquam vitae mi iaculis, congue finibus magna. Curabitur a ornare mi. Nulla convallis, lorem et elementum commodo, nisi ligula rhoncus velit, vitae placerat lacus augue vulputate ex.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12">
-                        <div class="product-item">
-                            <div class="item-thumb col-md-4 col-sm-4">
-                                <img src="assets/images/products/fashion/12.jpg" class="img-responsive" alt=""/>
-                                <div class="overlay-rmore fa fa-search quickview" data-toggle="modal" data-target="#myModal"></div>
-                                <div class="product-overlay">
-                                    <a href="#" class="addcart fa fa-shopping-cart"></a>
-                                    <a href="#" class="compare fa fa-signal"></a>
-                                    <a href="#" class="likeitem fa fa-heart-o"></a>
-                                </div>
-                            </div>
-                            <div class="product-info col-md-8 col-sm-8">
-                                <h4 class="product-title"><a href="./single-product.html">Product fashion</a></h4>
-                                <span class="product-price">$99.00 <em>- Pre order</em></span>
-                                <div class="item-colors">
-                                    <a href="#" class="brown"></a>
-                                    <a href="#" class="white"></a>
-                                    <a href="#" class="litebrown"></a>
-                                </div>
-                                <p>Nam placerat sem lacus, ut vestibulum enim pulvinar vitae. Sed sodales, tortor et auctor volutpat, nisl est sollicitudin ex, nec sollicitudin risus odio mollis ligula. Suspendisse eget augue purus. Proin a mauris ac arcu volutpat mattis ac eu odio. Fusce at porttitor orci, nec accumsan nunc. Quisque tempor massa turpis, a congue mauris fermentum in. Vivamus molestie ac elit nec semper. Aenean dolor ipsum, aliquam vitae mi iaculis, congue finibus magna. Curabitur a ornare mi. Nulla convallis, lorem et elementum commodo, nisi ligula rhoncus velit, vitae placerat lacus augue vulputate ex.</p>
-                            </div>
-                        </div>
-                    </div>
+                    </c:forEach>
                 </div>
                 <div class="pagenav-wrap">
                     <div class="row">

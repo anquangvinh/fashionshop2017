@@ -24,7 +24,7 @@
     cursor:pointer;
 }
 
-.fs-product-color img {
+.fs-product-color img, .fs-product-modal-color img {
     width: 30px;
     height: 30px;
     cursor:pointer;
@@ -34,14 +34,14 @@
     box-shadow: 0 0 8px rgba(20, 10, 0, 1);
 }
 
-.fs-product-color-border {
+.fs-product-color-border, .fs-product-modal-color-border {
     border: 2px solid #ccc;
     padding: 2px;
     float: left;
     margin-right: 10px;
 }
 
-.fs-product-color-border:hover {
+.fs-product-color-border:hover, .fs-product-modal-color-border:hover {
     border-color: #000; 
 }
 
@@ -55,6 +55,7 @@
 
 .fs-product-size {
     margin-bottom: 55px;
+    text-align: center;
 }
 
 .fs-particular-size {
@@ -64,9 +65,69 @@
     padding: 2px;
     float: left;
     margin-right: 13px;
+    margin-top: 6px;
     text-align: center;
-    line-height: 28px;
+    line-height: 28px !important;
     font-size: 15px;
-    font-weight: 400;
+    font-weight: bold;
     cursor: pointer;
+    position: relative;
+    color: #d6644a;
+}
+
+.fs-unselectable {
+    background: #e6e6e6;
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+a.fs-product-modal-link-to-detail:hover {
+    background: #d6644a;
+}
+
+a.fs-product-modal-link-to-detail{
+    height: 33px;
+    border: none;
+    line-height: 33px;
+    background: #333;
+    padding: 0 20px;
+    display: inline-block;
+    font-family: Montserrat;
+    font-size: 11px;
+    border-radius: 3px;
+    color: #fff !important;
+    text-transform: uppercase;
+    margin: 8px 0 0;
+}
+
+.select-wraps p {
+    margin: 0 !important;
+}
+
+.fs-modal-btn-addtobag:hover, .fs-modal-btn-addtobag:visited, .addtobag:hover, .addtobag:visited {
+    color: #fff !important;
+}
+
+.fs-modal-btn-addtobag:hover {
+    background: #333;
+}
+
+.fs-modal-btn-addtobag {
+    height: 33px;
+    border: none;
+    line-height: 33px;
+    background: #d6644a;
+    padding: 0 20px;
+    display: inline-block;
+    font-family: Montserrat;
+    font-size: 11px;
+    border-radius: 3px;
+    color: #fff;
+    text-transform: uppercase;
+    margin: 8px 0 0;
+}
+
+.modal-ku {
+  width: 900px !important;
+  margin: auto;
 }

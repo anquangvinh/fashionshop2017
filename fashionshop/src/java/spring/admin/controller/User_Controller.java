@@ -31,9 +31,8 @@ import spring.entity.Users;
 public class User_Controller {
 
     RolesStateLessBeanLocal rolesStateLessBean = lookupRolesStateLessBeanLocal();
-
     UsersStateLessBeanLocal usersStateLessBean = lookupUsersStateLessBeanLocal();
-
+    
     @RequestMapping(value = "list")
     public String userList(Model model) {
         List<Users> ulist = usersStateLessBean.getAllUsers();
@@ -42,8 +41,8 @@ public class User_Controller {
     }
 
     @RequestMapping(value = "role")
-    public String userRole(Model model) {
-        List<Users> rlist = usersStateLessBean.getAllUsers();
+    public String roleList(Model model) {
+        List<Roles> rlist = rolesStateLessBean.getRole();
         model.addAttribute("rlist", rlist);
         return "admin/pages/user-role-list";
     }
@@ -72,52 +71,54 @@ public class User_Controller {
         return "redirect:/admin/user/role/create.html";
 
     }
-    
+
     @ResponseBody
     @RequestMapping(value = "updateStatus", method = RequestMethod.POST)
     public String userStatusUpdate(@RequestParam("userID") Integer userID,
             @RequestParam("status") Short status) {
-        if(usersStateLessBean.updateStatusUser(userID, status)){
+        if (usersStateLessBean.updateStatusUser(userID, status)) {
             return "ok";
         } else {
             return "fail";
         }
     }
-    
-    @RequestMapping(value = "role/edit/{userID}/{roleID}", method = RequestMethod.GET)
-    public String userRoleUpdate(ModelMap model,@PathVariable("userID") Integer userID,
-            @PathVariable("roleID") Integer roleID) {
-        Users user = usersStateLessBean.getUserByID(userID);
-        Roles role = rolesStateLessBean.findRoles(roleID);
-        if(user != null){
-            if(rolesStateLessBean.editRoles(user, role, roleID)){
-                return "redirect:/admin/user/role.html";
-            }
-        }
-//        model.addAttribute("user",user);
-//        model.addAttribute("role",role);
-//        return "admin/pages/user-role-update";
-        return "redirect:/admin/user/role.html";
-    }
-    
-//    @RequestMapping(value = "role/edit/{userID}/{roleID}", method = RequestMethod.POST)
-//    public String userRoleUpdate(@ModelAttribute("role") Roles role,
-//            @PathVariable("userID") Integer userID, @PathVariable("roleID") Integer roleID,
-//            RedirectAttributes redirectAttributes, ModelMap model) {
-//        if(rolesStateLessBean.editRoles(role)){
-//            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-success\">Update Roles Successfully!</div>");
-//        }else{
-//            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-danger\">FAILED!. Error was happened!</div>");
-//        }
-//        model.addAttribute("role",role);
-//        return "redirect:/admin/user/role/edit/" +userID +"/" + roleID +".html";
-//    }
 
-//    @ModelAttribute("roless")
-//    public List<Roles> getRole() {
-//        return rolesStateLessBean.getRole();
-//    }
-    
+    @ResponseBody
+    @RequestMapping(value = "usersrole/edit", method = RequestMethod.POST)
+    public String userRoleUpdate(ModelMap model, @RequestParam("userID") Integer userID,
+            @RequestParam("roleID") Integer roleID) {
+        if (rolesStateLessBean.editRolesForUsers(userID, roleID)) {
+            return "thành công";
+        }
+        return "thất bại";
+    }
+
+    @RequestMapping(value = "role/edit/{roleID}", method = RequestMethod.GET)
+    public String userRoleUpdate(ModelMap model, @PathVariable("roleID") int roleID) {
+        model.addAttribute("roleupdate", rolesStateLessBean.findRoles(roleID));
+        return "admin/pages/user-role-update";
+    }
+
+    @RequestMapping(value = "role/edit/{roleID}", method = RequestMethod.POST)
+    public String userRoleUpdate(ModelMap model, @PathVariable("roleID") int roleID,
+            RedirectAttributes redirectAttributes, @ModelAttribute("roleupdate") Roles roleupdate) {
+        int error = rolesStateLessBean.editRoles(roleupdate);
+        if (error == 1) {
+            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-success\">Update Roles Successfully!</div>");
+        } else if (error == 2) {
+            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-danger\">FAILED!. Roles Exitsted! </div>");
+        } else if (error == 0) {
+            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-danger\">FAILED!. Error was happened!</div>");
+        }
+        redirectAttributes.addFlashAttribute("roleupdate", roleupdate);
+        return "redirect:/admin/user/role/edit/" + roleID + ".html";
+    }
+
+    @ModelAttribute("roles")
+    public List<Roles> getRole() {
+        return rolesStateLessBean.getRole();
+    }
+
     private UsersStateLessBeanLocal lookupUsersStateLessBeanLocal() {
         try {
             Context c = new InitialContext();
