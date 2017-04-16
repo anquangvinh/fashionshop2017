@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import spring.ejb.OrderStateFulBeanLocal;
 import spring.ejb.OrderStateLessBeanLocal;
 import spring.ejb.ProductStateLessBeanLocal;
+import spring.entity.CartLineInfo;
 import spring.entity.Orders;
 import spring.entity.Products;
 
@@ -27,7 +28,7 @@ public class OrdersController {
 
     @RequestMapping(value = "producttest")
     public String product(ModelMap model){
-        model.addAttribute("productList", productStateLessBean.productList());
+        model.addAttribute("productList", productStateLessBean.productList("admin"));
         return "client/pages/product";
     }
     
@@ -52,10 +53,10 @@ public class OrdersController {
     }
     
     @RequestMapping(value = "deleteitemCart/{productid}", method = RequestMethod.GET)
-    public String deleteitemCart(@PathVariable("productid") String productid){
-        Products pro = orderStateFulBean.getProductInListByID(Integer.parseInt(productid));
-        if (pro != null) {
-            orderStateFulBean.deleteProduct(pro);
+    public String deleteitemCart(@PathVariable("productid") int productid){
+        CartLineInfo cartLineInfo = orderStateFulBean.getProductInListByID(productid);
+        if (cartLineInfo != null) {
+            orderStateFulBean.deleteProduct(cartLineInfo);
         }
         return "redirect:/orders/shoppingcart.html";
     }

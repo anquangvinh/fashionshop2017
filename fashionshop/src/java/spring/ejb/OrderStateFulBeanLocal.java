@@ -8,6 +8,8 @@ package spring.ejb;
 import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Local;
+import spring.entity.CartLineInfo;
+import spring.entity.Orders;
 import spring.entity.Products;
 
 /**
@@ -17,8 +19,8 @@ import spring.entity.Products;
 @Local
 public interface OrderStateFulBeanLocal {
     void addProduct(int productID, int quantity);
-    boolean deleteProduct(Products product);
-    HashMap<Integer, Integer> showCart();
-    Products getProductInListByID(int id);
-    void completePurchase();
+    boolean deleteProduct(CartLineInfo cartLineInfo);
+    List<CartLineInfo> showCart();
+    CartLineInfo getProductInListByID(int id);
+    int completePurchase(Orders orders);
 }
