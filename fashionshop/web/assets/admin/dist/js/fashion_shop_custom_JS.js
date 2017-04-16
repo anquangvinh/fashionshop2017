@@ -145,4 +145,22 @@ $(document).ready(function () {
             }
         });
     });
+
+    /* 
+     * AJAX - EVENT ONCHANGE SELECT USER "ROLE" 
+     */
+    $(".fs-select-user-role").on("change", function(){
+        var roleID = $(this).val();
+        var userID = $(this).attr("fs-user");
+        
+        $.ajax({
+           url : "admin/user/usersrole/edit.html",
+           method: "POST",
+           data: {userID : userID, roleID: roleID},
+           success: function(response){
+               alert(response);
+           }
+        });
+        
+    });
 });

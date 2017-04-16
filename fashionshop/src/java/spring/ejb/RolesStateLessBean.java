@@ -61,33 +61,47 @@ public class RolesStateLessBean implements RolesStateLessBeanLocal {
     }
 
     @Override
-    public boolean editRoles(Users user, Roles role, int roleID) {
-        try {
-            Users u = new Users();
-            Roles r = new Roles();
-            u.setUserID(user.getUserID());
-            r.setRoleID(roleID);
-            u.setRole(r);
-            u.setEmail(user.getEmail());
-            u.setPassword(user.getPassword());
-            u.setFirstName(user.getFirstName());
-            u.setLastName(user.getLastName());
-            u.setAvatar(user.getAvatar());
-            u.setGender(user.getGender());
-            u.setBirthday(user.getBirthday());
-            u.setRegistrationDate(user.getRegistrationDate());
-            u.setStatus(user.getStatus());
-            getEm().merge(u);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    public boolean editRolesForUsers(int userID, int roleID) {
+        Users user = getEm().find(Users.class, userID);
+        Roles role = findRoles(roleID);
+        
+        user.setRole(role);
+        getEm().merge(user);
+        return true;
     }
 
     @Override
     public List<Roles> getRole() {
         Query q = getEm().createQuery("SELECT r FROM Roles r", Roles.class);
         return q.getResultList();
+    }
+
+    @Override
+    public int editRoles(Roles role) {
+        int error;
+        Roles roleold = findRoles(role.getRoleID());
+        Roles rolenew = findRoleName(role.getRoleName());
+        if(roleold.getRoleName().equals(role.getRoleName())){ // không thay đổi roleName
+            try {
+                getEm().merge(role);
+                error = 1;
+            } catch (Exception e) {
+                error = 0;
+            }
+        }
+        
+        if(rolenew != null){
+            error = 2; // trùng
+        }else {
+            try {
+                getEm().merge(role);
+                error = 1;
+            } catch (Exception e) {
+                error = 2;
+            }
+        }
+        
+        return error;
     }
     
     

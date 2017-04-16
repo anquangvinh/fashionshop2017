@@ -46,24 +46,29 @@
                                 <td class="center" align="center">
                                     <fmt:formatDate pattern="dd/MM/yyyy" value="${users.registrationDate}"/>
                                 </td>
-                                <!--<td class="center" align="center"></${users.status}></td>-->
                                 <td align="center">
                                     <select name="status" fs-user="${users.userID}" class="fs-select-user-status form-control input-sm">
                                         <option value="1" <c:if test="${users.status == 1}">selected</c:if>>WORKING</option>
                                         <option value="0" <c:if test="${users.status == 0}">selected</c:if>>BANNED</option>
                                     </select>
                                 </td>
-                                <td class="center" align="center">${users.role.roleName}</td>
+                                <td class="center" align="center">
+                                    <select class="fs-select-user-role form-control input-sm" fs-user="${users.userID}" >
+                                        <c:forEach items="${roles}" var="role">
+                                            <option <c:if test="${users.role.roleID == role.roleID}">selected</c:if> value="${role.roleID}">${role.roleName}</option>
+                                        </c:forEach>
+                                    </select>       
+                                </td>
                             </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-                <!-- /.table-responsive -->
-            </div>
-            <!-- /.col-lg-12 -->
+                    </c:forEach>
+                </tbody>
+            </table>
+            <!-- /.table-responsive -->
         </div>
-        <!-- /.row -->
+        <!-- /.col-lg-12 -->
     </div>
-    <!-- /.container-fluid -->
+    <!-- /.row -->
+</div>
+<!-- /.container-fluid -->
 </div>
 <!-- /#page-wrapper -->
