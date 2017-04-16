@@ -23,7 +23,9 @@ public interface RolesStateLessBeanLocal {
 
     Roles findRoleName(String roleName);
 
-    boolean editRoles(Users user ,Roles role, int roleID);
+    boolean editRolesForUsers(int userID, int roleID);
     
     List<Roles> getRole();
+    
+    int editRoles(Roles role);
 }

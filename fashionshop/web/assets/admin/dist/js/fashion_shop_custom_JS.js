@@ -55,21 +55,39 @@ $(document).ready(function () {
         changeMonth: true,
         changeYear: true
     });
-    
+
     /* 
      * AJAX - EVENT ONCHANGE SELECT USER "STATUS" 
      */
-    $(".fs-select-user-status").on("change", function(){
+    $(".fs-select-user-status").on("change", function () {
         var status = $(this).val();
         var userID = $(this).attr("fs-user");
 
         $.ajax({
-            url : "admin/user/updateStatus.html",
+            url: "admin/user/updateStatus.html",
             method: "POST",
             data: {userID: userID, status: status},
-            success: function(response){
+            success: function (response) {
                 alert(response);
             }
         });
+    });
+
+    /* 
+     * AJAX - EVENT ONCHANGE SELECT USER "ROLE" 
+     */
+    $(".fs-select-user-role").on("change", function(){
+        var roleID = $(this).val();
+        var userID = $(this).attr("fs-user");
+        
+        $.ajax({
+           url : "admin/user/usersrole/edit.html",
+           method: "POST",
+           data: {userID : userID, roleID: roleID},
+           success: function(response){
+               alert(response);
+           }
+        });
+        
     });
 });
