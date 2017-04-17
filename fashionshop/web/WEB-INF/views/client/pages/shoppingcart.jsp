@@ -15,7 +15,6 @@
                         <tr>
                             <th>Product Image</th>
                             <th>Product Name</th>
-                            <!--<th>Edit</th>-->
                             <th>Quantity</th>
                             <th>Unit Price</th>
                             <th>Subtotal</th>
@@ -25,55 +24,63 @@
                     <tbody>
                         <c:forEach items="${cartList}" var="item">
                             <tr>
-                                <td><img src="assets/images/products/fashion/5.jpg" class="img-responsive" alt=""/></td>
+                                <td><img src="assets/images/products/${item.getProduct().getUrlImg()}" class="img-responsive" alt=""/></td>
                                 <td>
-                                    <h4><a href="./single-product.html">${item.productName}</a></h4>
-                                    <p>Size: M</p>
-                                    <p>Color: White</p>
+<!--                                    <table style="border-collapse: collapse;">
+                                        <tr>
+                                            <td colspan="2">
+                                                <a href="${item.getProduct().productID}-${item.getProduct().productColorList[0].colorID}-${item.getProduct().productNameNA}.html">
+                                                    ${item.getProduct().productName}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Size: ${item.getSizesByColor().getProductSize()}
+                                            </td>
+                                            <td>
+                                                Color:   
+                                                <img fs-color="${item.getSizesByColor().getColor().colorID}" 
+                                                     src="assets/images/products/colors/${item.getSizesByColor().getColor().getUrlColorImg()}" 
+                                                     class="img-responsive" 
+                                                     alt="${item.getSizesByColor().getColor().urlColorImg}" 
+                                                     title="${item.getSizesByColor().getColor().getColor()}"
+                                                     style="width: 20px; height: 20px; display: inline;"/>
+                                            </td>
+                                        </tr>
+                                    </table>-->
+                                    <h4>
+                                        <a href="${item.getProduct().productID}-${item.getProduct().productColorList[0].colorID}-${item.getProduct().productNameNA}.html">
+                                            ${item.getProduct().productName}
+                                        </a>
+                                    </h4>
+                                    <p>Size: ${item.getSizesByColor().getProductSize()}  |  Color:   
+                                        <img fs-color="${item.getSizesByColor().getColor().colorID}" 
+                                             src="assets/images/products/colors/${item.getSizesByColor().getColor().getUrlColorImg()}" 
+                                             class="img-responsive" 
+                                             alt="${item.getSizesByColor().getColor().urlColorImg}" 
+                                             title="${item.getSizesByColor().getColor().getColor()}"
+                                             style="width: 20px; height: 20px; display: inline;"/>
+                                    </p>
                                 </td>
-                                <!--<td><i class="fa fa-edit"></i></td>-->
                                 <td>
-                                    <select>
-                                        <option>01</option>
-                                        <option>02</option>
-                                        <option>03</option>
-                                    </select>
+                                    ${item.quantity}
+                                    <!--                                    <select>
+                                                                            <option>01</option>
+                                                                            <option>02</option>
+                                                                            <option>03</option>
+                                                                        </select>-->
                                 </td>
                                 <td>
-                                    <div class="item-price">${item.price}</div>
+                                    <div class="item-price">${item.getProduct().getPrice()}</div>
                                 </td>
                                 <td>
-                                    <div class="item-price">$ 99.00</div>
+                                    <div class="item-price">${item.getAmount()}</div>
                                 </td>
-                                <td><a href="orders/deleteitemCart.html?productid=${item.productID}"><i class="fa fa-trash-o"></i></a></td>
+                                <td><a href="orders/deleteitemCart/${item.getProduct().productID}.html"><i class="fa fa-trash-o"></i></a></td>
                             </tr>
                         </c:forEach>
                     </tbody>
-
-
-                    <!--                                <tr>
-                                                        <td><i class="fa fa-trash-o"></i></td>
-                                                        <td><img src="assets/images/products/fashion/5.jpg" class="img-responsive" alt=""/></td>
-                                                        <td>
-                                                            <h4><a href="./single-product.html">Product fashion</a></h4>
-                                                            <p>Size: M</p>
-                                                            <p>Color: White</p>
-                                                        </td>
-                                                        <td><i class="fa fa-edit"></i></td>
-                                                        <td>
-                                                            <select>
-                                                                <option>01</option>
-                                                                <option>02</option>
-                                                                <option>03</option>
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <div class="item-price">$ 99.00</div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="item-price">$ 99.00</div>
-                                                        </td>
-                                                    </tr>-->
                 </table>
                 <div class="table-btn">
                     <a href="#" class="btn-black pull-left">Continue Shopping</a>

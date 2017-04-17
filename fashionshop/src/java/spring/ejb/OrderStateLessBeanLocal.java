@@ -12,6 +12,7 @@ import spring.entity.DiscountVoucher;
 import spring.entity.Orders;
 import spring.entity.OrdersDetail;
 import spring.entity.Products;
+import spring.entity.SizesByColor;
 import spring.entity.SubCategories;
 
 /**
@@ -31,6 +32,7 @@ public interface OrderStateLessBeanLocal {
     public Products getProductByID(int productID);
     public OrdersDetail getOrderDetailByID(int orderDetailID);
     public DiscountVoucher getDiscountVoucherByID(String discountVoucherID);
+    public SizesByColor getSizesByColorBySizeID(int sizeId);
     
     public int createDiscountVoucher(DiscountVoucher newDiscountVoucher);
     

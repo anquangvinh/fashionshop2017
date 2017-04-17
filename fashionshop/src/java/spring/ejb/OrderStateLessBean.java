@@ -16,6 +16,7 @@ import spring.entity.DiscountVoucher;
 import spring.entity.Orders;
 import spring.entity.OrdersDetail;
 import spring.entity.Products;
+import spring.entity.SizesByColor;
 import spring.entity.SubCategories;
 
 /**
@@ -165,6 +166,11 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
             checkError = 2;
         }
         return checkError;
+    }
+
+    @Override
+    public SizesByColor getSizesByColorBySizeID(int sizeId) {
+        return getEntityManager().find(SizesByColor.class, sizeId);
     }
     
     

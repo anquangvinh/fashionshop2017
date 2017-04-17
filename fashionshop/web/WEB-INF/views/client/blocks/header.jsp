@@ -1,5 +1,16 @@
+<%@page import="org.springframework.context.ApplicationContext"%>
+<%@page import="java.util.ArrayList"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page import="java.util.List"%>
+<%@page import="spring.entity.CartLineInfo"%>
+<%@page import="spring.ejb.OrderStateFulBean"%>
+<%@page import="spring.ejb.OrderStateFulBeanLocal"%>
+<%@page import="javax.naming.InitialContext"%>
+<%@page import="javax.naming.Context"%>
+<%@page import="java.util.logging.Logger"%>
+<%@page import="java.util.logging.Level"%>
+<%@page import="javax.naming.NamingException"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 <!-- TOPBAR -->
 <div class="top_bar">
     <div class="container">
@@ -72,37 +83,53 @@
                     <a class="navbar-brand" href="./index.html"><img src="assets/images/basic/logo.png" class="img-responsive" alt=""/></a>
                 </div>
                 <!-- Cart & Search -->
+                <%
+                    List<CartLineInfo> cartList;
+                    try {
+                        Context c = new InitialContext();
+                        OrderStateFulBeanLocal orderStateFulBean = (OrderStateFulBeanLocal) c.lookup("java:global/fashionshop/OrderStateFulBean!spring.ejb.OrderStateFulBeanLocal");
+                        cartList = orderStateFulBean.showCart();
+                    } catch (NamingException ne) {
+                        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+                        throw new RuntimeException(ne);
+                    }
+                %>
                 <div class="header-xtra pull-right">
                     <div class="topcart">
                         <span><i class="fa fa-shopping-cart"></i></span>
                         <div class="cart-info">
-                            <small>You have <em class="highlight">3 item(s)</em> in your shopping bag</small>
-                            <div class="ci-item">
-                                <img src="assets/images/products/fashion/8.jpg" width="80" alt=""/>
-                                <div class="ci-item-info">
-                                    <h5><a href="./single-product.html">Product fashion</a></h5>
-                                    <p>2 x $250.00</p>
-                                    <div class="ci-edit">
-                                        <a href="#" class="edit fa fa-edit"></a>
-                                        <a href="#" class="edit fa fa-trash"></a>
+                            <small>You have <em class="highlight">${cartList.size()} item(s)</em> in your shopping bag</small>
+                            <c:forEach items="${cartList}" var="item">
+                                <div class="ci-item">
+                                    <img src="assets/images/products/${item.getProduct().getUrlImg()}" width="80" alt=""/>
+                                    <div class="ci-item-info">
+                                        <h5>
+                                            <a href="${item.getProduct().productID}-${item.getProduct().productColorList[0].colorID}-${item.getProduct().productNameNA}.html">
+                                                ${item.getProduct().productName}
+                                            </a>
+                                        </h5>
+                                        <p>${item.quantity} x $${item.getProduct().getPrice()}</p>
+                                        <div class="ci-edit">
+                                            <!--<a href="#" class="edit fa fa-edit"></a>-->
+                                            <a href="orders/deleteitemCart/${item.getProduct().productID}.html" class="edit fa fa-trash"></a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="ci-item">
-                                <img src="assets/images/products/fashion/15.jpg" width="80" alt=""/>
-                                <div class="ci-item-info">
-                                    <h5><a href="./single-product.html">Product fashion</a></h5>
-                                    <p>2 x $250.00</p>
-                                    <div class="ci-edit">
-                                        <a href="#" class="edit fa fa-edit"></a>
-                                        <a href="#" class="edit fa fa-trash"></a>
-                                    </div>
-                                </div>
-                            </div>
-
+                            </c:forEach>
+                            <!--                            <div class="ci-item">
+                                                            <img src="assets/images/products/fashion/15.jpg" width="80" alt=""/>
+                                                            <div class="ci-item-info">
+                                                                <h5><a href="./single-product.html">Product fashion</a></h5>
+                                                                <p>2 x $250.00</p>
+                                                                <div class="ci-edit">
+                                                                    <a href="#" class="edit fa fa-edit"></a>
+                                                                    <a href="#" class="edit fa fa-trash"></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>-->
                             <div class="ci-total">Subtotal: $750.00</div>
                             <div class="cart-btn">
-                                <a href="#">View Bag</a>
+                                <a href="orders/shoppingcart.html">View Bag</a>
                                 <a href="#">Checkout</a>
                             </div>
                         </div>
