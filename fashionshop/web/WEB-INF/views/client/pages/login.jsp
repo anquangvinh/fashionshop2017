@@ -20,7 +20,7 @@
                         <span class="fa fa-chevron-right"></span>Login
                     </h4>                                                                  
                     <div class="account-form">
-                        <form class="form-login">                                        
+                        <form action="user/login.html" method="post" class="form-login"> 
                             <ul class="form-list row">
                                 <li class="col-md-6 col-sm-12"> 
                                     <a href="#" class="btn facebook"><i class="fa fa-facebook"></i>Sign in with Facebook</a>
@@ -30,11 +30,11 @@
                                 </li>
                                 <li class="col-md-12 col-sm-12">
                                     <label >User name or email <em>*</em></label>
-                                    <input required type="text" class="input-text">
+                                    <input type="email" name="email" class="input-text" autofocus >
                                 </li>
                                 <li class="col-md-12 col-sm-12">
                                     <label >Your password <em>*</em></label>
-                                    <input required type="password" class="input-text">
+                                    <input type="password" name="password" class="input-text" >
                                 </li> 
                                 <li class="col-md-6 col-sm-12">                                                
                                     <input class="input-chkbox" type="checkbox">
@@ -56,7 +56,7 @@
                     <h4 class="account-title"><span class="fa fa-chevron-right"></span>Create New Account</h4>                                                                  
                     <div class="account-form">
                         <form:form class="form-login" method="POST" action="user/register.html" modelAttribute="users" enctype="multipart/form-data">      
-                            ${ee}
+                            
                             <ul class="form-list row">
                                 <li class="col-md-12 col-sm-12">
                                     <label>Email <em>*</em></label>

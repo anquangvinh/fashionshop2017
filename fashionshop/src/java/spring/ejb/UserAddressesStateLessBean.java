@@ -50,9 +50,9 @@ public class UserAddressesStateLessBean implements UserAddressesStateLessBeanLoc
                     error = 3;
                 } else {
                     Users u = findUserID(userID);
-                    if (u != null) {
+//                    if (u != null) {
                         userAddresses.setUser(u);
-                    }
+//                    }
                     getEm().persist(userAddresses);
                     error = 1;
                 }
@@ -86,7 +86,7 @@ public class UserAddressesStateLessBean implements UserAddressesStateLessBeanLoc
     }
 
     @Override
-    public int editAddressUser(UserAddresses userAddresses) {
+    public int editAddressUser(UserAddresses userAddresses, int userID) {
         int error;
         UserAddresses findAD = findAddress(userAddresses.getAddress());
         UserAddresses findP = findPhone(userAddresses.getPhoneNumber());
@@ -98,6 +98,8 @@ public class UserAddressesStateLessBean implements UserAddressesStateLessBeanLoc
                     String a = "Input address and phone or blank adress and phone";
                     error = 3;
                 } else {
+                    Users u = findUserID(userID);
+                    userAddresses.setUser(u);
                     getEm().merge(userAddresses);
                     error = 1;
                 }

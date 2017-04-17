@@ -55,12 +55,14 @@ public interface ProductStateLessBeanLocal {
      *                                                                       *
      ========================================================================*/
     List<Products> productList(String role);
-    
+
     Products findProductByID(int productID);
-    
+
+    List<Products> getProductByCategory(int cateID);
+
     List<Object> getTop3ProductBestSeller();
-    
+
     List<Products> getTop3ProductMostViewed();
-    
+
     ProductColors findProductColorByColorID(int colorID);
 }

@@ -12,7 +12,7 @@
                 <div id="account-id">
                     <h4 class="account-title"><span class="fa fa-chevron-right"></span>Change Your Password</h4>                                                                 
                     <div class="account-form">
-                        <form id="shipping-zip-form">                                      
+                        <form id="shipping-zip-form" action="user/change-password.html">                                      
                             <ul class="form-list row">
                                 <li class="col-md-6 col-sm-6">
                                     <label >Password <em>*</em></label>
