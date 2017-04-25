@@ -5,6 +5,7 @@
  */
 package spring.ejb;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -25,7 +26,7 @@ import spring.entity.Users;
  * @author NganNgo
  */
 @Stateful
-public class OrderStateFulBean implements OrderStateFulBeanLocal {
+public class OrderStateFulBean implements OrderStateFulBeanLocal, Serializable {
 
     @EJB
     private OrderStateLessBeanLocal orderStateLessBean;
@@ -50,21 +51,14 @@ public class OrderStateFulBean implements OrderStateFulBeanLocal {
 
     @Override
     public void addProduct(CartLineInfo cartLineInfo) {
-        CartLineInfo oldCartLineInfo = getProductInListByID(cartLineInfo.getProduct().getProductID());
+        CartLineInfo oldCartLineInfo = getProductInListByID(cartLineInfo.getProduct().getProductID(),
+                  cartLineInfo.getSizesByColor().getSizeID(),
+                  cartLineInfo.getSizesByColor().getColor().getColorID());
         if (oldCartLineInfo != null) {
-            if (cartLineInfo.getProduct().getProductID().equals(oldCartLineInfo.getProduct().getProductID())) {
-                if (cartLineInfo.getSizesByColor().getSizeID().equals(oldCartLineInfo.getSizesByColor().getSizeID())) {
-                    cartLineInfo.setQuantity(oldCartLineInfo.getQuantity() + cartLineInfo.getQuantity());
-                    deleteProduct(oldCartLineInfo);
-                    cart.add(cartLineInfo);
-                    return;
-                }else{
-                    cart.add(cartLineInfo);
-                }
-            }else{
-                cart.add(cartLineInfo);
-            }
-        }else{
+            cartLineInfo.setQuantity(oldCartLineInfo.getQuantity() + cartLineInfo.getQuantity());
+            cart.set(cart.indexOf(oldCartLineInfo), cartLineInfo);
+            return;
+        } else {
             cart.add(cartLineInfo);
         }
     }
@@ -73,6 +67,7 @@ public class OrderStateFulBean implements OrderStateFulBeanLocal {
     public boolean deleteProduct(CartLineInfo cartLineInfo) {
         if (cartLineInfo != null) {
             cart.remove(cartLineInfo);
+            return true;
         }
         return false;
     }
@@ -83,10 +78,13 @@ public class OrderStateFulBean implements OrderStateFulBeanLocal {
     }
 
     @Override
-    public CartLineInfo getProductInListByID(int id) {
+    public CartLineInfo getProductInListByID(int productid, int sizeid, int colorid) {
         for (CartLineInfo cartLineInfo : cart) {
-            if (cartLineInfo.getProduct().getProductID().equals(id)) {
-                return cartLineInfo;
+            if (cartLineInfo.getProduct().getProductID().equals(productid)) {
+                if (cartLineInfo.getSizesByColor().getSizeID().equals(sizeid)
+                          && cartLineInfo.getSizesByColor().getColor().getColorID().equals(colorid)) {
+                    return cartLineInfo;
+                }
             }
         }
         return null;
@@ -119,6 +117,25 @@ public class OrderStateFulBean implements OrderStateFulBeanLocal {
 //        orders.setPhoneNumber(null);
         cart = new ArrayList<>();
         return checkError;
+    }
+
+    @Override
+    public float subTotal() {
+        float subtotal = 0;
+        for (CartLineInfo cartLineInfo : cart) {
+            subtotal += cartLineInfo.getAmount();
+        }
+        return subtotal;
+    }
+
+    @Override
+    public boolean updateProduct(CartLineInfo oldCartLineInfo, CartLineInfo cartLineInfo) {
+        try {
+            cart.set(cart.indexOf(oldCartLineInfo), cartLineInfo);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }
