@@ -29,5 +29,13 @@ public interface UserAddressesStateLessBeanLocal {
     
     Users findUserID(int userID);
     
+    UserAddresses findID(int userID);
+    
     void addUser(Users user);
+    
+    List<UserAddresses> AddressListUser(int userID);
+    
+    UserAddresses findAddressID(int addressID);
+    
+    
 }

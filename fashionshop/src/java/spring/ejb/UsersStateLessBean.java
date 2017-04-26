@@ -8,6 +8,7 @@ package spring.ejb;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import spring.entity.UserAddresses;
@@ -61,7 +62,7 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
         } else {
             try {
                 getEm().persist(users);
-                
+
                 if (!"".equals(phone) && !"".equals(address)) {
                     getEm().flush();
 
@@ -102,59 +103,65 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
         return true;
     }
 
-    @Override
-    public int updateUser(Users user, String repass) {
-        int error;
-        Users findEmail = findUserByEmail(user.getEmail());
+//    @Override
+//    public int updateUserPass(Users user, String pass, String repass) {
+//        int error = 0;
+//        Users findEmail = findUserByEmail(user.getEmail());
 //        if (findEmail != null) {
 //            error = 2; // email đã có
-//        } else if (findEmail == null) {
-//            try {
-//                getEm().merge(user);
-//                error = 1;
-//            } catch (Exception e) {
-//                error = 0;
-//            }
-//        } else {
-//            try {
-//                Users finduID = getUserByID(user.getUserID());
-//                if (repass.equals("")) {
-//                    String a = "Input Repass";
+//            if (!findEmail.getPassword().equals(pass)) {
+//                error = 4;
+//            } else {
+//                if (findEmail.getPassword().equals(repass)) {
 //                    error = 3;
-//                } else {
-//                    if (repass.equals(user.getPassword())) {
-//                    }
-//                    finduID.setPassword(repass);
-//                    getEm().merge(finduID);
-//                    error = 4;
+//                } else if (!repass.equals("")) {
+//                    findEmail.setPassword(repass);
+//                    getEm().merge(findEmail);
+//                    error = 1;
+//                } else if (repass.equals("")) {
+//                    error = 5;
 //                }
-//            } catch (Exception e) {
-//                error = 5;
+//
 //            }
+////        }else{
+////            
+////            try {
+////                getEm().merge(user);
+////                error = 1; // cập nhật thành công
+//////                Users finduserID = getUserByID(user.getUserID());
+//////                if(finduserID == null){
+//////                //
+//////                }else{
+//////                if(!pass.equals("")){
+//////                    finduserID.setPassword(pass);
+//////                    getEm().merge(finduserID);
+//////                    error = 2; // cập nhật pass ok
+//////                }else if(finduserID.getPassword().equals(pass)){
+//////                    error = 3 ; // không đổi pass
+//////                }
+////////                else if(!finduserID.getPassword().equals(user.getPassword())){
+////////                    error = 4; //  sai pass cũ
+////////                }
+//////                else if(pass.equals("")){
+//////                    error = 5; // repass để trống
+//////                }
+//////                }
+////            } catch (Exception e) {
+////                error = 0;
+////            }
+////        }
 //        }
-        if(findEmail != null){
-            error = 2; // email đã có
-        }else{
-            Users finduserID = getUserByID(user.getUserID());
-            try {
-                getEm().merge(user);
-                error = 1; // cập nhật thành công
-                if(!repass.equals("")){
-                    finduserID.setPassword(repass);
-                    getEm().merge(finduserID);
-                    error = 2; // cập nhật pass ok
-                }else if(finduserID.getPassword().equals(repass)){
-                    error = 3 ; // không đổi pass
-                }else if(repass.equals("")){
-                    error = 4; //  để trống pass
-                }
-            } catch (Exception e) {
-                error = 0;
-            }
-        }
-        return error;
-    }
+//        return error;
+//
+//    }
 
+    @Override
+    public void changePass(int userID,String newpass){
+        Users findID = getUserByID(userID);
+        findID.setPassword(newpass);
+        getEm().merge(findID);
+    }
+    
     @Override
     public int login(String email, String pass) {
         int error;
@@ -179,14 +186,46 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
     public int checkLoginUser(String email, String pass) {
         int error;
         Users userfindEmail = findUserByEmail(email);
-        if(userfindEmail == null){
+        if (userfindEmail == null) {
             error = 2; // sai email
-        }else{
-            if(userfindEmail.getPassword().equals(pass)){
-                error = 1 ; // login thành công
-            }else {
+        } else {
+            if (userfindEmail.getPassword().equals(pass)) {
+                error = 1; // login thành công
+            } else {
                 error = 0; // sai password
             }
+        }
+        return error;
+    }
+
+//    @Override
+//    public int updateUser(Users user, String pass, String repass) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
+    @Override
+    public int updateUser(Users user) {
+        int error;
+        Users findEmailOld = findUserByEmail(user.getEmail());
+        Users findEmailNew = findUserByEmail(user.getEmail());
+        if(findEmailOld.getEmail().equals(user.getEmail())){ // không thay đổi email
+            try {
+                getEm().merge(user);
+                error = 1;
+            } catch (Exception e) {
+                error = 0;
+            }
+        }
+        else{
+        if (findEmailNew != null) {
+            error = 2;// email đã có
+        } else {
+            try {
+                getEm().merge(user);
+                error = 1; // update thành công
+            } catch (Exception e) {
+                error = 0; // lỗi
+            }
+        }
         }
         return error;
     }

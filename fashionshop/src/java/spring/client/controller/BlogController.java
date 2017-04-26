@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import spring.ejb.BlogCategoriesSBLocal;
 import spring.ejb.BlogsSBLocal;
 import spring.ejb.UsersStateLessBeanLocal;
+import spring.entity.BlogCategories;
 import spring.entity.Blogs;
 import spring.functions.SharedFunctions;
 
@@ -47,7 +48,9 @@ public class BlogController {
 //        return "client/pages/blog";
 //    }
     @RequestMapping(value = "/blog")
-    public String blog() {
+    public String blog(ModelMap model) {
+        List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
+        model.addAttribute("blogCateListClient", getBlogCateList); 
         return "client/pages/blog";
     }
 

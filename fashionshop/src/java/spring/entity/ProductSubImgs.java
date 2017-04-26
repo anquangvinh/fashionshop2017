@@ -19,9 +19,7 @@ public class ProductSubImgs implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer subImgID;
-    //private Integer colorID;
     private String urlImg;
-    private Short status;
 
     @ManyToOne
     @JoinColumn(name = "colorID")
@@ -42,14 +40,6 @@ public class ProductSubImgs implements Serializable {
 
     public void setUrlImg(String urlImg) {
         this.urlImg = urlImg;
-    }
-
-    public Short getStatus() {
-        return status;
-    }
-
-    public void setStatus(Short status) {
-        this.status = status;
     }
 
     public ProductColors getProductColor() {

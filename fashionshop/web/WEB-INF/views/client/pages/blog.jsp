@@ -20,24 +20,11 @@
                 </div>
                 <div class="side-widget space50">
                     <h3><span>Categories</span></h3>
-<!--                    <ul class="list-unstyled cat-list">
-                        <li> <a href="#">Marketing</a> <i class="icon-plus2"></i></li>
-                        <li> <a href="#">Photography</a> <i class="icon-plus2"></i></li>
-                        <li> <a href="#">Webdesign</a> <i class="icon-plus2"></i></li>
-                        <li> <a href="#">Fashion</a> <i class="icon-plus2"></i></li>
-                        <li> <a href="#">Seo Strategy</a> <i class="icon-plus2"></i></li>
-                    </ul>-->
-<tbody>
-    <c:forEach items="${blogsListClient}" var="blogsclient">
-        <tr>
-            <td>
-                <span style="font-size: 20px">
-                    <td>${blogsclient.blogCategory.blogCateName}</td></br>
-                </span>
-            </td> <br>
-        </tr>
-    </c:forEach>
-</tbody>
+                    <ul class="list-unstyled cat-list">
+                        <c:forEach items="${blogCateListClient}" var="blogcateclient">
+                            <li> <a href="#">${blogcateclient.blogCateName}</a></li>
+                        </c:forEach>
+                    </ul>
                 </div>
                 <div class="side-widget space50">
                     <h3><span>Popular Post</span></h3>
@@ -113,7 +100,7 @@
                         <span><a href="#"><i class="fa fa-calendar"></i> 23 May</a></span>
                         <span><a href="#"><i class="fa fa-user"></i> John Doe</a></span>
                         <span><i class="fa fa-folder"></i><a href="">Vector</a>, <a href="#">Design</a></span>
-<!--                        <span><a href="#"><i class="fa fa-comments"></i> 13 Comments</a></span>-->
+                        <!--                        <span><a href="#"><i class="fa fa-comments"></i> 13 Comments</a></span>-->
                     </div>
                     <div class="space30"></div>
                     <!-- Media Gallery -->
@@ -121,11 +108,11 @@
                         <div class="blog-slider">
                             <div class="item">						
                                 <img src="" class="img-responsive" alt="">
-                                <img src="../../../../assets/images/blog/1/1.jpg" alt=""/>
+                                <img src="assets/images/blog/1/1.jpg" alt=""/>
                             </div>
                             <div class="item">						
                                 <img src="" class="img-responsive" alt="">
-                                <img src="../../../../assets/images/blog/1/2.jpg" alt=""/>
+                                <img src="assets/images/blog/1/2.jpg" alt=""/>
                             </div>
                             <div class="item">						
                                 <img src="assets/images/blog/3.jpg"  class="img-responsive" alt="">
@@ -163,7 +150,7 @@
                         <span><a href="#"><i class="fa fa-calendar"></i> 15 May</a></span>
                         <span><a href="#"><i class="fa fa-user"></i> John Doe</a></span>
                         <span><i class="fa fa-folder"></i><a href="">Design</a>, <a href="#">Photoshop</a></span>
-<!--                        <span><a href="#"><i class="fa fa-comments"></i> 5 Comments</a></span>-->
+                        <!--                        <span><a href="#"><i class="fa fa-comments"></i> 5 Comments</a></span>-->
                     </div>
                     <div class="space30"></div>
                     <div class="post-media">
@@ -184,7 +171,7 @@
                         <span><a href="#"><i class="fa fa-calendar"></i> 5 May</a></span>
                         <span><a href="#"><i class="fa fa-user"></i> John Doe</a></span>
                         <span><i class="fa fa-folder"></i><a href="">Illustration</a>, <a href="#">Branding</a></span>
-<!--                        <span><a href="#"><i class="fa fa-comments"></i> 1 Comment</a></span>-->
+                        <!--                        <span><a href="#"><i class="fa fa-comments"></i> 1 Comment</a></span>-->
                     </div>
                     <div class="space20"></div>
                     <div class="post-media">
@@ -203,7 +190,7 @@
                         <span><a href="#"><i class="fa fa-calendar"></i> 17 April</a></span>
                         <span><a href="#"><i class="fa fa-user"></i> John Doe</a></span>
                         <span><i class="fa fa-folder"></i><a href="">Photography</a>, <a href="#">Branding</a></span>
-<!--                        <span><a href="#"><i class="fa fa-comments"></i> 8 Comments</a></span>-->
+                        <!--                        <span><a href="#"><i class="fa fa-comments"></i> 8 Comments</a></span>-->
                     </div>
                     <div class="space20"></div>
                     <div class="post-excerpt">

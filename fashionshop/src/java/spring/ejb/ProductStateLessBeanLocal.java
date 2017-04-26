@@ -65,4 +65,11 @@ public interface ProductStateLessBeanLocal {
     List<Products> getTop3ProductMostViewed();
 
     ProductColors findProductColorByColorID(int colorID);
+
+    boolean checkDuplicateProductName(String name);
+
+    boolean createNewProduct(Products newProduct);
+    
+    void updateProductStatus(int productID, short productStatus);
+
 }

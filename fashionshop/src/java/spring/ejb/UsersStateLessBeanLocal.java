@@ -29,9 +29,13 @@ public interface UsersStateLessBeanLocal {
     
     boolean updateStatusUser(int userID, short status);
     
-    int updateUser(Users user, String repass);
+//    int updateUserPass(Users user,String pass, String repass);
+    
+    int updateUser(Users user);
     
     int login(String email, String pass);
     
     int checkLoginUser(String email, String pass);
+    void changePass(int userID, String newpass);
+//    boolean changePass(int userID, String pass, String repass);
 }

@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <!-- BREADCRUMBS -->
 <jsp:include page="../blocks/breadcrumbs.jsp" flush="true" />
@@ -12,21 +13,22 @@
                 <div id="account-id">
                     <h4 class="account-title"><span class="fa fa-chevron-right"></span>Create Address</h4>                                                                  
                     <div class="account-form">
-                        <form id="shipping-zip-form">                                        
+                        <form:form id="shipping-zip-form" action="user/address-add/${findUsersID}.html" method="post" modelAttribute="userAddress">                                        
+                            ${error}
                             <ul class="form-list row">
                                 <li class="col-md-6 col-sm-6">
-                                    <label >Address 1 <em>*</em></label>
-                                    <input required type="text" class="input-text">
+                                    <label >Address <em>*</em></label>
+                                    <form:input path="address" cssClass="input-text" />
                                 </li>
                                 <li class="col-md-6 col-sm-6">
                                     <label >Phone Number <em>*</em></label>
-                                    <input required type="text" class="input-text">
+                                    <form:input path="phoneNumber" cssClass="input-text" />
                                 </li>
                             </ul>
                             <div class="buttons-set">
                                 <button class="btn-black" type="submit"><span><span>Create</span></span></button>
                             </div>
-                        </form>
+                        </form:form>
                     </div>                                    
                 </div>
             </div>
@@ -45,14 +47,3 @@
     Author     : hoang
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
-        <h1>Hello World!</h1>
-    </body>
-</html>

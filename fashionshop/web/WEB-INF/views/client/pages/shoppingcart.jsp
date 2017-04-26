@@ -1,3 +1,4 @@
+<%@page import="spring.entity.CartLineInfo"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!-- BREADCRUMBS -->
@@ -9,148 +10,127 @@
 <div class="shop-single shopping-cart">
     <div class="container">
         <div class="row">
+            <div id="error">
+                ${error}
+            </div>
             <div class="col-md-12 col-sm-12">
-                <table class="cart-table">
-                    <thead>
-                        <tr>
-                            <th>Product Image</th>
-                            <th>Product Name</th>
-                            <!--<th>Edit</th>-->
-                            <th>Quantity</th>
-                            <th>Unit Price</th>
-                            <th>Subtotal</th>
-                            <th>Remove</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach items="${cartList}" var="item">
+                <form method="POST" action="orders/updatecart.html">
+                    <table class="cart-table">
+                        <thead>
                             <tr>
-                                <td><img src="assets/images/products/fashion/5.jpg" class="img-responsive" alt=""/></td>
-                                <td>
-                                    <h4><a href="./single-product.html">${item.productName}</a></h4>
-                                    <p>Size: M</p>
-                                    <p>Color: White</p>
-                                </td>
-                                <!--<td><i class="fa fa-edit"></i></td>-->
-                                <td>
-                                    <select>
-                                        <option>01</option>
-                                        <option>02</option>
-                                        <option>03</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="item-price">${item.price}</div>
-                                </td>
-                                <td>
-                                    <div class="item-price">$ 99.00</div>
-                                </td>
-                                <td><a href="orders/deleteitemCart.html?productid=${item.productID}"><i class="fa fa-trash-o"></i></a></td>
+                                <th>Product Image</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Subtotal</th>
+                                <th>Remove</th>
                             </tr>
-                        </c:forEach>
-                    </tbody>
-
-
-                    <!--                                <tr>
-                                                        <td><i class="fa fa-trash-o"></i></td>
-                                                        <td><img src="assets/images/products/fashion/5.jpg" class="img-responsive" alt=""/></td>
-                                                        <td>
-                                                            <h4><a href="./single-product.html">Product fashion</a></h4>
-                                                            <p>Size: M</p>
-                                                            <p>Color: White</p>
-                                                        </td>
-                                                        <td><i class="fa fa-edit"></i></td>
-                                                        <td>
-                                                            <select>
-                                                                <option>01</option>
-                                                                <option>02</option>
-                                                                <option>03</option>
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <div class="item-price">$ 99.00</div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="item-price">$ 99.00</div>
-                                                        </td>
-                                                    </tr>-->
-                </table>
-                <div class="table-btn">
-                    <a href="#" class="btn-black pull-left">Continue Shopping</a>
-                    <a href="#" class="btn-black pull-right">Update Shopping Cart</a>
-                </div>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${cartList}" var="item">
+                                <tr>
+                                    <td><img src="assets/images/products/${item.getProduct().getUrlImg()}" class="img-responsive" alt=""/></td>
+                                    <td>
+                                        <h4>
+                                            <a href="${item.getProduct().productID}-${item.getProduct().productColorList[0].colorID}-${item.getProduct().productNameNA}.html">
+                                                ${item.getProduct().productName}
+                                            </a>
+                                        </h4>
+                                        <p>Size: ${item.getSizesByColor().getProductSize()}  |  Color:   
+                                            <img fs-color="${item.getSizesByColor().getColor().colorID}" 
+                                                 src="assets/images/products/colors/${item.getSizesByColor().getColor().getUrlColorImg()}" 
+                                                 class="img-responsive" 
+                                                 alt="${item.getSizesByColor().getColor().urlColorImg}" 
+                                                 title="${item.getSizesByColor().getColor().getColor()}"
+                                                 style="width: 20px; height: 20px; display: inline;"/>
+                                        </p>
+                                    </td>
+                                    <td align="center">
+                                        <select name="${item.getProduct().productID}-${item.getSizesByColor().getSizeID()}-${item.getSizesByColor().getColor().getColorID()}">
+                                            <%
+                                                CartLineInfo cartLineInfo = (CartLineInfo) pageContext.getAttribute("item");
+                                                for (int i = 1; i < 11; i++) {
+                                                    if (cartLineInfo.getQuantity() == i) {
+                                            %>
+                                            <option value="<%= i%>" selected="selected"><%= i%></option>
+                                            <%
+                                            } else {
+                                            %>
+                                            <option value="<%= i%>"><%= i%></option>
+                                            <%
+                                                    }
+                                                }
+                                            %>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="item-price">${item.getProduct().getPrice()}</div>
+                                    </td>
+                                    <td>
+                                        <div class="item-price">${item.getAmount()}</div>
+                                    </td>
+                                    <td><a href="orders/deleteitemCart/${item.getProduct().productID}/${item.getSizesByColor().getSizeID()}/${item.getSizesByColor().getColor().getColorID()}.html"><i class="fa fa-trash-o"></i></a></td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                    <div class="table-btn">
+                        <a href="index.html" class="btn-black pull-left">Continue Shopping</a>
+                        <button type="submit" class="btn-black pull-right">Update Shopping Cart</button>
+                    </div>
+                </form>
                 <div class="clearfix space20"></div>
                 <div class="row shipping-info-wrap">
-                    <!--                                <div class="col-md-4 col-sm-4 col-xs-12">
-                                                        <div class="shipping">
-                                                            <h2>Estimate Shipping and Tax</h2>
-                                                            <div class="shipping-form">
-                                                                <form id="shipping-zip-form">
-                                                                    <p>Enter your destination to get a shipping estimate.</p>
-                                                                    <ul class="form-list">
-                                                                        <li>
-                                                                            <label class="required"><em>*</em>Country</label>
-                                                                            <input class="input-text" type="text">
-                                                                        </li>
-                                                                        <li>
-                                                                            <label>State/Province</label>
-                                                                            <input class="input-text" type="text">
-                                                                        </li>
-                                                                        <li>
-                                                                            <label>Zip/Postal Code</label>
-                                                                            <input class="input-text" type="text">
-                                                                        </li>
-                                                                    </ul>
-                                                                    <div class="buttons-set">
-                                                                        <button type="button" class="btn-black"><span><span>Get a Quote</span></span></button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
+                    <!--                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <form id="discount-coupon-form">
+                                                <div class="discount">
+                                                    <h2>Discount Codes</h2>
+                                                    <div class="form-list">
+                                                        <label for="coupon_code">Enter your coupon code if you have one.</label>
+                                                        <input name="remove" id="remove-coupone" value="0" type="hidden">
+                                                        <div class="input-box">
+                                                            <input class="input-text" id="coupon_code" name="coupon_code" value="">
                                                         </div>
-                                                    </div>-->
-                    <div class="col-md-4 col-sm-4 col-xs-12">
-                        <form id="discount-coupon-form">
-                            <div class="discount">
-                                <h2>Discount Codes</h2>
-                                <div class="form-list">
-                                    <label for="coupon_code">Enter your coupon code if you have one.</label>
-                                    <input name="remove" id="remove-coupone" value="0" type="hidden">
-                                    <div class="input-box">
-                                        <input class="input-text" id="coupon_code" name="coupon_code" value="">
-                                    </div>
-                                    <div class="buttons-set">
-                                        <button type="button" title="Apply Coupon" class="btn-black"><span><span>Apply Coupon</span></span></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                                                        <div class="buttons-set">
+                                                            <button type="button" title="Apply Coupon" class="btn-black"><span><span>Apply Coupon</span></span></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>-->
                     <div class="col-md-4 col-sm-4 col-xs-12">
                         <div class="totals">
-                            <table id="shopping-cart-totals-table">
-                                <tfoot>
-                                    <tr>
-                                        <td style="" class="a-right" colspan="1">
-                                            <strong>Grand Total</strong>
-                                        </td>
-                                        <td style="" class="a-right">
-                                            <strong><span class="price">$1000.00</span></strong>
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                                <tbody>
-                                    <tr>
-                                        <td style="" class="a-right" colspan="1">
-                                            Subtotal    
-                                        </td>
-                                        <td style="" class="a-right">
-                                            <span class="price">$1000.00</span>    
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <!--                            <table id="shopping-cart-totals-table">
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <td style="" class="a-right" colspan="1">
+                                                                        <strong>Grand Total</strong>
+                                                                    </td>
+                                                                    <td style="" class="a-right">
+                                                                        <strong><span class="price">$${grandTotal}</span></strong>
+                                                                    </td>
+                                                                </tr>
+                                                            </tfoot>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="" class="a-right" colspan="1">
+                                                                        <strong>Grand Total</strong>    
+                                                                    </td>
+                                                                    <td style="" class="a-right">
+                                                                        <span class="price">$${grandTotal}</span>    
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>-->
                             <ul class="checkout-types">
-                                <li class="space10"><button type="button" class="btn-color">Proceed to checkout</button></li>
+                                <li class="space10">
+                                    <strong>Grand Total: $${grandTotal}</strong>
+                                </li>
+                                <li class="space10">
+                                    <button onclick="btnCheckoutClick();" type="button" class="btn btn-danger" style="color: #fff !important;">
+                                        Proceed to checkout
+                                    </button>
+                                </li>
                                 <!--<li><a href="#">Checkout with Multiple Addresses</a></li>-->
                             </ul>
                         </div>
@@ -272,6 +252,17 @@
     </div>
 </div>
 <div class="clearfix space20"></div>
-
+<script type="text/javascript">
+    function btnCheckoutClick() {
+        var cartSize = ${cartList.size()};
+        if (cartSize === 0) {
+            $("#error").html("<div class=\"alert alert-danger\">\n"
+                    + "<strong>You have no item in cart!</strong> \n"
+                    + "</div>");
+        } else {
+            window.location = "orders/checkout.html";
+        }
+    }
+</script>
 <!-- MODAL -->
 <jsp:include page="../blocks/modal.jsp" flush="true" />
