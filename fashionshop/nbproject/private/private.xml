@@ -2,14 +2,5 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
-        <group name="fashionshop2017">
-            <file>file:/D:/PJ/fashionshop2017/fashionshop/src/java/spring/client/controller/UserController.java</file>
-            <file>file:/D:/PJ/fashionshop2017/fashionshop/web/WEB-INF/views/admin/pages/user-role-list.jsp</file>
-            <file>file:/D:/PJ/fashionshop2017/fashionshop/web/WEB-INF/views/client/pages/address-list.jsp</file>
-            <file>file:/D:/PJ/fashionshop2017/fashionshop/src/java/spring/ejb/UserAddressesStateLessBean.java</file>
-            <file>file:/D:/PJ/fashionshop2017/fashionshop/web/WEB-INF/views/client/pages/my-account.jsp</file>
-            <file>file:/D:/PJ/fashionshop2017/fashionshop/web/WEB-INF/views/client/pages/address-book.jsp</file>
-        </group>
     </open-files>
 </project-private>

@@ -18,4 +18,6 @@ public interface BlogsSBLocal {
     public List<Blogs> getAllBlogs();
     List<Blogs> getListBlogsByCategory(int blogCateID);
      boolean blogAdd(Blogs newBlogs);
+     Blogs findBlogsByID(int id);
+     boolean editBlogs(Blogs targetBlogs);
 }

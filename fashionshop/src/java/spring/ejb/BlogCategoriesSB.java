@@ -49,8 +49,12 @@ public class BlogCategoriesSB implements BlogCategoriesSBLocal {
 
     @Override
     public boolean updateCategories(BlogCategories cate) {
-        return false;
-        
+          try {
+            em.merge(cate);
+            return true; //Update thành công
+        } catch (Exception e) {
+            return false;  //Lỗi đã xảy ra
+        }
     }
 
     // Add business logic below. (Right-click in editor and choose
@@ -65,10 +69,10 @@ public class BlogCategoriesSB implements BlogCategoriesSBLocal {
     }
 
     @Override
-    public void deleteBlogCategory(int blogCateID) {
-        BlogCategories targetBlogCategory = em.find(BlogCategories.class, blogCateID);
-        if(targetBlogCategory != null){
-            em.remove(targetBlogCategory);        
-        }
+    public BlogCategories findCategoryByID(int blogCateID) {
+  BlogCategories targetBlogCategories = em.find(BlogCategories.class, blogCateID);
+        return targetBlogCategories;
     }
+    
+    
 }

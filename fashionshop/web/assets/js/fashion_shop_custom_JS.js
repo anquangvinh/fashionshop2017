@@ -7,6 +7,9 @@
  */
 
 $(document).ready(function () {
+      /* --------------- BLOG ADMIN -------------------- */
+
+    
     /* USER JS AREA */
     /* REGISTER FORM */
     $("#txtBirthday").datepicker({
@@ -24,9 +27,7 @@ $(document).ready(function () {
             $("#account-create-new").show("drop", {direction: "up"}, 2000);
         });
     });
-    
-    
-  
+
     /* --------------- PRODUCT INDEX -------------------- */
     /* SLIDE PRODUCTS IN INDEX */
     $("#isotope").isotope({
@@ -35,7 +36,7 @@ $(document).ready(function () {
     });
 
     /* INDEX - CHANGE IMG WHEN CHOOSE COLOR */
-    $(".fs-index-color-img").click(function () {
+    $(".body").on("click", ".fs-index-color-img", function () {
         var colorID = $(this).attr("fs-index-color-img");
         var productID = $(this).attr("fs-product");
 
@@ -63,6 +64,7 @@ $(document).ready(function () {
     });
 
     /* FUNCTION FOR OWL CAROUSEL */
+    
     function fsCreateOwlCarousel() {
         var sync1 = $(".sync1");
         var sync2 = $(".sync2");
@@ -147,7 +149,7 @@ $(document).ready(function () {
     }
 
     /* AJAX CALL MODAL */
-    $(".fs-product-modal").click(function () {
+    $(".body").on("click", ".fs-product-modal", function () {
         var productID = $(this).attr("fs-product");
         var colorID = $(this).attr("fs-product-modal-color");
         var productModal = $("#productModal");
@@ -212,7 +214,7 @@ $(document).ready(function () {
         linkArray[1] = colorID;
         var newLink = linkArray.join("-");
         $(".fs-product-modal-link-to-detail").attr("href", newLink);
-        
+
         $.ajax({
             url: "ajax/color.html",
             method: "POST",
@@ -248,7 +250,7 @@ $(document).ready(function () {
             }
         });
     });
-    
+
     /* EVENT INCREASE OR DECREASE QUANTITY */
     $(".fs-modal-btn-number").click(function () {
         var action = $(this).attr("data-type");
@@ -298,7 +300,7 @@ $(document).ready(function () {
             $(this).val($(this).data('oldVal'));
         }
     });
-    
+
     $(".fs-modal-input-number").keydown(function (e) {
         var press = e.keyCode || e.which;
         // Allow: backspace, delete, tab, escape, enter and .
@@ -306,15 +308,15 @@ $(document).ready(function () {
             // let it happen, don't do anything
             return;
         }
-        if(press == '13'){
+        if (press == '13') {
             $(this).blur();
         }
         // Ensure that it is a number and stop the keypress
-        if ((press < 48 || press > 57) && (press < 96 || press > 105) && (press < 112 || press > 123) ) {
+        if ((press < 48 || press > 57) && (press < 96 || press > 105) && (press < 112 || press > 123)) {
             e.preventDefault();
         }
     });
-    
+
     /* ------------------ PRODUCT_DETAIL ------------------- */
     /* CHANGE DATA WHEN CHOOSE A COLOR */
     $(".fs-product-color-border").on("click", function () {
@@ -358,7 +360,7 @@ $(document).ready(function () {
                     if (item.quantity === 0) {
                         str_change_size += "<div class=\"fs-particular-size fs-unselectable\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
                     } else {
-                        str_change_size += "<div class=\"fs-particular-size\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
+                        str_change_size += "<div onclick=\"sizeImageClick("+item.sizeID+");\" class=\"fs-particular-size\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
                     }
                 });
                 $("#fs-product-size").hide().html(str_change_size).fadeIn(1000);
@@ -425,21 +427,30 @@ $(document).ready(function () {
             $(this).val($(this).data('oldValue'));
         }
     });
-    
+
     $(".fs-input-number").keydown(function (e) {
         var press = e.keyCode || e.which;
         // Allow: backspace, delete, tab, escape, enter and .
         if ($.inArray(press, [46, 8, 9, 27, 13, 190, 17]) !== -1) {
             // let it happen, don't do anything
             $(this).blur().focus();
-             return;
+            return;
         }
         // Ensure that it is a number and stop the keypress
-        if ((press < 48 || press > 57) && (press < 96 || press > 105) && (press < 112 || press > 123) ) {
+        if ((press < 48 || press > 57) && (press < 96 || press > 105) && (press < 112 || press > 123)) {
             e.preventDefault();
         }
-        
-        
+
+
     });
+    
+    /*========================================NGAN - ORDER====================================================*/
+    
+    $("#cart").load("orders/ajax/cart.html");
+    $('#diff-discount').on("click", function () {
+        $('.discount-code').toggle("slow");
+    });
+    
+    /*======================================END NGAN - ORDER==================================================*/
 });
 

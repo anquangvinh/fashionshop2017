@@ -4614,7 +4614,7 @@ label.css-label {
 .cart-table .item-info h4{
     font-size: 14px;
 }
-.create-account, .shipping-address, .transfer-guide{
+.create-account, .shipping-address, .transfer-guide, .discount-code{
     display: none;
 }
 /* 20. CONTACT STYLES  */
