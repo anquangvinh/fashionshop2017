@@ -57,9 +57,10 @@ public class UserController {
         int error = usersStateLessBean.checkLoginUser(email, sharedFunc.encodePassword(password));
         if (error == 1) {
             redirectAttributes.addFlashAttribute("error", "ok"); // sửa lại thông báo
-            session.setAttribute("email", email);
+            session.setAttribute("emailUser", email);
             Users userfindUserID = usersStateLessBean.findUserByEmail(email);
             session.setAttribute("findUsersID", userfindUserID.getUserID());
+            return "redirect:http://localhost:8080/fashionshop/";
         } else if (error == 2) {
             redirectAttributes.addFlashAttribute("error", "sai email");
         } else {
@@ -103,7 +104,10 @@ public class UserController {
             return "redirect:/user/register.html";
         } else if (error == 1) {
             redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-5  alert alert-success\">Create New User Successfully!</div>");
-            session.setAttribute("email", newUser.getEmail());
+            session.setAttribute("emailUser", newUser.getEmail());
+//            Users userfindID = usersStateLessBean.getUserByID(newUser.getUserID());
+            Users userfindUserID = usersStateLessBean.findUserByEmail(newUser.getEmail());
+            session.setAttribute("findUsersID", userfindUserID.getUserID());
         } else if (error == 0) {
             redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-5  alert alert-danger\">FAILED!. Error was happened!</div>");
         } else if (error == 2) {
@@ -194,7 +198,8 @@ public class UserController {
             RedirectAttributes redirectAttributes, @PathVariable("userID") int userID,
             @PathVariable("addressID") int addressID) {
         int error;
-        model.addAttribute("addressID", userAddresses.getAddressID());
+        addressID = userAddresses.getAddressID();
+        model.addAttribute("addressID", addressID);
         error = userAddressesStateLessBean.editAddressUser(userAddresses, userID);
         if (error == 2) {
             redirectAttributes.addFlashAttribute("error", "Trùng");
@@ -274,6 +279,13 @@ public class UserController {
     @RequestMapping(value = "myaccount")
     public String checkOut() {
         return "client/pages/my-account";
+    }
+    
+    @RequestMapping(value = "logout")
+    public String logOut(HttpSession session){
+        session.removeAttribute("emailUser");
+        
+        return "redirect:/user/login.html";
     }
 
     private UsersStateLessBeanLocal lookupUsersStateLessBeanLocal() {

@@ -667,6 +667,7 @@ $(document).ready(function () {
     });
     /*==========================END VINH - PRODUCT============================*/
 
+    /*==============================THANH - BLOG============================*/
     /*    
      * CẤU HÌNH DATEPICKER CHO BLOG
      */
@@ -676,7 +677,9 @@ $(document).ready(function () {
         changeMonth: true,
         changeYear: true
     });
-
+    /*==============================THANH - BLOG============================*/
+    
+    /*==============================DUONG - USER============================*/
     /* 
      * AJAX - EVENT ONCHANGE SELECT USER "STATUS" 
      */
@@ -711,6 +714,7 @@ $(document).ready(function () {
         });
     });
 
+
     /*
      * FORMATTING FUNCTION FOR ROW DETAIL - MODIFY AS YOU NEED
      */
@@ -721,7 +725,7 @@ $(document).ready(function () {
 
     //function load data từ 1 dataSource lên table
     function renderTableFromJson (json) {
-        var beginStr = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+        var beginStr = '<table class="table table-striped table table-bordered table table-hover" >' +
                     '<tr>' +
                         '<th>Address</th>' +
                         '<th>Phone</th>' +
@@ -765,6 +769,8 @@ $(document).ready(function () {
             tr.addClass('shown');
         }
     });
+    
+    /*==============================END DUONG - USER============================*/
 
 });
 
