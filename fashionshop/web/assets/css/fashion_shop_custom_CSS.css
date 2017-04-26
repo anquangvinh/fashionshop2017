@@ -138,7 +138,7 @@ a.fs-product-modal-link-to-detail{
     STYLE
 */
 
-.btn-link-1 {
+/*.btn-link-1 {
 	display: inline-block;
 	height: 50px;
 	margin: 0 5px;
@@ -187,9 +187,9 @@ a.fs-product-modal-link-to-detail{
 }
 
 
-/*
+
     FORM-ELEMENTS
-*/
+
 
 input[type="text"], 
 input[type="password"], 
@@ -264,7 +264,7 @@ button.btn:active { outline: 0; opacity: 0.6; color: #fff; -moz-box-shadow: none
 
 button.btn:focus { outline: 0; opacity: 0.6; background: #399599; color: #fff; }
 
-button.btn:active:focus, button.btn.active:focus { outline: 0; opacity: 0.6; background: #399599; color: #fff; }
+button.btn:active:focus, button.btn.active:focus { outline: 0; opacity: 0.6; background: #399599; color: #fff; }*/
 
 
 
