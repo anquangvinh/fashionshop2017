@@ -18,9 +18,11 @@ import spring.entity.Products;
  */
 @Local
 public interface OrderStateFulBeanLocal {
-    void addProduct(int productID, int quantity);
+    void addProduct(CartLineInfo cartLineInfo);
     boolean deleteProduct(CartLineInfo cartLineInfo);
+    boolean updateProduct(CartLineInfo oldCartLineInfo, CartLineInfo cartLineInfo);
     List<CartLineInfo> showCart();
-    CartLineInfo getProductInListByID(int id);
+    CartLineInfo getProductInListByID(int productid, int sizeid, int colorid);
     int completePurchase(Orders orders);
+    float subTotal();
 }
