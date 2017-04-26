@@ -71,11 +71,14 @@ public class OrdersController {
 
     @RequestMapping(value = "checkout", method = RequestMethod.GET)
     public String checkout(ModelMap model, HttpServletRequest request) {
-        Users users = (Users) request.getSession().getAttribute("user");
-        if (users == null) {
+        String email = String.valueOf(request.getSession().getAttribute("emailUser      A"));
+        if (email == null) {
             return "redirect:/user/login.html";
         }
-        model.addAttribute("userAddressList", orderStateLessBean.getUserAddressListByUserID(users.getUserID()));
+        Users users = usersStateLessBean.findUserByEmail(email);
+        if (users != null) {
+            model.addAttribute("userAddressList", orderStateLessBean.getUserAddressListByUserID(users.getUserID()));
+        }
         model.addAttribute("cartList", orderStateFulBean.showCart());
         model.addAttribute("grandTotal", orderStateFulBean.subTotal());
         return "client/pages/checkout";
@@ -83,8 +86,6 @@ public class OrdersController {
 
     @RequestMapping(value = "shoppingcart")
     public String shoppingcart(ModelMap model, HttpServletRequest request) {
-        //Test user
-        request.getSession().setAttribute("user", usersStateLessBean.getUserByID(5));
         model.addAttribute("cartList", orderStateFulBean.showCart());
         model.addAttribute("grandTotal", orderStateFulBean.subTotal());
         return "client/pages/shoppingcart";
