@@ -30,13 +30,16 @@
 
         <!-- Custom FASHION SHOP CSS -->
         <link href="assets/admin/dist/css/fashion_shop_custom_CSS.css" rel="stylesheet" type="text/css"/>
-        
+
         <!-- JQUERY UI CSS -->
         <link href="assets/js/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
-        
+
         <!-- Custom Fonts -->
         <link href="assets/admin/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
+        
+        <!-- fileUploader -->
+        <link href="assets/admin/dist/css/jquery.fileuploader.css" rel="stylesheet" type="text/css"/>
+        
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -58,11 +61,13 @@
 
         </div>
         <!-- /#wrapper -->
-
+        <script src="assets/ckeditor/ckeditor.js" type="text/javascript"></script>
+        <script src="assets/ckfinder/ckfinder.js" type="text/javascript"></script>
+        
         <!-- jQuery -->
         <script src="assets/admin/vendor/jquery/jquery.min.js"></script>
         <script src="assets/js/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
-        
+
         <!-- Bootstrap Core JavaScript -->
         <script src="assets/admin/vendor/bootstrap/js/bootstrap.min.js"></script>
 
@@ -73,7 +78,10 @@
         <script src="assets/admin/vendor/datatables/js/jquery.dataTables.min.js"></script>
         <script src="assets/admin/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
         <script src="assets/admin/vendor/datatables-responsive/dataTables.responsive.js"></script>
-
+        
+        <!-- fileUploader -->
+        <script src="assets/admin/dist/js/jquery.fileuploader.min.js" type="text/javascript"></script>
+        
         <!-- Custom Theme JavaScript -->
         <script src="assets/admin/dist/js/sb-admin-2.js"></script>
 
