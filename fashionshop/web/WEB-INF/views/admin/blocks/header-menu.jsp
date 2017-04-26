@@ -160,6 +160,9 @@
                         <li>
                             <a href="admin/blog/create.html"><i class="fa fa-plus" aria-hidden="true"></i> New</a>
                         </li>
+                            <li>
+                            <a href="admin/blog/ChartServlet"><i class="fa fa-list" aria-hidden="true"></i> Statistics</a>
+                        </li>
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>

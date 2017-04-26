@@ -53,7 +53,8 @@ $(document).ready(function () {
     var animating; //flag to prevent quick multi-click glitches
 
     $(".next").click(function () {
-        if (animating) return false;
+        if (animating)
+            return false;
         animating = true;
 
         current_fs = $(this).parent().parent().parent();
@@ -118,7 +119,7 @@ $(document).ready(function () {
     });
 
 
-
+    /*=============================== THANH - BLOG =================================*/
     /*    
      * CẤU HÌNH DATEPICKER CHO BLOG
      */
@@ -128,6 +129,247 @@ $(document).ready(function () {
         changeMonth: true,
         changeYear: true
     });
+
+    /* BẮT validation CREATE BLOG CATEGORY */
+    // blog-category-add
+    $("#fs-button-create-blog-category").click(function (e) {
+        e.preventDefault();
+        var blogCateVal = $("#fs-blog-category").val();
+        if (blogCateVal === "") {
+            $("#fs-blog-category-error").text("Category cannot be empty!");
+        } else if (blogCateVal.length < 5 || blogCateVal.length > 20) {
+            $("#fs-blog-category-error").text("Category has 5 - 20 characters!");
+        } else {
+            $("form[name=\"cateForm\"]").submit();
+        }
+    });
+
+    $("#fs-blog-category").keyup(function () {
+        var blogCateVal = $("#fs-blog-category").val();
+        if (blogCateVal === "") {
+            $("#fs-blog-category-error").text("Category cannot be empty!");
+        } else if (blogCateVal.length < 5 || blogCateVal.length > 20) {
+            $("#fs-blog-category-error").text("Category has 5 - 20 characters!");
+        } else {
+            $("#fs-blog-category-error").text("");
+        }
+    });
+    // blog-category-update
+    $("#fs-button-update-blog-category").click(function (e) {
+        e.preventDefault();
+        var blogCateVal = $("#fs-blog-category-update").val();
+
+        if (blogCateVal === "") {
+            $("#fs-blog-category-error").text("Category cannot be empty!");
+        } else if (blogCateVal.length < 5 || blogCateVal.length > 20) {
+            $("#fs-blog-category-error").text("Category has 5 - 20 characters!");
+        } else {
+            $("form[name=\"cateupdateForm\"]").submit();
+        }
+    });
+
+    $("#fs-blog-category-update").keyup(function () {
+        var blogCateVal = $("#fs-blog-category-update").val();
+        if (blogCateVal === "") {
+            $("#fs-blog-category-error").text("Category cannot be empty!");
+        } else if (blogCateVal.length < 5 || blogCateVal.length > 20) {
+            $("#fs-blog-category-error").text("Category has 5 - 20 characters!");
+        } else {
+            $("#fs-blog-category-error").text("");
+        }
+    });
+    //update image not null
+ 
+
+
+    
+          $("#fs-button-update-blog").bind("click",function() 
+    { 
+        var imgVal = $("#upImage").val(); 
+        if(imgVal==="") 
+        { 
+            alert("Please select the image for the article."); 
+
+        } 
+        return 0; 
+
+    }); 
+
+    // blog-category-update-end
+    /* BẮT validation CREATE BLOG */
+    $("#fs-button-create-blog").click(function (e) {
+        e.preventDefault();
+        var categoryID = $("#fs-select-box-blog-category").val();
+
+        if (categoryID === 0) {
+            $("#fs-select-box-blog-category-error").text("Please select a Category!.");
+        } else {
+            $("#fs-form-create-blog").submit();
+        }
+    });
+
+    $("#fs-select-box-blog-category").change(function () {
+        var categoryID = $("#fs-select-box-blog-category").val();
+        if (categoryID === 0) {
+            $("#fs-select-box-blog-category-error").text("Please select a Category!.");
+        } else {
+            $("#fs-select-box-blog-category-error").text("");
+        }
+    });
+
+    $("#fs-button-create-blog").click(function (e) {
+        e.preventDefault();
+        var blogCateVal = $("#fs-blog-line-title").val();
+        if (blogCateVal === "") {
+            $("#fs-blog-title-error").text("Title cannot be empty!");
+        } else if (blogCateVal.length < 5 || blogCateVal.length > 100)
+        {
+            $("#fs-blog-title-error").text("Title has 5 - 100 characters!");
+        }
+      
+        else
+        {
+            $("form[name=\"blogForm\"]").submit();
+        }
+        
+    });
+
+    $("#fs-blog-line-title").keyup(function () {
+        var blogCateVal = $("#fs-blog-line-title").val();
+        if (blogCateVal === "") {
+            $("#fs-blog-title-error").text("Title cannot be empty!");
+        } else if (blogCateVal.length < 5 || blogCateVal.length > 100) {
+            $("#fs-blog-title-error").text("Title has 5 - 100 characters!");
+        } else {
+            $("#fs-blog-title-error").text("");
+        }
+    });
+
+       $("#fs-button-create-blog").click(function(e){
+        e.preventDefault();
+        var blogCateValSummary = $("#fs-blog-line-summary").val();
+        if(blogCateValSummary === ""){
+            $("#fs-blog-summary-error").text("Summary cannot be empty!");
+        } else if(blogCateValSummary.length < 5 || blogCateValSummary.length > 200){
+            $("#fs-blog-summary-error").text("Summary has 15 - 400 characters!");
+        } else {
+            $("form[name=\"blogForm\"]").submit();
+        }
+    });
+    
+     $("#fs-blog-line-summary").keyup(function(){
+        var blogCateValSummary = $("#fs-blog-line-summary").val();
+        if(blogCateValSummary === ""){
+            $("#fs-blog-summary-error").text("Summary cannot be empty!");
+        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 200) {
+            $("#fs-blog-summary-error").text("Summary has 15 - 400 characters!");
+        } else {
+            $("#fs-blog-summary-error").text("");
+        }
+    });
+    
+    // validate CKfinder
+        $(document).ready(function(){
+
+            $("#f3").validate(
+            {
+                ignore: [],
+              debug: false,
+                rules: { 
+
+                    editor1:{
+                         required: function() 
+                        {
+                         CKEDITOR.instances.cktext.updateElement();
+                        },
+
+                         minlength:10
+                    }
+                },
+                messages:
+                    {
+
+                    editor1:{
+                        required:"Please enter Text",
+                        minlength:"Please enter 10 characters"
+
+
+                    }
+                }
+            });
+        });
+    /* BẮT validation UPDATE BLOG */
+        $("#fs-button-update-blog").click(function (e) {
+        e.preventDefault();
+        var categoryID = $("#fs-select-box-blog-category-update").val();
+
+        if (categoryID === 0) {
+            $("#fs-select-box-blog-category-update-error").text("Please select a Category!.");
+        } else {
+            $("#fs-form-update-blog").submit();
+        }
+    });
+
+    $("#fs-select-box-blog-category-update").change(function () {
+        var categoryID = $("#fs-select-box-blog-category-update").val();
+        if (categoryID === 0) {
+            $("#fs-select-box-blog-category-update-error").text("Please select a Category!.");
+        } else {
+            $("#fs-select-box-blog-category-update-error").text("");
+        }
+    });
+    
+    // Line Title
+      $("#fs-button-update-blog").click(function(e){
+        e.preventDefault();
+        var blogCateValTitleUpdate = $("#fs-blog-update-line-title").val();
+        if(blogCateValTitleUpdate === ""){
+            $("#fs-blog-update-title-error").text("Title cannot be empty!");
+        } else if(blogCateValTitleUpdate.length < 5 || blogCateValTitleUpdate.length > 100){
+            $("#fs-blog-update-title-error").text("Title has 5 - 100 characters!");
+        } else {
+            $("form[name=\"blogupdateForm\"]").submit();
+        }
+    });
+    
+     $("#fs-blog-update-line-title").keyup(function(){
+        var blogCateValSummary = $("#fs-blog-update-line-title").val();
+        if(blogCateValSummary === ""){
+            $("#fs-blog-update-title-error").text("Title cannot be empty!");
+        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 200) {
+            $("fs-blog-update-title-error").text("Title has 15 - 400 characters!");
+        } else {
+            $("#fs-blog-update-title-error").text("");
+        }
+    });
+    
+    // Line Summary
+    
+      $("#fs-button-update-blog").click(function(e){
+        e.preventDefault();
+        var blogCateValTitleUpdate = $("#fs-blog-update-line-summary").val();
+        if(blogCateValTitleUpdate === ""){
+            $("#fs-blog-update-title-error").text("Title cannot be empty!");
+        } else if(blogCateValTitleUpdate.length < 5 || blogCateValTitleUpdate.length > 100){
+            $("#fs-blog-update-title-error").text("Title has 5 - 100 characters!");
+        } else {
+            $("form[name=\"blogupdateForm\"]").submit();
+        }
+    });
+    
+     $("#fs-blog-update-line-summary").keyup(function(){
+        var blogCateValSummary = $("#fs-blog-update-line-summary").val();
+        if(blogCateValSummary === ""){
+            $("#fs-blog-update-summary-error").text("Title cannot be empty!");
+        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 200) {
+            $("fs-blog-update-summary-error").text("Title has 15 - 400 characters!");
+        } else {
+            $("#fs-blog-update-summary-error").text("");
+        }
+    });
+    
+    
+    /*===============================END THANH - BLOG =================================*/
 
     /* 
      * AJAX - EVENT ONCHANGE SELECT USER "STATUS" 
@@ -149,18 +391,18 @@ $(document).ready(function () {
     /* 
      * AJAX - EVENT ONCHANGE SELECT USER "ROLE" 
      */
-    $(".fs-select-user-role").on("change", function(){
+    $(".fs-select-user-role").on("change", function () {
         var roleID = $(this).val();
         var userID = $(this).attr("fs-user");
-        
+
         $.ajax({
-           url : "admin/user/usersrole/edit.html",
-           method: "POST",
-           data: {userID : userID, roleID: roleID},
-           success: function(response){
-               alert(response);
-           }
+            url: "admin/user/usersrole/edit.html",
+            method: "POST",
+            data: {userID: userID, roleID: roleID},
+            success: function (response) {
+                alert(response);
+            }
         });
-        
+
     });
 });

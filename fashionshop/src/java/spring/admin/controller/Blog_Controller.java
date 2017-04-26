@@ -17,7 +17,9 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -121,14 +123,15 @@ public class Blog_Controller {
         model.addAttribute("blogsList", blogsSB.getAllBlogs());
         return "admin/pages/blog-list";
     }
-    
-      @RequestMapping(value = "listChart")
+
+    @RequestMapping(value = "listChart")
     public String blogListChart(ModelMap model) {
         return "admin/pages/blog-statistics";
     }
 
     @RequestMapping(value = "create", method = RequestMethod.GET)
     public String blogAdd(ModelMap model) {
+
         Blogs newBlogs = new Blogs();
         model.addAttribute("newBlogs", newBlogs);
         return "admin/pages/blog-add";
@@ -137,9 +140,17 @@ public class Blog_Controller {
     @RequestMapping(value = "create", method = RequestMethod.POST)
     public String blogAdd(@ModelAttribute("newBlogs") Blogs newBlogs,
             @RequestParam("upImage") MultipartFile image,
-            RedirectAttributes redirectAttr) {
+            RedirectAttributes redirectAttr, HttpServletRequest Request) {
 
+        String email = String.valueOf(Request.getSession().getAttribute("email"));
+        if (email != null) {
+            Users user = usersStateLessBean.findUserByEmail(email);
+            if(user!= null){
+                newBlogs.setUser(user);
+            }
+        }
         newBlogs.setBlogTitleNA(shareFunc.changeText(newBlogs.getBlogTitle()));
+        newBlogs.setPostedDate(new Date());
         try {
             if (image.isEmpty()) {
                 newBlogs.setBlogImg("defaultProduct.png");
