@@ -15,13 +15,16 @@
                         <div class="details-box">
                             <ul>
                                 <li>                                                
-                                    <a href="account-information.html"> <i class="fa fa-edit"></i> Edit your account information</a>
+                                    <a href="user/account-information/${findUsersID}.html"> <i class="fa fa-edit"></i> Edit your account information</a>
                                 </li>
                                 <li>                                               
-                                    <a href="cng-pw.html"> <i class="fa fa-edit"></i> Change your password</a>
+                                    <a href="user/change-password/${findUsersID}.html"> <i class="fa fa-edit"></i> Change your password</a>
                                 </li>
                                 <li>                                              
-                                    <a href="address-book.html"> <i class="fa fa-edit"></i> Modify your address book entries</a>
+                                    <a href="user/address-add/${findUsersID}.html"> <i class="fa fa-edit"></i> Add new your address book entries</a>
+                                </li>
+                                <li>                                              
+                                    <a href="user/address-list/${findUsersID}.html"> <i class="fa fa-edit"></i> Modify your address book entries</a>
                                 </li>
                             </ul>
                         </div>                                    

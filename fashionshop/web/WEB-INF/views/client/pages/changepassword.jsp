@@ -12,16 +12,22 @@
                 <div id="account-id">
                     <h4 class="account-title"><span class="fa fa-chevron-right"></span>Change Your Password</h4>                                                                 
                     <div class="account-form">
-                        <form id="shipping-zip-form" action="user/change-password.html">                                      
+                        <form id="shipping-zip-form" action="user/change-password/${findUsersID}.html" method="post">    
+                            ${error}
                             <ul class="form-list row">
                                 <li class="col-md-6 col-sm-6">
+                                    <label >Old Password <em>*</em></label>
+                                    <input required name="oldpassword" type="password" class="input-text">
+                                </li>
+                                <li class="col-md-6 col-sm-6">
                                     <label >Password <em>*</em></label>
-                                    <input required name="password" type="text" class="input-text">
+                                    <input required name="password" type="password" class="input-text">
                                 </li>
                                 <li class="col-md-6 col-sm-6">
                                     <label> Password Confirm <em>*</em></label>
-                                    <input required name="repassword" type="text" class="input-text">
-                                </li>                                               
+                                    <input required name="repassword" type="password" class="input-text">
+                                </li>    
+                                  
                             </ul>
                             <div class="buttons-set">
                                 <button class="btn-black" type="submit"><span><span>Update</span></span></button>

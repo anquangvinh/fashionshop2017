@@ -53,7 +53,8 @@ $(document).ready(function () {
     var animating; //flag to prevent quick multi-click glitches
 
     $(".next").click(function () {
-        if (animating) return false;
+        if (animating)
+            return false;
         animating = true;
 
         current_fs = $(this).parent().parent().parent();
@@ -149,18 +150,75 @@ $(document).ready(function () {
     /* 
      * AJAX - EVENT ONCHANGE SELECT USER "ROLE" 
      */
-    $(".fs-select-user-role").on("change", function(){
+    $(".fs-select-user-role").on("change", function () {
         var roleID = $(this).val();
         var userID = $(this).attr("fs-user");
-        
+
         $.ajax({
-           url : "admin/user/usersrole/edit.html",
-           method: "POST",
-           data: {userID : userID, roleID: roleID},
-           success: function(response){
-               alert(response);
-           }
+            url: "admin/user/usersrole/edit.html",
+            method: "POST",
+            data: {userID: userID, roleID: roleID},
+            success: function (response) {
+                alert(response);
+            }
+        });
+    });
+
+    /*
+     * FORMATTING FUNCTION FOR ROW DETAIL - MODIFY AS YOU NEED
+     */
+
+    var fs_user_table = $("#fs-user-dataTables").DataTable({//cấu hình datatable chính chủ.
+        responsive: true
+    });
+
+    //function load data từ 1 dataSource lên table
+    function renderTableFromJson (json) {
+        var beginStr = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                    '<tr>' +
+                        '<th>Address</th>' +
+                        '<th>Phone</th>' +
+                    '</tr>';
+        var endStr = '</table>';
+        var dataStr = '';
+        
+        //vòng lặp foreach của jquery
+        $.each(json, function(i, item){ //i: index; item: từng object
+            dataStr += '<tr>' +
+                        '<td>'+ item.address +'</td>' +
+                        '<td>' + item.phoneNumber + '</td>' +
+                    '</tr>';
         });
         
+        return beginStr + dataStr + endStr;
+    }
+
+    $("#fs-user-dataTables").on("click", ".fs-user-dataTable-control-button", function () {
+        var userID = $(this).attr("fs-userID");
+        var tr = $(this).closest('tr');
+        var row = fs_user_table.row(tr);
+
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            //Gọi Ajax
+            $.ajax({
+                url: "admin/user/ajax/getUserAddress.html",
+                method: "POST",
+                data: {userID: userID},
+                dataType : "JSON",
+                success: function (response) {
+                    row.child(renderTableFromJson(response)).show();
+                }
+            });
+            
+            tr.addClass('shown');
+        }
     });
+
 });
+
+

@@ -56,3 +56,24 @@
 	background: #27AE60;
 	color: white;
 }
+
+/*
+   show information User-address, Wish List
+*/
+  td.details-control{
+    /*background: url("./images/details_open.png") no-repeat center center;*/
+    /*background-image: url(/images/details_open.gif);*/
+    background: url('../../../images/details_open.gif') no-repeat center center;
+    cursor: pointer;
+}
+
+/*
+    Close datatables User-address, Wish list
+*/
+
+tr.shown td.details-control{
+    background: url('../../../images/details_close.gif') no-repeat center center;
+    /*background: url("./images/details_close.png") no-repeat center center;*/
+        /*background-image: url(/images/details_close.gif);*/
+
+}

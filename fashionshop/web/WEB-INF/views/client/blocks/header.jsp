@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <!-- TOPBAR -->
@@ -19,15 +20,56 @@
                         <ul>
                             <li>
                                 <div class="tbr-info">
+
                                     <span>Account <i class="fa fa-caret-down"></i></span>
                                     <div class="tbr-inner">
-                                        <a href="my-account.html">My Account</a>
-                                        <a href="#">My Wishlist</a>
-                                        <a href="#">Checkout</a>
-                                        <a href="login-page.html">Login</a>
+                                        <c:if test="${not empty email}">
+                                            <a href="user/myaccount.html">My Account</a>
+                                            <a href="#">My Wishlist</a>
+                                            <a href="#">Checkout</a>
+                                            <a href="#">LogOut</a>
+                                        </c:if>
+                                        <c:if test="${empty email}">
+                                            <a class="" href="user/login.html">Login</a>
+                                        </c:if>
                                     </div>
                                 </div>
                             </li>
+
+                            <!-- MODAL LOGIN -->
+<!--                            <div class="modal fade" id="modal-login" tabindex="-1" role="dialog" aria-labelledby="modal-login-label" aria-hidden="true">
+
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">
+                                                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                                            </button>
+                                            <h3 class="modal-title" id="modal-login-label">Login to our site</h3>
+                                            <p>Enter your email and password to log on:</p>
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <form role="form" action="" method="post" class="login-form">
+                                                <div class="form-group">
+                                                    <label class="sr-only" for="form-username">Email</label>
+                                                    <input type="text" name="form-username" placeholder="Email..." class="form-username form-control" id="form-username">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="sr-only" for="form-password">Password</label>
+                                                    <input type="password" name="form-password" placeholder="Password..." class="form-password form-control" id="form-password">
+                                                </div>
+                                                <button type="submit" class="btn">Sign in!</button>
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>-->
+
                             <li>
                                 <div class="tbr-info">
                                     <span><img src="assets/images/basic/flag1.png" alt=""/>&nbsp;English <i class="fa fa-caret-down"></i></span>

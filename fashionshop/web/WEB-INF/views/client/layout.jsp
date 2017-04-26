@@ -68,6 +68,7 @@
         <!-- Javascript -->
         <script src="assets/js/jquery-ui-1.12.1/external/jquery/jquery.js"></script>
         <script src="assets/js/fashion_shop_custom_JS.js" type="text/javascript"></script>
+        <script src="assets/js/bootstrap.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>        
         <script src="assets/plugin/owl-carousel/owl.carousel.min.js"></script>
         <script src="assets/plugin/prettyphoto/js/jquery.prettyPhoto.js"></script>
@@ -83,5 +84,8 @@
         <script src="assets/js/royalslider/jquery.royalslider.min.js"></script>
         <script src="assets/js/vendors/select/jquery.selectBoxIt.min.js"></script>
         <script src="assets/js/main.js"></script>
+<!--        <script src="assets/js/vendors/vmenu/script.js" ></script>
+        <script src="assets/js/jquery.backstretch.min.js" ></script>
+        <script src="assets/js/jquery-1.11.1.min.js"></script>-->
     </body>
 </html>

@@ -24,6 +24,8 @@ $(document).ready(function () {
             $("#account-create-new").show("drop", {direction: "up"}, 2000);
         });
     });
+    
+    
   
     /* --------------- PRODUCT INDEX -------------------- */
     /* SLIDE PRODUCTS IN INDEX */

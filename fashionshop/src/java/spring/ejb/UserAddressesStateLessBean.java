@@ -45,17 +45,14 @@ public class UserAddressesStateLessBean implements UserAddressesStateLessBeanLoc
             error = 2; // phone hoặc address bị trùng
         } else {
             try {
-                if (userAddresses.getAddress() == "" || userAddresses.getPhoneNumber() == "") {
-                    String a = "Input address and phone or blank adress and phone";
-                    error = 3;
-                } else {
+              
                     Users u = findUserID(userID);
 //                    if (u != null) {
                         userAddresses.setUser(u);
 //                    }
                     getEm().persist(userAddresses);
                     error = 1;
-                }
+            
             } catch (Exception e) {
                 error = 0;
             }
@@ -88,24 +85,42 @@ public class UserAddressesStateLessBean implements UserAddressesStateLessBeanLoc
     @Override
     public int editAddressUser(UserAddresses userAddresses, int userID) {
         int error;
-        UserAddresses findAD = findAddress(userAddresses.getAddress());
-        UserAddresses findP = findPhone(userAddresses.getPhoneNumber());
-        if (findAD != null || findP != null) {
-            error = 2; // phone hoặc address bị trùng
-        } else {
-            try {
-                if (userAddresses.getAddress() == "" || userAddresses.getPhoneNumber() == "") {
-                    String a = "Input address and phone or blank adress and phone";
-                    error = 3;
-                } else {
-                    Users u = findUserID(userID);
-                    userAddresses.setUser(u);
+        UserAddresses findADOld = findAddress(userAddresses.getAddress());
+        UserAddresses findADNew = findAddress(userAddresses.getAddress());
+        UserAddresses findPOld = findPhone(userAddresses.getPhoneNumber());
+        UserAddresses findPNew = findPhone(userAddresses.getPhoneNumber());
+        
+        if(findADOld.getAddress().equals(userAddresses.getAddress()) || 
+                findPOld.getPhoneNumber().equals(userAddresses.getPhoneNumber()) ||
+                findADOld.getAddress().equals(userAddresses.getAddress()) && 
+                findPOld.getPhoneNumber().equals(userAddresses.getPhoneNumber())){ // không thay đổi userAddress hoặc phone, cả 2 cùng không thay đổi
+                try {
+                    Users user = findUserID(userID);
+                    userAddresses.setUser(user);
                     getEm().merge(userAddresses);
                     error = 1;
-                }
             } catch (Exception e) {
                 error = 0;
             }
+        }else{    
+            if (findADNew != null || findPNew != null || findADNew != null && findPNew != null) {
+            error = 2; // phone hoặc address bị trùng, hoặc cả hai cùng bị trùng
+        } else {
+            try {
+                    Users user = findUserID(userID);
+//                    if(!email.equals("")){
+//                        u.setEmail(email);
+//                        error = 4;
+//                    }else{
+                    userAddresses.setUser(user);
+                    getEm().merge(userAddresses);
+                    error = 1;
+//                    }
+                
+            } catch (Exception e) {
+                error = 0;
+            }
+        }
         }
         return error;
     }
@@ -118,6 +133,29 @@ public class UserAddressesStateLessBean implements UserAddressesStateLessBeanLoc
     @Override
     public void addUser(Users user) {
         getEm().persist(user);
+    }
+
+    @Override
+    public UserAddresses findID(int userID) {
+        Query q = getEm().createQuery("SELECT ua FROM UserAddresses ua WHERE ua.user.userID = :userID", UserAddresses.class);
+        q.setParameter("userID", userID);
+        try {
+            return (UserAddresses) q.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<UserAddresses> AddressListUser(int userID) {
+        Query q = getEm().createQuery("SELECT ua FROM UserAddresses ua WHERE ua.user.userID = :userID", UserAddresses.class);
+        q.setParameter("userID", userID);
+        return q.getResultList();
+    }
+
+    @Override
+    public UserAddresses findAddressID(int addressID) {
+        return getEm().find(UserAddresses.class, addressID);
     }
 
 }
