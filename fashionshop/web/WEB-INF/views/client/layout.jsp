@@ -83,5 +83,8 @@
         <script src="assets/js/royalslider/jquery.royalslider.min.js"></script>
         <script src="assets/js/vendors/select/jquery.selectBoxIt.min.js"></script>
         <script src="assets/js/main.js"></script>
+<!--        <script src="assets/js/vendors/vmenu/script.js" ></script>
+        <script src="assets/js/jquery.backstretch.min.js" ></script>
+        <script src="assets/js/jquery-1.11.1.min.js"></script>-->
     </body>
 </html>

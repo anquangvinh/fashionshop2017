@@ -87,6 +87,7 @@ $(document).ready(function () {
         var discount = $("#fs-product-discount").val();
         var count = 0;
 
+
         if (cateID == 0) {
             $("p#fs-select-cate-error").text("Please choose a Category!");
             $("#fs-product-category").focus();
@@ -710,4 +711,61 @@ $(document).ready(function () {
         });
     });
 
+    /*
+     * FORMATTING FUNCTION FOR ROW DETAIL - MODIFY AS YOU NEED
+     */
+
+    var fs_user_table = $("#fs-user-dataTables").DataTable({//cấu hình datatable chính chủ.
+        responsive: true
+    });
+
+    //function load data từ 1 dataSource lên table
+    function renderTableFromJson (json) {
+        var beginStr = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                    '<tr>' +
+                        '<th>Address</th>' +
+                        '<th>Phone</th>' +
+                    '</tr>';
+        var endStr = '</table>';
+        var dataStr = '';
+        
+        //vòng lặp foreach của jquery
+        $.each(json, function(i, item){ //i: index; item: từng object
+            dataStr += '<tr>' +
+                        '<td>'+ item.address +'</td>' +
+                        '<td>' + item.phoneNumber + '</td>' +
+                    '</tr>';
+        });
+        
+        return beginStr + dataStr + endStr;
+    }
+
+    $("#fs-user-dataTables").on("click", ".fs-user-dataTable-control-button", function () {
+        var userID = $(this).attr("fs-userID");
+        var tr = $(this).closest('tr');
+        var row = fs_user_table.row(tr);
+
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            //Gọi Ajax
+            $.ajax({
+                url: "admin/user/ajax/getUserAddress.html",
+                method: "POST",
+                data: {userID: userID},
+                dataType : "JSON",
+                success: function (response) {
+                    row.child(renderTableFromJson(response)).show();
+                }
+            });
+            
+            tr.addClass('shown');
+        }
+    });
+
 });
+
+

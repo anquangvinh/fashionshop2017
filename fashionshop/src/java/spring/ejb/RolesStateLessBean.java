@@ -72,7 +72,8 @@ public class RolesStateLessBean implements RolesStateLessBeanLocal {
 
     @Override
     public List<Roles> getRole() {
-        Query q = getEm().createQuery("SELECT r FROM Roles r", Roles.class);
+        Query q = getEm().createQuery("SELECT r FROM Roles r WHERE r.roleID != :roleID", Roles.class);
+        q.setParameter("roleID", 1);
         return q.getResultList();
     }
 
