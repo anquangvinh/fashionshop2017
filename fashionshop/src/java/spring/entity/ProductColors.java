@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,11 +29,11 @@ public class ProductColors implements Serializable {
     private String urlColorImg;
     private Short status;
 
-    @OneToMany(mappedBy = "color")
+    @OneToMany(mappedBy = "color", cascade = CascadeType.PERSIST)
     @JsonManagedReference
     private List<SizesByColor> sizeList;
 
-    @OneToMany(mappedBy = "productColor")
+    @OneToMany(mappedBy = "productColor", cascade = CascadeType.PERSIST)
     @JsonManagedReference
     private List<ProductSubImgs> ProductSubImgsList;
 

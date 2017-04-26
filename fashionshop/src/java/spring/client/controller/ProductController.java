@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import spring.ejb.ProductStateLessBeanLocal;
+import spring.entity.CartLineInfoByID;
 import spring.entity.ProductColors;
 import spring.entity.Products;
 
@@ -46,7 +47,7 @@ public class ProductController {
         return "client/pages/categories-grid";
     }
 
-    @RequestMapping(value = "/{productID}-{colorID:[0-9]+}-{productNameNA:[A-Za-z0-9-]+}")
+    @RequestMapping(value = "/{productID:[0-9]+}-{colorID:[0-9]+}-{productNameNA:[A-Za-z0-9-]+}")
     public String productdetail(ModelMap model,
             @PathVariable("productID") Integer productID,
             @PathVariable("colorID") Integer colorID
@@ -66,6 +67,8 @@ public class ProductController {
                 ProductColors targetColor = productStateLessBean.findProductColorByColorID(colorID);
                 model.addAttribute("targetProduct", targetProduct);
                 model.addAttribute("targetColor", targetColor);
+                CartLineInfoByID cartLineInfoByID = new CartLineInfoByID();
+                model.addAttribute("cartLineInfoByID", cartLineInfoByID);
             } else {
                 String error = "Product ko có color này!";
             }
@@ -75,7 +78,7 @@ public class ProductController {
 
         return "client/pages/product-detail";
     }
-
+    
     @ResponseBody
     @RequestMapping(value = "/ajax/findProduct", method = RequestMethod.POST)
     public String getProductByID(@RequestParam("productID") Integer productID) {

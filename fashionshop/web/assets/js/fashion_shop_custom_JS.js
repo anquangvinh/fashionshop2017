@@ -36,7 +36,7 @@ $(document).ready(function () {
     });
 
     /* INDEX - CHANGE IMG WHEN CHOOSE COLOR */
-    $(".fs-index-color-img").click(function () {
+    $(".body").on("click", ".fs-index-color-img", function () {
         var colorID = $(this).attr("fs-index-color-img");
         var productID = $(this).attr("fs-product");
 
@@ -149,7 +149,7 @@ $(document).ready(function () {
     }
 
     /* AJAX CALL MODAL */
-    $(".fs-product-modal").click(function () {
+    $(".body").on("click", ".fs-product-modal", function () {
         var productID = $(this).attr("fs-product");
         var colorID = $(this).attr("fs-product-modal-color");
         var productModal = $("#productModal");
@@ -360,7 +360,7 @@ $(document).ready(function () {
                     if (item.quantity === 0) {
                         str_change_size += "<div class=\"fs-particular-size fs-unselectable\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
                     } else {
-                        str_change_size += "<div class=\"fs-particular-size\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
+                        str_change_size += "<div onclick=\"sizeImageClick("+item.sizeID+");\" class=\"fs-particular-size\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
                     }
                 });
                 $("#fs-product-size").hide().html(str_change_size).fadeIn(1000);
@@ -443,8 +443,14 @@ $(document).ready(function () {
 
 
     });
-
-  
-
+    
+    /*========================================NGAN - ORDER====================================================*/
+    
+    $("#cart").load("orders/ajax/cart.html");
+    $('#diff-discount').on("click", function () {
+        $('.discount-code').toggle("slow");
+    });
+    
+    /*======================================END NGAN - ORDER==================================================*/
 });
 

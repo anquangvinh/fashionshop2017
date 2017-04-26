@@ -239,4 +239,33 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
         ProductColors productColor = getEntityManager().find(ProductColors.class, colorID);
         return productColor;
     }
+    
+    @Override
+    public boolean checkDuplicateProductName(String name){
+        String sql = "SELECT p FROM Products p WHERE p.productName LIKE :productName";
+        Query q = getEntityManager().createQuery(sql, Products.class);
+        q.setParameter("productName", name);
+        
+        int count = q.getResultList().size();
+        return count == 1;
+    }
+    
+    @Override
+    public boolean createNewProduct(Products newProduct){   
+        try {
+            getEntityManager().persist(newProduct);
+            getEntityManager().flush();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    @Override
+    public void updateProductStatus(int productID, short productStatus){
+        Products targetProduct = findProductByID(productID);
+        
+        targetProduct.setStatus(productStatus);
+        getEntityManager().merge(targetProduct);
+    }
 }
