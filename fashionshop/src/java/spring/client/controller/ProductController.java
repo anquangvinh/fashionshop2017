@@ -46,7 +46,7 @@ public class ProductController {
         return "client/pages/categories-grid";
     }
 
-    @RequestMapping(value = "/{productID}-{colorID:[0-9]+}-{productNameNA:[A-Za-z0-9-]+}")
+    @RequestMapping(value = "/{productID:[0-9]+}-{colorID:[0-9]+}-{productNameNA:[A-Za-z0-9-]+}")
     public String productdetail(ModelMap model,
             @PathVariable("productID") Integer productID,
             @PathVariable("colorID") Integer colorID
