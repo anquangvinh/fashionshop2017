@@ -68,7 +68,6 @@
         <!-- Javascript -->
         <script src="assets/js/jquery-ui-1.12.1/external/jquery/jquery.js"></script>
         <script src="assets/js/fashion_shop_custom_JS.js" type="text/javascript"></script>
-        <script src="assets/js/bootstrap.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>        
         <script src="assets/plugin/owl-carousel/owl.carousel.min.js"></script>
         <script src="assets/plugin/prettyphoto/js/jquery.prettyPhoto.js"></script>
