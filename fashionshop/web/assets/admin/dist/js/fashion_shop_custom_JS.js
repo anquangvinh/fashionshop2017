@@ -633,41 +633,41 @@ $(document).ready(function () {
             $(this).parent().siblings("p.fs-error-mess-quantity").text("");
         }
     });
-    
+
     /* Xử lý choose TASK - PRODUCT-UPDATE */
-    $("#fs-select-product-update-task").change(function(){
+    $("#fs-select-product-update-task").change(function () {
         var select = $(this).val();
-        if(select == 1){
+        if (select == 1) {
             $("#fs-edit-product-general-info").removeClass("fs-display-none");
         } else {
-            if(!$("#fs-edit-product-general-info").hasClass("fs-display-none")){
+            if (!$("#fs-edit-product-general-info").hasClass("fs-display-none")) {
                 $("#fs-edit-product-general-info").addClass("fs-display-none");
             }
         }
-        
-        if(select == 2){
+
+        if (select == 2) {
             $("#fs-select-product-update-color").removeClass("fs-display-none");
             $("#fs-select-product-update-color").focus();
         } else {
-            if(!$("#fs-select-product-update-color").hasClass("fs-display-none")){
-                 $("#fs-select-product-update-color").addClass("fs-display-none");
+            if (!$("#fs-select-product-update-color").hasClass("fs-display-none")) {
+                $("#fs-select-product-update-color").addClass("fs-display-none");
             }
         }
     });
-    
-    $("#fs-select-product-update-color").change(function(){
+
+    $("#fs-select-product-update-color").change(function () {
         var select = $(this).val();
-        if(select == 1){
+        if (select == 1) {
             $("#fs-edit-product-detail-info").removeClass("fs-display-none");
         } else {
-            if(!$("#fs-edit-product-detail-info").hasClass("fs-display-none")){
+            if (!$("#fs-edit-product-detail-info").hasClass("fs-display-none")) {
                 $("#fs-edit-product-detail-info").addClass("fs-display-none");
             }
         }
     });
     /*==========================END VINH - PRODUCT============================*/
 
-    /*==============================THANH - BLOG============================*/
+    /*=============================== THANH - BLOG =================================*/
     /*    
      * CẤU HÌNH DATEPICKER CHO BLOG
      */
@@ -677,7 +677,219 @@ $(document).ready(function () {
         changeMonth: true,
         changeYear: true
     });
-    /*==============================THANH - BLOG============================*/
+
+    /* BẮT validation CREATE BLOG CATEGORY */
+    // blog-category-add
+    $("#fs-button-create-blog-category").click(function (e) {
+        e.preventDefault();
+        var blogCateVal = $("#fs-blog-category").val();
+        if (blogCateVal === "") {
+            $("#fs-blog-category-error").text("Category cannot be empty!");
+        } else if (blogCateVal.length < 5 || blogCateVal.length > 20) {
+            $("#fs-blog-category-error").text("Category has 5 - 20 characters!");
+        } else {
+            $("form[name=\"cateForm\"]").submit();
+        }
+    });
+
+    $("#fs-blog-category").keyup(function () {
+        var blogCateVal = $("#fs-blog-category").val();
+        if (blogCateVal === "") {
+            $("#fs-blog-category-error").text("Category cannot be empty!");
+        } else if (blogCateVal.length < 5 || blogCateVal.length > 20) {
+            $("#fs-blog-category-error").text("Category has 5 - 20 characters!");
+        } else {
+            $("#fs-blog-category-error").text("");
+        }
+    });
+    // blog-category-update
+    $("#fs-button-update-blog-category").click(function (e) {
+        e.preventDefault();
+        var blogCateVal = $("#fs-blog-category-update").val();
+
+        if (blogCateVal === "") {
+            $("#fs-blog-category-error").text("Category cannot be empty!");
+        } else if (blogCateVal.length < 5 || blogCateVal.length > 20) {
+            $("#fs-blog-category-error").text("Category has 5 - 20 characters!");
+        } else {
+            $("form[name=\"cateupdateForm\"]").submit();
+        }
+    });
+
+    $("#fs-blog-category-update").keyup(function () {
+        var blogCateVal = $("#fs-blog-category-update").val();
+        if (blogCateVal === "") {
+            $("#fs-blog-category-error").text("Category cannot be empty!");
+        } else if (blogCateVal.length < 5 || blogCateVal.length > 20) {
+            $("#fs-blog-category-error").text("Category has 5 - 20 characters!");
+        } else {
+            $("#fs-blog-category-error").text("");
+        }
+    });
+    //update image not null
+
+
+
+
+    $("#fs-button-update-blog").bind("click", function ()
+    {
+        var imgVal = $("#upImage").val();
+        if (imgVal === "")
+        {
+            alert("Please select the image for the article.");
+
+        }
+        return 0;
+
+    });
+
+    // blog-category-update-end
+    /* BẮT validation CREATE BLOG */
+    $("#fs-button-create-blog").click(function (e) {
+        e.preventDefault();
+        var categoryID = $("#fs-select-box-blog-category").val();
+
+        if (categoryID === 0) {
+            $("#fs-select-box-blog-category-error").text("Please select a Category!.");
+        } else {
+            $("#fs-form-create-blog").submit();
+        }
+    });
+
+    $("#fs-select-box-blog-category").change(function () {
+        var categoryID = $("#fs-select-box-blog-category").val();
+        if (categoryID === 0) {
+            $("#fs-select-box-blog-category-error").text("Please select a Category!.");
+        } else {
+            $("#fs-select-box-blog-category-error").text("");
+        }
+    });
+
+    $("#fs-button-create-blog").click(function (e) {
+        e.preventDefault();
+        var blogCateVal = $("#fs-blog-line-title").val();
+        if (blogCateVal === "") {
+            $("#fs-blog-title-error").text("Title cannot be empty!");
+        } else if (blogCateVal.length < 5 || blogCateVal.length > 100)
+        {
+            $("#fs-blog-title-error").text("Title has 5 - 100 characters!");
+        }
+
+        else
+        {
+            $("form[name=\"blogForm\"]").submit();
+        }
+
+    });
+
+    $("#fs-blog-line-title").keyup(function () {
+        var blogCateVal = $("#fs-blog-line-title").val();
+        if (blogCateVal === "") {
+            $("#fs-blog-title-error").text("Title cannot be empty!");
+        } else if (blogCateVal.length < 5 || blogCateVal.length > 100) {
+            $("#fs-blog-title-error").text("Title has 5 - 100 characters!");
+        } else {
+            $("#fs-blog-title-error").text("");
+        }
+    });
+
+    $("#fs-button-create-blog").click(function (e) {
+        e.preventDefault();
+        var blogCateValSummary = $("#fs-blog-line-summary").val();
+        if (blogCateValSummary === "") {
+            $("#fs-blog-summary-error").text("Summary cannot be empty!");
+        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 200) {
+            $("#fs-blog-summary-error").text("Summary has 15 - 400 characters!");
+        } else {
+            $("form[name=\"blogForm\"]").submit();
+        }
+    });
+
+    $("#fs-blog-line-summary").keyup(function () {
+        var blogCateValSummary = $("#fs-blog-line-summary").val();
+        if (blogCateValSummary === "") {
+            $("#fs-blog-summary-error").text("Summary cannot be empty!");
+        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 200) {
+            $("#fs-blog-summary-error").text("Summary has 15 - 400 characters!");
+        } else {
+            $("#fs-blog-summary-error").text("");
+        }
+    });
+
+    // validate CKfinder
+
+    /* BẮT validation UPDATE BLOG */
+    $("#fs-button-update-blog").click(function (e) {
+        e.preventDefault();
+        var categoryID = $("#fs-select-box-blog-category-update").val();
+
+        if (categoryID === 0) {
+            $("#fs-select-box-blog-category-update-error").text("Please select a Category!.");
+        } else {
+            $("#fs-form-update-blog").submit();
+        }
+    });
+
+    $("#fs-select-box-blog-category-update").change(function () {
+        var categoryID = $("#fs-select-box-blog-category-update").val();
+        if (categoryID === 0) {
+            $("#fs-select-box-blog-category-update-error").text("Please select a Category!.");
+        } else {
+            $("#fs-select-box-blog-category-update-error").text("");
+        }
+    });
+
+    // Line Title
+    $("#fs-button-update-blog").click(function (e) {
+        e.preventDefault();
+        var blogCateValTitleUpdate = $("#fs-blog-update-line-title").val();
+        if (blogCateValTitleUpdate === "") {
+            $("#fs-blog-update-title-error").text("Title cannot be empty!");
+        } else if (blogCateValTitleUpdate.length < 5 || blogCateValTitleUpdate.length > 100) {
+            $("#fs-blog-update-title-error").text("Title has 5 - 100 characters!");
+        } else {
+            $("form[name=\"blogupdateForm\"]").submit();
+        }
+    });
+
+    $("#fs-blog-update-line-title").keyup(function () {
+        var blogCateValSummary = $("#fs-blog-update-line-title").val();
+        if (blogCateValSummary === "") {
+            $("#fs-blog-update-title-error").text("Title cannot be empty!");
+        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 200) {
+            $("fs-blog-update-title-error").text("Title has 15 - 400 characters!");
+        } else {
+            $("#fs-blog-update-title-error").text("");
+        }
+    });
+
+    // Line Summary
+
+    $("#fs-button-update-blog").click(function (e) {
+        e.preventDefault();
+        var blogCateValTitleUpdate = $("#fs-blog-update-line-summary").val();
+        if (blogCateValTitleUpdate === "") {
+            $("#fs-blog-update-title-error").text("Title cannot be empty!");
+        } else if (blogCateValTitleUpdate.length < 5 || blogCateValTitleUpdate.length > 100) {
+            $("#fs-blog-update-title-error").text("Title has 5 - 100 characters!");
+        } else {
+            $("form[name=\"blogupdateForm\"]").submit();
+        }
+    });
+
+    $("#fs-blog-update-line-summary").keyup(function () {
+        var blogCateValSummary = $("#fs-blog-update-line-summary").val();
+        if (blogCateValSummary === "") {
+            $("#fs-blog-update-summary-error").text("Title cannot be empty!");
+        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 200) {
+            $("fs-blog-update-summary-error").text("Title has 15 - 400 characters!");
+        } else {
+            $("#fs-blog-update-summary-error").text("");
+        }
+    });
+
+
+    /*===============================END THANH - BLOG =================================*/
     
     /*==============================DUONG - USER============================*/
     /* 
@@ -730,17 +942,18 @@ $(document).ready(function () {
                         '<th>Address</th>' +
                         '<th>Phone</th>' +
                     '</tr>';
+
         var endStr = '</table>';
         var dataStr = '';
-        
+
         //vòng lặp foreach của jquery
-        $.each(json, function(i, item){ //i: index; item: từng object
+        $.each(json, function (i, item) { //i: index; item: từng object
             dataStr += '<tr>' +
-                        '<td>'+ item.address +'</td>' +
-                        '<td>' + item.phoneNumber + '</td>' +
+                    '<td>' + item.address + '</td>' +
+                    '<td>' + item.phoneNumber + '</td>' +
                     '</tr>';
         });
-        
+
         return beginStr + dataStr + endStr;
     }
 
@@ -760,12 +973,12 @@ $(document).ready(function () {
                 url: "admin/user/ajax/getUserAddress.html",
                 method: "POST",
                 data: {userID: userID},
-                dataType : "JSON",
+                dataType: "JSON",
                 success: function (response) {
                     row.child(renderTableFromJson(response)).show();
                 }
             });
-            
+
             tr.addClass('shown');
         }
     });
@@ -773,5 +986,3 @@ $(document).ready(function () {
     /*==============================END DUONG - USER============================*/
 
 });
-
-

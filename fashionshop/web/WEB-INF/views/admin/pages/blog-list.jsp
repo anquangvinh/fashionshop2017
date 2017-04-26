@@ -49,24 +49,21 @@
                                 <td>${blogs.blogImg}</td>
                                 <td>${blogs.content}</td>
                                 <td>  
-                                    <fmt:formatDate pattern="dd/MM/YYYY" value="${blogs.postedDate}"/>
+                                    <fmt:formatDate value="${blogs.postedDate}" pattern="dd-MM-YYYY" />
                                 </td>
                                 <td>${blogs.blogViews}</td>
                                 <td>
-                                    <select class="btn btn-info">
-                                        <option value="0">Enable</option>
-                                        <option value="1">Disable</option>
-                                    </select>
+                                    ${blogs.status}
                                 </td>
                                 <td>
-                                    <a href="admin/blog/category/edit/${cate.cateID}.html" class="btn btn-primary">Update</a>
-                                    <a href="admin/blog/delete/${cate.cateID}.html" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn xóa ?!')">Delete</a>
+                                    <a href="admin/blog/edit/${blogs.blogID}.html" class="btn btn-primary">Update</a>
                                 </td>
                             </tr>
                         </c:forEach>
 
-                        </tbody>
+                    </tbody>
                 </table>
+
                 <!-- /.table-responsive -->
             </div>
             <!-- /.col-lg-12 -->

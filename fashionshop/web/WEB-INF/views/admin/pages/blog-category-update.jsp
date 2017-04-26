@@ -18,12 +18,11 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="col-lg-6">
-                    <form:form role="form">
+                    <form:form name="cateupdateForm" action="" method="POST" modelAttribute="targetBlogCategories">
                         <div class="form-group">
                             <label>Category</label>
-                            <form:input class="form-control" path="blogCateName"/>
-                            <!--Error Message-->
-                            <p class="help-block">Error Message will be here!!!</p>
+                            <p class="help-block" id="fs-blog-category-error"></p>                      
+                            <form:input id="fs-blog-category-update" class="form-control" path="blogCateName"/>
                         </div>
                         <div class="form-group">
                             <label>Status</label>
@@ -38,7 +37,7 @@
 
                         </div>
 
-                                    <form:button type="submit" class="btn btn-warning">Update</form:button>
+                                    <form:button type="submit" id="fs-button-update-blog-category" class="btn btn-warning">Update</form:button>
                                     <form:button type="reset" class="btn btn-default">Reset</form:button>
                     </form:form>
                 </div>

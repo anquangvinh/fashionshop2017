@@ -19,7 +19,7 @@
         <!-- /.row -->
 
         <div class="row">
-            <form:form action="admin/blog/edit.html" method="POST" modelAttribute="" enctype="multipart/form-data">
+            <form:form action="" id="fs-form-update-blog" name="blogupdateForm" method="POST" modelAttribute="targetBlogs" enctype="multipart/form-data">
                   <div class="col-lg-12">
                     <div class="col-lg-6">
                         <div class="form-group">
@@ -37,8 +37,9 @@
                             </form:select>
                         </div>
                         <div class="form-group">
-                            <label>Title</label>                   
-                            <form:input path="blogTitle" cssClass="form-control" />
+                            <label>Title</label>  
+                            <p class="help-block" id="fs-blog-update-title-error"></p>
+                            <form:input path="blogTitle" id="fs-blog-update-line-title" cssClass="form-control" />
                             <!--Error Message-->
                             <div style="color:red; margin-top: 10px;">
                                 <form:errors path="blogTitle"/>
@@ -46,7 +47,8 @@
                         </div>
                         <div class="form-group">
                             <label>Summary</label>
-                            <form:input path="blogSummary" cssClass="form-control" />
+                            <p class="help-block" id="fs-blog-update-summary-error"></p>
+                            <form:input path="blogSummary" id="fs-blog-update-line-summary" cssClass="form-control" />
                             <!--Error Message-->
                             <div style="color:red; margin-top: 10px;">
                                 <form:errors path="blogSummary"/>
@@ -104,10 +106,6 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>BlogView</label>
-                            <form:input path="blogViews" cssClass="form-control" />
-                        </div>
-                        <div class="form-group">
                             <label>Status</label>
                             <div>
                                 <label class="radio-inline">
@@ -123,7 +121,7 @@
                             </div>
                         </div>
                         ${status}
-                        <form:button type="submit" class="btn btn-success" style="width: 30%">Update</form:button>
+                        <form:button id="fs-button-update-blog" type="submit" class="btn btn-success" style="width: 30%" onclick="return confirm('Are you sure you want to change??!')">Update</form:button>
                         <form:button type="reset" class="btn btn-default">Reset</form:button>
                         </div>
                     </div>

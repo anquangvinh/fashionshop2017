@@ -20,29 +20,22 @@
                 <div>
                     ${error}
                 <div class="col-lg-6">
-                    <form:form action="admin/blog/category/create.html" method="POST" modelAttribute="categories" enctype="multipart/form-data">
+                    <form:form name="cateForm" action="admin/blog/category/create.html" method="POST" modelAttribute="categories" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="blogCateName">Category Name</label>
-                             <form:input path="blogCateName" cssClass="form-control" placeholder="Enter Blog Category Name" />
-                            <!--Error Message-->
-                            <form:errors path="blogCateName"/>
+                            <p class="help-block" id="fs-blog-category-error"></p>
+                            <form:input name="catename" path="blogCateName" id="fs-blog-category" cssClass="form-control" placeholder="Enter Blog Category Name" />
                         </div>
                         <div class="form-group">
                             <label>Status</label>
                             <div>
-<!--                                <label class="radio-inline">
-                                    <input type="radio" name="radioEnable" id="optionsRadiosInline1" value="0" checked>Enable
-                                </label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="radioDisable" id="optionsRadiosInline2" value="1">Disable
-                                </label>-->
                                 <form:radiobutton path="status" value="0" checked="checked"/>Enable
                                 <form:radiobutton path="status" value="1"/>Disable
                             </div>
 
                         </div>
                         <div>
-                            <button type="submit" class="btn btn-success">Create</button>
+                            <button type="submit" id="fs-button-create-blog-category" class="btn btn-success">Create</button>
                             <button type="reset" class="btn btn-default">Reset</button>
                         </div>
                     </form:form>
@@ -53,5 +46,6 @@
         <!-- /.row -->
     </div>
     <!-- /.container-fluid -->
+</div>
 </div>
 <!-- /#page-wrapper -->

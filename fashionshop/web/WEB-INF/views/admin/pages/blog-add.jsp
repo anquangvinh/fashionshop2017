@@ -20,38 +20,30 @@
         <!-- /.row -->
 
         <div class="row">
-            <form:form action="admin/blog/create.html" method="POST" modelAttribute="newBlogs" enctype="multipart/form-data">
+            <form:form id="fs-form-create-blog" name="blogForm" action="admin/blog/create.html" method="POST" modelAttribute="newBlogs" enctype="multipart/form-data">
                 <div class="col-lg-12">
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label>Categories</label>
-                            <form:select path="blogCategory.blogCateID" cssClass="form-control">
-                                <form:option value="0"> Please Select </form:option>
+                            <p class="help-block" id="fs-select-box-blog-category-error"></p>
+                            <form:select id="fs-select-box-blog-category" path="blogCategory.blogCateID" cssClass="form-control">
+                                <form:option value="0">-- Please Select --</form:option>
                                 <form:options items="${blogcategory}" itemValue="blogCateID" itemLabel="blogCateName" />
                             </form:select>
                         </div>
-                        <div class="form-group">
+<!--                        <div class="form-group">
                             <label>User name</label>
-                            <form:select path="user.userID" cssClass="form-control">
-                                <form:option value="0"> Please Select </form:option>
-                                <form:options items="${user}" itemValue="userID" itemLabel="firstName" />
-                            </form:select>
-                        </div>
+                                 <form:input path="" value="<%=session.getAttribute("username") %>" id="fs-blog-line-username" cssClass="form-control" />
+                        </div>-->
                         <div class="form-group">
-                            <label>Title</label>                   
-                            <form:input path="blogTitle" cssClass="form-control" />
-                            <!--Error Message-->
-                            <div style="color:red; margin-top: 10px;">
-                                <form:errors path="blogTitle"/>
-                            </div>
+                            <label>Title</label> 
+                            <p class="help-block" id="fs-blog-title-error"></p>
+                            <form:input path="blogTitle" id="fs-blog-line-title" cssClass="form-control" />
                         </div>
                         <div class="form-group">
                             <label>Summary</label>
-                            <form:input path="blogSummary" cssClass="form-control" />
-                            <!--Error Message-->
-                            <div style="color:red; margin-top: 10px;">
-                                <form:errors path="blogSummary"/>
-                            </div>
+                                 <p class="help-block" id="fs-blog-summary-error"></p>
+                            <form:input path="blogSummary" id="fs-blog-line-summary" cssClass="form-control" />
                         </div>
                         <div class="form-group">
                             <div>
@@ -82,20 +74,20 @@
                             </script>
                         </div>
                         <br/>
-                        <div class="form-group">
+<!--                        <div class="form-group">
                             <label>Date</label>
                             <form:input path="postedDate" cssClass="form-control" />
-                            <!--Error Message-->
+                            Error Message
                             <div style="color:red; margin-top: 10px;">
                                 <form:errors path="postedDate"/>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="form-group">
                             <label>Content</label>
                             <br/>
                             <!--CKEditor-->
                             <form action="getContent" method="get">
-                                <textarea cols="80" id="editor1" name="editor1" rows="10"></textarea>				
+                                <textarea class="ckeditor" cols="80" id="editor1" name="editor1" rows="10"></textarea>				
                             </form>
                             <ckfinder:setupCKEditor basePath="assets/ckfinder/" editor="editor1" />
                             <ckeditor:replace replace="editor1" basePath="assets/ckeditor/" />
@@ -105,26 +97,18 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>BlogView</label>
-                            <form:input path="blogViews" cssClass="form-control" />
-                        </div>
-                        <div class="form-group">
                             <label>Status</label>
                             <div>
                                 <label class="radio-inline">
-                                    <form:radiobutton path="status" value="0" id="rdoEnable" label="Enable" />
-                                    <!--                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="0" checked>Enable-->
+                                    <form:radiobutton path="status" checked="checked" value="0" id="rdoEnable" label="Enable" />
                                 </label>
                                 <label class="radio-inline">
                                     <form:radiobutton path="status" value="1" id="rdoDisable" label="Disable" />
-                                    <!--                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="1">Disable-->
                                 </label>
-
-
                             </div>
                         </div>
                         ${status}
-                        <form:button type="submit" class="btn btn-success" style="width: 30%">Create</form:button>
+                        <form:button type="submit" id="fs-button-create-blog" name="fs-button-create-blog" class="btn btn-success">Create</form:button>
                         <form:button type="reset" class="btn btn-default">Reset</form:button>
                         </div>
                     </div>
