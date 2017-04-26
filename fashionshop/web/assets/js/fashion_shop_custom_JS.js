@@ -7,6 +7,9 @@
  */
 
 $(document).ready(function () {
+      /* --------------- BLOG ADMIN -------------------- */
+
+    
     /* USER JS AREA */
     /* REGISTER FORM */
     $("#txtBirthday").datepicker({
@@ -61,6 +64,7 @@ $(document).ready(function () {
     });
 
     /* FUNCTION FOR OWL CAROUSEL */
+    
     function fsCreateOwlCarousel() {
         var sync1 = $(".sync1");
         var sync2 = $(".sync2");
