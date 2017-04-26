@@ -35,6 +35,11 @@ public class GeneralController {
         model.addAttribute("mostViewList", mostViewList); //lấy sản phẩm xem nhiều nhất
         return "client/pages/index";
     }
+    
+    @RequestMapping(value = "/admin")
+    public String admin(ModelMap model) {
+        return "admin/login";
+    }
 
     private ProductStateLessBeanLocal lookupProductStateLessBeanLocal() {
         try {
