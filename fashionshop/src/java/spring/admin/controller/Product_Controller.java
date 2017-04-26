@@ -5,6 +5,7 @@
  */
 package spring.admin.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
@@ -408,7 +409,12 @@ public class Product_Controller {
             newList.add(prop);
         }
         ObjectMapper mapper = new ObjectMapper();
-        String result = mapper.writeValueAsString(newList);
+        String result = "";
+        try {
+            result = mapper.writeValueAsString(newList);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(Product_Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return result;
     }
 

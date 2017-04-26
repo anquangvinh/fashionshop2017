@@ -5,6 +5,7 @@
  */
 package spring.admin.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.logging.Level;
@@ -122,7 +123,12 @@ public class User_Controller {
         List<UserAddresses> userAddressList = usersStateLessBean.getUserByID(userID).getUserAddressList();
         
         ObjectMapper om = new ObjectMapper();
-        String json = om.writeValueAsString(userAddressList); //Chuyển list sang chuỗi JSON (com.fasterxml.jackson.databind.ObjectMapper;)
+        String json = ""; 
+        try {
+            json = om.writeValueAsString(userAddressList); //Chuyển list sang chuỗi JSON (com.fasterxml.jackson.databind.ObjectMapper;)
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(User_Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         return json;
     }
