@@ -97,6 +97,7 @@ public class UserAddressesStateLessBean implements UserAddressesStateLessBeanLoc
                 try {
                     Users user = findUserID(userID);
                     userAddresses.setUser(user);
+                    
                     getEm().merge(userAddresses);
                     error = 1;
             } catch (Exception e) {
@@ -113,6 +114,7 @@ public class UserAddressesStateLessBean implements UserAddressesStateLessBeanLoc
 //                        error = 4;
 //                    }else{
                     userAddresses.setUser(user);
+                    userAddresses.getAddressID();
                     getEm().merge(userAddresses);
                     error = 1;
 //                    }
