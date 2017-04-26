@@ -5,6 +5,7 @@
  */
 package spring.ejb;
 
+import java.security.Principal;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -48,5 +49,22 @@ public class BlogsSB implements BlogsSBLocal {
             return false;
         }
     }
+
+
+    @Override
+    public Blogs findBlogsByID(int id) {
+        Query q = em.createQuery("SELECT b FROM Blogs b WHERE b.blogID = :blogID", Blogs.class);
+        q.setParameter("blogID", id);
+        return (Blogs) q.getSingleResult();
+    }
+
+    @Override
+    public boolean editBlogs(Blogs targetBlogs) {
+    try {
+            em.merge(targetBlogs);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }    }
 
 }

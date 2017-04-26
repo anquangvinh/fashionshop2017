@@ -39,20 +39,12 @@
                                 <button class="btn-black" type="submit"><span><span>Update</span></span></button>
                             </div>
                         </form>-->
-                        <form:form class="form-login" method="POST" action="" modelAttribute="user" enctype="multipart/form-data">      
-                            
+                        <form:form class="form-update-user" method="POST" action="user/account-information/${findUsersID}.html" modelAttribute="updateUser" enctype="multipart/form-data">      
+                            ${error}
                             <ul class="form-list row">
                                 <li class="col-md-12 col-sm-12">
                                     <label>Email <em>*</em></label>
                                     <form:input path="email" cssClass="input-text"/>
-                                </li>
-                                <li class="col-md-6 col-sm-12">
-                                    <label>Password <em>*</em></label>
-                                    <form:password path="password" cssClass="input-text" id="password" />
-                                </li> 
-                                <li class="col-md-6 col-sm-12">
-                                    <label>Retype Password <em>*</em></label>
-                                    <input type="password" name="Repassword" class="input-text" id="Repassword" />
                                 </li>
                                 <li class="col-md-6 col-sm-12">
                                     <label>First Name <em>*</em></label>
@@ -79,7 +71,7 @@
                                     <label>Birthday</label>
                                     <form:input path="birthday" id="txtBirthday" cssClass="input-text" />
                                 </li>
-                                ${ee}
+<!--                                
                                 <li class="col-md-12 col-sm-12">
                                     <label>Phone <em>*</em></label>
                                     <input type="text" name="phoneNumber" />
@@ -88,7 +80,7 @@
                                 <li class="col-md-12 col-sm-12">
                                     <label>Address <em>*</em></label>
                                     <input type="text" name="address" />
-                                </li>
+                                </li>-->
 
                                 <li class="col-md-12 col-sm-12">
                                     <label>Avatar <em>*</em></label>
@@ -96,7 +88,7 @@
                                 </li>
                             </ul>
                             <div class="buttons-set">
-                                <button class="btn-black" type="submit"><span>Create Account</span></button>
+                                <button class="btn-black" type="submit"><span>Update Account</span></button>
                             </div>
                         </form:form>
                     </div>                                

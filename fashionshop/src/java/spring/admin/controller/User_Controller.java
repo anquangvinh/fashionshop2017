@@ -5,6 +5,8 @@
  */
 package spring.admin.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import spring.ejb.RolesStateLessBeanLocal;
 import spring.ejb.UsersStateLessBeanLocal;
 import spring.entity.Roles;
+import spring.entity.UserAddresses;
 import spring.entity.Users;
 
 @Controller
@@ -113,7 +116,23 @@ public class User_Controller {
         redirectAttributes.addFlashAttribute("roleupdate", roleupdate);
         return "redirect:/admin/user/role/edit/" + roleID + ".html";
     }
-
+    
+    @ResponseBody //Annotation này: dùng để trả về string nguyên thủy, ko trả về view.
+    @RequestMapping(value = "ajax/getUserAddress", method = RequestMethod.POST)
+    public String getUserAddress(@RequestParam("userID") Integer userID){
+        List<UserAddresses> userAddressList = usersStateLessBean.getUserByID(userID).getUserAddressList();
+        
+        ObjectMapper om = new ObjectMapper();
+        String json = ""; 
+        try {
+            json = om.writeValueAsString(userAddressList); //Chuyển list sang chuỗi JSON (com.fasterxml.jackson.databind.ObjectMapper;)
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(User_Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return json;
+    }
+    
     @ModelAttribute("roles")
     public List<Roles> getRole() {
         return rolesStateLessBean.getRole();

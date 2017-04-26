@@ -66,6 +66,6 @@ public class BlogCategories implements Serializable {
     public void setBlogList(List<Blogs> blogList) {
         this.blogList = blogList;
     }
-    
+
     
 }
