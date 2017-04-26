@@ -23,5 +23,7 @@ public interface BlogCategoriesSBLocal {
     
     int findCategoriesByName(String blogCateName);
     
-
+    BlogCategories findCategoryByID(int blogCateID);
+    
+    
 }

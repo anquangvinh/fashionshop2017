@@ -19,4 +19,5 @@ public interface BlogsSBLocal {
     List<Blogs> getListBlogsByCategory(int blogCateID);
      boolean blogAdd(Blogs newBlogs);
      Blogs findBlogsByID(int id);
+     boolean editBlogs(Blogs targetBlogs);
 }
