@@ -79,23 +79,35 @@ public class Blog_Controller {
             model.addAttribute("error", "<div class=\"col-md-12  alert alert-danger\">Blog Category Name existed!.</div>");
             model.addAttribute("categories", newBlogCate);
             return "admin/pages/blog-category-add";
-        } else if (checkError == 0){
+        } else if (checkError == 0) {
             redirectAttr.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-success\">Create New Categories Successfully!</div>");
             return "redirect:/admin/blog/category/create.html";
-        }else{
+        } else {
             redirectAttr.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-danger\">Create New Categories FAILED!. Error was happened!</div>");
             return "redirect:/admin/blog/category/create.html";
         }
     }
 
-    @RequestMapping(value = "category/edit")
-    public String blogCateUpdate() {
+    @RequestMapping(value = "category/edit/{blogCateID}", method = RequestMethod.GET)
+    public String blogCateUpdate(ModelMap model, @PathVariable("blogCateID") Integer blogCateID) {
+        BlogCategories targetBlogCategories = categoriesSB.findCategoryByID(blogCateID);
+        model.addAttribute("targetBlogCategories", targetBlogCategories);
         return "admin/pages/blog-category-update";
     }
-    
-    
-    
-    
+
+    @RequestMapping(value = "category/edit/{blogCateID}", method = RequestMethod.POST)
+    public String blogCateUpdate(@ModelAttribute("targetBlogCategories") BlogCategories targetBlogCategories,
+            RedirectAttributes redirectAttr,
+            @PathVariable("blogCateID") Integer blogCateID) {
+        targetBlogCategories.setBlogCateNameNA(shareFunc.changeText(targetBlogCategories.getBlogCateName()));
+        if (blogCategoriesSB.updateCategories(targetBlogCategories)) {
+            redirectAttr.addFlashAttribute("status", "<div class=\"col-md-12  alert alert-success\">Update Category Successfully!</div>");
+        } else {
+            redirectAttr.addFlashAttribute("status", "<div class=\"col-md-12  alert alert-success\">Error was happened!</div>");
+        }
+        return "redirect:/admin/blog/category/edit/" + blogCateID + ".html";
+
+    }
 
     @RequestMapping(value = "list/{blogCateID}")
     public String blogList(@PathVariable("blogCateID") Integer blogCateID, ModelMap model) {
@@ -108,6 +120,11 @@ public class Blog_Controller {
     public String blogList(ModelMap model) {
         model.addAttribute("blogsList", blogsSB.getAllBlogs());
         return "admin/pages/blog-list";
+    }
+    
+      @RequestMapping(value = "listChart")
+    public String blogListChart(ModelMap model) {
+        return "admin/pages/blog-statistics";
     }
 
     @RequestMapping(value = "create", method = RequestMethod.GET)
@@ -142,7 +159,7 @@ public class Blog_Controller {
         }
         Blogs blogs = new Blogs();
         redirectAttr.addFlashAttribute("blogs", blogs);
-        return "redirect:/admin/pages/create.html";
+        return "redirect:/admin/blog/create.html";
 
     }
 
@@ -162,15 +179,52 @@ public class Blog_Controller {
     public String blogUpdate(@PathVariable("blogID") Integer blogID,
             ModelMap model) {
         Blogs targetBlogs = blogsSB.findBlogsByID(blogID);
-        
         //Change normal date to string
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Date date = targetBlogs.getPostedDate();
         String formattedDate = dateFormat.format(date);
         model.addAttribute("formattedDate", formattedDate);
         model.addAttribute("targetBlogs", targetBlogs);
-        
+
         return "admin/pages/blog-update";
+    }
+
+    @RequestMapping(value = "edit/{blogID}", method = RequestMethod.POST)
+    public String blogUpdate(@ModelAttribute("targetBlogs") Blogs updatedTargetBlogs,
+            @PathVariable("blogID") Integer blogID,
+            @RequestParam("upImage") MultipartFile image,
+            RedirectAttributes redirectAttr) {
+        Blogs normalTargetProduct = blogsSB.findBlogsByID(blogID); //Blogs Khi chưa chỉnh sửa
+
+        updatedTargetBlogs.setBlogTitleNA(shareFunc.changeText(updatedTargetBlogs.getBlogTitle()));
+
+        try {
+            if (!image.isEmpty()) {
+                updatedTargetBlogs.setBlogImg(image.getOriginalFilename());
+                String path = app.getRealPath("/assets/images/") + "/" + updatedTargetBlogs.getBlogImg();
+                image.transferTo(new File(path));
+            } else {
+                updatedTargetBlogs.setBlogImg(normalTargetProduct.getBlogImg());
+            }
+        } catch (IOException | IllegalStateException ex) {
+            Logger.getLogger(Blog_Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (blogsSB.editBlogs(updatedTargetBlogs)) {
+            Blogs afterUpdateBlogs = blogsSB.findBlogsByID(blogID);
+            //Change normal date to string
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = afterUpdateBlogs.getPostedDate();
+            String formattedDate = dateFormat.format(date);
+            redirectAttr.addFlashAttribute("formattedDate", formattedDate);
+
+            redirectAttr.addFlashAttribute("targetBlogs", afterUpdateBlogs);
+            redirectAttr.addFlashAttribute("status", "<div class=\"col-md-12  alert alert-success\">Update Blogs Info Successfully!</div>");
+        } else {
+            redirectAttr.addFlashAttribute("status", "<div class=\"col-md-12  alert alert-danger\">Update Blogs Info FAILED!. Error was happened!</div>");
+        }
+
+        return "redirect:/admin/blog/edit/" + blogID + ".html";
     }
 
     private BlogsSBLocal lookupBlogsSBLocal() {
