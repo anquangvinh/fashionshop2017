@@ -23,6 +23,6 @@ public interface OrderStateFulBeanLocal {
     boolean updateProduct(CartLineInfo oldCartLineInfo, CartLineInfo cartLineInfo);
     List<CartLineInfo> showCart();
     CartLineInfo getProductInListByID(int productid, int sizeid, int colorid);
-    int completePurchase(Orders orders);
+    String completePurchase(Orders orders);
     float subTotal();
 }

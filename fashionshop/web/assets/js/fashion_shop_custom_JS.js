@@ -7,9 +7,9 @@
  */
 
 $(document).ready(function () {
-      /* --------------- BLOG ADMIN -------------------- */
+    /* --------------- BLOG ADMIN -------------------- */
 
-    
+
     /* USER JS AREA */
     /* REGISTER FORM */
     $("#txtBirthday").datepicker({
@@ -64,7 +64,7 @@ $(document).ready(function () {
     });
 
     /* FUNCTION FOR OWL CAROUSEL */
-    
+
     function fsCreateOwlCarousel() {
         var sync1 = $(".sync1");
         var sync2 = $(".sync2");
@@ -360,7 +360,7 @@ $(document).ready(function () {
                     if (item.quantity === 0) {
                         str_change_size += "<div class=\"fs-particular-size fs-unselectable\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
                     } else {
-                        str_change_size += "<div onclick=\"sizeImageClick("+item.sizeID+");\" class=\"fs-particular-size\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
+                        str_change_size += "<div onclick=\"sizeImageClick(" + item.sizeID + ");\" class=\"fs-particular-size\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
                     }
                 });
                 $("#fs-product-size").hide().html(str_change_size).fadeIn(1000);
@@ -443,14 +443,16 @@ $(document).ready(function () {
 
 
     });
-    
+
     /*========================================NGAN - ORDER====================================================*/
-    
+
     $("#cart").load("orders/ajax/cart.html");
     $('#diff-discount').on("click", function () {
         $('.discount-code').toggle("slow");
     });
-    
+    $("#coupon_code").keyup(function () {
+        $("#fs-checkout-discountvou-error").text("");
+    });
     /*======================================END NGAN - ORDER==================================================*/
 });
 

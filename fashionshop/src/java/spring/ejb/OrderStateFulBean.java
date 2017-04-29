@@ -19,6 +19,7 @@ import spring.entity.CartLineInfo;
 import spring.entity.DiscountVoucher;
 import spring.entity.Orders;
 import spring.entity.OrdersDetail;
+import spring.entity.SizesByColor;
 import spring.entity.Users;
 
 /**
@@ -42,7 +43,6 @@ public class OrderStateFulBean implements OrderStateFulBeanLocal, Serializable {
 
     private DiscountVoucher discountVoucher;
     private List<CartLineInfo> cart;
-    private Users users;
 
     @PostConstruct
     private void init() {
@@ -92,10 +92,17 @@ public class OrderStateFulBean implements OrderStateFulBeanLocal, Serializable {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public int completePurchase(Orders orders) {
-        int checkError;
+    public String completePurchase(Orders orders) {
+        String checkError;
         try {
             getEntityManager().persist(orders);
+            getEntityManager().flush();
+            if (orders.getVoucher() != null) {
+                DiscountVoucher discountVoucher = orders.getVoucher();
+                discountVoucher.setQuantity(discountVoucher.getQuantity()-1);
+                getEntityManager().merge(discountVoucher);
+                getEntityManager().flush();
+            }
             for (CartLineInfo cartLineInfo : cart) {
                 OrdersDetail ordersDetail = new OrdersDetail();
                 ordersDetail.setOrder(orders);
@@ -106,15 +113,16 @@ public class OrderStateFulBean implements OrderStateFulBeanLocal, Serializable {
                 ordersDetail.setPrice(cartLineInfo.getProduct().getPrice());
                 ordersDetail.setStatus(Short.parseShort("0"));
                 getEntityManager().persist(ordersDetail);
+                getEntityManager().flush();
+                SizesByColor sizesByColor = cartLineInfo.getSizesByColor();
+                sizesByColor.setQuantity(sizesByColor.getQuantity()-cartLineInfo.getQuantity());
+                getEntityManager().merge(sizesByColor);
+                getEntityManager().flush();
             }
-            checkError = 1;
+            checkError = String.valueOf(orders.getOrdersID());
         } catch (Exception e) {
-            checkError = 0;
+            checkError = String.valueOf("000");
         }
-//        orders.setOrdersDate(new Date());
-//        orders.setReceiverFirstName(users.getFirstName());
-//        orders.setReceiverLastName(users.getLastName());
-//        orders.setPhoneNumber(null);
         cart = new ArrayList<>();
         return checkError;
     }

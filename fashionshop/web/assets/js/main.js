@@ -303,9 +303,9 @@ $(document).ready(function () {
     $('#create-act').on("click", function () {
         $('.create-account').toggle("slow");
     });
-    $('#diff-address').on("click", function () {
-        $('.shipping-address').toggle("slow");
-    });
+//    $('#diff-address').on("click", function () {
+//        $('.shipping-address').toggle("slow");
+//    });
 
     $('#direct-transfer').on("click", function () {
         $('#direct-transfer-msg').show("slow");

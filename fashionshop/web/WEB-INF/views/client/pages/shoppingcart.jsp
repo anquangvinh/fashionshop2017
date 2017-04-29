@@ -81,47 +81,8 @@
                 </form>
                 <div class="clearfix space20"></div>
                 <div class="row shipping-info-wrap">
-                    <!--                    <div class="col-md-4 col-sm-4 col-xs-12">
-                                            <form id="discount-coupon-form">
-                                                <div class="discount">
-                                                    <h2>Discount Codes</h2>
-                                                    <div class="form-list">
-                                                        <label for="coupon_code">Enter your coupon code if you have one.</label>
-                                                        <input name="remove" id="remove-coupone" value="0" type="hidden">
-                                                        <div class="input-box">
-                                                            <input class="input-text" id="coupon_code" name="coupon_code" value="">
-                                                        </div>
-                                                        <div class="buttons-set">
-                                                            <button type="button" title="Apply Coupon" class="btn-black"><span><span>Apply Coupon</span></span></button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>-->
                     <div class="col-md-4 col-sm-4 col-xs-12">
                         <div class="totals">
-                            <!--                            <table id="shopping-cart-totals-table">
-                                                            <tfoot>
-                                                                <tr>
-                                                                    <td style="" class="a-right" colspan="1">
-                                                                        <strong>Grand Total</strong>
-                                                                    </td>
-                                                                    <td style="" class="a-right">
-                                                                        <strong><span class="price">$${grandTotal}</span></strong>
-                                                                    </td>
-                                                                </tr>
-                                                            </tfoot>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td style="" class="a-right" colspan="1">
-                                                                        <strong>Grand Total</strong>    
-                                                                    </td>
-                                                                    <td style="" class="a-right">
-                                                                        <span class="price">$${grandTotal}</span>    
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>-->
                             <ul class="checkout-types">
                                 <li class="space10">
                                     <strong>Grand Total: $${grandTotal}</strong>
@@ -131,7 +92,6 @@
                                         Proceed to checkout
                                     </button>
                                 </li>
-                                <!--<li><a href="#">Checkout with Multiple Addresses</a></li>-->
                             </ul>
                         </div>
                     </div>

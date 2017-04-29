@@ -37,7 +37,7 @@
                                 <td align="center">${orderdetail.ordersDetailID}</td>
                                 <td align="center">${orderdetail.getProduct().getProductName()}</td>
                                 <td align="center">${orderdetail.getSize().getColor().getColor()}</td>
-                                <td align="center">${orderdetail.getSize().getColor().colorID}</td>
+                                <td align="center">${orderdetail.getSize().productSize}</td>
                                 <td align="center">${orderdetail.quantity}</td>
                                 <td align="center">${orderdetail.price}</td>
                                 <td align="center">${orderdetail.getTotalPrice()}</td>
