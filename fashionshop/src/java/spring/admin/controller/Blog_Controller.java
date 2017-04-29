@@ -137,7 +137,48 @@ public class Blog_Controller {
         return "admin/pages/blog-add";
     }
 
-    @RequestMapping(value = "create", method = RequestMethod.POST)
+//    @RequestMapping(value = "create", method = RequestMethod.POST)
+//    public String blogAdd(@ModelAttribute("newBlogs") Blogs newBlogs,
+//            @RequestParam("upImage") MultipartFile image,
+//            RedirectAttributes redirectAttr, HttpServletRequest Request) {
+//        String email = String.valueOf(Request.getSession().getAttribute("email"));
+////        if (email != null) {
+////            Users user = usersStateLessBean.findUserByEmail(email);
+////            if(user!= null){
+////                newBlogs.setUser(user);
+////            }
+////        }
+//        newBlogs.setBlogTitleNA(shareFunc.changeText(newBlogs.getBlogTitle()));
+//        newBlogs.setPostedDate(new Date());
+//        try {
+//            if (image.isEmpty()) {
+//                newBlogs.setBlogImg("defaultProduct.png");
+//            } else if(email != null){
+//                   Users user = usersStateLessBean.findUserByEmail(email);
+//            if(user!= null){
+//                newBlogs.setUser(user);
+//            }
+//            } else {
+//                  newBlogs.setBlogImg(image.getOriginalFilename());
+//                String path = app.getRealPath("/assets/images/") + "/" + newBlogs.getBlogImg();
+//                image.transferTo(new File(path));
+//            }
+//        } catch (IOException | IllegalStateException ex) {
+//            Logger.getLogger(Blog_Controller.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//        if (blogsSB.blogAdd(newBlogs)) {
+//            redirectAttr.addFlashAttribute("status", "<div class=\"col-md-12  alert alert-success\">Create New Blogs Successfully!</div>");
+//        } else {
+//            redirectAttr.addFlashAttribute("status", "<div class=\"col-md-12  alert alert-danger\">Create New Blogs FAILED!. Error was happened!</div>");
+//        }
+//        Blogs blogs = new Blogs();
+//        redirectAttr.addFlashAttribute("blogs", blogs);
+//        return "redirect:/admin/blog/create.html";
+//
+//    }
+    
+      @RequestMapping(value = "create", method = RequestMethod.POST)
     public String blogAdd(@ModelAttribute("newBlogs") Blogs newBlogs,
             @RequestParam("upImage") MultipartFile image,
             RedirectAttributes redirectAttr, HttpServletRequest Request) {
@@ -208,7 +249,7 @@ public class Blog_Controller {
         Blogs normalTargetProduct = blogsSB.findBlogsByID(blogID); //Blogs Khi chưa chỉnh sửa
 
         updatedTargetBlogs.setBlogTitleNA(shareFunc.changeText(updatedTargetBlogs.getBlogTitle()));
-
+           updatedTargetBlogs.setPostedDate(new Date());
         try {
             if (!image.isEmpty()) {
                 updatedTargetBlogs.setBlogImg(image.getOriginalFilename());
