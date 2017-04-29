@@ -19,7 +19,7 @@ public class OrdersDetail implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer ordersDetailID;
-    private Float productDiscount;
+    private Short productDiscount;
     private Integer quantity;
     private Float price;
     private Short status;
@@ -51,11 +51,11 @@ public class OrdersDetail implements Serializable {
         this.ordersDetailID = ordersDetailID;
     }
 
-    public Float getProductDiscount() {
+    public Short getProductDiscount() {
         return productDiscount;
     }
 
-    public void setProductDiscount(Float productDiscount) {
+    public void setProductDiscount(Short productDiscount) {
         this.productDiscount = productDiscount;
     }
 

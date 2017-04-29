@@ -23,7 +23,6 @@
                             <th class="text-center">No</th>
                             <th class="text-center">Category</th>
                             <th class="text-center">SubCategory</th>
-                            <th class="text-center">Status</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -33,7 +32,6 @@
                                 <td class="text-center fs-valign-middle">${No.index + 1}</td>
                                 <td class="text-center fs-valign-middle">${subCate.category.cateName}</td>
                                 <td class="text-center fs-valign-middle">${subCate.subCateName}</td>
-                                <td class="text-center fs-valign-middle">${subCate.status}</td>
                                 <td class="text-center fs-valign-middle">
                                     <a href="admin/product-subcategory/${subCate.subCateNameNA}-${subCate.subCateID}.html" class="btn btn-warning">Update</a>
                                     <a href="#" class="btn btn-danger">Delete</a>

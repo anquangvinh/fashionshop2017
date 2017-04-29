@@ -20,4 +20,5 @@ public interface BlogsSBLocal {
      boolean blogAdd(Blogs newBlogs);
      Blogs findBlogsByID(int id);
      boolean editBlogs(Blogs targetBlogs);
+       List<Blogs> findBlogsByTitle(String blogTitle);
 }

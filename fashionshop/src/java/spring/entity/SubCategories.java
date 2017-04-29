@@ -25,7 +25,6 @@ public class SubCategories implements Serializable {
     private Integer subCateID;
     private String subCateName;
     private String subCateNameNA;
-    private Short status;
     
     @OneToMany(mappedBy = "subCate")
     @JsonManagedReference
@@ -59,15 +58,7 @@ public class SubCategories implements Serializable {
     public void setSubCateNameNA(String subCateNameNA) {
         this.subCateNameNA = subCateNameNA;
     }
-
-    public Short getStatus() {
-        return status;
-    }
-
-    public void setStatus(Short status) {
-        this.status = status;
-    }
-
+    
     public List<Products> getProductList() {
         return productList;
     }
