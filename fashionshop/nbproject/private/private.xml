@@ -2,17 +2,5 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/F:/Courses/fpt_aptech/Sem4/project/fashionshop/web/assets/js/fashion_shop_custom_JS.js</file>
-            <file>file:/F:/Courses/fpt_aptech/Sem4/project/fashionshop/web/WEB-INF/views/admin/pages/product-add.jsp</file>
-            <file>file:/F:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/admin/controller/Product_Controller.java</file>
-            <file>file:/F:/Courses/fpt_aptech/Sem4/project/fashionshop/web/WEB-INF/views/client/pages/index.jsp</file>
-            <file>file:/F:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/client/controller/ProductController.java</file>
-            <file>file:/F:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/ProductColors.java</file>
-            <file>file:/F:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/ejb/ProductStateLessBean.java</file>
-            <file>file:/F:/Courses/fpt_aptech/Sem4/project/fashionshop/src/java/spring/entity/Products.java</file>
-            <file>file:/F:/Courses/fpt_aptech/Sem4/project/fashionshop/web/WEB-INF/views/client/pages/product-detail.jsp</file>
-            <file>file:/F:/Courses/fpt_aptech/Sem4/project/fashionshop/web/assets/admin/dist/js/fashion_shop_custom_JS.js</file>
-        </group>
     </open-files>
 </project-private>

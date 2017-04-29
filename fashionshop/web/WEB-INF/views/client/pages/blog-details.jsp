@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!-- BREADCRUMBS -->
 <jsp:include page="../blocks/breadcrumbs.jsp" flush="true"/>
@@ -19,45 +21,15 @@
                 </div>
                 <div class="side-widget space50">
                     <h3><span>Categories</span></h3>
-                    <ul class="list-unstyled cat-list">
-                        <li> <a href="#">Marketing</a> <i class="icon-plus2"></i></li>
-                        <li> <a href="#">Photography</a> <i class="icon-plus2"></i></li>
-                        <li> <a href="#">Webdesign</a> <i class="icon-plus2"></i></li>
-                        <li> <a href="#">Fashion</a> <i class="icon-plus2"></i></li>
-                        <li> <a href="#">Seo Strategy</a> <i class="icon-plus2"></i></li>
+                   <ul class="list-unstyled cat-list">
+                        <c:forEach items="${blogCateListClientDetail}" var="blogcateclientdetail">
+                            <li> <a href="#">${blogcateclientdetail.blogCateName}</a></li>
+                            </c:forEach>
                     </ul>
                 </div>
                 <div class="side-widget space50">
                     <h3><span>Popular Post</span></h3>
-                    <ul class="list-unstyled popular-post">
-                        <li>
-                            <div class="popular-img">
-                                <a href="#"> <img src="assets/images/blog/1/1.jpg" class="img-responsive" alt=""></a>
-                            </div>
-                            <div class="popular-desc">
-                                <h5> <a href="#">Mattis arcu viverra vel</a></h5>
-                                <span>By Admin</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="popular-img">
-                                <a href="#"> <img src="assets/images/blog/1/2.jpg" class="img-responsive" alt=""></a>
-                            </div>
-                            <div class="popular-desc">
-                                <h5> <a href="#">Sed vel diam sit amet</a></h5>
-                                <span>By John Doe</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="popular-img">
-                                <a href="#"> <img src="assets/images/blog/1/3.jpg" class="img-responsive" alt=""></a>
-                            </div>
-                            <div class="popular-desc">
-                                <h5> <a href="#">Cras vulputate dolor</a></h5>
-                                <span>By Admin</span>
-                            </div>
-                        </li>
-                    </ul>
+                   
                 </div>
                 <div class="side-widget space50">
                     <h3><span>Archives</span></h3>
@@ -97,12 +69,11 @@
             <div class="col-md-9 col-sm-8 blog-content">
                 <div class="blog-single">
                     <article class="blogpost">
-                        <h2 class="post-title"><a href="#">Lorem ipsum dolor sit amet consec tetur</a></h2>
+                        <h2 class="post-title">${blogTitle}</h2>
                         <div class="post-meta">
-                            <span><a href="#"><i class="fa fa-calendar"></i> 23 May</a></span>
+                            <span><a href="#"><i class="fa fa-calendar"></i>${postedDate}</a></span>
                             <span><a href="#"><i class="fa fa-user"></i> John Doe</a></span>
                             <span><i class="fa fa-folder"></i><a href="">Vector</a>, <a href="#">Design</a></span>
-                            <span><a href="#"><i class="fa fa-comments"></i> 13 Comments</a></span>
                         </div>
                         <div class="space30"></div>
                         <!-- Media Gallery -->

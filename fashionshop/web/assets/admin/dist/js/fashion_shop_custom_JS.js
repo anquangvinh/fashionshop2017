@@ -727,29 +727,12 @@ $(document).ready(function () {
             $("#fs-blog-category-error").text("");
         }
     });
-    //update image not null
-
-
-
-
-    $("#fs-button-update-blog").bind("click", function ()
-    {
-        var imgVal = $("#upImage").val();
-        if (imgVal === "")
-        {
-            alert("Please select the image for the article.");
-
-        }
-        return 0;
-
-    });
 
     // blog-category-update-end
     /* BẮT validation CREATE BLOG */
     $("#fs-button-create-blog").click(function (e) {
         e.preventDefault();
         var categoryID = $("#fs-select-box-blog-category").val();
-
         if (categoryID === 0) {
             $("#fs-select-box-blog-category-error").text("Please select a Category!.");
         } else {
@@ -775,12 +758,10 @@ $(document).ready(function () {
         {
             $("#fs-blog-title-error").text("Title has 5 - 100 characters!");
         }
-
         else
         {
             $("form[name=\"blogForm\"]").submit();
         }
-
     });
 
     $("#fs-blog-line-title").keyup(function () {
@@ -823,7 +804,6 @@ $(document).ready(function () {
     $("#fs-button-update-blog").click(function (e) {
         e.preventDefault();
         var categoryID = $("#fs-select-box-blog-category-update").val();
-
         if (categoryID === 0) {
             $("#fs-select-box-blog-category-update-error").text("Please select a Category!.");
         } else {

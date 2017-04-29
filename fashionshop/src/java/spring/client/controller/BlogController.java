@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import spring.ejb.BlogCategoriesSBLocal;
 import spring.ejb.BlogsSBLocal;
 import spring.ejb.UsersStateLessBeanLocal;
@@ -47,15 +48,47 @@ public class BlogController {
 //        model.addAttribute("blogsListClient", getBlogsListByCate);  
 //        return "client/pages/blog";
 //    }
+//    @RequestMapping(value = "/blog")
+//    public String blog(ModelMap model) {
+//        List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
+//        model.addAttribute("blogCateListClient", getBlogCateList); 
+//        return "client/pages/blog";
+//    }
+    
     @RequestMapping(value = "/blog")
     public String blog(ModelMap model) {
+        List<Blogs> getShowAllBlogs = blogsSB.getAllBlogs();
         List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
+        model.addAttribute("blogListClient", getShowAllBlogs);
         model.addAttribute("blogCateListClient", getBlogCateList); 
         return "client/pages/blog";
     }
+    
+        @RequestMapping(value = "/blog-categories/{blogCateID}", method = RequestMethod.POST)
+    public String blog_categories(ModelMap model, @PathVariable("blogCateID") Integer blogCateID) {
+        BlogCategories blogCategories= blogCategoriesSB.findCategoryByID(blogCateID);
+        if (blogCategories != null) {
+            model.addAttribute("listBlog",blogCategories.getBlogList());
+        }
+//            BlogCategories blogCategories= blogCategoriesSB.findCategoryByID(blogCateID);
+//        if (blogCategories != null) {
+//            model.addAttribute("listBlog",blogCategories.getBlogList());
+//        }
+//        List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
+//        model.addAttribute("blogCateListClient", getBlogCateList); 
+        return "client/pages/blog-categories";
+    }
+    
 
     @RequestMapping(value = "/blog/detail")
-    public String blogdetail() {
+    public String blogdetail(ModelMap model) {
+//        , @PathVariable("blogCateID") Integer blogCateID 
+//           List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
+//           Blogs bloglistdetail = blogsSB.findBlogsByID(id);
+//           if (id == null){
+//               model.addAttribute("")
+//           }
+//        model.addAttribute("blogCateListClientDetail", getBlogCateList); 
         return "client/pages/blog-details";
     }
 
