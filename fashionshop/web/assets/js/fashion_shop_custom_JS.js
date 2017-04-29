@@ -58,7 +58,8 @@ $(document).ready(function () {
             data: {colorID: colorID},
             dataType: 'json',
             success: function (response) {
-                $("img[fs-product-for-img=" + productID + "]").hide().attr("src", "assets/images/products/subImg/" + response.productSubImgsList[0].urlImg).fadeIn(600);
+                var i = response.productSubImgsList.findIndex(x => x.subImgOrder == 1);
+                $("img[fs-product-for-img=" + productID + "]").hide().attr("src", "assets/images/products/subImg/" + response.productSubImgsList[i].urlImg).fadeIn(600);
             }
         });
     });
@@ -450,9 +451,29 @@ $(document).ready(function () {
     $('#diff-discount').on("click", function () {
         $('.discount-code').toggle("slow");
     });
+
     $("#coupon_code").keyup(function () {
         $("#fs-checkout-discountvou-error").text("");
     });
     /*======================================END NGAN - ORDER==================================================*/
+    
+    /*========================================DUONG - USER====================================================*/
+    $(".fs-add-address-user").on("click", function () {
+        var userID = $(this).attr("fs-userID");
+        var modal = $(this).attr("fs-message"); 
+        $.ajax({
+            url: "user/address-add/" +userID+ ".html",
+            method: "GET",
+            data: {userID: userID},
+            success: function (response) {
+                alert('không thể thêm address');
+            }
+        });
+    });
+    
+    
+//    fs-add-address-user
+    
+    /*========================================END DUONG - USER====================================================*/
 });
 

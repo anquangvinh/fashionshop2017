@@ -22,7 +22,6 @@
                         <tr>
                             <th class="text-center">No</th>
                             <th class="text-center">Category</th>
-                            <th class="text-center">Status</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -31,7 +30,6 @@
                             <tr class="odd gradeX">
                                 <td class="text-center fs-valign-middle">${No.index + 1}</td>
                                 <td class="text-center fs-valign-middle">${cate.cateName}</td>
-                                <td class="text-center fs-valign-middle">${cate.status}</td>
                                 <td class="text-center fs-valign-middle">
                                     <a href="admin/product-category/${cate.cateNameNA}-${cate.cateID}.html" class="btn btn-warning">Update</a>
                                     <a href="#" class="btn btn-danger">Delete</a>

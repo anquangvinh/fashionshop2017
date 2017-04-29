@@ -20,7 +20,8 @@ public class ProductSubImgs implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer subImgID;
     private String urlImg;
-
+    private Integer subImgOrder;
+    
     @ManyToOne
     @JoinColumn(name = "colorID")
     @JsonBackReference
@@ -42,6 +43,14 @@ public class ProductSubImgs implements Serializable {
         this.urlImg = urlImg;
     }
 
+    public Integer getSubImgOrder() {
+        return subImgOrder;
+    }
+
+    public void setSubImgOrder(Integer subImgOrder) {
+        this.subImgOrder = subImgOrder;
+    }
+    
     public ProductColors getProductColor() {
         return productColor;
     }

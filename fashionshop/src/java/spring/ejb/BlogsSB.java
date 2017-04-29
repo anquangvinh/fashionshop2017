@@ -67,4 +67,14 @@ public class BlogsSB implements BlogsSBLocal {
             return false;
         }    }
 
+    @Override
+    public List<Blogs> findBlogsByTitle(String blogTitle) {
+        Query q = getEntityManager().createQuery("SELECT c FROM Blogs c WHERE c.blogTitle LIKE :blogTitle", Blogs.class);
+        q.setParameter("blogTitle", blogTitle);
+        return q.getResultList();
+    }
+
+    
+
+
 }

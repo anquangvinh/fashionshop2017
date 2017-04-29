@@ -21,7 +21,6 @@ public class Categories implements Serializable {
     private Integer cateID;
     private String cateName;
     private String cateNameNA;
-    private Short status;
     
     @OneToMany(mappedBy = "category")
     @JsonManagedReference
@@ -53,14 +52,6 @@ public class Categories implements Serializable {
 
     public void setCateNameNA(String cateNameNA) {
         this.cateNameNA = cateNameNA;
-    }
-
-    public Short getStatus() {
-        return status;
-    }
-
-    public void setStatus(Short status) {
-        this.status = status;
     }
 
     public List<SubCategories> getSubCateList() {

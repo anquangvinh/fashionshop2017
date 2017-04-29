@@ -69,7 +69,6 @@ public class Product_Controller {
     @RequestMapping(value = "product-category/create", method = RequestMethod.GET)
     public String productCateAdd(ModelMap model) {
         Categories newCate = new Categories();
-        newCate.setStatus((short) 1);
         model.addAttribute("newCate", newCate);
         return "admin/pages/product-category-add";
     }
@@ -246,7 +245,7 @@ public class Product_Controller {
         int subCateID = Integer.parseInt(allRequestParams.get("subCategory").get(0));
         
         Float price = Float.parseFloat(allRequestParams.get("price").get(0));
-        Float discount = Float.parseFloat(allRequestParams.get("discount").get(0));
+        Short discount = Short.parseShort(allRequestParams.get("discount").get(0));
         String description = allRequestParams.get("description").get(0);
         List<String> colorList = allRequestParams.get("color");
         List<MultipartFile> colorImgs = ((DefaultMultipartHttpServletRequest) request).getFiles("colorImg[]");
@@ -268,7 +267,8 @@ public class Product_Controller {
             productColor.setColorNA(shareFunc.changeText(colorList.get(i)));
             productColor.setStatus((short) 1);
             productColor.setProduct(product);
-
+            productColor.setColorOrder(i);
+            
             //setUrlColorImg
             MultipartFile colorImg = colorImgs.get(i);
             if (!colorImg.isEmpty()) {
@@ -292,6 +292,7 @@ public class Product_Controller {
                     SizesByColor size = new SizesByColor();
                     size.setProductSize(sizeListFromClient.get(j).toUpperCase());
                     size.setQuantity(Integer.parseInt(allRequestParams.get("quantity").get(j)));
+                    size.setSizeOrder(j);
                     size.setStatus((short) 1);
                     size.setColor(productColor);
                     sizeList.add(size);
@@ -302,6 +303,7 @@ public class Product_Controller {
                     SizesByColor size = new SizesByColor();
                     size.setProductSize(sizeListFromClient.get(j).toUpperCase());
                     size.setQuantity(Integer.parseInt(allRequestParams.get("quantity_" + i).get(j)));
+                    size.setSizeOrder(j);
                     size.setStatus((short) 1);
                     size.setColor(productColor);
                     sizeList.add(size);
@@ -317,10 +319,13 @@ public class Product_Controller {
             } else {
                 subImgsList = ((DefaultMultipartHttpServletRequest) request).getFiles("productSubImg_" + i + "[]");
             }
+            int k = 0;
             for (MultipartFile file : subImgsList) {
+                k++;
                 ProductSubImgs psi = new ProductSubImgs();
                 //set urlimg
                 psi.setUrlImg(simpleDateFormat.format(new Date()) + shareFunc.changeText(file.getOriginalFilename()));
+                psi.setSubImgOrder(k);
                 //Luu file vao duong dan
                 String subImgPath = app.getRealPath("/assets/images/products/subImg/") + "/" + psi.getUrlImg();
                 try {
@@ -420,7 +425,6 @@ public class Product_Controller {
 
     @RequestMapping(value = "product/edit-{productID}")
     public String productUpdate() {
-        
         return "admin/pages/product-update";
     }
 

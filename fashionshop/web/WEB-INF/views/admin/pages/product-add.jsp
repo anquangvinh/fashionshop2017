@@ -107,7 +107,7 @@
                 <!-- fieldset DETAIL INFORMATION -->
                 <fieldset class="form-group" id="fs-fieldset-detail">
                     <legend class="text-center">Detail Information</legend>
-                    <div class="col-xs-12" style="padding: 5px 0; border: 1px #CCC dashed; margin-bottom: 10px">
+                    <div class="col-xs-12" style="padding: 5px 0; border: 1px #CCC dashed; margin-bottom: 10px" fs-big-div-color="0">
                         <div class="col-md-6 fs-right-border">
                             <div class="form-group">
                                 <label>Color <span class="fs-color-red">*</span></label>

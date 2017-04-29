@@ -97,7 +97,7 @@ public class Orders_Controller {
     @RequestMapping(value = "discountadd", method = RequestMethod.POST)
     public String discountadd(ModelMap model, @ModelAttribute("discountVoucher") DiscountVoucher newDiscountVoucher, 
               RedirectAttributes flashAttr){
-        newDiscountVoucher.setDiscount(newDiscountVoucher.getDiscount()/100);
+        newDiscountVoucher.setDiscount((short) (newDiscountVoucher.getDiscount()/100));
         int checkSta = orderStateLessBean.createDiscountVoucher(newDiscountVoucher);
         if (checkSta == 2) {
             model.addAttribute("error", "<div class=\"alert alert-danger\">\n"
@@ -135,7 +135,7 @@ public class Orders_Controller {
     @RequestMapping(value = "discountupdate/{voucherID}", method = RequestMethod.POST)
     public String discountupdate(@PathVariable("voucherID") String voucherID, ModelMap model, 
               @ModelAttribute("targetDiscountVoucher") DiscountVoucher targetDiscountVoucher, RedirectAttributes flashAttr){
-        targetDiscountVoucher.setDiscount(targetDiscountVoucher.getDiscount()/100);
+        targetDiscountVoucher.setDiscount((short)(targetDiscountVoucher.getDiscount()/100));
         int checkSta = orderStateLessBean.updateDiscountVoucher(targetDiscountVoucher);
         if (checkSta == 2) {
             model.addAttribute("error", "<div class=\"alert alert-danger\">\n"

@@ -31,10 +31,6 @@
                                 <form:options items="${blogcategory}" itemValue="blogCateID" itemLabel="blogCateName" />
                             </form:select>
                         </div>
-<!--                        <div class="form-group">
-                            <label>User name</label>
-                                 <form:input path="" value="<%=session.getAttribute("username") %>" id="fs-blog-line-username" cssClass="form-control" />
-                        </div>-->
                         <div class="form-group">
                             <label>Title</label> 
                             <p class="help-block" id="fs-blog-title-error"></p>

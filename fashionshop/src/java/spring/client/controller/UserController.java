@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import static java.util.Collections.list;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import spring.ejb.RolesStateLessBeanLocal;
@@ -154,24 +156,41 @@ public class UserController {
         return "redirect:/user/change-password/" + userID + ".html";
     }
 
+
     @RequestMapping(value = "address-add/{userID}", method = RequestMethod.GET)
     public String addressAdd(@PathVariable("userID") int userID, ModelMap model) {
-        UserAddresses userAddress = new UserAddresses();
-        model.addAttribute("userAddress", userAddress);
-        return "client/pages/address-user-add";
+        List<UserAddresses> listAddress = usersStateLessBean.getUserByID(userID).getUserAddressList();
+        if(listAddress.size() < 20){
+            UserAddresses userAddress = new UserAddresses();
+            model.addAttribute("userAddress", userAddress);
+            return "client/pages/address-user-add";
+        }else{
+            model.addAttribute("message", "Không thể thêm AddressUser");
+            return "redirect:/user/myaccount.html";
+        }
+        
     }
 
     @RequestMapping(value = "address-add/{userID}", method = RequestMethod.POST)
     public String addressAdd(@PathVariable("userID") int userID, @ModelAttribute("userAddress") UserAddresses userAddress,
             RedirectAttributes redirectAttributes) {
-        int error = userAddressesStateLessBean.addAddressUser(userAddress, userID);
-        if (error == 2) {
-            redirectAttributes.addFlashAttribute("error", "Phone or Address trùng");
-        } else if (error == 3) {
-            redirectAttributes.addFlashAttribute("error", "Nhập cả 2");
-        } else if (error == 1) {
+        
+//        List<UserAddresses> listAddress = usersStateLessBean.getUserByID(userID).getUserAddressList();
+//        for(UserAddresses list : listAddress){
+//            if(list.getAddress().equals(userAddress.getAddress()) && list.getPhoneNumber().equals(userAddress.getPhoneNumber())){
+//                
+//            }
+//        }
+//        UserAddresses ua = userAddressesStateLessBean.findID(userID);
+        
+//        int error = userAddressesStateLessBean.addAddressUser(userAddress, userID);
+//        if (ua.getAddress().equals(userAddress.getAddress()) && ua.getPhoneNumber().equals(userAddress.getPhoneNumber())) {
+//            redirectAttributes.addFlashAttribute("error", "Phone và Address trùng");
+//        } else {
+            userAddressesStateLessBean.addAddressUser(userAddress, userID);
             redirectAttributes.addFlashAttribute("error", "OK");
-        }
+//        } 
+        
         return "redirect:/user/address-add/" + userID + ".html";
     }
 
@@ -183,7 +202,7 @@ public class UserController {
         return "client/pages/address-list";
     }
     
-    @RequestMapping(value = "address-book/{addressID}-{userID}", method = RequestMethod.GET)
+    @RequestMapping(value = "address-book/{userID}-{addressID}", method = RequestMethod.GET)
     public String addressbook(ModelMap model, @PathVariable("userID") int userID, 
             @PathVariable("addressID") int addressID) {
         UserAddresses userAddresses = userAddressesStateLessBean.findID(userID);
@@ -193,14 +212,16 @@ public class UserController {
         return "client/pages/address-book";
     }
 
-    @RequestMapping(value = "address-book/{addressID}-{userID}", method = RequestMethod.POST)
+    @RequestMapping(value = "address-book/{userID}-{addressID}", method = RequestMethod.POST)
     public String addressbook(ModelMap model, @ModelAttribute("userAddresses") UserAddresses userAddresses,
             RedirectAttributes redirectAttributes, @PathVariable("userID") int userID,
             @PathVariable("addressID") int addressID) {
         int error;
-        addressID = userAddresses.getAddressID();
-        model.addAttribute("addressID", addressID);
+//        addressID = userAddresses.getAddressID();
+//        userAddresses = userAddressesStateLessBean.findAddressID(addressID);
+        model.addAttribute("addressID", userAddresses.getAddressID());
         error = userAddressesStateLessBean.editAddressUser(userAddresses, userID);
+//        error = userAddressesStateLessBean.editAddress(userID, addressID);
         if (error == 2) {
             redirectAttributes.addFlashAttribute("error", "Trùng");
         } else if (error == 1) {
@@ -209,7 +230,7 @@ public class UserController {
             redirectAttributes.addFlashAttribute("error", "lỗi");
         }
 //        model.addAttribute(userAddresses, "ua");
-        return "redirect:/user/address-book/" + addressID + "-" + userID + ".html";
+        return "redirect:/user/address-book/"  + userID + "-" + addressID + ".html";
     }
 
     @RequestMapping(value = "account-information/{userID}", method = RequestMethod.GET)

@@ -26,7 +26,7 @@
                                     <td>${uad.address}</td>
                                     <td>${uad.phoneNumber}</td>
                                     <td>
-                                        <a class="btn btn-warning" href="user/address-book/${uad.addressID}-${findUsersID}.html">Update</a> 
+                                        <a class="btn btn-warning" href="user/address-book/${findUsersID}-${uad.addressID}.html">Update</a> 
                                         <a class="btn btn-danger">Delete</a>
                                     </td>
                                 </tr>
