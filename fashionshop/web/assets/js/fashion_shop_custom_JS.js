@@ -452,5 +452,24 @@ $(document).ready(function () {
     });
     
     /*======================================END NGAN - ORDER==================================================*/
+    
+    /*========================================DUONG - USER====================================================*/
+    $(".fs-add-address-user").on("click", function () {
+        var userID = $(this).attr("fs-userID");
+        var modal = $(this).attr("fs-message"); 
+        $.ajax({
+            url: "user/address-add/" +userID+ ".html",
+            method: "GET",
+            data: {userID: userID},
+            success: function (response) {
+                alert('không thể thêm address');
+            }
+        });
+    });
+    
+    
+//    fs-add-address-user
+    
+    /*========================================END DUONG - USER====================================================*/
 });
 

@@ -19,11 +19,11 @@ public interface UserAddressesStateLessBeanLocal {
     
     List<UserAddresses> getAddressUser();
     
-    int addAddressUser(UserAddresses userAddresses, int userID);
+    void addAddressUser(UserAddresses userAddresses, int userID);
     
-    UserAddresses findAddress(String address);
+    UserAddresses findAddress(int userID);
     
-    UserAddresses findPhone(String phone);
+    UserAddresses findPhone(int userID);
     
     int editAddressUser(UserAddresses userAddresses, int userID);
     
@@ -37,5 +37,6 @@ public interface UserAddressesStateLessBeanLocal {
     
     UserAddresses findAddressID(int addressID);
     
+    int editAddress(int userID, int addressID);
     
 }
