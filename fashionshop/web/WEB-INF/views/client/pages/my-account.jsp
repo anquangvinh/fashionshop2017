@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!-- BREADCRUMBS -->
 <jsp:include page="../blocks/breadcrumbs.jsp" flush="true" />
@@ -21,7 +22,7 @@
                                     <a href="user/change-password/${findUsersID}.html"> <i class="fa fa-edit"></i> Change your password</a>
                                 </li>
                                 <li>                                              
-                                    <a href="user/address-add/${findUsersID}.html"> <i class="fa fa-edit"></i> Add new your address book entries</a>
+                                    <a class="fs-add-address-user" fs-message="${message}" fs-userID="${findUsersID}" href="user/address-add/${findUsersID}.html"> <i class="fa fa-edit"></i> Add new your address book entries</a>
                                 </li>
                                 <li>                                              
                                     <a href="user/address-list/${findUsersID}.html"> <i class="fa fa-edit"></i> Modify your address book entries</a>

@@ -13,7 +13,7 @@
                 <div id="account-id">
                     <h4 class="account-title"><span class="fa fa-chevron-right"></span>Change Your Address</h4>                                                                  
                     <div class="account-form">
-                        <form:form id="shipping-zip-form" action="user/address-book/${addressID}-${findUsersID}.html" method="post" modelAttribute="userAddresses">                                        
+                        <form:form id="shipping-zip-form" action="user/address-book/${findUsersID}-${addressID}.html" method="post" modelAttribute="userAddresses">                                        
                             ${error}
                             <ul class="form-list row">
                                 <li class="col-md-6 col-sm-6">
