@@ -57,7 +57,7 @@ public class Orders_Controller {
         Orders order = orderStateLessBean.getOrderByID(orderid);
         if (order != null) {
             model.addAttribute("orderID",orderid);
-            model.addAttribute("orderdetailList", order.getOrderDetailList());
+            model.addAttribute("orderdetailList", orderStateLessBean.getAllOrderDetailByOrderID(orderid));
             model.addAttribute("orderTotal", orderStateLessBean.sumTotalOrderDetail(order.getOrderDetailList()));
             return "admin/pages/orders-list-detail";
         }

@@ -16,8 +16,6 @@ import spring.entity.Orders;
 import spring.entity.OrdersDetail;
 import spring.entity.Products;
 import spring.entity.SizesByColor;
-import spring.entity.SubCategories;
-import spring.entity.UserAddresses;
 
 /**
  *
@@ -36,6 +34,13 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
     @Override
     public List<Orders> getAllOrder() {
         Query q = getEntityManager().createQuery("SELECT o FROM Orders o", Orders.class);
+        return q.getResultList();
+    }
+
+    @Override
+    public List<OrdersDetail> getAllOrderDetailByOrderID(int orderID) {
+        Query q = getEntityManager().createQuery("SELECT od FROM OrdersDetail od WHERE od.order.ordersID = :orderID",OrdersDetail.class);
+        q.setParameter("orderID", orderID);
         return q.getResultList();
     }
 
@@ -64,28 +69,10 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
     }
 
     @Override
-    public List<Orders> getOrderListByUserID(int userID) {
-        Query q = getEntityManager().createQuery("SELECT o FROM Orders o WHERE o.user.userID = :userID", Orders.class);
-        q.setParameter("userID", userID);
-        return q.getResultList();
-    }
-
-    @Override
     public boolean confirmStatusOrder(Orders orders, short status) {
         try {
-            Orders order = new Orders();
-            order.setOrdersID(orders.getOrdersID());
-            order.setOrdersDate(orders.getOrdersDate());
-            order.setDeliveryAddress(orders.getDeliveryAddress());
-            order.setNote(orders.getNote());
-            order.setPhoneNumber(orders.getPhoneNumber());
-            order.setReceiverFirstName(orders.getReceiverFirstName());
-            order.setReceiverLastName(orders.getReceiverLastName());
-            order.setStatus(status);
-            order.setUser(orders.getUser());
-            order.setVoucher(orders.getVoucher());
-            order.setOrderDetailList(orders.getOrderDetailList());
-            getEntityManager().merge(order);
+            orders.setStatus(status);
+            getEntityManager().merge(orders);
             return true;
         } catch (Exception ex) {
             return false;
@@ -95,16 +82,8 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
     @Override
     public boolean confirmStatusOrderDetail(OrdersDetail ordersDetail, short status) {
         try {
-            OrdersDetail orDetail = new OrdersDetail();
-            orDetail.setOrdersDetailID(ordersDetail.getOrdersDetailID());
-            orDetail.setProductDiscount(ordersDetail.getProductDiscount());
-            orDetail.setQuantity(ordersDetail.getQuantity());
-            orDetail.setPrice(ordersDetail.getPrice());
-            orDetail.setStatus(status);
-            orDetail.setOrder(ordersDetail.getOrder());
-            orDetail.setProduct(ordersDetail.getProduct());
-            orDetail.setSize(ordersDetail.getSize());
-            getEntityManager().merge(orDetail);
+            ordersDetail.setStatus(status);
+            getEntityManager().merge(ordersDetail);
             return true;
         } catch (Exception ex) {
             return false;
@@ -114,13 +93,6 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
     @Override
     public List<Categories> getAllCategory() {
         Query q = getEntityManager().createQuery("SELECT c FROM Categories c", Categories.class);
-        return q.getResultList();
-    }
-
-    @Override
-    public List<SubCategories> getSubCategoryListByCateID(int id) {
-        Query q = getEntityManager().createQuery("SELECT sc FROM SubCategories sc WHERE sc.category.cateID = :cateID", SubCategories.class);
-        q.setParameter("cateID", id);
         return q.getResultList();
     }
 
@@ -179,13 +151,6 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    @Override
-    public List<UserAddresses> getUserAddressListByUserID(int userId) {
-        Query q = getEntityManager().createQuery("SELECT ua FROM UserAddresses ua WHERE ua.user.userID = :userID", UserAddresses.class);
-        q.setParameter("userID", userId);
-        return q.getResultList();
     }
 
 }

@@ -452,6 +452,9 @@ $(document).ready(function () {
         $('.discount-code').toggle("slow");
     });
 
+    $("#coupon_code").keyup(function () {
+        $("#fs-checkout-discountvou-error").text("");
+    });
     /*======================================END NGAN - ORDER==================================================*/
     
     /*========================================DUONG - USER====================================================*/

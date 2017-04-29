@@ -1,5 +1,6 @@
 package spring.client.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -7,6 +8,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,18 +21,23 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import spring.ejb.OrderStateFulBeanLocal;
 import spring.ejb.OrderStateLessBeanLocal;
 import spring.ejb.ProductStateLessBeanLocal;
+import spring.ejb.UserAddressesStateLessBean;
+import spring.ejb.UserAddressesStateLessBeanLocal;
 import spring.ejb.UsersStateLessBeanLocal;
 import spring.entity.CartLineInfo;
 import spring.entity.CartLineInfoByID;
+import spring.entity.DiscountVoucher;
 import spring.entity.Orders;
 import spring.entity.Products;
 import spring.entity.SizesByColor;
+import spring.entity.UserAddresses;
 import spring.entity.Users;
 
 @Controller
 @RequestMapping(value = "/orders/")
 public class OrdersController {
 
+    UserAddressesStateLessBeanLocal userAddressesStateLessBean = lookupUserAddressesStateLessBeanLocal();
     UsersStateLessBeanLocal usersStateLessBean = lookupUsersStateLessBeanLocal();
     ProductStateLessBeanLocal productStateLessBean = lookupProductStateLessBeanLocal();
     OrderStateFulBeanLocal orderStateFulBean = lookupOrderStateFulBeanLocal();
@@ -71,17 +78,92 @@ public class OrdersController {
 
     @RequestMapping(value = "checkout", method = RequestMethod.GET)
     public String checkout(ModelMap model, HttpServletRequest request) {
-        String email = String.valueOf(request.getSession().getAttribute("emailUser      A"));
+        String email = (String) request.getSession().getAttribute("emailUser");
         if (email == null) {
             return "redirect:/user/login.html";
+        } else {
+            Users users = usersStateLessBean.findUserByEmail(email);
+            if (users.getRole().getRoleID() == 1 || users.getRole().getRoleID() == 2) {
+                return "redirect:/user/login.html";
+            } else {
+                model.addAttribute("userAddressList", users.getUserAddressList());
+                model.addAttribute("cartList", orderStateFulBean.showCart());
+                model.addAttribute("grandTotal", orderStateFulBean.subTotal());
+                return "client/pages/checkout";
+            }
         }
+    }
+
+    @RequestMapping(value = "checkout", method = RequestMethod.POST)
+    public String checkoutPost(ModelMap model, HttpServletRequest request, RedirectAttributes flashAttr) {
+        String success_orderID = "";
+        String email = (String) request.getSession().getAttribute("emailUser");
         Users users = usersStateLessBean.findUserByEmail(email);
-        if (users != null) {
-            model.addAttribute("userAddressList", orderStateLessBean.getUserAddressListByUserID(users.getUserID()));
+        String addressChose = request.getParameter("address-chose");
+        String discountCode = request.getParameter("discount-code-input");
+        DiscountVoucher discountVoucher = null;
+        if (discountCode != null) {
+            discountVoucher = orderStateLessBean.getDiscountVoucherByID(discountCode);
         }
-        model.addAttribute("cartList", orderStateFulBean.showCart());
-        model.addAttribute("grandTotal", orderStateFulBean.subTotal());
-        return "client/pages/checkout";
+        String note = request.getParameter("note");
+        if (addressChose.equals("difference")) {
+            String firstname = request.getParameter("diffFirstname");
+            String lastname = request.getParameter("diffLastname");
+            String address = request.getParameter("diffAddress");
+            String province = request.getParameter("diffProvince");
+            String phone = request.getParameter("diffPhone");
+            Orders orders = new Orders();
+            orders.setUser(users);
+            orders.setOrdersDate(new Date());
+            orders.setReceiverFirstName(firstname);
+            orders.setReceiverLastName(lastname);
+            orders.setPhoneNumber(phone);
+            orders.setDeliveryAddress(address + ", " + province);
+            if (discountVoucher != null) {
+                orders.setVoucher(discountVoucher);
+            } else {
+                orders.setVoucher(null);
+            }
+            orders.setNote(note);
+            orders.setStatus(Short.parseShort("2"));
+            success_orderID = orderStateFulBean.completePurchase(orders);
+        } else {
+            UserAddresses userAddresses = userAddressesStateLessBean.findAddressID(Integer.parseInt(addressChose));
+            if (userAddresses != null) {
+                String firstname = users.getFirstName();
+                String lastname = users.getLastName();
+                String address = userAddresses.getAddress();
+                String phone = userAddresses.getPhoneNumber();
+                Orders orders = new Orders();
+                orders.setUser(users);
+                orders.setOrdersDate(new Date());
+                orders.setReceiverFirstName(firstname);
+                orders.setReceiverLastName(lastname);
+                orders.setPhoneNumber(phone);
+                orders.setDeliveryAddress(address);
+                if (discountVoucher != null) {
+                    orders.setVoucher(discountVoucher);
+                } else {
+                    orders.setVoucher(null);
+                }
+                orders.setNote(note);
+                orders.setStatus(Short.parseShort("2"));
+                success_orderID = orderStateFulBean.completePurchase(orders);
+            } else {
+                return "redirect:/orders/checkout.html";
+            }
+        }
+        if (success_orderID.equals("000")) {
+            return "redirect:/orders/checkout.html";
+        } else {
+            return "redirect:/orders/checkout-success/" + success_orderID + ".html";
+        }
+    }
+
+    @RequestMapping(value = "checkout-success/{success_orderID}")
+    public String checkout_success(ModelMap model, @PathVariable("success_orderID") Integer success_orderID) {
+        model.addAttribute("success_orderID", success_orderID);
+        return "client/pages/checkout-success";
     }
 
     @RequestMapping(value = "shoppingcart")
@@ -137,9 +219,13 @@ public class OrdersController {
     }
 
     @RequestMapping(value = "order-history")
-    public String orderhistory(ModelMap model) {
+    public String orderhistory(ModelMap model, HttpServletRequest request) {
+        String email = (String) request.getSession().getAttribute("emailUser");
+        if (email == null) {
+            return "redirect:/user/login.html";
+        }
         HashMap<Orders, Float> order_total = new HashMap<>();
-        for (Orders orders : orderStateLessBean.getOrderListByUserID(5)) {
+        for (Orders orders : usersStateLessBean.findUserByEmail(email).getOrdersList()) {
             order_total.put(orders, orderStateLessBean.sumTotalOrderDetail(orders.getOrderDetailList()));
         }
         model.addAttribute("orderList", order_total);
@@ -206,6 +292,52 @@ public class OrdersController {
         return str_cart_big;
     }
 
+    @ResponseBody
+    @RequestMapping(value = "ajax/discount", method = RequestMethod.POST)
+    public String getDiscount(@RequestParam("discountCode") String discountCode) {
+        DiscountVoucher discountVoucher = orderStateLessBean.getDiscountVoucherByID(discountCode);
+        if (discountVoucher != null) {
+            if (discountVoucher.getQuantity() == 0) {
+                return "empty";
+            } else {
+                float discountTotal = orderStateFulBean.subTotal() * discountVoucher.getDiscount();
+                float orderTotal = orderStateFulBean.subTotal() - discountTotal;
+                String str_show_discount = "<tr>\n"
+                          + "                                    <th>Discount</th>\n"
+                          + "                                    <td>\n"
+                          + "                                        <div class=\"\">$" + discountTotal + "</div>\n"
+                          + "                                    </td> \n"
+                          + "                                </tr>\n"
+                          + "                                <tr>\n"
+                          + "                                    <th>Order Total</th>\n"
+                          + "                                    <td>\n"
+                          + "                                        <div class=\"grandTotal\">$" + orderTotal + "</div>\n"
+                          + "                                    </td> \n"
+                          + "                                </tr>";
+                return str_show_discount;
+            }
+        }
+        return "error";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "ajax/nodiscount", method = RequestMethod.GET)
+    public String getNoDiscount() {
+        String str_show = "<tr>\n"
+                  + "                                    <th>Discount</th>\n"
+                  + "                                    <td>\n"
+                  + "                                        <div class=\"\">$0.0</div>\n"
+                  + "                                    </td> \n"
+                  + "                                </tr>\n"
+                  + "                                <tr>\n"
+                  + "                                    <th>Order Total</th>\n"
+                  + "                                    <td>\n"
+                  + "                                        <div class=\"grandTotal\">$" + orderStateFulBean.subTotal() + "</div>\n"
+                  + "                                    </td> \n"
+                  + "                                </tr>";
+        return str_show;
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="Look Up Beans Local">
     private OrderStateLessBeanLocal lookupOrderStateLessBeanLocal() {
         try {
@@ -241,6 +373,16 @@ public class OrdersController {
         try {
             Context c = new InitialContext();
             return (UsersStateLessBeanLocal) c.lookup("java:global/fashionshop/UsersStateLessBean!spring.ejb.UsersStateLessBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
+    private UserAddressesStateLessBeanLocal lookupUserAddressesStateLessBeanLocal() {
+        try {
+            Context c = new InitialContext();
+            return (UserAddressesStateLessBeanLocal) c.lookup("java:global/fashionshop/UserAddressesStateLessBean!spring.ejb.UserAddressesStateLessBeanLocal");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);
