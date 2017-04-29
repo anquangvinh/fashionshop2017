@@ -26,6 +26,7 @@ public class SizesByColor implements Serializable {
     @Column(name = "size")
     private String productSize;
     private Integer quantity;
+    private Integer sizeOrder;
     private Short status;
     
     @OneToMany(mappedBy = "size")
@@ -61,6 +62,14 @@ public class SizesByColor implements Serializable {
         this.quantity = quantity;
     }
 
+    public Integer getSizeOrder() {
+        return sizeOrder;
+    }
+
+    public void setSizeOrder(Integer sizeOrder) {
+        this.sizeOrder = sizeOrder;
+    }
+    
     public Short getStatus() {
         return status;
     }
