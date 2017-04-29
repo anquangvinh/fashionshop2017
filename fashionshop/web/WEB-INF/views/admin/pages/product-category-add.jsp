@@ -30,19 +30,6 @@
 <!--                            <p class="help-block">Error Message will be here!!!</p>-->
                         </div>
 
-                        <div class="form-group">
-                            <label>Status</label>
-                            <div>
-                                <label class="radio-inline">
-                                    <form:radiobutton path="status" value="1" id="rdoVisible" /> Visible
-                                </label>
-                                <label class="radio-inline">
-                                    <form:radiobutton path="status" value="0" id="rdoInvisible" /> Invisible
-                                </label>
-                            </div>
-
-                        </div>
-
                         <button type="submit" class="btn btn-success">Create</button>
                         <button type="reset" class="btn btn-default">Reset</button>
                     </form:form>

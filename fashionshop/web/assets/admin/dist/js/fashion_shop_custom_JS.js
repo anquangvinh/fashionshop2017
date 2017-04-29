@@ -108,8 +108,8 @@ $(document).ready(function () {
             $("#fs-product-name-error").text("Product Name cannot be empty!");
             $("#fs-product-name").focus();
             count++;
-        } else if (productName.length < 5 || productName.length > 20) {
-            $("#fs-product-name-error").text("Product Name must have 5 - 20 characters!");
+        } else if (productName.length < 5 || productName.length > 25) {
+            $("#fs-product-name-error").text("Product Name must have 5 - 25 characters!");
             $("#fs-product-name").focus();
         } else {
             $("#fs-product-name-error").text("");
@@ -267,8 +267,8 @@ $(document).ready(function () {
                 } else {
                     if (productName == "") {
                         $("#fs-product-name-error").text("Product Name cannot be empty!");
-                    } else if (productName.length < 5 || productName.length > 20) {
-                        $("#fs-product-name-error").text("Product Name must have 5 - 20 characters!");
+                    } else if (productName.length < 5 || productName.length > 25) {
+                        $("#fs-product-name-error").text("Product Name must have 5 - 25 characters!");
                     } else {
                         $("#fs-product-name-error").text("");
                     }
@@ -390,8 +390,9 @@ $(document).ready(function () {
     var fs_count_div_color = 0;
     /* XỬ LÝ BUTTON ADD-MORE-SIZE - PRODUCT CREATE */
     $("#fs-fieldset-detail").on("click", ".fs-add-more-size", function () {
+        var colorNo = $(this).parent().parent().parent().parent().attr("fs-big-div-color");
         var addMoreSize;
-        if (fs_count_div_color === 0) {
+        if (colorNo == 0) {
             addMoreSize = " <div class=\"col-xs-8 fs-div-size\" style=\"padding: 0; border: 1px #CCC dashed; margin-bottom: 5px;\">\n\
                                 <div class=\"form-group col-xs-6\">\n\
                                     <label>Size</label>\n\
@@ -408,11 +409,11 @@ $(document).ready(function () {
             addMoreSize = " <div class=\"col-xs-8 fs-div-size\" style=\"padding: 0; border: 1px #CCC dashed; margin-bottom: 5px;\">\n\
                                 <div class=\"form-group col-xs-6\">\n\
                                     <label>Size</label>\n\
-                                    <input name=\"size_" + fs_count_div_color + "\" class=\"form-control fs-product-size\" placeholder=\"Size\" style=\"text-transform:uppercase\">\n\
+                                    <input name=\"size_" + colorNo + "\" class=\"form-control fs-product-size\" placeholder=\"Size\" style=\"text-transform:uppercase\">\n\
                                 </div>\n\
                                 <div class=\"form-group col-xs-6\">\n\
                                     <label>Quantity</label>\n\
-                                    <input name=\"quantity_" + fs_count_div_color + "\" class=\"form-control fs-product-quantity\" placeholder=\"Quantity\">\n\
+                                    <input name=\"quantity_" + colorNo + "\" class=\"form-control fs-product-quantity\" placeholder=\"Quantity\">\n\
                                 </div>\n\
                                 <p class=\"fs-error-mess-size\" style=\"color: red; margin-left: 15px\"></p>\n\
                                 <p class=\"fs-error-mess-quantity\" style=\"color: red; margin-left: 15px\"></p>\n\
@@ -425,7 +426,7 @@ $(document).ready(function () {
     /* XỬ LÝ BUTTON ADD-MORE-COLOR - PRODUCT CREATE */
     $("#fs-add-more-color").click(function () {
         fs_count_div_color = $(this).parent().siblings("#fs-more-color").find(".fs-div-color").length + 1;
-        var addMoreColor = "<div class=\"col-xs-12 fs-div-color\" style=\"padding: 5px 0; border: 1px #CCC dashed; margin-bottom: 10px\">\n\
+        var addMoreColor = "<div class=\"col-xs-12 fs-div-color\" style=\"padding: 5px 0; border: 1px #CCC dashed; margin-bottom: 10px\" fs-big-div-color=\""+ fs_count_div_color +"\">\n\
                                 <div class=\"col-md-6 fs-right-border\">\n\
                                     <div class=\"form-group\">\n\
                                         <label>Color</label>\n\

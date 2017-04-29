@@ -16,7 +16,7 @@ import javax.persistence.OneToMany;
 public class DiscountVoucher implements Serializable {
     @Id
     private String voucherID;
-    private Float discount;
+    private Short discount;
     private Integer quantity;
     private String description;
     
@@ -36,11 +36,11 @@ public class DiscountVoucher implements Serializable {
         this.voucherID = voucherID;
     }
 
-    public Float getDiscount() {
+    public Short getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Float discount) {
+    public void setDiscount(Short discount) {
         this.discount = discount;
     }
 

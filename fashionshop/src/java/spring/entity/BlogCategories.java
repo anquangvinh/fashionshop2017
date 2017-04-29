@@ -21,7 +21,6 @@ public class BlogCategories implements Serializable {
     private Integer blogCateID;
     private String blogCateName;
     private String blogCateNameNA;
-    private Short status;
     
     @OneToMany(mappedBy = "blogCategory")
     @JsonManagedReference
@@ -51,14 +50,6 @@ public class BlogCategories implements Serializable {
         this.blogCateNameNA = blogCateNameNA;
     }
 
-    public Short getStatus() {
-        return status;
-    }
-
-    public void setStatus(Short status) {
-        this.status = status;
-    }
-
     public List<Blogs> getBlogList() {
         return blogList;
     }
@@ -66,6 +57,4 @@ public class BlogCategories implements Serializable {
     public void setBlogList(List<Blogs> blogList) {
         this.blogList = blogList;
     }
-
-    
 }

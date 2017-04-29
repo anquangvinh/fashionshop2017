@@ -8,6 +8,8 @@ package spring.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -32,7 +34,7 @@ public class Products implements Serializable {
     private Float price;
     private String urlImg;
     private String productDescription;
-    private Float productDiscount;
+    private Short productDiscount;
     @Temporal(TemporalType.DATE)
     private Date postedDate;
     private Integer productViews;
@@ -108,11 +110,11 @@ public class Products implements Serializable {
         this.productDescription = productDescription;
     }
 
-    public Float getProductDiscount() {
+    public Short getProductDiscount() {
         return productDiscount;
     }
 
-    public void setProductDiscount(Float productDiscount) {
+    public void setProductDiscount(Short productDiscount) {
         this.productDiscount = productDiscount;
     }
 
@@ -157,6 +159,12 @@ public class Products implements Serializable {
     }
 
     public List<ProductColors> getProductColorList() {
+        Collections.sort(productColorList, new Comparator<ProductColors>(){
+            @Override
+            public int compare(ProductColors p1, ProductColors p2) {
+                return p1.getColorOrder() - p2.getColorOrder();
+            }            
+        });
         return productColorList;
     }
 

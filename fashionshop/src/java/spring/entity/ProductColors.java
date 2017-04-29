@@ -8,6 +8,8 @@ package spring.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -27,6 +29,7 @@ public class ProductColors implements Serializable {
     private String color;
     private String colorNA;
     private String urlColorImg;
+    private Integer colorOrder;
     private Short status;
 
     @OneToMany(mappedBy = "color", cascade = CascadeType.PERSIST)
@@ -74,6 +77,14 @@ public class ProductColors implements Serializable {
         this.urlColorImg = urlColorImg;
     }
 
+    public Integer getColorOrder() {
+        return colorOrder;
+    }
+
+    public void setColorOrder(Integer colorOrder) {
+        this.colorOrder = colorOrder;
+    }
+
     public Short getStatus() {
         return status;
     }
@@ -83,6 +94,12 @@ public class ProductColors implements Serializable {
     }
 
     public List<SizesByColor> getSizeList() {
+        Collections.sort(sizeList, new Comparator<SizesByColor>(){
+            @Override
+            public int compare(SizesByColor s1, SizesByColor s2) {
+                return s1.getSizeOrder() - s2.getSizeOrder();
+            }            
+        });
         return sizeList;
     }
 
@@ -99,6 +116,12 @@ public class ProductColors implements Serializable {
     }
 
     public List<ProductSubImgs> getProductSubImgsList() {
+        Collections.sort(ProductSubImgsList, new Comparator<ProductSubImgs>(){
+            @Override
+            public int compare(ProductSubImgs p1, ProductSubImgs p2) {
+                return p1.getSubImgOrder() - p2.getSubImgOrder();
+            }            
+        });
         return ProductSubImgsList;
     }
 
