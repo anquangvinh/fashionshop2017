@@ -29,13 +29,13 @@
                                 <form:options items="${blogcategory}" itemValue="blogCateID" itemLabel="blogCateName" />
                             </form:select>
                         </div>
-                        <div class="form-group">
+<!--                        <div class="form-group">
                             <label>User name</label>
                             <form:select path="user.userID" cssClass="form-control">
                                 <form:option value="0"> Please Select </form:option>
                                 <form:options items="${user}" itemValue="userID" itemLabel="firstName" />
                             </form:select>
-                        </div>
+                        </div>-->
                         <div class="form-group">
                             <label>Title</label>  
                             <p class="help-block" id="fs-blog-update-title-error"></p>
@@ -83,14 +83,14 @@
                             </script>
                         </div>
                         <br/>
-                        <div class="form-group">
+<!--                        <div class="form-group">
                             <label>Date</label>
                             <form:input path="postedDate" cssClass="form-control" />
-                            <!--Error Message-->
+                            Error Message
                             <div style="color:red; margin-top: 10px;">
                                 <form:errors path="postedDate"/>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="form-group">
                             <label>Content</label>
                             <br/>
