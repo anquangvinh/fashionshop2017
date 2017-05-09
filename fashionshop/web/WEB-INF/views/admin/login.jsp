@@ -42,10 +42,10 @@
                             <form method="POST" action="admin/login.html">
                                 <fieldset>
                                     <div class="form-group">
-                                        <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
+                                        <input class="form-control" placeholder="E-mail" name="email" type="email" value="admin@gmail.com" autofocus>
                                     </div>
                                     <div class="form-group">
-                                        <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                                        <input class="form-control" placeholder="Password" name="password" type="password" value="123456">
                                     </div>
                                     <div class="checkbox">
                                         <label>

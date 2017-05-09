@@ -426,7 +426,7 @@ $(document).ready(function () {
     /* XỬ LÝ BUTTON ADD-MORE-COLOR - PRODUCT CREATE */
     $("#fs-add-more-color").click(function () {
         fs_count_div_color = $(this).parent().siblings("#fs-more-color").find(".fs-div-color").length + 1;
-        var addMoreColor = "<div class=\"col-xs-12 fs-div-color\" style=\"padding: 5px 0; border: 1px #CCC dashed; margin-bottom: 10px\" fs-big-div-color=\""+ fs_count_div_color +"\">\n\
+        var addMoreColor = "<div class=\"col-xs-12 fs-div-color\" style=\"padding: 5px 0; border: 1px #CCC dashed; margin-bottom: 10px\" fs-big-div-color=\"" + fs_count_div_color + "\">\n\
                                 <div class=\"col-md-6 fs-right-border\">\n\
                                     <div class=\"form-group\">\n\
                                         <label>Color</label>\n\
@@ -871,7 +871,7 @@ $(document).ready(function () {
 
 
     /*===============================END THANH - BLOG =================================*/
-    
+
     /*==============================DUONG - USER============================*/
     /* 
      * AJAX - EVENT ONCHANGE SELECT USER "STATUS" 
@@ -917,12 +917,12 @@ $(document).ready(function () {
     });
 
     //function load data từ 1 dataSource lên table
-    function renderTableFromJson (json) {
+    function renderTableFromJson(json) {
         var beginStr = '<table class="table table-striped table table-bordered table table-hover" >' +
-                    '<tr>' +
-                        '<th>Address</th>' +
-                        '<th>Phone</th>' +
-                    '</tr>';
+                '<tr>' +
+                '<th>Address</th>' +
+                '<th>Phone</th>' +
+                '</tr>';
 
         var endStr = '</table>';
         var dataStr = '';
@@ -963,7 +963,162 @@ $(document).ready(function () {
             tr.addClass('shown');
         }
     });
-    
+
     /*==============================END DUONG - USER============================*/
 
+    /*==============================NGAN - ORDER============================*/
+    //Thiết lập cho bảng order list
+    $('#tableOrder').DataTable({
+        responsive: true,
+        order: [[0, "desc"]],
+        columnDefs: [{"orderable": false, "targets": [2, 3, 5]}] //,{"targets":4,render: $.fn.dataTable.render.moment(dd/mm/yyyy)}
+    });
+
+    //Thiết lập cho bảng order details list
+    $('#tableOrderDetails').DataTable({
+        responsive: true,
+        columnDefs: [{"orderable": false, "targets": [2, 3, 8]}]
+    });
+
+    //Thiết lập cho bảng discount list
+    $('#tableDiscountList').DataTable({
+        responsive: true,
+        columnDefs: [{"orderable": false, "targets": [3, 4]}]
+    });
+
+    //Order-list-detail-add.jsp
+    $('#tableProductOrderDetailAdd').DataTable({
+        responsive: true,
+        order: [[0, "asc"]]
+    });
+    $('#tableProductOrderDetailAdd tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+            $(this).prop("style", false);
+            $("#productOrDetailAddColor").html(" ");
+            $("#productOrDetailAddSize").html(" ");
+        }
+        else {
+            $("#productOrDetailAddColor").html(" ");
+            $("#productOrDetailAddSize").html(" ");
+            $('tr.selected').prop("style", false);
+            $('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+            $(this).css("background-color", "skyblue");
+            var productID = $("tr.selected .proID")[0].innerHTML;
+            $.ajax({
+                url: "admin/orders/ajax/searchcolor.html",
+                method: "POST",
+                data: {productID: productID},
+                dataType: 'html',
+                success: function (response) {
+                    $("#productOrDetailAddColor").html(response);
+                }
+            });
+        }
+    });
+    $('select[name=productOrDetailAddColor]').on("change", function () {
+        $("#order-detail-add-color-error").text("");
+        var colorID = $("select[name=productOrDetailAddColor]").val();
+        $.ajax({
+            url: "admin/orders/ajax/searchsize.html",
+            method: "POST",
+            data: {colorID: colorID},
+            dataType: 'html',
+            success: function (response) {
+                $("#productOrDetailAddSize").html(response);
+            }
+        });
+    });
+    $('select[name=productOrDetailAddSize]').on("change", function () {
+        $("#order-detail-add-size-error").text("");
+    });
+    $("#btnSearchProduct").on("click", function () {
+        var searchType = $('#searchType').val();
+        var searchText = $('#searchText').val();
+        if (searchType == 1) { //ProductName
+            if (searchText == "") {
+                $("#order-detail-add-error").text("PLEASE ENTER PRODUCT NAME");
+            }
+            $.ajax({
+                url: "admin/orders/ajax/searchproduct.html",
+                method: "POST",
+                data: {searchType: searchType, searchText: searchText},
+                dataType: 'html',
+                success: function (response) {
+                    if (response === "0") {
+                        $("#order-detail-add-error").text("PRODUCT NAME ERROR");
+                    } else {
+                        $(".bodyProductOrDetailAdd").html(response);
+                    }
+                }
+            });
+        } else { //Product ID
+            if (searchText == "") {
+                $("#order-detail-add-error").text("PLEASE ENTER PRODUCT ID");
+            } else if (!$.isNumeric(searchText)) {
+                $("#order-detail-add-error").text("PLEASE ENTER PRODUCT ID IN NUMBER");
+            }
+            $.ajax({
+                url: "admin/orders/ajax/searchproduct.html",
+                method: "POST",
+                data: {searchType: searchType, searchText: searchText},
+                dataType: 'html',
+                success: function (response) {
+                    if (response == "0") {
+                        $("#order-detail-add-error").text("PRODUCT NOT EXIST");
+                    } else {
+                        $(".bodyProductOrDetailAdd").html(response);
+                    }
+                }
+            });
+        }
+    });
+    $('#btnAddOrderDetail').on("click", function () {
+        if ($("tr.selected .proID")[0] == null) {
+            $("#order-detail-add-error").text("PLEASE SEARCH AND CHOOSE PRODUCT");
+        } else {
+            var orderID = $("#productOrDetailAddHeader").attr("fs-order-id");
+            var productID = $("tr.selected .proID")[0].innerHTML;
+            var colorID = $("select[name=productOrDetailAddColor]").val();
+            var sizeID = $("select[name=productOrDetailAddSize]").val();
+            var quantity = $("input[name=productOrDetailAddQuantity]").val();
+            if (colorID == null || colorID == 0) {
+                $("#order-detail-add-color-error").text("PLEASE CHOOSE COLOR");
+            } else if (sizeID == null || sizeID == 0) {
+                $("#order-detail-add-size-error").text("PLEASE CHOOSE SIZE");
+            } else if (quantity == "") {
+                $("#order-detail-add-quantity-error").text("PLEASE ENTER QUANTITY");
+            } else if (quantity < 1 || quantity > 10) {
+                $("#order-detail-add-quantity-error").text("QUANTITY MUST 1 TO 10");
+            } else {
+                $.ajax({
+                    url: "admin/orders/ajax/addOrderDetail.html",
+                    method: "POST",
+                    data: {orderID: orderID,
+                        productID: productID,
+                        colorID: colorID,
+                        sizeID: sizeID,
+                        quantity: quantity},
+                    dataType: 'html',
+                    success: function (response) {
+                        if (response == "") {
+                            $("#order-detail-add-error").text("ERROR");
+                        } else if (response == "0") {
+                            $("#order-detail-add-error").text("OUT OF STOCK! CHOSE ANOTHER COLOR AND SIZE.");
+                        } else {
+                            window.location = "admin/orders/orderlistdetail/"+orderID+".html";
+                        }
+                    }
+                });
+            }
+        }
+    });
+    $("#searchText").keyup(function () {
+        $("#order-detail-add-error").text("");
+    });
+    $('input[name=productOrDetailAddQuantity]').keyup(function () {
+        $("#order-detail-add-quantity-error").text("");
+    });
+    /*==============================END NGAN - ORDER============================*/
 });

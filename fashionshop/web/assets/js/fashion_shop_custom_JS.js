@@ -58,7 +58,7 @@ $(document).ready(function () {
             data: {colorID: colorID},
             dataType: 'json',
             success: function (response) {
-                var i = response.productSubImgsList.findIndex(x => x.subImgOrder == 1);
+                var i = response.productSubImgsList.findIndex(x = s > x.subImgOrder == 1);
                 $("img[fs-product-for-img=" + productID + "]").hide().attr("src", "assets/images/products/subImg/" + response.productSubImgsList[i].urlImg).fadeIn(600);
             }
         });
@@ -166,6 +166,7 @@ $(document).ready(function () {
             success: function (response) {
                 /* Init Name and Price */
                 $("h3.fs-product-name").text(response.productName);
+                $("h3.fs-product-name").attr("fs-product-id", productID);
                 $("div.fs-product-price").text("$ " + response.price + ".00");
 
                 /* Init color img  */
@@ -446,23 +447,142 @@ $(document).ready(function () {
     });
 
     /*========================================NGAN - ORDER====================================================*/
-
+    //Load cart in header
     $("#cart").load("orders/ajax/cart.html");
+
+    //checkout.jsp
+    //Discount in checkout.jsp
+    //Load form discount in checkout
     $('#diff-discount').on("click", function () {
         $('.discount-code').toggle("slow");
     });
-
     $("#coupon_code").keyup(function () {
         $("#fs-checkout-discountvou-error").text("");
     });
+    $("input[name=address-chose]").on("click", function () {
+        var checked = $('input[name=address-chose]:checked').val();
+        if (checked === "difference") {
+            $('.shipping-address').css("display", "list-item");
+        } else {
+            $('.shipping-address').prop("style", false);
+        }
+    });
+//    $("#discount-order").on("click", function () {
+//        $(".cart-table").remove(".foot");
+//        $(".cart-table").add("<tfoot class=\"foot\"></tfoot>");
+//        var discountCode = $("#coupon_code").val();
+//        if (discountCode === "") {
+//            $("#fs-checkout-discountvou-error").text("You must enter your discount code!");
+//        } else {
+//            $.ajax({
+//                url: "orders/ajax/discount.html",
+//                method: "POST",
+//                data: {discountCode: discountCode},
+//                dataType: 'html',
+//                success: function (response) {
+//                    if (response !== "error" && response !== "empty") {
+//                        $(".discount-ul").removeClass(".discount-inputs");
+//                        $(".discount-ul").removeClass(".discount-buttons");
+//                        $(".discount-ul").hide().html("<li class=\"col-md-6 col-sm-6 discount-inputs\"><div class=\"discountShow\" style=\"padding-bottom: 15px;\">\n"
+//                                + "<input type=\"hidden\" id=\"discount-code-input\" name=\"discount-code-input\" value=\"" + discountCode + "\"/>\n"
+//                                + "<b>Your Discount Code: " + discountCode + "</b>&nbsp<button type=\"button\" class=\"fa fa-times\" id=\"cancel-discount\"  onclick=\"enterDiscountAgain();\"></button>\n"
+//                                + "</div></li>").fadeIn(1000);
+//                        $(".foot").hide().html(response).fadeIn(1000);
+//                    } else {
+//                        $.get("orders/ajax/nodiscount.html", function (responsenodiscount) {
+//                            if (response === "error") {
+//                                $("#fs-checkout-discountvou-error").text("Discount Code not existed!");
+//                                $(".foot").hide().html(responsenodiscount).fadeIn(1000);
+//                            } else if (response === "empty") {
+//                                $("#fs-checkout-discountvou-error").text("Your Discount Code is out of quantity");
+//                                $(".foot").hide().html(responsenodiscount).fadeIn(1000);
+//                            }
+//                        });
+//                    }
+//                }
+//            });
+//        }
+//    });
+//    $("#cancel-discount").on("click", function () {
+//        $(".discount-ul").removeClass(".discount-inputs");
+//        $(".discount-ul").hide().html("<li class=\"col-md-6 col-sm-6 discount-inputs\">\n"
+//                + "<label>Your Discount Code</label>\n"
+//                + "<div class=\"input-box\">\n"
+//                + "<p class=\"help-block\" id=\"fs-checkout-discountvou-error\"></p>\n"
+//                + "<input class=\"input-text\" id=\"coupon_code\" name=\"coupon_code\" value=\"\"/>\n"
+//                + "</div>\n"
+//                + "</li>\n"
+//                + "<li class=\"col-md-6 col-sm-6 discount-buttons\" style=\"padding-top: 27px;\">\n"
+//                + "<div class=\"buttons-set\">\n"
+//                + "<button style=\"height: 40px;\" type=\"button\" title=\"Apply Discount Code\" class=\"btn-black\" id=\"discount-order\" onclick=\"discountClick();\"><span><span>Apply Discount Code</span></span></button>\n"
+//                + "</div></li>").fadeIn(1000);
+//        $.get("orders/ajax/nodiscount.html", function (responsenodiscount) {
+//            $(".foot").hide().html(responsenodiscount).fadeIn(1000);
+//        });
+//    });
+
+    //Cancel Order side client in order-history-detail.jsp 
+    $('#btnClientCancelOrder').on("click", function () {
+        var orderID = $(this).val();
+        var cancelConfirm = confirm("Are you sure to cancel this order?");
+        if (cancelConfirm == true) {
+            window.location = "orders/cancelorder/" + orderID + ".html";
+        }
+    });
+
+    //Cart in modal.jsp
+    $(".fs-modal-btn-addtobag").on("click", function () {
+        var colorID = $(".fs-product-modal-color .fs-product-selected").find("img").attr("fs-color");
+        var sizeID = $("#fs-product-modal-size .fs-product-selected").attr("fs-size");
+        var productID = $(".fs-product-name").attr("fs-product-id");
+        var quantity = $(".fs-modal-input-number").val();
+        if (colorID == null && sizeID == null) {
+            $(".fs-modal-error").css("color", "red"); //green
+            $(".fs-modal-error").text("YOU MUST CHOOSE COLOR AND SIZE");
+        } else {
+            if (colorID == null) {
+                $(".fs-modal-error").css("color", "red"); //green
+                $(".fs-modal-error").text("YOU MUST CHOOSE COLOR");
+            }
+            if (sizeID == null) {
+                $(".fs-modal-error").css("color", "red"); //green
+                $(".fs-modal-error").text("YOU MUST CHOOSE SIZE");
+            }
+            $.ajax({
+                url: "orders/ajax/addtocart.html",
+                method: "POST",
+                data: {productID: productID, sizeID: sizeID, colorID: colorID, quantity: quantity},
+                dataType: 'html',
+                success: function (response) {
+                    if (response == "3") {
+                        $(".fs-modal-error").css("color", "red"); //green
+                        $(".fs-modal-error").text("PRODUCT ERROR!");
+                    } else if (response == "2") {
+                        $(".fs-modal-error").css("color", "red"); //green
+                        $(".fs-modal-error").text("COLOR AND SIZE ERROR!");
+                    } else if (response == "1") {
+                        $(".fs-modal-error").css("color", "red"); //green
+                        $(".fs-modal-error").text("NOT ENOUGH STOCK! PLEASE ENTER DIFFERENT QUANTITY");
+                    } else {
+                        $(".fs-modal-error").css("color", "green"); //red
+                        $(".fs-modal-error").text("ADD PRODUCT TO CART SUCCESSFULLY!");
+                        $("#cart").load("orders/ajax/cart.html");
+                    }
+                }
+            });
+        }
+    });
+    $(".fs-modal-close").on("click", function () {
+        $(".fs-modal-error").text("");
+    });
     /*======================================END NGAN - ORDER==================================================*/
-    
+
     /*========================================DUONG - USER====================================================*/
     $(".fs-add-address-user").on("click", function () {
         var userID = $(this).attr("fs-userID");
-        var modal = $(this).attr("fs-message"); 
+        var modal = $(this).attr("fs-message");
         $.ajax({
-            url: "user/address-add/" +userID+ ".html",
+            url: "user/address-add/" + userID + ".html",
             method: "GET",
             data: {userID: userID},
             success: function (response) {
@@ -470,10 +590,10 @@ $(document).ready(function () {
             }
         });
     });
-    
-    
+
+
 //    fs-add-address-user
-    
+
     /*========================================END DUONG - USER====================================================*/
 });
 

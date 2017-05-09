@@ -20,7 +20,6 @@ import spring.entity.DiscountVoucher;
 import spring.entity.Orders;
 import spring.entity.OrdersDetail;
 import spring.entity.SizesByColor;
-import spring.entity.Users;
 
 /**
  *
@@ -41,7 +40,6 @@ public class OrderStateFulBean implements OrderStateFulBeanLocal, Serializable {
         return em;
     }
 
-    private DiscountVoucher discountVoucher;
     private List<CartLineInfo> cart;
 
     @PostConstruct
@@ -95,14 +93,7 @@ public class OrderStateFulBean implements OrderStateFulBeanLocal, Serializable {
     public String completePurchase(Orders orders) {
         String checkError;
         try {
-            getEntityManager().persist(orders);
-            getEntityManager().flush();
-            if (orders.getVoucher() != null) {
-                DiscountVoucher discountVoucher = orders.getVoucher();
-                discountVoucher.setQuantity(discountVoucher.getQuantity()-1);
-                getEntityManager().merge(discountVoucher);
-                getEntityManager().flush();
-            }
+            List<OrdersDetail> ordersDetailList = new ArrayList<>();
             for (CartLineInfo cartLineInfo : cart) {
                 OrdersDetail ordersDetail = new OrdersDetail();
                 ordersDetail.setOrder(orders);
@@ -112,11 +103,19 @@ public class OrderStateFulBean implements OrderStateFulBeanLocal, Serializable {
                 ordersDetail.setQuantity(cartLineInfo.getQuantity());
                 ordersDetail.setPrice(cartLineInfo.getProduct().getPrice());
                 ordersDetail.setStatus(Short.parseShort("0"));
-                getEntityManager().persist(ordersDetail);
-                getEntityManager().flush();
+                ordersDetailList.add(ordersDetail);
                 SizesByColor sizesByColor = cartLineInfo.getSizesByColor();
-                sizesByColor.setQuantity(sizesByColor.getQuantity()-cartLineInfo.getQuantity());
+                sizesByColor.setQuantity(sizesByColor.getQuantity() - cartLineInfo.getQuantity());
                 getEntityManager().merge(sizesByColor);
+                getEntityManager().flush();
+            }
+            orders.setOrderDetailList(ordersDetailList);
+            getEntityManager().persist(orders);
+            getEntityManager().flush();
+            if (orders.getVoucher() != null) {
+                DiscountVoucher discountVoucher = orders.getVoucher();
+                discountVoucher.setQuantity(discountVoucher.getQuantity() - 1);
+                getEntityManager().merge(discountVoucher);
                 getEntityManager().flush();
             }
             checkError = String.valueOf(orders.getOrdersID());
@@ -131,7 +130,7 @@ public class OrderStateFulBean implements OrderStateFulBeanLocal, Serializable {
     public float subTotal() {
         float subtotal = 0;
         for (CartLineInfo cartLineInfo : cart) {
-            subtotal += cartLineInfo.getAmount();
+            subtotal += cartLineInfo.getSubTotal();
         }
         return subtotal;
     }

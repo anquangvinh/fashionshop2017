@@ -42,6 +42,10 @@ public class OrdersDetail implements Serializable {
     public double getTotalPrice() {
         return price*quantity;
     }
+    
+    public float getSubTotal(){
+        return ((price * quantity)-product.getProductDiscountPrice());
+    }
 
     public Integer getOrdersDetailID() {
         return ordersDetailID;
