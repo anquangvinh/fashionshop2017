@@ -30,11 +30,11 @@
                                 </li>
                                 <li class="col-md-12 col-sm-12">
                                     <label >User name or email <em>*</em></label>
-                                    <input type="email" name="email" class="input-text" autofocus value="laurel@yahoo.com">
+                                    <input type="email" name="email" class="input-text" autofocus>
                                 </li>
                                 <li class="col-md-12 col-sm-12">
                                     <label >Your password <em>*</em></label>
-                                    <input type="password" name="password" class="input-text" value="123456">
+                                    <input type="password" name="password" class="input-text">
                                 </li> 
                                 <li class="col-md-6 col-sm-12">                                                
                                     <input class="input-chkbox" type="checkbox">
