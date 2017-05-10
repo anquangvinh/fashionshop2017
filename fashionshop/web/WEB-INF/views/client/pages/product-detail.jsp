@@ -94,8 +94,8 @@
                                 <div class="share">
                                     <span>
                                         <a href="#" class="fa fa-heart-o"></a>
-                                        <a href="#" class="fa fa-signal"></a>
-                                        <a href="#" class="fa fa-envelope-o"></a>
+<!--                                        <a href="#" class="fa fa-signal"></a>-->
+<!--                                        <a href="#" class="fa fa-envelope-o"></a>-->
                                     </span>
                                     <div class="addthis_native_toolbox"></div>
                                 </div>
@@ -105,7 +105,7 @@
                                 <input type="hidden" id="colorID" name="colorID" value="0"/>
                                 <input type="hidden" id="sizeID" name="sizeID" value="0"/>
                                 <input type="hidden" id="productID" name="productID" value="${targetProduct.productID}"/>
-                                <button type="submit" class="btn btn-warning" id="fs-product-detail-add-to-cart">Add to Bag</button>
+                                <button type="submit" class="btn addtobag" id="fs-product-detail-add-to-cart">Add to Bag</button>
                             </form:form>
                         </div>
                     </div>
@@ -342,10 +342,45 @@
 
 <!-- BREADCRUMBS -->
 <script type="text/javascript">
-    function colorImageClick(colorID){
+    var productObj = {
+        productID: '${targetProduct.productID}',
+        productColorID: '${targetColor.colorID}',
+        productName: '${targetProduct.productName}',
+        price: '${targetProduct.price}',
+        productNameNA: '${targetProduct.productNameNA}',
+        productImg: '${targetProduct.urlImg}'
+    };
+
+    // Check browser support
+    if (typeof (Storage) !== "undefined") {
+
+        if (localStorage.getItem("productsArrLocal") == null) {
+            var productArr = [];
+            productArr.push(productObj);
+            localStorage.setItem("productsArrLocal", JSON.stringify(productArr));
+        } else {
+            var productsArrLocal = JSON.parse(localStorage.getItem("productsArrLocal"));
+            var count = 0;
+            for (var lc = 0; lc < productsArrLocal.length; lc++) {
+                if (productsArrLocal[lc].productID == productObj.productID) {
+                    count++;
+                    break;
+                }
+            }
+
+            if (count == 0) {
+                productsArrLocal.push(productObj);
+                localStorage.setItem("productsArrLocal", JSON.stringify(productsArrLocal));
+            }
+        }
+    } else {
+        document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Storage...";
+    }
+
+    function colorImageClick(colorID) {
         document.getElementById("colorID").value = colorID;
     }
-    function sizeImageClick(sizeID){
+    function sizeImageClick(sizeID) {
         document.getElementById("sizeID").value = sizeID;
     }
 </script>

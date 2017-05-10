@@ -98,7 +98,7 @@ tr.shown td.details-control{
         width: 35px; 
         position: absolute; 
         top: 22px; 
-        left: 143px;
+        left: 37%;
     }
 }
 
@@ -108,7 +108,7 @@ tr.shown td.details-control{
         width: 35px; 
         position: absolute; 
         top: 15px; 
-        left: 40px;
+        left: 37%;
     }
     
     .fs-right-border {
@@ -169,3 +169,7 @@ tr.shown td.details-control{
     text-align: center !important;
 }
 
+#fs-product-update-page .fileuploader, #fs-product-add-page .fileuploader{
+    padding: 0 !important;
+    margin: 0 !important;
+}
