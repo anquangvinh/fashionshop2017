@@ -15,10 +15,18 @@ import spring.entity.Blogs;
  */
 @Local
 public interface BlogsSBLocal {
+
     public List<Blogs> getAllBlogs();
+    public List<Blogs> getAllBlogsIndex();
+
     List<Blogs> getListBlogsByCategory(int blogCateID);
-     boolean blogAdd(Blogs newBlogs);
-     Blogs findBlogsByID(int id);
-     boolean editBlogs(Blogs targetBlogs);
-       List<Blogs> findBlogsByTitle(String blogTitle);
+
+    boolean blogAdd(Blogs newBlogs);
+
+    Blogs findBlogsByID(int id);
+
+    boolean editBlogs(Blogs targetBlogs);
+
+    List<Blogs> findBlogsByTitle(String blogTitle);
+
 }

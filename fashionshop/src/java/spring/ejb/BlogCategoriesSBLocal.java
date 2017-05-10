@@ -25,5 +25,7 @@ public interface BlogCategoriesSBLocal {
     
     BlogCategories findCategoryByID(int blogCateID);
     
+      boolean deleteCategory(int blogCateID);
+    
     
 }

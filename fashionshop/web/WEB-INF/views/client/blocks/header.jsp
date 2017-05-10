@@ -212,10 +212,10 @@
                             </ul>
                         </li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Blog</a>
+                            <a href="blog.html" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Blog</a>
                             <ul class="dropdown-menu submenu" role="menu">
                                 <li><a href="blog.html">Blog Posts</a>
-                                <li><a href="./blog-single.html">Blog Single</a>
+<!--                                <li><a href="./blog-single.html">Blog Single</a>-->
                             </ul>
                         </li>
                         <li class="dropdown">

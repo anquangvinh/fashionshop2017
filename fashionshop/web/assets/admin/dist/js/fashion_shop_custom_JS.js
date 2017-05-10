@@ -426,7 +426,7 @@ $(document).ready(function () {
     /* XỬ LÝ BUTTON ADD-MORE-COLOR - PRODUCT CREATE */
     $("#fs-add-more-color").click(function () {
         fs_count_div_color = $(this).parent().siblings("#fs-more-color").find(".fs-div-color").length + 1;
-        var addMoreColor = "<div class=\"col-xs-12 fs-div-color\" style=\"padding: 5px 0; border: 1px #CCC dashed; margin-bottom: 10px\" fs-big-div-color=\""+ fs_count_div_color +"\">\n\
+        var addMoreColor = "<div class=\"col-xs-12 fs-div-color\" style=\"padding: 5px 0; border: 1px #CCC dashed; margin-bottom: 10px\" fs-big-div-color=\"" + fs_count_div_color + "\">\n\
                                 <div class=\"col-md-6 fs-right-border\">\n\
                                     <div class=\"form-group\">\n\
                                         <label>Color</label>\n\
@@ -672,19 +672,20 @@ $(document).ready(function () {
     /*    
      * CẤU HÌNH DATEPICKER CHO BLOG
      */
-    $("#postedDate").datepicker({
-        showAnim: "drop",
-        dateFormat: "dd-mm-yy",
-        changeMonth: true,
-        changeYear: true
-    });
+//    $("#postedDate").datepicker({
+//        showAnim: "drop",
+//        dateFormat: "dd-mm-yy",
+//        changeMonth: true,
+//        changeYear: true
+//    });
+    /* BẮT validation CKSinder */
 
     /* BẮT validation CREATE BLOG CATEGORY */
     // blog-category-add
     $("#fs-button-create-blog-category").click(function (e) {
         e.preventDefault();
         var blogCateVal = $("#fs-blog-category").val();
-        if (blogCateVal === "") {
+        if (blogCateVal == "") {
             $("#fs-blog-category-error").text("Category cannot be empty!");
         } else if (blogCateVal.length < 5 || blogCateVal.length > 20) {
             $("#fs-blog-category-error").text("Category has 5 - 20 characters!");
@@ -695,7 +696,7 @@ $(document).ready(function () {
 
     $("#fs-blog-category").keyup(function () {
         var blogCateVal = $("#fs-blog-category").val();
-        if (blogCateVal === "") {
+        if (blogCateVal == "") {
             $("#fs-blog-category-error").text("Category cannot be empty!");
         } else if (blogCateVal.length < 5 || blogCateVal.length > 20) {
             $("#fs-blog-category-error").text("Category has 5 - 20 characters!");
@@ -708,7 +709,7 @@ $(document).ready(function () {
         e.preventDefault();
         var blogCateVal = $("#fs-blog-category-update").val();
 
-        if (blogCateVal === "") {
+        if (blogCateVal == "") {
             $("#fs-blog-category-error").text("Category cannot be empty!");
         } else if (blogCateVal.length < 5 || blogCateVal.length > 20) {
             $("#fs-blog-category-error").text("Category has 5 - 20 characters!");
@@ -719,7 +720,7 @@ $(document).ready(function () {
 
     $("#fs-blog-category-update").keyup(function () {
         var blogCateVal = $("#fs-blog-category-update").val();
-        if (blogCateVal === "") {
+        if (blogCateVal == "") {
             $("#fs-blog-category-error").text("Category cannot be empty!");
         } else if (blogCateVal.length < 5 || blogCateVal.length > 20) {
             $("#fs-blog-category-error").text("Category has 5 - 20 characters!");
@@ -727,72 +728,172 @@ $(document).ready(function () {
             $("#fs-blog-category-error").text("");
         }
     });
+    
+    $('input[id="upImage"]').fileuploader({
+        limit: 1,
+        extensions: ['jpg', 'jpeg', 'png'],
+        dialogs: {
+            // alert dialog
+            alert: function (text) {
+                $("#fs-error-mess-blog-img").text(text);
+            }
+        },
+        thumbnails: {
+            // Callback fired after the item image was loaded
+            onImageLoaded: function (itemEl, listEl, parentEl, newInputEl, inputEl) {
+                $("#fs-error-mess-blog-img").empty();
+            }
+        }
+    });
+
 
     // blog-category-update-end
     /* BẮT validation CREATE BLOG */
-    $("#fs-button-create-blog").click(function (e) {
-        e.preventDefault();
-        var categoryID = $("#fs-select-box-blog-category").val();
-        if (categoryID === 0) {
-            $("#fs-select-box-blog-category-error").text("Please select a Category!.");
+//    $("#fs-button-create-blog").click(function (e) {
+//        e.preventDefault();
+//        var categoryID = $("#fs-select-box-blog-category").val();
+//        if (categoryID == 0) {
+//            $("#fs-select-box-blog-category-error").text("Please select a Category!.");
+//        } else {
+//            $("#fs-form-create-blog").submit();
+//        }
+//    });
+//
+//    $("#fs-select-box-blog-category").change(function () {
+//        var categoryID = $("#fs-select-box-blog-category").val();
+//        if (categoryID == 0) {
+//            $("#fs-select-box-blog-category-error").text("Please select a Category!.");
+//        } else {
+//            $("#fs-select-box-blog-category-error").text("");
+//        }
+//    });
+////// Line Title add
+//    $("#fs-button-create-blog").click(function (e) {
+//        e.preventDefault();
+//        var blogCateVal = $("#fs-blog-line-title").val();
+//        if (blogCateVal == "") {
+//            $("#fs-blog-title-error").text("Title cannot be empty!");
+//        } else if (blogCateVal.length < 5 || blogCateVal.length > 100)
+//        {
+//            $("#fs-blog-title-error").text("Title has 5 - 100 characters!");
+//        }
+//        else
+//        {
+//            $("form[name=\"blogForm\"]").submit();
+//        }
+//    });
+//
+//    $("#fs-blog-line-title").keyup(function () {
+//        var blogCateVal = $("#fs-blog-line-title").val();
+//        if (blogCateVal == "") {
+//            $("#fs-blog-title-error").text("Title cannot be empty!");
+//        } else if (blogCateVal.length < 5 || blogCateVal.length > 100) {
+//            $("#fs-blog-title-error").text("Title has 5 - 100 characters!");
+//        } else {
+//            $("#fs-blog-title-error").text("");
+//        }
+//    });
+//// Line Summary add
+//    $("#fs-button-create-blog").click(function (e) {
+//        e.preventDefault();
+//        var blogCateValSummary = $("#fs-blog-line-summary").val();
+//        if (blogCateValSummary == "") {
+//            $("#fs-blog-summary-error").text("Summary cannot be empty!");
+//        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 1000) {
+//            $("#fs-blog-summary-error").text("Summary has 15 - 1000 characters!");
+//        } else {
+//            $("form[name=\"blogForm\"]").submit();
+//        }
+//    });
+////
+//    $("#fs-blog-line-summary").keyup(function () {
+//        var blogCateValSummary = $("#fs-blog-line-summary").val();
+//        if (blogCateValSummary == "") {
+//            $("#fs-blog-summary-error").text("Summary cannot be empty!");
+//        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 1000) {
+//            $("#fs-blog-summary-error").text("Summary has 15 - 1000 characters!");
+//        } else {
+//            $("#fs-blog-summary-error").text("");
+//        }
+//    });
+
+
+    $("#fs-form-create-blog").on("click", ".next", function () {
+        var cateID = $("#fs-select-box-blog-category").val();
+        var titleID = $("#fs-blog-line-title").val();
+        var summary = $("#fs-blog-line-summary").val();
+        var blogImg = $("#upImage").val();
+        var count = 0;
+
+
+        if (cateID == 0) {
+            $("p#fs-select-box-blog-category-error").text("Please choose a Category!");
+            $("#fs-select-box-blog-category").focus();
+            count++;
         } else {
-            $("#fs-form-create-blog").submit();
+            $("p#fs-select-box-blog-category-error").text("");
         }
-    });
 
-    $("#fs-select-box-blog-category").change(function () {
-        var categoryID = $("#fs-select-box-blog-category").val();
-        if (categoryID === 0) {
-            $("#fs-select-box-blog-category-error").text("Please select a Category!.");
+        if (titleID == "") {
+            $("#fs-blog-title-error").text("Title cannot be empty!");
+            $("#fs-blog-line-title").focus();
+            count++;
+        } else if (titleID.length < 5 || titleID.length > 50) {
+            $("#fs-blog-title-error").text("Title must have 5 - 50 characters!");
+            $("#fs-blog-line-title").focus();
         } else {
-            $("#fs-select-box-blog-category-error").text("");
+            $("#fs-blog-title-error").text("");
+        }
+
+        if (summary == "") {
+            $("#fs-blog-summary-error").text("Summary cannot be empty!");
+            $("#fs-blog-line-summary").focus();
+            count++;
+        } else if (summary.length < 50 || summary.length > 1000) {
+            $("#fs-blog-summary-error").text("Summary  must have 50 - 700 characters!");
+            $("#fs-blog-line-summary").focus();
+        } else {
+            $("#fs-blog-summary-error").text("");
+        }
+
+        if (blogImg == "") {
+            $("#fs-error-mess-blog-img").text("Image cannot be empty!");
+            $("#upImage").focus();
+            count++;
+        } else {
+            $("#fs-error-mess-blog-img").text("");
         }
     });
 
-    $("#fs-button-create-blog").click(function (e) {
-        e.preventDefault();
-        var blogCateVal = $("#fs-blog-line-title").val();
-        if (blogCateVal === "") {
-            $("#fs-blog-title-error").text("Title cannot be empty!");
-        } else if (blogCateVal.length < 5 || blogCateVal.length > 100)
-        {
-            $("#fs-blog-title-error").text("Title has 5 - 100 characters!");
-        }
-        else
-        {
-            $("form[name=\"blogForm\"]").submit();
+    // keyup
+    $("#fs-form-create-blog").on("change", "#fs-select-box-blog-category", function () {
+        var subCateID = $("#fs-select-box-blog-category").val();
+        if (subCateID == 0) {
+            $("p#fs-select-box-blog-category-error").text("Please choose a SubCategory!");
+        } else {
+            $("p#fs-select-box-blog-category-error").text("");
         }
     });
-
-    $("#fs-blog-line-title").keyup(function () {
-        var blogCateVal = $("#fs-blog-line-title").val();
-        if (blogCateVal === "") {
+    
+       $("#fs-blog-line-title").keyup(function () {
+        var titleID = $("#fs-blog-line-title").val();
+        if (titleID == "") {
             $("#fs-blog-title-error").text("Title cannot be empty!");
-        } else if (blogCateVal.length < 5 || blogCateVal.length > 100) {
-            $("#fs-blog-title-error").text("Title has 5 - 100 characters!");
+        }
+         else if (titleID.length < 5 || titleID.length > 50) {
+            $("#fs-blog-title-error").text("Title must have 5 - 50 characters!");
         } else {
             $("#fs-blog-title-error").text("");
         }
     });
-
-    $("#fs-button-create-blog").click(function (e) {
-        e.preventDefault();
-        var blogCateValSummary = $("#fs-blog-line-summary").val();
-        if (blogCateValSummary === "") {
+    
+     $("#fs-blog-line-summary").keyup(function () {
+        var summary = $("#fs-blog-line-summary").val();
+        if (summary == "") {
             $("#fs-blog-summary-error").text("Summary cannot be empty!");
-        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 200) {
-            $("#fs-blog-summary-error").text("Summary has 15 - 400 characters!");
-        } else {
-            $("form[name=\"blogForm\"]").submit();
         }
-    });
-
-    $("#fs-blog-line-summary").keyup(function () {
-        var blogCateValSummary = $("#fs-blog-line-summary").val();
-        if (blogCateValSummary === "") {
-            $("#fs-blog-summary-error").text("Summary cannot be empty!");
-        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 200) {
-            $("#fs-blog-summary-error").text("Summary has 15 - 400 characters!");
+         else if (summary.length < 15 || summary.length > 1000) {
+            $("#fs-blog-summary-error").text("Summary has 15 - 1000 characters!");
         } else {
             $("#fs-blog-summary-error").text("");
         }
@@ -800,45 +901,114 @@ $(document).ready(function () {
 
     // validate CKfinder
 
+        if ($("#editor1").length) {
+        var editor1 = CKEDITOR.replace('editor1', {
+            toolbar: [
+                {name: 'document', items: ['Source']},
+                {name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']},
+                {name: 'editing', items: ['Find', 'Replace']},
+                {name: 'insert', items: ['Image', 'Table', 'HorizontalRule']},
+                '/',
+                {name: 'styles', items: ['Format', 'Font', 'FontSize']},
+                {name: 'colors', items: ['TextColor', 'BGColor']},
+                '/',
+                {name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+                {name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote']}
+            ]
+        });
+        CKFinder.setupCKEditor(editor1, {basePath: '/fashionshop/assets/ckfinder/'});
+    }
+    
+    // Button Create Blog
+     $("#fs-button-create-blog").click(function (e) {
+        e.preventDefault();
+        var count = 0;
+        
+        $(".fs-blog-line-title").each(function () {
+            if ($(this).val() == "") {
+                $(this).focus();
+                $(this).siblings("p").text("Title is required!");
+                count++;
+            }else if ($(this).val().length < 5 ) {
+                $(this).focus();
+                $(this).siblings("p").text("Title must have 5 - 50 characters! . ");
+                count++;   
+                } else {
+                $(this).siblings("p").text("");
+            }
+         });
+         
+            $(".fs-blog-line-summary").each(function () {
+            if ($(this).val() == "") {
+                $(this).focus();
+                $(this).siblings("p").text("Summary is required!");
+                count++;
+            }else if ($(this).val().length < 15) {
+                $(this).focus();
+                $(this).siblings("p").text("Summary has 15 - 1000 characters!");
+                count++;   
+                } else {
+                $(this).siblings("p").text("");
+            }
+         });
+         
+           $(".upImage").each(function () {
+            if ($(this).val() == "") {
+                $(this).focus();
+                $(this).parent().siblings("p").text("Choose an image for Blog!");
+                count++;
+            }
+             });
+            
+              if (count == 0) {
+            $("#fs-form-create-blog").submit();
+        }
+    
+        });
+
     /* BẮT validation UPDATE BLOG */
+
     $("#fs-button-update-blog").click(function (e) {
         e.preventDefault();
         var categoryID = $("#fs-select-box-blog-category-update").val();
-        if (categoryID === 0) {
-            $("#fs-select-box-blog-category-update-error").text("Please select a Category!.");
+        if (categoryID == 0) {
+            $("#fs-select-box-blog-category-error").text("Please select a Category!.");
         } else {
-            $("#fs-form-update-blog").submit();
+            $("#fs-form-create-blog").submit();
         }
     });
 
     $("#fs-select-box-blog-category-update").change(function () {
         var categoryID = $("#fs-select-box-blog-category-update").val();
-        if (categoryID === 0) {
-            $("#fs-select-box-blog-category-update-error").text("Please select a Category!.");
+        if (categoryID == 0) {
+            $("#fs-select-box-blog-category-error").text("Please select a Category!.");
         } else {
-            $("#fs-select-box-blog-category-update-error").text("");
+            $("#fs-select-box-blog-category-error").text("");
         }
     });
 
     // Line Title
     $("#fs-button-update-blog").click(function (e) {
         e.preventDefault();
-        var blogCateValTitleUpdate = $("#fs-blog-update-line-title").val();
-        if (blogCateValTitleUpdate === "") {
+        var blogCateVal = $("#fs-blog-update-line-title").val();
+        if (blogCateVal == "") {
             $("#fs-blog-update-title-error").text("Title cannot be empty!");
-        } else if (blogCateValTitleUpdate.length < 5 || blogCateValTitleUpdate.length > 100) {
+        } else if (blogCateVal.length < 5 || blogCateVal.length > 100)
+        {
             $("#fs-blog-update-title-error").text("Title has 5 - 100 characters!");
-        } else {
+        }
+        else
+        {
             $("form[name=\"blogupdateForm\"]").submit();
         }
     });
 
     $("#fs-blog-update-line-title").keyup(function () {
-        var blogCateValSummary = $("#fs-blog-update-line-title").val();
-        if (blogCateValSummary === "") {
+        var blogCateVal = $("#fs-blog-update-line-title").val();
+        if (blogCateVal == "") {
             $("#fs-blog-update-title-error").text("Title cannot be empty!");
-        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 200) {
-            $("fs-blog-update-title-error").text("Title has 15 - 400 characters!");
+        } else if (blogCateVal.length < 5 || blogCateVal.length > 100) {
+            $("#fs-blog-update-title-error").text("Title has 5 - 100 characters!");
         } else {
             $("#fs-blog-update-title-error").text("");
         }
@@ -848,11 +1018,11 @@ $(document).ready(function () {
 
     $("#fs-button-update-blog").click(function (e) {
         e.preventDefault();
-        var blogCateValTitleUpdate = $("#fs-blog-update-line-summary").val();
-        if (blogCateValTitleUpdate === "") {
-            $("#fs-blog-update-title-error").text("Title cannot be empty!");
-        } else if (blogCateValTitleUpdate.length < 5 || blogCateValTitleUpdate.length > 100) {
-            $("#fs-blog-update-title-error").text("Title has 5 - 100 characters!");
+        var blogCateValSummary = $("#fs-blog-update-line-summary").val();
+        if (blogCateValSummary == "") {
+            $("#fs-blog-summary-error").text("Summary cannot be empty!");
+        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 1000) {
+            $("#fs-blog-summary-error").text("Summary has 15 - 1000 characters!");
         } else {
             $("form[name=\"blogupdateForm\"]").submit();
         }
@@ -860,18 +1030,18 @@ $(document).ready(function () {
 
     $("#fs-blog-update-line-summary").keyup(function () {
         var blogCateValSummary = $("#fs-blog-update-line-summary").val();
-        if (blogCateValSummary === "") {
-            $("#fs-blog-update-summary-error").text("Title cannot be empty!");
-        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 200) {
-            $("fs-blog-update-summary-error").text("Title has 15 - 400 characters!");
+        if (blogCateValSummary == "") {
+            $("#fs-blog-summary-error").text("Summary cannot be empty!");
+        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 1000) {
+            $("#fs-blog-summary-error").text("Summary has 15 - 1000 characters!");
         } else {
-            $("#fs-blog-update-summary-error").text("");
+            $("#fs-blog-summary-error").text("");
         }
     });
 
 
     /*===============================END THANH - BLOG =================================*/
-    
+
     /*==============================DUONG - USER============================*/
     /* 
      * AJAX - EVENT ONCHANGE SELECT USER "STATUS" 
@@ -917,12 +1087,12 @@ $(document).ready(function () {
     });
 
     //function load data từ 1 dataSource lên table
-    function renderTableFromJson (json) {
+    function renderTableFromJson(json) {
         var beginStr = '<table class="table table-striped table table-bordered table table-hover" >' +
-                    '<tr>' +
-                        '<th>Address</th>' +
-                        '<th>Phone</th>' +
-                    '</tr>';
+                '<tr>' +
+                '<th>Address</th>' +
+                '<th>Phone</th>' +
+                '</tr>';
 
         var endStr = '</table>';
         var dataStr = '';
@@ -963,7 +1133,7 @@ $(document).ready(function () {
             tr.addClass('shown');
         }
     });
-    
+
     /*==============================END DUONG - USER============================*/
 
 });

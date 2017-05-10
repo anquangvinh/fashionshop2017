@@ -27,7 +27,7 @@ public class BlogCategoriesSB implements BlogCategoriesSBLocal {
 
     @Override
     public List<BlogCategories> getBlogCategoriesList() {
-        Query q = em.createQuery("SELECT b FROM BlogCategories b", BlogCategories.class);
+        Query q = getEm().createQuery("SELECT b FROM BlogCategories b", BlogCategories.class);
         return q.getResultList();
     }
 
@@ -72,6 +72,16 @@ public class BlogCategoriesSB implements BlogCategoriesSBLocal {
     public BlogCategories findCategoryByID(int blogCateID) {
   BlogCategories targetBlogCategories = em.find(BlogCategories.class, blogCateID);
         return targetBlogCategories;
+    }
+
+    @Override
+    public boolean deleteCategory(int blogCateID) {
+         BlogCategories targetBlogCate = em.find(BlogCategories.class, blogCateID);
+        if(targetBlogCate!= null){
+            em.remove(targetBlogCate);
+            return true;
+        }
+        return false;
     }
     
     

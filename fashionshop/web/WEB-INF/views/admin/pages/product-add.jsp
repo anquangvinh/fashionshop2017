@@ -89,6 +89,7 @@
                         </div>
 
                         <div class="col-md-7">
+                            <div class="form-group text-right">
                             <div class="form-group">
                                 <label for="description">Description</label>
                                 <textarea name="description" class="form-control" rows="5" id="fs-product-description"></textarea>
@@ -100,7 +101,7 @@
                                 </button>
                             </div>
                         </div>
-
+                           </div>
                     </div>
                 </fieldset><!-- /fieldset -->
 
