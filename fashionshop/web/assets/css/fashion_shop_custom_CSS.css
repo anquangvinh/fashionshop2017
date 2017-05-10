@@ -274,3 +274,62 @@ h1.fs-site-title{
 	margin-top: -20px;
 	font-size: 15px;
 }*/
+
+.fs-page-number {
+    cursor: pointer;
+}
+
+.fs-page-number-active {
+    font-size: 18px;
+    font-weight: bold;
+    color: #d6644a !important;
+    cursor: default;
+}
+
+/* PRODUCT CATEGORY */
+/* WAITING AJAX */
+#fs-ajax-loading {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       50px;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, 0.8 ) 
+        url('../images/loading.gif') 
+        50% 50% 
+        no-repeat;
+}
+
+.fs-ul-color, .fs-ul-size {
+    column-count:2;
+    -moz-column-count:2;
+    -webkit-column-count:2;
+}
+
+input.fs-color-checkbox, input.fs-size-checkbox { display:none; }
+
+input.fs-color-checkbox + label:before, input.fs-size-checkbox + label:before {
+  font-family: FontAwesome;
+  display: inline-block;
+  font-size: 18px;
+}
+
+input.fs-color-checkbox + label:before, input.fs-size-checkbox + label:before { content: "\f096"; }
+input.fs-color-checkbox + label:before, input.fs-size-checkbox + label:before { letter-spacing: 8px; }
+
+input.fs-color-checkbox:checked + label:before, input.fs-size-checkbox:checked + label:before { content: "\f046"; }
+input.fs-color-checkbox:checked + label:before, input.fs-size-checkbox:checked + label:before { letter-spacing: 8px; }
+
+.fs-product-price-filter::-webkit-inner-spin-button, .fs-product-price-filter::-webkit-outer-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+}
+
+.fs-sc-range {
+    position: relative;
+    top: 15px;
+}
+
+/* CSS FOR USER-LOGIN-MODAL: */

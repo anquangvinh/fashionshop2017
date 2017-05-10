@@ -26,9 +26,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import spring.admin.controller.User_Controller;
+import spring.ejb.ProductStateLessBeanLocal;
 import spring.ejb.RolesStateLessBeanLocal;
 import spring.ejb.UserAddressesStateLessBeanLocal;
 import spring.ejb.UsersStateLessBeanLocal;
+import spring.entity.Categories;
 import spring.entity.UserAddresses;
 import spring.entity.Users;
 import spring.functions.SharedFunctions;
@@ -40,7 +42,8 @@ public class UserController {
     UserAddressesStateLessBeanLocal userAddressesStateLessBean = lookupUserAddressesStateLessBeanLocal();
     RolesStateLessBeanLocal rolesStateLessBean = lookupRolesStateLessBeanLocal();
     UsersStateLessBeanLocal usersStateLessBean = lookupUsersStateLessBeanLocal();
-
+    ProductStateLessBeanLocal productStateLessBean = lookupProductStateLessBeanLocal();
+    
     @Autowired
     SharedFunctions sharedFunc;
     @Autowired
@@ -49,6 +52,9 @@ public class UserController {
     @RequestMapping(value = "login", method = RequestMethod.GET)
     public String login(ModelMap model) {
         Users users = new Users();
+        //2 dòng này thêm để render ra menu chính
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
         model.addAttribute("users", users);
         return "client/pages/login";
 ////        return "client/blocks/loginModal";
@@ -145,6 +151,9 @@ public class UserController {
 
     @RequestMapping(value = "change-password/{userID}", method = RequestMethod.GET)
     public String changePass(ModelMap model, @PathVariable("userID") int userID) {
+        //2 dòng này thêm để render ra menu chính
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
         return "client/pages/changepassword";
     }
 
@@ -183,6 +192,9 @@ public class UserController {
     public String addressAdd(@PathVariable("userID") int userID, ModelMap model) {
         List<UserAddresses> listAddress = usersStateLessBean.getUserByID(userID).getUserAddressList();
         if (listAddress.size() < 20) {
+            //2 dòng này thêm để render ra menu chính
+            List<Categories> cateList = productStateLessBean.categoryList();
+            model.addAttribute("cateList", cateList);
             UserAddresses userAddress = new UserAddresses();
             model.addAttribute("userAddress", userAddress);
             return "client/pages/address-user-add";
@@ -206,7 +218,6 @@ public class UserController {
             break;
         }
 //        UserAddresses ua = userAddressesStateLessBean.findID(userID);
-
 //        int error = userAddressesStateLessBean.addAddressUser(userAddress, userID);
 //        if (ua.getAddress().equals(userAddress.getAddress()) && ua.getPhoneNumber().equals(userAddress.getPhoneNumber())) {
 //            redirectAttributes.addFlashAttribute("error", "Phone và Address trùng");
@@ -221,6 +232,9 @@ public class UserController {
 
     @RequestMapping(value = "address-list/{userID}")
     public String addresslist(ModelMap model, @PathVariable("userID") int userID) {
+        //2 dòng này thêm để render ra menu chính
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
         List<UserAddresses> ualist = userAddressesStateLessBean.AddressListUser(userID);
         model.addAttribute("ualist", ualist);
 
@@ -230,6 +244,10 @@ public class UserController {
     @RequestMapping(value = "address-book/{userID}-{addressID}", method = RequestMethod.GET)
     public String addressbook(ModelMap model, @PathVariable("userID") int userID,
             @PathVariable("addressID") int addressID) {
+        //2 dòng này thêm để render ra menu chính
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
+        
         UserAddresses userAddresses = userAddressesStateLessBean.findID(userID);
         UserAddresses userAddresses1 = userAddressesStateLessBean.findAddressID(addressID);
 //        model.addAttribute("userAddresses", userAddresses);
@@ -263,7 +281,11 @@ public class UserController {
     @RequestMapping(value = "account-information/{userID}", method = RequestMethod.GET)
     public String accountinfo(@PathVariable("userID") int userID, ModelMap model) {
         Users updateUser = usersStateLessBean.getUserByID(userID);
-
+        
+        //2 dòng này thêm để render ra menu chính
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
+        
         //Change normal date to string
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = updateUser.getBirthday();
@@ -319,10 +341,11 @@ public class UserController {
         return "redirect:/user/account-information/" + userID + ".html";
     }
 
-   
-
     @RequestMapping(value = "myaccount")
-    public String checkOut() {
+    public String checkOut(ModelMap model) {
+        //2 dòng này thêm để render ra menu chính
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
         return "client/pages/my-account";
     }
 
@@ -362,5 +385,14 @@ public class UserController {
             throw new RuntimeException(ne);
         }
     }
-
+    
+    private ProductStateLessBeanLocal lookupProductStateLessBeanLocal() {
+        try {
+            Context c = new InitialContext();
+            return (ProductStateLessBeanLocal) c.lookup("java:global/fashionshop/ProductStateLessBean!spring.ejb.ProductStateLessBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
 }

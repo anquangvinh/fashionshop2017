@@ -387,6 +387,16 @@ $(document).ready(function () {
         }
     });
 
+    $('input[id="fs-edit-product-color-img"]').fileuploader({
+        limit: 1,
+        extensions: ['jpg', 'jpeg', 'png']
+    });
+
+    $('input[id="fs-sub-img"]').fileuploader({
+        limit: 1,
+        extensions: ['jpg', 'jpeg', 'png']
+    });
+
     var fs_count_div_color = 0;
     /* XỬ LÝ BUTTON ADD-MORE-SIZE - PRODUCT CREATE */
     $("#fs-fieldset-detail").on("click", ".fs-add-more-size", function () {
@@ -635,37 +645,66 @@ $(document).ready(function () {
         }
     });
 
-    /* Xử lý choose TASK - PRODUCT-UPDATE */
-    $("#fs-select-product-update-task").change(function () {
+    /* TRANG PRODUCT-UPDATE */
+    /* Xử lý choose "FIRST" TASK */
+    $("#fs-product-update-page").on("change", "#fs-select-product-update-choose-first-task", function () {
+        $(".fs-select-product-update-task").addClass("fs-display-none");
+        $("#fs-select-product-update-choose-color").val(0);
         var select = $(this).val();
         if (select == 1) {
             $("#fs-edit-product-general-info").removeClass("fs-display-none");
+            $("#fs-select-product-update-choose-color").addClass("fs-display-none");
         } else {
-            if (!$("#fs-edit-product-general-info").hasClass("fs-display-none")) {
-                $("#fs-edit-product-general-info").addClass("fs-display-none");
-            }
+            $("#fs-edit-product-general-info").addClass("fs-display-none");
         }
 
         if (select == 2) {
-            $("#fs-select-product-update-color").removeClass("fs-display-none");
-            $("#fs-select-product-update-color").focus();
+            $("#fs-edit-product-color").removeClass("fs-display-none");
+            $("#fs-select-product-update-choose-color").addClass("fs-display-none");
         } else {
-            if (!$("#fs-select-product-update-color").hasClass("fs-display-none")) {
-                $("#fs-select-product-update-color").addClass("fs-display-none");
-            }
+            $("#fs-edit-product-color").addClass("fs-display-none");
         }
+        
+        if(select == 3 || select == 4){
+            $("#fs-select-product-update-choose-color").removeClass("fs-display-none");
+        }
+        
+        if(select == 0){
+            $("#fs-select-product-update-choose-color").addClass("fs-display-none");
+        }
+        
     });
 
-    $("#fs-select-product-update-color").change(function () {
-        var select = $(this).val();
-        if (select == 1) {
-            $("#fs-edit-product-detail-info").removeClass("fs-display-none");
+    /*Xử lý choose Color*/
+    $("#fs-product-update-page").on("change", "#fs-select-product-update-choose-color", function () {
+        var task = $("#fs-select-product-update-choose-first-task").val();
+        var colorID = $("#fs-select-product-update-choose-color").val();
+        
+        if (task == 3) {
+            $("#fs-edit-product-size").removeClass("fs-display-none");
+            $(".fs-edit-product-table-size").addClass("fs-display-none");
+            $("#fs-edit-product-table-size-" + colorID).removeClass("fs-display-none");
         } else {
-            if (!$("#fs-edit-product-detail-info").hasClass("fs-display-none")) {
-                $("#fs-edit-product-detail-info").addClass("fs-display-none");
-            }
+            $("#fs-edit-product-size").addClass("fs-display-none");
         }
+        
+       if(task == 4){
+           $("#fs-edit-product-sub-img").removeClass("fs-display-none");
+           $(".fs-edit-product-table-sub-img").addClass("fs-display-none");
+           $("#fs-edit-product-table-sub-img-" + colorID).removeClass("fs-display-none");
+       } else {
+           $("#fs-edit-product-sub-img").addClass("fs-display-none");
+       }
+       
+       if(colorID == 0){
+           $(".fs-select-product-update-task").addClass("fs-display-none");
+       }
     });
+
+    $("#fs-edit-product-table-color tbody").sortable();
+
+    $(".fs-edit-product-table-sub-img tbody").sortable();
+
     /*==========================END VINH - PRODUCT============================*/
 
     /*=============================== THANH - BLOG =================================*/
@@ -940,6 +979,7 @@ $(document).ready(function () {
     });
 
     //function load data từ 1 dataSource lên table
+
 //    function renderTableFromJson(json) {
 //        var beginStr = '<table class="table table-striped table table-bordered table table-hover" >' +
 //                '<tr>' +
@@ -1415,7 +1455,161 @@ $(document).ready(function () {
 //    $(".fs-button-detele-role").prop('disable', true);
 
 //    $
-
     /*==============================END DUONG - USER============================*/
 
+    /*==============================NGAN - ORDER============================*/
+    //Thiết lập cho bảng order list
+    $('#tableOrder').DataTable({
+        responsive: true,
+        order: [[0, "desc"]],
+        columnDefs: [{"orderable": false, "targets": [2, 3, 5]}] //,{"targets":4,render: $.fn.dataTable.render.moment(dd/mm/yyyy)}
+    });
+
+    //Thiết lập cho bảng order details list
+    $('#tableOrderDetails').DataTable({
+        responsive: true,
+        columnDefs: [{"orderable": false, "targets": [2, 3, 8]}]
+    });
+
+    //Thiết lập cho bảng discount list
+    $('#tableDiscountList').DataTable({
+        responsive: true,
+        columnDefs: [{"orderable": false, "targets": [3, 4]}]
+    });
+
+    //Order-list-detail-add.jsp
+    $('#tableProductOrderDetailAdd').DataTable({
+        responsive: true,
+        order: [[0, "asc"]]
+    });
+    $('#tableProductOrderDetailAdd tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+            $(this).prop("style", false);
+            $("#productOrDetailAddColor").html(" ");
+            $("#productOrDetailAddSize").html(" ");
+        }
+        else {
+            $("#productOrDetailAddColor").html(" ");
+            $("#productOrDetailAddSize").html(" ");
+            $('tr.selected').prop("style", false);
+            $('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+            $(this).css("background-color", "skyblue");
+            var productID = $("tr.selected .proID")[0].innerHTML;
+            $.ajax({
+                url: "admin/orders/ajax/searchcolor.html",
+                method: "POST",
+                data: {productID: productID},
+                dataType: 'html',
+                success: function (response) {
+                    $("#productOrDetailAddColor").html(response);
+                }
+            });
+        }
+    });
+    $('select[name=productOrDetailAddColor]').on("change", function () {
+        $("#order-detail-add-color-error").text("");
+        var colorID = $("select[name=productOrDetailAddColor]").val();
+        $.ajax({
+            url: "admin/orders/ajax/searchsize.html",
+            method: "POST",
+            data: {colorID: colorID},
+            dataType: 'html',
+            success: function (response) {
+                $("#productOrDetailAddSize").html(response);
+            }
+        });
+    });
+    $('select[name=productOrDetailAddSize]').on("change", function () {
+        $("#order-detail-add-size-error").text("");
+    });
+    $("#btnSearchProduct").on("click", function () {
+        var searchType = $('#searchType').val();
+        var searchText = $('#searchText').val();
+        if (searchType == 1) { //ProductName
+            if (searchText == "") {
+                $("#order-detail-add-error").text("PLEASE ENTER PRODUCT NAME");
+            }
+            $.ajax({
+                url: "admin/orders/ajax/searchproduct.html",
+                method: "POST",
+                data: {searchType: searchType, searchText: searchText},
+                dataType: 'html',
+                success: function (response) {
+                    if (response === "0") {
+                        $("#order-detail-add-error").text("PRODUCT NAME ERROR");
+                    } else {
+                        $(".bodyProductOrDetailAdd").html(response);
+                    }
+                }
+            });
+        } else { //Product ID
+            if (searchText == "") {
+                $("#order-detail-add-error").text("PLEASE ENTER PRODUCT ID");
+            } else if (!$.isNumeric(searchText)) {
+                $("#order-detail-add-error").text("PLEASE ENTER PRODUCT ID IN NUMBER");
+            }
+            $.ajax({
+                url: "admin/orders/ajax/searchproduct.html",
+                method: "POST",
+                data: {searchType: searchType, searchText: searchText},
+                dataType: 'html',
+                success: function (response) {
+                    if (response == "0") {
+                        $("#order-detail-add-error").text("PRODUCT NOT EXIST");
+                    } else {
+                        $(".bodyProductOrDetailAdd").html(response);
+                    }
+                }
+            });
+        }
+    });
+    $('#btnAddOrderDetail').on("click", function () {
+        if ($("tr.selected .proID")[0] == null) {
+            $("#order-detail-add-error").text("PLEASE SEARCH AND CHOOSE PRODUCT");
+        } else {
+            var orderID = $("#productOrDetailAddHeader").attr("fs-order-id");
+            var productID = $("tr.selected .proID")[0].innerHTML;
+            var colorID = $("select[name=productOrDetailAddColor]").val();
+            var sizeID = $("select[name=productOrDetailAddSize]").val();
+            var quantity = $("input[name=productOrDetailAddQuantity]").val();
+            if (colorID == null || colorID == 0) {
+                $("#order-detail-add-color-error").text("PLEASE CHOOSE COLOR");
+            } else if (sizeID == null || sizeID == 0) {
+                $("#order-detail-add-size-error").text("PLEASE CHOOSE SIZE");
+            } else if (quantity == "") {
+                $("#order-detail-add-quantity-error").text("PLEASE ENTER QUANTITY");
+            } else if (quantity < 1 || quantity > 10) {
+                $("#order-detail-add-quantity-error").text("QUANTITY MUST 1 TO 10");
+            } else {
+                $.ajax({
+                    url: "admin/orders/ajax/addOrderDetail.html",
+                    method: "POST",
+                    data: {orderID: orderID,
+                        productID: productID,
+                        colorID: colorID,
+                        sizeID: sizeID,
+                        quantity: quantity},
+                    dataType: 'html',
+                    success: function (response) {
+                        if (response == "") {
+                            $("#order-detail-add-error").text("ERROR");
+                        } else if (response == "0") {
+                            $("#order-detail-add-error").text("OUT OF STOCK! CHOSE ANOTHER COLOR AND SIZE.");
+                        } else {
+                            window.location = "admin/orders/orderlistdetail/"+orderID+".html";
+                        }
+                    }
+                });
+            }
+        }
+    });
+    $("#searchText").keyup(function () {
+        $("#order-detail-add-error").text("");
+    });
+    $('input[name=productOrDetailAddQuantity]').keyup(function () {
+        $("#order-detail-add-quantity-error").text("");
+    });
+    /*==============================END NGAN - ORDER============================*/
 });

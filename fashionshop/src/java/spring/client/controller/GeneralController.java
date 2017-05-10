@@ -28,14 +28,14 @@ public class GeneralController {
         }
         List<Object> bestSellerList = productStateLessBean.getTop3ProductBestSeller();
         List<Products> mostViewList = productStateLessBean.getTop3ProductMostViewed();
-        
+
         model.addAttribute("cateList", cateList);
         model.addAttribute("latestProducts", productStateLessBean.productList("client")); //lấy sản phẩm mới nhất
         model.addAttribute("bestSellerList", bestSellerList); //lấy sản phẩm bán chạy nhất
         model.addAttribute("mostViewList", mostViewList); //lấy sản phẩm xem nhiều nhất
         return "client/pages/index";
     }
-    
+
     @RequestMapping(value = "/admin")
     public String admin(ModelMap model) {
         return "admin/login";

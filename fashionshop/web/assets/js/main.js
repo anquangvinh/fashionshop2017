@@ -439,22 +439,6 @@ $(document).ready(function () {
         $("body").addClass("bg-climpek");
     });
 
-    //PRICE RANGE
-
-    $('#slider-container').slider({
-        range: true,
-        min: 69,
-        max: 199,
-        values: [69, 199],
-        create: function () {
-            $("#amount").val("$69 - $199");
-        },
-        slide: function (event, ui) {
-            $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
-            var mi = ui.values[0];
-            var mx = ui.values[1];
-        }
-    })
 });
 
 //Slider Product

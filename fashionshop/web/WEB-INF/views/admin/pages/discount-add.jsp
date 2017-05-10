@@ -41,8 +41,8 @@
                             <label>Description</label>
                             <form:input cssClass="form-control" path="description"/>
                         </div>
-                        <button type="submit" class="btn btn-success">Create</button>
-                        <button type="reset" class="btn btn-default">Reset</button>
+                        <button type="submit" class="btn btn-success">CREATE</button>
+                        <button type="reset" class="btn btn-default">RESET</button>
                     </form:form>
                 </div>
             </div>

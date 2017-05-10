@@ -424,7 +424,15 @@ public class Product_Controller {
     }
 
     @RequestMapping(value = "product/edit-{productID}")
-    public String productUpdate() {
+    public String productUpdate(
+            @PathVariable("productID") Integer productID,
+            ModelMap model) {
+        Products targetProduct = productStateLessBean.findProductByID(productID);
+        model.addAttribute("targetProduct", targetProduct);
+        Categories cate = productStateLessBean.findCategoryByID(targetProduct.getCategory().getCateID());
+        List<SubCategories> subCateListByCate = cate.getSubCateList();
+        
+        model.addAttribute("subCateList", subCateListByCate);
         return "admin/pages/product-update";
     }
 

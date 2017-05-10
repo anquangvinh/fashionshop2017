@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -44,10 +45,41 @@ public class Orders implements Serializable {
     @JsonBackReference
     private DiscountVoucher voucher;
     
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     @JsonManagedReference
     private List<OrdersDetail> orderDetailList;
     
+    public float getOrderDiscountPrice(){
+        float voucherDiscount = 0;
+        float total = 0;
+        if (voucher != null) {
+            voucherDiscount = Float.parseFloat(voucher.getDiscount().toString());
+        }
+        for (OrdersDetail orderDetail : orderDetailList) {
+            if (orderDetail.getStatus() != 1) {
+                total += orderDetail.getTotalPrice();
+            }
+        }
+        return (total * (voucherDiscount/100));
+    } 
+    
+    public float getPaymentTotal(){
+        float total = 0;
+        for (OrdersDetail orderDetail : orderDetailList) {
+            if (orderDetail.getStatus() != 1) {
+                total += orderDetail.getSubTotal();
+            }
+        }
+        return (total - getOrderDiscountPrice());
+    }
+    
+    public OrdersDetail getOrderDetailForOrderHistoryPage(){
+        if (!orderDetailList.isEmpty()) {
+            return orderDetailList.get(0);
+        }
+        return null;
+    }
+              
     public Integer getOrdersID() {
         return ordersID;
     }

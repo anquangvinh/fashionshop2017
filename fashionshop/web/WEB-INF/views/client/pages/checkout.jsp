@@ -12,152 +12,28 @@
             <div class="col-md-9 col-sm-8">
                 <!-- HTML -->
                 <div>
+                    <div id="error">
+                        ${error}
+                    </div>
                     <h4 class="account-title"><span class="fa fa-chevron-right"></span>Checkout Method</h4>
                     <div class="account-form">
                         <form id="shipping-zip-form" method="POST" action="orders/checkout.html">
                             <ul class="form-list row">
+                                <li class="col-md-12 col-sm-12" style="padding-bottom: 10px;">
+                                    <span style="font-weight: 900; font-size: 16px;">Please choose your address method below</span>
+                                </li>
                                 <c:forEach items="${userAddressList}" var="userAddress">
                                     <li class="col-md-6 col-sm-6">
-                                        <input type="radio" id="diff-address" name="address-chose" value="${userAddress.addressID}" onclick="differenceAddress();"/>
-                                        <label>Ship to: &nbsp ${userAddress.getUser().firstName} &nbsp ${userAddress.getUser().lastName}<br/>
-                                            ${userAddress.address}<br/>
-                                            Phone: &nbsp ${userAddress.phoneNumber}
+                                        <input type="radio" id="diff-address" name="address-chose" value="${userAddress.addressID}"/>
+                                        <label style="font-weight: normal;"><span style="font-weight: 700;">Ship to:</span> &nbsp ${userAddress.getUser().firstName} &nbsp ${userAddress.getUser().lastName}<br/>
+                                            <span style="font-weight: 700;">Address:</span> ${userAddress.address}<br/>
+                                            <span style="font-weight: 700;">Phone:</span> &nbsp ${userAddress.phoneNumber}
                                         </label>
                                     </li>
                                 </c:forEach>
-                                <!--editor-fold defaultstate="collapsed" desc="">
-                                    <li class="col-md-12 col-sm-12">
-                                        <label>Country <em>*</em></label>
-                                        <select required>
-                                            <option value="">Country 1</option>
-                                            <option value="1">Country 2</option>
-                                            <option value="2">Country 3</option>
-                                        </select>
-                                    </li> 
-                                    <li class="col-md-6 col-sm-6">
-                                        <label>First Name <em>*</em></label>
-                                        <input type="text" class="input-text" required>
-                                    </li>
-                                    <li class="col-md-6 col-sm-6">
-                                        <label>Last Name <em>*</em></label>
-                                        <input type="text" class="input-text" required>
-                                    </li>
-
-                                    <li class="col-md-6 col-sm-6">
-                                        <label >Address <em>*</em></label>
-                                        <input required type="text" class="input-text">
-                                    </li>
-                                    <li class="col-md-6 col-sm-6">
-                                        <label >Address 2</label>
-                                        <input type="text" class="input-text">
-                                    </li>
-                                    <li class="col-md-6 col-sm-6">
-                                        <label >Company Name</label>
-                                        <input type="text" class="input-text">
-                                    </li>
-                                    <li class="col-md-6 col-sm-6">
-                                        <label>Province/City</label>
-                                        <select>
-                                            <option value="">Choose Province/City</option>
-                                            <option value="294">Ho Chi Minh</option>
-                                            <option value="297">Ha Noi</option>
-                                            <option value="291">Da Nang</option>
-                                            <option value="278">An Giang</option>
-                                            <option value="280">Ba Ria - Vung Tau</option>
-                                            <option value="282">Bac Giang</option>
-                                            <option value="281">Bac Kan</option>
-                                            <option value="279">Bac Lieu</option>
-                                            <option value="283">Bac Ninh</option>
-                                            <option value="284">Ben Tre</option>
-                                            <option value="285">Binh Duong</option>
-                                            <option value="286">Binh Phuoc</option>
-                                            <option value="287">Binh Thuan</option>
-                                            <option value="316">Binh Dinh</option>
-                                            <option value="289">Ca Mau</option>
-                                            <option value="290">Can Tho</option>
-                                            <option value="288">Cao Bang</option>
-                                            <option value="293">Gia Lai</option>
-                                            <option value="295">Ha Giang</option>
-                                            <option value="296">Ha Nam</option>
-                                            <option value="299">Ha Tinh</option>
-                                            <option value="300">Hai Duong</option>
-                                            <option value="301">Hai Phong</option>
-                                            <option value="319">Hau Giang</option>
-                                            <option value="302">Hoa Binh</option>
-                                            <option value="320">Hung Yen</option>
-                                            <option value="321">Khanh Hoa</option>
-                                            <option value="322">Kien Giang</option>
-                                            <option value="323">Kon Tum</option>
-                                            <option value="304">Lai Chau</option>
-                                            <option value="306">Lam Dong</option>
-                                            <option value="305">Lang Son</option>
-                                            <option value="324">Lao Cai</option>
-                                            <option value="325">Long An</option>
-                                            <option value="326">Nam Dinh</option>
-                                            <option value="327">Nghe An</option>
-                                            <option value="307">Ninh Binh</option>
-                                            <option value="328">Ninh Thuan</option>
-                                            <option value="329">Phu Tho</option>
-                                            <option value="308">Phu Yen</option>
-                                            <option value="309">Quang Binh</option>
-                                            <option value="310">Quang Nam</option>
-                                            <option value="311">Quang Ngai</option>
-                                            <option value="330">Quang Ninh</option>
-                                            <option value="312">Quang Tri</option>
-                                            <option value="313">Soc Trang</option>
-                                            <option value="331">Son La</option>
-                                            <option value="332">Tay Ninh</option>
-                                            <option value="333">Thai Binh</option>
-                                            <option value="334">Thai Nguyen</option>
-                                            <option value="335">Thanh Hoa</option>
-                                            <option value="303">Thua Thien Hue</option>
-                                            <option value="336">Tien Giang</option>
-                                            <option value="314">Tra Vinh</option>
-                                            <option value="315">Tuyen Quang</option>
-                                            <option value="337">Vinh Long</option>
-                                            <option value="338">Vinh Phuc</option>
-                                            <option value="339">Yen Bai</option>
-                                            <option value="292">Dak Lak</option>
-                                            <option value="340">Dak Nong</option>
-                                            <option value="341">Dien Bien</option>
-                                            <option value="317">Dong Nai</option>
-                                            <option value="318">Dong Thap</option>
-                                        </select>
-                                    </li>
-                                    <li class="clearfix"></li>
-                                    <li class="col-md-6 col-sm-6">
-                                        <label>State</label>
-                                        <select>
-                                            <option>State 1</option>
-                                            <option>State 2</option>
-                                            <option>State 3</option>
-                                        </select>
-                                    </li> 
-                                    <li class="col-md-6 col-sm-6">
-                                        <label >Zip/Postal Code <em>*</em></label>
-                                        <input required type="text" class="input-text">
-                                    </li>
-                                    <li class="col-md-6 col-sm-6">
-                                        <label >Email <em>*</em></label>
-                                        <input required type="text" class="input-text">
-                                    </li>
-                                    <li class="col-md-6 col-sm-6">
-                                        <label >Phone Number <em>*</em></label>
-                                        <input required type="text" class="input-text">
-                                    </li>
-                                    <li class="col-md-12 col-sm-12">
-                                        <input id="create-act" type="checkbox" class="input-chkbox">
-                                        <label> Create an account?</label>
-                                    </li>
-                                    <li class="col-md-12 col-sm-12 create-account">
-                                        <p>Create an account by entering the information below. If you are a returning customer please login at the top of the page.</p>
-                                        <label > Account password <em>*</em></label>
-                                        <input required type="text" class="input-text">
-                                    </li>
-                            </editor-fold-->
                                 <li class="col-md-12 col-sm-12">
-                                    <input id="diff-address" name="address-chose" value="difference" type="radio" class="input-chkbox" onclick="differenceAddress();"/>
-                                    <label> Ship to a different address?</label>
+                                    <input id="diff-address" name="address-chose" value="difference" type="radio" class="input-chkbox"/>
+                                    <label style="font-weight: normal;"><span style="font-weight: 700;"> Ship to a different address?</span></label>
                                 </li>
                                 <li class="col-md-12 col-sm-12 shipping-address">
                                     <ul class="form-list row">
@@ -251,7 +127,7 @@
                                 </li>
                                 <li class="col-md-12 col-sm-12">
                                     <input id="diff-discount" type="checkbox" class="input-chkbox"/>
-                                    <label> You have discount code?</label>
+                                    <span style="font-weight: 900; font-size: 16px;">You have discount code?</span>
                                 </li>
                                 <li class="col-md-12 col-sm-12 discount-code">
                                     <ul class="form-list row discount-ul">
@@ -264,13 +140,13 @@
                                         </li>
                                         <li class="col-md-6 col-sm-6 discount-buttons" style="padding-top: 27px;">
                                             <div class="buttons-set">
-                                                <button style="height: 40px;" type="button" title="Apply Discount Code" class="btn-black" id="discount-order" onclick="discountClick();"><span><span>Apply Discount Code</span></span></button>
+                                                <button style="height: 40px;" type="button" title="Apply Discount Code" class="btn-black" id="discount-order" onclick="discountClick()"><span><span>Apply Discount Code</span></span></button>
                                             </div>
                                         </li>
                                     </ul>
                                 </li>
                                 <li class="col-md-12 col-sm-12">
-                                    <label >Note (Eg: deliver during office hours)</label>
+                                    <span style="font-weight: 900; font-size: 16px;">Note (Eg: deliver during office hours)</span>
                                     <input type="text"  class="input-text" name="note"/>
                                 </li>
                             </ul>
@@ -316,7 +192,7 @@
                                 <tr>
                                     <th>Discount</th>
                                     <td>
-                                        <div class="">$0.0</div>
+                                        <div class="">-$0.0</div>
                                     </td> 
                                 </tr>
                                 <tr>
@@ -336,33 +212,6 @@
 
 <div class="clearfix space20"></div>
 <script type="text/javascript">
-    function differenceAddress() {
-        var checked = $('#diff-address:checked').val();
-        if (checked === "difference") {
-            $('.shipping-address').toggle("slow");
-        } else {
-            $('.shipping-address').prop("style", false);
-        }
-    }
-    ;
-    function enterDiscountAgain() {
-        $(".discount-ul").removeClass(".discount-inputs");
-        $(".discount-ul").hide().html("<li class=\"col-md-6 col-sm-6 discount-inputs\">\n"
-                + "<label>Your Discount Code</label>\n"
-                + "<div class=\"input-box\">\n"
-                + "<p class=\"help-block\" id=\"fs-checkout-discountvou-error\"></p>\n"
-                + "<input class=\"input-text\" id=\"coupon_code\" name=\"coupon_code\" value=\"\"/>\n"
-                + "</div>\n"
-                + "</li>\n"
-                + "<li class=\"col-md-6 col-sm-6 discount-buttons\" style=\"padding-top: 27px;\">\n"
-                + "<div class=\"buttons-set\">\n"
-                + "<button style=\"height: 40px;\" type=\"button\" title=\"Apply Discount Code\" class=\"btn-black\" id=\"discount-order\" onclick=\"discountClick();\"><span><span>Apply Discount Code</span></span></button>\n"
-                + "</div></li>").fadeIn(1000);
-        $.get("orders/ajax/nodiscount.html", function (responsenodiscount) {
-            $(".foot").hide().html(responsenodiscount).fadeIn(1000);
-        });
-    }
-    ;
     function discountClick() {
         $(".cart-table").remove(".foot");
         $(".cart-table").add("<tfoot class=\"foot\"></tfoot>");
@@ -381,7 +230,7 @@
                         $(".discount-ul").removeClass(".discount-buttons");
                         $(".discount-ul").hide().html("<li class=\"col-md-6 col-sm-6 discount-inputs\"><div class=\"discountShow\" style=\"padding-bottom: 15px;\">\n"
                                 + "<input type=\"hidden\" id=\"discount-code-input\" name=\"discount-code-input\" value=\"" + discountCode + "\"/>\n"
-                                + "<b>Your Discount Code: " + discountCode + "</b>&nbsp<button class=\"fa fa-times\" id=\"cancel-discount\"  onclick=\"enterDiscountAgain();\"></button>\n"
+                                + "<b>Your Discount Code: " + discountCode + "</b>&nbsp<button type=\"button\" class=\"fa fa-times\" id=\"cancel-discount\"  onclick=\"enterDiscountAgain();\"></button>\n"
                                 + "</div></li>").fadeIn(1000);
                         $(".foot").hide().html(response).fadeIn(1000);
                     } else {
@@ -398,35 +247,22 @@
                 }
             });
         }
-    }
-    ;
+    };
+    function enterDiscountAgain() {
+        $(".discount-ul").removeClass(".discount-inputs");
+        $(".discount-ul").hide().html("<li class=\"col-md-6 col-sm-6 discount-inputs\">\n"
+                + "<label>Your Discount Code</label>\n"
+                + "<div class=\"input-box\">\n"
+                + "<p class=\"help-block\" id=\"fs-checkout-discountvou-error\"></p>\n"
+                + "<input class=\"input-text\" id=\"coupon_code\" name=\"coupon_code\" value=\"\"/>\n"
+                + "</div>\n"
+                + "</li>\n"
+                + "<li class=\"col-md-6 col-sm-6 discount-buttons\" style=\"padding-top: 27px;\">\n"
+                + "<div class=\"buttons-set\">\n"
+                + "<button style=\"height: 40px;\" type=\"button\" title=\"Apply Discount Code\" class=\"btn-black\" id=\"discount-order\" onclick=\"discountClick()\"><span><span>Apply Discount Code</span></span></button>\n"
+                + "</div></li>").fadeIn(1000);
+        $.get("orders/ajax/nodiscount.html", function (responsenodiscount) {
+            $(".foot").hide().html(responsenodiscount).fadeIn(1000);
+        });
+    };
 </script>
-<!-- ============================== COUPON CODE MODAL ===================================== -->
-<!--<div class="modal fade" id="coupon-code" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">                   
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>  
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12 col-md-12">
-                        <form class="shipping-info-wrap" id="discount-coupon-form">
-                            <div class="discount">
-                                <h2>Discount Codes</h2>
-                                <div class="form-list">
-                                    <label for="coupon_code">Enter your coupon code if you have one.</label>
-                                    <input type="hidden" value="0" id="remove-coupone" name="remove">
-                                    <div class="input-box">
-                                        <input value="" name="coupon_code" id="coupon_code" class="input-text">
-                                    </div>
-                                    <div class="buttons-set">
-                                        <button class="btn-black" title="Apply Coupon" type="button"><span><span>Apply Coupon</span></span></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>                            
-                </div>
-            </div>
-        </div>
-    </div>
-</div>-->

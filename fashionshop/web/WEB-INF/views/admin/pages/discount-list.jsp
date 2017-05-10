@@ -21,35 +21,28 @@
                 <div>
                     ${error}
                 </div>
-                <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                <table width="100%" class="table table-striped table-bordered table-hover" id="tableDiscountList">
                     <thead>
                         <tr>
-                            <th>Voucher Code</th>
-                            <th>Discount Percent</th>
-                            <th>Quantity</th>
-                            <th>Discription</th>
-                            <th>Action</th>
+                            <th class="text-center fs-valign-middle">Voucher Code</th>
+                            <th class="text-center fs-valign-middle">Discount Percent</th>
+                            <th class="text-center fs-valign-middle">Quantity</th>
+                            <th class="text-center fs-valign-middle">Description</th>
+                            <th class="text-center fs-valign-middle">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <c:forEach items="${discountList}" var="discount">
                             <tr class="odd gradeX">
-                                <td align="center">${discount.voucherID}</td>
-                                <td align="center">${discount.getPercent()}</td>
-                                <td align="center">${discount.quantity}</td>
-                                <td align="center">${discount.description}</td>
-                                <td align="center">
+                                <td class="text-center fs-valign-middle">${discount.voucherID}</td>
+                                <td class="text-center fs-valign-middle">${discount.discount}</td>
+                                <td class="text-center fs-valign-middle">${discount.quantity}</td>
+                                <td class="text-center fs-valign-middle">${discount.description}</td>
+                                <td class="text-center fs-valign-middle">
                                     <a href="admin/orders/discountupdate/${discount.voucherID}.html" type="button" class="btn btn-primary">Update</a>
                                 </td>
                             </tr>
                         </c:forEach>
-                        <!--                        <tr class="odd gradeX">
-                                                    <td>Trident</td>
-                                                    <td>Internet Explorer 4.0</td>
-                                                    <td>Win 95+</td>
-                                                    <td class="center">4</td>
-                                                    <td class="center">X</td>
-                                                </tr>-->
                     </tbody>
                 </table>
                 <!-- /.table-responsive -->
