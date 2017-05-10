@@ -5,9 +5,15 @@
  */
 package spring.client.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
@@ -22,8 +28,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import spring.ejb.ProductStateLessBeanLocal;
 import spring.entity.CartLineInfoByID;
+import spring.entity.Categories;
 import spring.entity.ProductColors;
 import spring.entity.Products;
+import spring.entity.SizeLetterOrder;
+import spring.entity.SizesByColor;
 
 @Controller
 public class ProductController {
@@ -32,18 +41,87 @@ public class ProductController {
 
     @RequestMapping(value = "/category/{cateID}-{categoryNameNA}")
     public String categorylist(ModelMap model,
-                                @PathVariable("cateID") Integer cateID) {
-        List<Products> productsListByCate = productStateLessBean.getProductByCategory(cateID);
-        if(productsListByCate != null){
-            model.addAttribute("productsList", productsListByCate);
+            @PathVariable("cateID") Integer cateID,
+            @PathVariable("categoryNameNA") String categoryNameNA) {
+        int page = 1;
+        int itemPerPage = 6;
+        String currentProductPageInfo = ((page - 1) * itemPerPage + 1) + " - " + (((page - 1) * itemPerPage) + itemPerPage);
+        List<Categories> cateList = productStateLessBean.categoryList();
+        List<Products> allProductByCate = productStateLessBean.findCategoryByID(cateID).getProductList();
+        int allProducts = allProductByCate.size();
+        float fromPrice = productStateLessBean.getMinPriceOfProduct_ByCate(cateID);
+        float toPrice = productStateLessBean.getMaxPriceOfProduct_ByCate(cateID);
+        List<Object[]> productIDList = productStateLessBean.filterProductByCategory(cateID, page, itemPerPage, fromPrice, toPrice, "", "", 1);
+        List<Products> finalProductList = new ArrayList<>();
+        for (Object[] prod : productIDList) {
+
+            Products product = productStateLessBean.findProductByID((Integer) prod[0]);
+            finalProductList.add(product);
+        }
+        Set<String> colorSet = new HashSet<>();
+        Set<String> sizeSet = new HashSet<>();
+
+        //get List of Color
+        for (Products p : allProductByCate) {
+            for (ProductColors pc : p.getProductColorList()) {
+                colorSet.add(pc.getColor());
+                for (SizesByColor size : pc.getSizeList()) {
+                    sizeSet.add(size.getProductSize());
+                }
+            }
+        }
+
+        List<SizeLetterOrder> newSizeList = new ArrayList<>();
+        for (String s : sizeSet) {
+            SizeLetterOrder slo = new SizeLetterOrder();
+            if (s.equals("XXS")) {
+                slo.setSizeLetter("XXS");
+                slo.setOrder(0);
+            } else if (s.equals("XS")) {
+                slo.setSizeLetter("XS");
+                slo.setOrder(1);
+            } else if (s.equals("S")) {
+                slo.setSizeLetter("S");
+                slo.setOrder(2);
+            } else if (s.equals("M")) {
+                slo.setSizeLetter("M");
+                slo.setOrder(3);
+            } else if (s.equals("L")) {
+                slo.setSizeLetter("L");
+                slo.setOrder(4);
+            } else if (s.equals("XL")) {
+                slo.setSizeLetter("XL");
+                slo.setOrder(5);
+            } else if (s.equals("XXL")) {
+                slo.setSizeLetter("XXL");
+                slo.setOrder(6);
+            } else if (s.equals("XXXL")) {
+                slo.setSizeLetter("XXXL");
+                slo.setOrder(7);
+            }
+            newSizeList.add(slo);
+        }
+
+        Collections.sort(newSizeList, new Comparator<SizeLetterOrder>() {
+            @Override
+            public int compare(SizeLetterOrder o1, SizeLetterOrder o2) {
+                return o1.getOrder() - o2.getOrder();
+            }
+        });
+
+        if (finalProductList != null) {
+            model.addAttribute("cateList", cateList);
+            model.addAttribute("allProducts", allProducts);
+            model.addAttribute("currentProductPageInfo", currentProductPageInfo);
+            model.addAttribute("cateID", cateID);
+            model.addAttribute("productsList", finalProductList);
+            model.addAttribute("colorList", colorSet);
+            model.addAttribute("sizeList", newSizeList);
+            model.addAttribute("maxPrice", productStateLessBean.getMaxPriceOfProduct_ByCate(cateID));
+            model.addAttribute("minPrice", productStateLessBean.getMinPriceOfProduct_ByCate(cateID));
         } else {
             //đưa về trang lỗi.
         }
-        return "client/pages/categories-list";
-    }
-
-    @RequestMapping(value = "category-grid")
-    public String categorygrid() {
         return "client/pages/categories-grid";
     }
 
@@ -53,6 +131,7 @@ public class ProductController {
             @PathVariable("colorID") Integer colorID
     ) {
         Products targetProduct = productStateLessBean.findProductByID(productID);
+        List<Categories> cateList = productStateLessBean.categoryList();
         if ((targetProduct != null)) {
             List<ProductColors> productColorList = targetProduct.getProductColorList();
             int count = 0;
@@ -67,6 +146,7 @@ public class ProductController {
                 ProductColors targetColor = productStateLessBean.findProductColorByColorID(colorID);
                 model.addAttribute("targetProduct", targetProduct);
                 model.addAttribute("targetColor", targetColor);
+                model.addAttribute("cateList", cateList);
                 CartLineInfoByID cartLineInfoByID = new CartLineInfoByID();
                 model.addAttribute("cartLineInfoByID", cartLineInfoByID);
             } else {
@@ -78,7 +158,7 @@ public class ProductController {
 
         return "client/pages/product-detail";
     }
-    
+
     @ResponseBody
     @RequestMapping(value = "/ajax/findProduct", method = RequestMethod.POST)
     public String getProductByID(@RequestParam("productID") Integer productID) {
@@ -98,16 +178,126 @@ public class ProductController {
     @RequestMapping(value = "/ajax/color", method = RequestMethod.POST)
     public String getInforByColorID(@RequestParam("colorID") Integer colorID) {
         ProductColors color = productStateLessBean.findProductColorByColorID(colorID);
-        
+
         try {
             ObjectMapper mapper = new ObjectMapper();
             String result = mapper.writeValueAsString(color);
             return result;
         } catch (Exception e) {
-            return ""+e.getMessage();
+            return "" + e.getMessage();
         }
     }
-      
+
+    @ResponseBody
+    @RequestMapping(value = "/ajax/productPagination", method = RequestMethod.POST)
+    public String productPagination(
+            @RequestParam("cateID") Integer cateID,
+            @RequestParam("page") Integer page,
+            @RequestParam("itemPerPage") Integer itemPerPage,
+            @RequestParam("sortBy") Integer sortBy,
+            @RequestParam("fromPrice") Float fromPrice,
+            @RequestParam("toPrice") Float toPrice,
+            @RequestParam(value = "colorFilterArr[]", required = false) List<String> colorFilterArr,
+            @RequestParam(value = "sizeFilterArr[]", required = false) List<String> sizeFilterArr) {
+        if (fromPrice == null) {
+            fromPrice = productStateLessBean.getMinPriceOfProduct_ByCate(cateID);
+        }
+
+        if (toPrice == null) {
+            toPrice = productStateLessBean.getMaxPriceOfProduct_ByCate(cateID);
+        }
+        String filterColor = "";
+        String beginColorStr = "AND pc.color in (";
+        String endColorStr = ") ";
+        String contentColorStr = "";
+
+        String filterSize = "";
+        String beginSizeStr = "AND ps.productSize in (";
+        String endSizeStr = ") ";
+        String contentSizeStr = "";
+
+        if (colorFilterArr != null) {
+            for (String color : colorFilterArr) {
+                contentColorStr += "'" + color + "',";
+            }
+            contentColorStr = contentColorStr.substring(0, contentColorStr.length() - 1);
+            filterColor = beginColorStr + contentColorStr + endColorStr;
+        }
+
+        if (sizeFilterArr != null) {
+            for (String size : sizeFilterArr) {
+                contentSizeStr += "'" + size + "',";
+            }
+            contentSizeStr = contentSizeStr.substring(0, contentSizeStr.length() - 1);
+            filterSize = beginSizeStr + contentSizeStr + endSizeStr;
+        }
+
+        List<Object[]> productIDList = productStateLessBean.filterProductByCategory(cateID, page, itemPerPage, fromPrice, toPrice, filterColor, filterSize, sortBy);
+        List<Products> finalProductList = new ArrayList<>();
+        for (Object[] prod : productIDList) {
+
+            Products product = productStateLessBean.findProductByID((Integer) prod[0]);
+            finalProductList.add(product);
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        String result = "";
+        try {
+            result = mapper.writeValueAsString(finalProductList);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(ProductController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/ajax/getNumberOfProductsByFilter_OfACategory", method = RequestMethod.POST)
+    public String getNumberOfProductsByFilter_OfACategory(
+            @RequestParam("cateID") Integer cateID,
+            @RequestParam("fromPrice") Float fromPrice,
+            @RequestParam("toPrice") Float toPrice,
+            @RequestParam(value = "colorFilterArr[]", required = false) List<String> colorFilterArr,
+            @RequestParam(value = "sizeFilterArr[]", required = false) List<String> sizeFilterArr
+    ) {
+        if (fromPrice == null) {
+            fromPrice = productStateLessBean.getMinPriceOfProduct_ByCate(cateID);
+        }
+
+        if (toPrice == null) {
+            toPrice = productStateLessBean.getMaxPriceOfProduct_ByCate(cateID);
+        }
+        String filterColor = "";
+        String beginColorStr = "AND pc.color in (";
+        String endColorStr = ") ";
+        String contentColorStr = "";
+
+        String filterSize = "";
+        String beginSizeStr = "AND ps.productSize in (";
+        String endSizeStr = ") ";
+        String contentSizeStr = "";
+
+        if (colorFilterArr != null) {
+            for (String color : colorFilterArr) {
+                contentColorStr += "'" + color + "',";
+            }
+            contentColorStr = contentColorStr.substring(0, contentColorStr.length() - 1);
+            filterColor = beginColorStr + contentColorStr + endColorStr;
+        }
+
+        if (sizeFilterArr != null) {
+            for (String size : sizeFilterArr) {
+                contentSizeStr += "'" + size + "',";
+            }
+            contentSizeStr = contentSizeStr.substring(0, contentSizeStr.length() - 1);
+            filterSize = beginSizeStr + contentSizeStr + endSizeStr;
+        }
+        
+        List<Object[]> allProductFilteredByPrice = productStateLessBean.productsByFilter_OfACategory(cateID, fromPrice, toPrice, filterColor, filterSize);
+
+        int numberOfProducts = allProductFilteredByPrice.size();
+        return "" + numberOfProducts;
+    }
+
     private ProductStateLessBeanLocal lookupProductStateLessBeanLocal() {
         try {
             Context c = new InitialContext();

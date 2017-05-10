@@ -5,17 +5,25 @@
  */
 package spring.ejb;
 
+import java.io.FileOutputStream;
+import java.io.StringReader;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import spring.entity.CartLineInfo;
 import spring.entity.Categories;
 import spring.entity.DiscountVoucher;
 import spring.entity.Orders;
 import spring.entity.OrdersDetail;
 import spring.entity.Products;
 import spring.entity.SizesByColor;
+import spring.entity.ProductColors;
 
 /**
  *
@@ -33,20 +41,29 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
 
     @Override
     public List<Orders> getAllOrder() {
-        Query q = getEntityManager().createQuery("SELECT o FROM Orders o", Orders.class);
+        Query q = getEntityManager().createQuery("SELECT o FROM Orders o ORDER BY o.ordersDate DESC", Orders.class);
+        return q.getResultList();
+    }
+
+    @Override
+    public List<Orders> getAllOrderByUserID(int userID) {
+        Query q = getEntityManager().createQuery("SELECT o FROM Orders o WHERE o.user.userID = :userID", Orders.class);
+        q.setParameter("userID", userID);
         return q.getResultList();
     }
 
     @Override
     public List<OrdersDetail> getAllOrderDetailByOrderID(int orderID) {
-        Query q = getEntityManager().createQuery("SELECT od FROM OrdersDetail od WHERE od.order.ordersID = :orderID",OrdersDetail.class);
+        Query q = getEntityManager().createQuery("SELECT od FROM OrdersDetail od WHERE od.order.ordersID = :orderID", OrdersDetail.class);
         q.setParameter("orderID", orderID);
         return q.getResultList();
     }
 
     @Override
     public Orders getOrderByID(int orderID) {
-        return getEntityManager().find(Orders.class, orderID);
+        Query q = getEntityManager().createQuery("SELECT o FROM Orders o WHERE o.ordersID = :orderID", Orders.class);
+        q.setParameter("orderID", orderID);
+        return (Orders) q.getSingleResult();
     }
 
     @Override
@@ -55,17 +72,31 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
     }
 
     @Override
-    public float sumTotalOrderDetail(List<OrdersDetail> ordersDetailList) {
-        float sum = 0;
-        for (OrdersDetail od : ordersDetailList) {
-            sum += od.getPrice() * od.getQuantity();
-        }
-        return sum;
+    public Products getProductByID(int productID) {
+        Query q = getEntityManager().createQuery("SELECT p FROM Products p WHERE p.productID = :productID", Products.class);
+        q.setParameter("productID", productID);
+        return (Products) q.getSingleResult();
     }
 
     @Override
-    public Products getProductByID(int productID) {
-        return getEntityManager().find(Products.class, productID);
+    public List<Products> getListProductsByName(String productName) {
+        Query q = getEntityManager().createQuery("SELECT p FROM Products p WHERE p.productName LIKE :productName", Products.class);
+        q.setParameter("productName", "%" + productName + "%"); //"%" + productName + "%"
+        return q.getResultList();
+    }
+
+    @Override
+    public List<ProductColors> getListProductColorsByProductID(int productID) {
+        Query q = getEntityManager().createQuery("SELECT pc FROM ProductColors pc WHERE pc.product.productID = :productID", ProductColors.class);
+        q.setParameter("productID", productID);
+        return q.getResultList();
+    }
+
+    @Override
+    public List<SizesByColor> getListSizesByColorByColorID(int colorID) {
+        Query q = getEntityManager().createQuery("SELECT sbc FROM SizesByColor sbc WHERE sbc.color.colorID = :colorID", SizesByColor.class);
+        q.setParameter("colorID", colorID);
+        return q.getResultList();
     }
 
     @Override
@@ -109,7 +140,7 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
 
     @Override
     public int createDiscountVoucher(DiscountVoucher newDiscountVoucher) {
-        int checkError;
+        int checkError = 0;
         if (getDiscountVoucherByID(newDiscountVoucher.getVoucherID()) != null) {
             checkError = 2;
         } else {
@@ -153,4 +184,57 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
         }
     }
 
+    @Override
+    public String createPDF(String html) {
+        String error = "";
+        try {
+//            W3CDom w3CDom = new W3CDom();
+//            Document doc = w3CDom.fromJsoup(Jsoup.parse(html));
+            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(html));
+            Document doc = db.parse(is);
+//            ITextRenderer renderer = new ITextRenderer();
+////            ResourceLoaderUserAgent callback = new ResourceLoaderUserAgent(renderer.getOutputDevice());
+////            callback.setSharedContext(renderer.getSharedContext());
+////            renderer.getSharedContext().setUserAgentCallback(callback);
+//            renderer.setDocument(doc,null);
+//            renderer.layout();
+            String fileNameWithPath = "D:\\Download\\fashionshop.pdf";
+            try (FileOutputStream fileOutputStream = new FileOutputStream(fileNameWithPath)) {
+//                renderer.createPDF(fileOutputStream);
+                error = doc.toString();
+            } catch (Exception ex) {
+                error = ex.getMessage();
+            }
+        } catch (Exception e) {
+            error = e.getMessage();
+        }
+        return error;
+    }
+
+    @Override
+    public int createOrderDetail(CartLineInfo cartLineInfo, Orders orders) {
+        int checkError = 0;
+        OrdersDetail ordersDetail = new OrdersDetail();
+        ordersDetail.setOrder(orders);
+        ordersDetail.setPrice(cartLineInfo.getProduct().getPrice());
+        ordersDetail.setProduct(cartLineInfo.getProduct());
+        ordersDetail.setProductDiscount(cartLineInfo.getProduct().getProductDiscount());
+        ordersDetail.setQuantity(cartLineInfo.getQuantity());
+        ordersDetail.setSize(cartLineInfo.getSizesByColor());
+        ordersDetail.setStatus(Short.valueOf("2"));
+        SizesByColor sizesByColor = cartLineInfo.getSizesByColor();
+        sizesByColor.setQuantity(sizesByColor.getQuantity() - cartLineInfo.getQuantity());
+        try {
+            getEntityManager().persist(ordersDetail);
+            getEntityManager().flush();
+            getEntityManager().merge(sizesByColor);
+            getEntityManager().flush();
+            checkError = 1;
+        } catch (Exception e) {
+            checkError = 0;
+        }
+        return checkError;
+    }
 }

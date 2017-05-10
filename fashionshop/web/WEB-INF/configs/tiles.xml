@@ -49,4 +49,5 @@
     </definition>
     
     <definition name="admin/login" template="/WEB-INF/views/admin/login.jsp"/>
+    <definition name="admin/orders-invoice" template="/WEB-INF/views/admin/orders-invoice.jsp"/>
 </tiles-definitions>

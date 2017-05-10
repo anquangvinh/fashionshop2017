@@ -32,7 +32,7 @@
                         <div class="form-group">
                             <label>Discount Percent</label>
                             <%--<form:input cssClass="form-control" path="discount"/>--%>
-                            <input class="form-control" type="number" min="1" max="100" name="discount" id="discount" value="${targetDiscountVoucher.getPercent()}"/>
+                            <input class="form-control" type="number" min="1" max="100" name="discount" id="discount" value="${targetDiscountVoucher.discount}"/>
                         </div>
                         <div class="form-group">
                             <label>Discount Quantity</label>
@@ -43,7 +43,7 @@
                             <label>Description</label>
                             <form:input cssClass="form-control" path="description"/>
                         </div>
-                        <button type="submit" class="btn btn-success">Update</button>
+                        <button type="submit" class="btn btn-success">UPDATE</button>
                         <!--<button type="reset" class="btn btn-default">Reset</button>-->
                     </form:form>
                 </div>

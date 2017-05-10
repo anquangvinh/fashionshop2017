@@ -487,16 +487,8 @@
             <div class="col-md-4 col-sm-4">
                 <h6>Recent Products</h6>
                 <div class="f-widget-content">
-                    <ul>
-                        <li>
-                            <div class="fw-thumb">
-                                <img src="assets/images/products/fashion/4.jpg" alt=""/>
-                            </div>
-                            <div class="fw-info">
-                                <h4><a href="./single-product.html">Product fashion</a></h4>
-                                <span class="fw-price">$ 99.00</span>
-                            </div>
-                        </li>
+                    <ul id="fs-recent-product-index-page">
+                        
                     </ul>
                 </div>
             </div>

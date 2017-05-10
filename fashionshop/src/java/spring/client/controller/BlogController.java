@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import spring.ejb.BlogCategoriesSBLocal;
 import spring.ejb.BlogsSBLocal;
+import spring.ejb.ProductStateLessBeanLocal;
 import spring.ejb.UsersStateLessBeanLocal;
 import spring.entity.BlogCategories;
 import spring.entity.Blogs;
+import spring.entity.Categories;
 import spring.functions.SharedFunctions;
 
 @Controller
@@ -30,7 +32,7 @@ public class BlogController {
 
     BlogCategoriesSBLocal categoriesSB = lookupBlogCategoriesSBLocal();
     BlogsSBLocal blogsSB = lookupBlogsSBLocal();
-
+    ProductStateLessBeanLocal productStateLessBean = lookupProductStateLessBeanLocal();
     UsersStateLessBeanLocal usersStateLessBean = lookupUsersStateLessBeanLocal();
     BlogCategoriesSBLocal blogCategoriesSB = lookupBlogCategoriesSBLocal();
 
@@ -44,6 +46,9 @@ public class BlogController {
     public String blog(ModelMap model) {
         List<Blogs> getShowAllBlogs = blogsSB.getAllBlogs();
         List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
+        //2 dòng này thêm để render ra menu chính
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
         model.addAttribute("blogListClient", getShowAllBlogs);
         model.addAttribute("blogCateListClient", getBlogCateList);
         model.addAttribute("PopularPosts", blogsSB.getAllBlogs());
@@ -58,6 +63,9 @@ public class BlogController {
         model.addAttribute("getBlogCateList", getBlogCateList);
         model.addAttribute("getBlogsListByCate", getBlogsListByCate);
         model.addAttribute("PopularPosts", blogsSB.getAllBlogs());
+      //2 dòng này thêm để render ra menu chính
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
         return "client/pages/blog-categories";
     }
 
@@ -80,6 +88,9 @@ public class BlogController {
     public String blogdetail(ModelMap model) {
         model.addAttribute("getBlogCateListDetail", blogCategoriesSB.getBlogCategoriesList());
         model.addAttribute("getShowAllBlogsDetail", blogsSB.getAllBlogs());
+        //2 dòng này thêm để render ra menu chính
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
         return "client/pages/blog-details";
     }
 
@@ -107,6 +118,16 @@ public class BlogController {
         try {
             Context c = new InitialContext();
             return (UsersStateLessBeanLocal) c.lookup("java:global/fashionshop/UsersStateLessBean!spring.ejb.UsersStateLessBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+    
+    private ProductStateLessBeanLocal lookupProductStateLessBeanLocal() {
+        try {
+            Context c = new InitialContext();
+            return (ProductStateLessBeanLocal) c.lookup("java:global/fashionshop/ProductStateLessBean!spring.ejb.ProductStateLessBeanLocal");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);

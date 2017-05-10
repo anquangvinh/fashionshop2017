@@ -29,6 +29,53 @@ $(document).ready(function () {
     });
 
     /* --------------- PRODUCT INDEX -------------------- */
+    /* LOAD IMG TO RECENT VIEW FROM LOCALSTORAGE */
+    // Check browser support
+    if (typeof (Storage) !== "undefined") {
+        // Retrieve
+        if (localStorage.getItem("productsArrLocal") != null) {
+            var productsArrLocal = JSON.parse(localStorage.getItem("productsArrLocal"));
+            productsArrLocal.reverse();
+            var liProdStr = "";
+            var liProdStrIndexPage = "";
+            $.each(productsArrLocal, function (i, prod) {
+                liProdStr += "<div>\n\
+                                <a href=\"" + prod.productID + "-" + prod.productColorID + "-" + prod.productNameNA + ".html\">\n\
+                                    <img style=\"width: 150px\" src=\"assets/images/products/" + prod.productImg + "\" class=\"img-responsive\" alt=\"" + prod.productImg + "\"/>\n\
+                                </a>\n\
+                            </div>";
+            });
+            console.log(productsArrLocal);
+//            for(var i = productsArrLocal.length - 1; i > productsArrLocal.length - 4; i--){
+//                liProdStrIndexPage += "<li>\n\
+//                                        <div class=\"fw-thumb\">\n\
+//                                            <img src=\"assets/images/products/"+ productsArrLocal[i].productImg +"\" alt=\""+ productsArrLocal[i].productImg +"\"/>\n\
+//                                        </div>\n\
+//                                            <div class=\"fw-info\">\n\
+//                                                <h4>\n\
+//                                                    <a href=\"" + productsArrLocal[i].productID + "-" + productsArrLocal[i].productColorID + "-" + productsArrLocal[i].productNameNA + ".html\">"+ productsArrLocal[i].productName +"</a>\n\
+//                                                </h4>\n\
+//                                                <span class=\"fw-price\">$ "+ productsArrLocal[i].price +".00</span>\n\
+//                                            </div>\n\
+//                                        </li>";
+//            }
+            $("#fs-recent-view-product").html(liProdStr);
+           // $("#fs-recent-product-index-page").html(liProdStrIndexPage);
+        }
+    } else {
+        $("#fs-localStorage-result").text("Sorry, your browser does not support Web Storage...");
+    }
+
+    $("#fs-recent-view-product").owlCarousel({
+        items: 6,
+        margin: 35,
+        loop:true,
+        navigation: true,
+        autoPlay: 2500,
+        stopOnHover: true
+
+    });
+    
     /* SLIDE PRODUCTS IN INDEX */
     $("#isotope").isotope({
         filter: '.isotope_to_all',
@@ -58,14 +105,16 @@ $(document).ready(function () {
             data: {colorID: colorID},
             dataType: 'json',
             success: function (response) {
-                var i = response.productSubImgsList.findIndex(x => x.subImgOrder == 1);
-                $("img[fs-product-for-img=" + productID + "]").hide().attr("src", "assets/images/products/subImg/" + response.productSubImgsList[i].urlImg).fadeIn(600);
+                $("img[fs-product-for-img=" + productID + "]")
+                        .hide()
+                        .attr("src", "assets/images/products/subImg/" + response.productSubImgsList[0].urlImg)
+                        .attr("alt", response.productSubImgsList[0].urlImg)
+                        .fadeIn(600);
             }
         });
     });
 
     /* FUNCTION FOR OWL CAROUSEL */
-
     function fsCreateOwlCarousel() {
         var sync1 = $(".sync1");
         var sync2 = $(".sync2");
@@ -102,9 +151,9 @@ $(document).ready(function () {
                     .find(".owl-item")
                     .removeClass("synced")
                     .eq(current)
-                    .addClass("synced")
+                    .addClass("synced");
             if ($(".sync2").data("owlCarousel") !== undefined) {
-                center(current)
+                center(current);
             }
         }
 
@@ -166,6 +215,7 @@ $(document).ready(function () {
             success: function (response) {
                 /* Init Name and Price */
                 $("h3.fs-product-name").text(response.productName);
+                $("h3.fs-product-name").attr("fs-product-id", productID);
                 $("div.fs-product-price").text("$ " + response.price + ".00");
 
                 /* Init color img  */
@@ -441,28 +491,1070 @@ $(document).ready(function () {
         if ((press < 48 || press > 57) && (press < 96 || press > 105) && (press < 112 || press > 123)) {
             e.preventDefault();
         }
+    });
+
+    /* PRODUCT CATEGORY-GRID */
+    /* AJAX PAGINATION */
+    var colorFilterArr = [];
+    var sizeFilterArr = [];
+
+    /* AJAX ON CLICK PAGE */
+    $(".shop-content").on("click", ".fs-page-number", function () {
+        if (!$(this).hasClass("fs-page-number-active")) {
+            $(".fs-page-number").removeClass("fs-page-number-active");
+            $(this).addClass("fs-page-number-active");
+            var page = $(this).attr("fs-page-number");                              //Số trang hiện tại
+            var itemPerPage = $("#fs-number-of-item-on-page").val();                //Số item trên 1 trang
+            var cateID = $(this).attr("fs-category");                               //Category ID
+            var numberOfProducts = parseInt($("#fs-number-of-products").text());    //Tổng số lượng Product
+            var sortBy = $("#fs-sort-product-by").val();                            //1: Newest; 2: Low to High Price; 3: High to Low Price
+            $(".fs-page-number[fs-page-number=" + page + "]").addClass("fs-page-number-active");
+            var from = (page - 1) * itemPerPage + 1;                                //STT của sp đầu tiên của trang
+            var to = (page - 1) * itemPerPage + parseInt(itemPerPage);              //STT của sp cuối cùng của trang
+            if (to > numberOfProducts) {
+                to = numberOfProducts;
+            }
+            var currentProductPageInfo = from + " - " + to;
+            var fromPrice = $("#fs-price-from-text").text();                        //Lọc giá Product "Từ"
+            var toPrice = $("#fs-price-to-text").text();                            //Lọc giá Product "Đến"
+
+            $.ajax({
+                url: "ajax/productPagination.html",
+                method: "POST",
+                data: {
+                    cateID: cateID,
+                    page: page,
+                    itemPerPage: itemPerPage,
+                    sortBy: sortBy,
+                    fromPrice: fromPrice,
+                    toPrice: toPrice,
+                    colorFilterArr: colorFilterArr,
+                    sizeFilterArr: sizeFilterArr
+                },
+                dataType: 'JSON',
+                beforeSend: function () {
+                    $("#fs-ajax-loading").css("display", "block");
+                },
+                success: function (response) {
+                    setTimeout(function () {
+                        $("#fs-ajax-loading").css("display", "none");
+                        if (response != "") {
+                            $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
+                            //Change product content
+                            var result = "";
+                            $.each(response, function (i, prod) {
+                                var renderColor = "";
+                                if (prod.productColorList.length > 1) {
+                                    $.each(prod.productColorList, function (j, color) {
+                                        renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
+                                                + "              class=\"img-responsive fs-index-color-img\" \n"
+                                                + "              fs-index-color-img=\"" + color.colorID + "\" \n"
+                                                + "              fs-product=\"" + prod.productID + "\" \n"
+                                                + "              alt=\"" + color.urlColorImg + "\" \n"
+                                                + "              title=\"" + color.color + "\"/>";
+                                    });
+                                }
+
+                                if (prod.productDiscount == 0) {
+                                    result += "<div class=\"col-md-4 col-sm-6\">\n"
+                                            + "     <div class=\"product-item\">\n"
+                                            + "          <div class=\"item-thumb\">\n"
+                                            + "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n"
+                                            + "                    class=\"img-responsive\" \n"
+                                            + "                    alt=\"" + prod.urlImg + "\"\n"
+                                            + "                    fs-product-for-img=\"" + prod.productID + "\"/>\n"
+                                            + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
+                                            + "                     data-toggle=\"modal\" \n"
+                                            + "                     fs-product=\"" + prod.productID + "\" \n"
+                                            + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                            + "                </div>\n"
+                                            + "                <div class=\"product-overlay\">\n"
+                                            + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
+                                            + "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n"
+                                            + "                </div>\n"
+                                            + "          </div>\n"
+                                            + "      <div class=\"product-info\">\n"
+                                            + "          <h4 class=\"product-title\">\n"
+                                            + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                            + "                 " + prod.productName + "\n"
+                                            + "              </a>\n"
+                                            + "          </h4>\n"
+                                            + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                            + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
+                                            + renderColor
+                                            + "          </div>\n"
+                                            + "      </div>\n"
+                                            + "    </div>\n"
+                                            + "</div>";
+                                } else {
+                                    result += "<div class=\"col-md-4 col-sm-6\">\n"
+                                            + "     <div class=\"product-item\">\n"
+                                            + "          <div class=\"item-thumb\">\n"
+                                            + "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n"
+                                            + "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n"
+                                            + "                    class=\"img-responsive\" \n"
+                                            + "                    alt=\"" + prod.urlImg + "\"\n"
+                                            + "                    fs-product-for-img=\"" + prod.productID + "\"/>\n"
+                                            + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
+                                            + "                     data-toggle=\"modal\" \n"
+                                            + "                     fs-product=\"" + prod.productID + "\" \n"
+                                            + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                            + "                </div>\n"
+                                            + "                <div class=\"product-overlay\">\n"
+                                            + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
+                                            + "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n"
+                                            + "                </div>\n"
+                                            + "          </div>\n"
+                                            + "      <div class=\"product-info\">\n"
+                                            + "          <h4 class=\"product-title\">\n"
+                                            + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                            + "                 " + prod.productName + "\n"
+                                            + "              </a>\n"
+                                            + "          </h4>\n"
+                                            + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                            + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
+                                            + renderColor
+                                            + "          </div>\n"
+                                            + "      </div>\n"
+                                            + "    </div>\n"
+                                            + "</div>";
+                                }
+                            });
+                            $("#fs-change-data-here").html(result);
+                        }
+                    }, 400);
+                }
+            });
+
+        }
 
 
     });
 
-    /*========================================NGAN - ORDER====================================================*/
+    /* AJAX ON CHANGE SORT PRODUCT BY  */
+    $(".shop-content").on("change", "#fs-sort-product-by", function () {
+        var sortBy = $(this).val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
+        var cateID = $(this).attr("fs-category");
+        var page = 1;
+        var itemPerPage = $("#fs-number-of-item-on-page").val();
+        $(".fs-page-number").removeClass("fs-page-number-active");
+        $(".fs-page-number[fs-page-number='1']").addClass("fs-page-number-active");
+        var numberOfProducts = parseInt($("#fs-number-of-products").text());
+        var from = (page - 1) * itemPerPage + 1;
+        var to = (page - 1) * itemPerPage + parseInt(itemPerPage);
+        if (to > numberOfProducts) {
+            to = numberOfProducts;
+        }
+        var currentProductPageInfo = from + " - " + to;
 
+        var fromPrice = $("#fs-price-from-text").text();                        //Lọc giá Product "Từ"
+        var toPrice = $("#fs-price-to-text").text();                            //Lọc giá Product "Đến
+
+        $.ajax({
+            url: "ajax/productPagination.html",
+            method: "POST",
+            data: {
+                cateID: cateID,
+                page: page,
+                itemPerPage: itemPerPage,
+                sortBy: sortBy,
+                fromPrice: fromPrice,
+                toPrice: toPrice,
+                colorFilterArr: colorFilterArr,
+                sizeFilterArr: sizeFilterArr
+            },
+            dataType: 'JSON',
+            beforeSend: function () {
+                $("#fs-ajax-loading").css("display", "block");
+            },
+            success: function (response) {
+                setTimeout(function () {
+                    $("#fs-ajax-loading").css("display", "none");
+                    if (response != 0) {
+                        $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
+
+                        //Change product content
+                        var result = "";
+                        $.each(response, function (i, prod) {
+                            var renderColor = "";
+                            if (prod.productColorList.length > 1) {
+                                $.each(prod.productColorList, function (j, color) {
+                                    renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
+                                            + "              class=\"img-responsive fs-index-color-img\" \n"
+                                            + "              fs-index-color-img=\"" + color.colorID + "\" \n"
+                                            + "              fs-product=\"" + prod.productID + "\" \n"
+                                            + "              alt=\"" + color.urlColorImg + "\" \n"
+                                            + "              title=\"" + color.color + "\"/>";
+                                });
+                            }
+
+                            if (prod.productDiscount == 0) {
+                                result += "<div class=\"col-md-4 col-sm-6\">\n"
+                                        + "     <div class=\"product-item\">\n"
+                                        + "          <div class=\"item-thumb\">\n"
+                                        + "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n"
+                                        + "                    class=\"img-responsive\" \n"
+                                        + "                    alt=\"" + prod.urlImg + "\"\n"
+                                        + "                    fs-product-for-img=\"" + prod.productID + "\"/>\n"
+                                        + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
+                                        + "                     data-toggle=\"modal\" \n"
+                                        + "                     fs-product=\"" + prod.productID + "\" \n"
+                                        + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                        + "                </div>\n"
+                                        + "                <div class=\"product-overlay\">\n"
+                                        + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
+                                        + "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n"
+                                        + "                </div>\n"
+                                        + "          </div>\n"
+                                        + "      <div class=\"product-info\">\n"
+                                        + "          <h4 class=\"product-title\">\n"
+                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                        + "                 " + prod.productName + "\n"
+                                        + "              </a>\n"
+                                        + "          </h4>\n"
+                                        + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                        + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
+                                        + renderColor
+                                        + "          </div>\n"
+                                        + "      </div>\n"
+                                        + "    </div>\n"
+                                        + "</div>";
+                            } else {
+                                result += "<div class=\"col-md-4 col-sm-6\">\n"
+                                        + "     <div class=\"product-item\">\n"
+                                        + "          <div class=\"item-thumb\">\n"
+                                        + "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n"
+                                        + "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n"
+                                        + "                    class=\"img-responsive\" \n"
+                                        + "                    alt=\"" + prod.urlImg + "\"\n"
+                                        + "                    fs-product-for-img=\"" + prod.productID + "\"/>\n"
+                                        + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
+                                        + "                     data-toggle=\"modal\" \n"
+                                        + "                     fs-product=\"" + prod.productID + "\" \n"
+                                        + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                        + "                </div>\n"
+                                        + "                <div class=\"product-overlay\">\n"
+                                        + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
+                                        + "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n"
+                                        + "                </div>\n"
+                                        + "          </div>\n"
+                                        + "      <div class=\"product-info\">\n"
+                                        + "          <h4 class=\"product-title\">\n"
+                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                        + "                 " + prod.productName + "\n"
+                                        + "              </a>\n"
+                                        + "          </h4>\n"
+                                        + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                        + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
+                                        + renderColor
+                                        + "          </div>\n"
+                                        + "      </div>\n"
+                                        + "    </div>\n"
+                                        + "</div>";
+                            }
+                        });
+                        $("#fs-change-data-here").html(result);
+                    }
+                }, 400);
+            }
+        });
+    });
+
+    /* AJAX ON CHANGE NUMBER OF PRODUCT PER PAGE */
+    $(".shop-content").on("change", "#fs-number-of-item-on-page", function () {
+        var sortBy = $("#fs-sort-product-by").val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
+        var itemPerPage = $("#fs-number-of-item-on-page").val();
+        var page = 1;
+        var cateID = $(this).attr("fs-category");
+        var numberOfProducts = parseInt($("#fs-number-of-products").text());
+        var numberOfPages = Math.ceil(numberOfProducts / itemPerPage);
+
+        var fromPrice = $("#fs-price-from-text").text();                        //Lọc giá Product "Từ"
+        var toPrice = $("#fs-price-to-text").text();                            //Lọc giá Product "Đến"
+
+        //change productPageInfo
+        var from = (page - 1) * itemPerPage + 1;
+        var to = (page - 1) * itemPerPage + parseInt(itemPerPage);
+        if (to > numberOfProducts) {
+            to = numberOfProducts;
+        }
+        var currentProductPageInfo = from + " - " + to;
+
+        //Change pagination
+        var pagination = "<li><span class=\"fs-page-number fs-page-number-active\" fs-page-number=\"1\" fs-category=\"" + cateID + "\">1</span></li>";
+
+        if (numberOfPages > 1) {
+            for (var i = 2; i <= numberOfPages; i++) {
+                pagination += "<li><span class=\"fs-page-number\" fs-page-number=\"" + i + "\" fs-category=\"" + cateID + "\">" + i + "</span></li>";
+            }
+        }
+
+        //Change Product in page
+        $.ajax({
+            url: "ajax/productPagination.html",
+            method: "POST",
+            data: {
+                cateID: cateID,
+                page: page,
+                itemPerPage: itemPerPage,
+                sortBy: sortBy,
+                fromPrice: fromPrice,
+                toPrice: toPrice,
+                colorFilterArr: colorFilterArr,
+                sizeFilterArr: sizeFilterArr
+            },
+            dataType: 'JSON',
+            beforeSend: function () {
+                $("#fs-ajax-loading").css("display", "block");
+            },
+            success: function (response) {
+                setTimeout(function () {
+                    $("#fs-ajax-loading").css("display", "none");
+                    if (response != 0) {
+                        $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
+
+                        //Change pagination
+                        $(".fs-ul-page-nav").html(pagination);
+
+                        //Change product content
+                        var result = "";
+                        $.each(response, function (i, prod) {
+                            var renderColor = "";
+                            if (prod.productColorList.length > 1) {
+                                $.each(prod.productColorList, function (j, color) {
+                                    renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
+                                            + "              class=\"img-responsive fs-index-color-img\" \n"
+                                            + "              fs-index-color-img=\"" + color.colorID + "\" \n"
+                                            + "              fs-product=\"" + prod.productID + "\" \n"
+                                            + "              alt=\"" + color.urlColorImg + "\" \n"
+                                            + "              title=\"" + color.color + "\"/>";
+                                });
+                            }
+
+                            if (prod.productDiscount == 0) {
+                                result += "<div class=\"col-md-4 col-sm-6\">\n"
+                                        + "     <div class=\"product-item\">\n"
+                                        + "          <div class=\"item-thumb\">\n"
+                                        + "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n"
+                                        + "                    class=\"img-responsive\" \n"
+                                        + "                    alt=\"" + prod.urlImg + "\"\n"
+                                        + "                    fs-product-for-img=\"" + prod.productID + "\"/>\n"
+                                        + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
+                                        + "                     data-toggle=\"modal\" \n"
+                                        + "                     fs-product=\"" + prod.productID + "\" \n"
+                                        + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                        + "                </div>\n"
+                                        + "                <div class=\"product-overlay\">\n"
+                                        + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
+                                        + "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n"
+                                        + "                </div>\n"
+                                        + "          </div>\n"
+                                        + "      <div class=\"product-info\">\n"
+                                        + "          <h4 class=\"product-title\">\n"
+                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                        + "                 " + prod.productName + "\n"
+                                        + "              </a>\n"
+                                        + "          </h4>\n"
+                                        + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                        + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
+                                        + renderColor
+                                        + "          </div>\n"
+                                        + "      </div>\n"
+                                        + "    </div>\n"
+                                        + "</div>";
+                            } else {
+                                result += "<div class=\"col-md-4 col-sm-6\">\n"
+                                        + "     <div class=\"product-item\">\n"
+                                        + "          <div class=\"item-thumb\">\n"
+                                        + "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n"
+                                        + "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n"
+                                        + "                    class=\"img-responsive\" \n"
+                                        + "                    alt=\"" + prod.urlImg + "\"\n"
+                                        + "                    fs-product-for-img=\"" + prod.productID + "\"/>\n"
+                                        + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
+                                        + "                     data-toggle=\"modal\" \n"
+                                        + "                     fs-product=\"" + prod.productID + "\" \n"
+                                        + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                        + "                </div>\n"
+                                        + "                <div class=\"product-overlay\">\n"
+                                        + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
+                                        + "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n"
+                                        + "                </div>\n"
+                                        + "          </div>\n"
+                                        + "      <div class=\"product-info\">\n"
+                                        + "          <h4 class=\"product-title\">\n"
+                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                        + "                 " + prod.productName + "\n"
+                                        + "              </a>\n"
+                                        + "          </h4>\n"
+                                        + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                        + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
+                                        + renderColor
+                                        + "          </div>\n"
+                                        + "      </div>\n"
+                                        + "    </div>\n"
+                                        + "</div>";
+                            }
+                        });
+                        $("#fs-change-data-here").html(result);
+                    }
+                }, 400);
+            }
+        });
+    });
+
+    /* FILTER PRODUCT BY PRICE */
+    $(".shop-content").on("click", "#fs-btn-filter-price", function () {
+
+        $(this).attr("fs-filter", "yes");
+        var page = 1;
+        var fromPrice = $("#fs-price-from").val();
+        var toPrice = $("#fs-price-to").val();
+        var cateID = $("#fs-price-from").attr("fs-category");
+        var sortBy = $("#fs-sort-product-by").val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
+        var itemPerPage = $("#fs-number-of-item-on-page").val();
+
+        if (fromPrice == "") {
+            fromPrice = $("#fs-price-from-text").attr("fs-min-price");
+        }
+
+        if (toPrice == "") {
+            toPrice = $("#fs-price-to-text").attr("fs-max-price");
+        }
+
+        if (fromPrice > toPrice) {
+            $("#fs-filter-price-error").text("\"From\" Price must be less than \"To\" Price");
+            $("#fs-price-from").val("");
+            $("#fs-price-to").val("");
+            $("#fs-price-from").focus();
+        } else {
+            if (fromPrice != "") {
+                $("#fs-price-from-text").text(fromPrice);
+            }
+
+            if (toPrice != "") {
+                $("#fs-price-to-text").text(toPrice);
+            }
+            $("#fs-filter-price-error").text("");
+            $.ajax({
+                url: "ajax/getNumberOfProductsByFilter_OfACategory.html",
+                method: "POST",
+                data: {
+                    cateID: cateID,
+                    fromPrice: fromPrice,
+                    toPrice: toPrice,
+                    colorFilterArr: colorFilterArr,
+                    sizeFilterArr: sizeFilterArr
+                },
+                success: function (numberOfProducts) {
+                    $.ajax({
+                        url: "ajax/productPagination.html",
+                        method: "POST",
+                        data: {
+                            cateID: cateID,
+                            page: page,
+                            itemPerPage: itemPerPage,
+                            sortBy: sortBy,
+                            fromPrice: fromPrice,
+                            toPrice: toPrice,
+                            colorFilterArr: colorFilterArr,
+                            sizeFilterArr: sizeFilterArr
+                        },
+                        dataType: 'JSON',
+                        beforeSend: function () {
+                            $("#fs-ajax-loading").css("display", "block");
+                        },
+                        success: function (response) {
+                            setTimeout(function () {
+                                $("#fs-ajax-loading").css("display", "none");
+                                if (response.length == 0) {
+                                    $("#fs-change-data-here").html("<div class='col-xs-12'><h1>Nothing To Show!</h1></div>");
+                                } else {
+                                    //Tổng số sản phẩm
+                                    var numberOfPages = Math.ceil(parseInt(numberOfProducts) / itemPerPage);
+
+                                    //Change pagination
+                                    var pagination = "<li><span class=\"fs-page-number fs-page-number-active\" fs-page-number=\"1\" fs-category=\"" + cateID + "\">1</span></li>";
+                                    if (numberOfPages > 1) {
+                                        for (var i = 2; i <= numberOfPages; i++) {
+                                            pagination += "<li><span class=\"fs-page-number\" fs-page-number=\"" + i + "\" fs-category=\"" + cateID + "\">" + i + "</span></li>";
+                                        }
+                                    }
+
+                                    $(".fs-ul-page-nav").html(pagination);
+
+                                    //change productPageInfo
+                                    var from = (page - 1) * itemPerPage + 1;
+                                    var to = (page - 1) * itemPerPage + parseInt(itemPerPage);
+                                    if (to > parseInt(numberOfProducts)) {
+                                        to = parseInt(numberOfProducts);
+                                    }
+                                    var currentProductPageInfo = from + " - " + to;
+                                    $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
+                                    $(".fs-number-of-products").text(numberOfProducts);
+
+                                    //Change product content
+                                    var result = "";
+                                    $.each(response, function (i, prod) {
+                                        var renderColor = "";
+                                        if (prod.productColorList.length > 1) {
+                                            $.each(prod.productColorList, function (j, color) {
+                                                renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
+                                                        + "              class=\"img-responsive fs-index-color-img\" \n"
+                                                        + "              fs-index-color-img=\"" + color.colorID + "\" \n"
+                                                        + "              fs-product=\"" + prod.productID + "\" \n"
+                                                        + "              alt=\"" + color.urlColorImg + "\" \n"
+                                                        + "              title=\"" + color.color + "\"/>";
+                                            });
+                                        }
+
+                                        if (prod.productDiscount == 0) {
+                                            result += "<div class=\"col-md-4 col-sm-6\">\n"
+                                                    + "     <div class=\"product-item\">\n"
+                                                    + "          <div class=\"item-thumb\">\n"
+                                                    + "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n"
+                                                    + "                    class=\"img-responsive\" \n"
+                                                    + "                    alt=\"" + prod.urlImg + "\"\n"
+                                                    + "                    fs-product-for-img=\"" + prod.productID + "\"/>\n"
+                                                    + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
+                                                    + "                     data-toggle=\"modal\" \n"
+                                                    + "                     fs-product=\"" + prod.productID + "\" \n"
+                                                    + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                    + "                </div>\n"
+                                                    + "                <div class=\"product-overlay\">\n"
+                                                    + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
+                                                    + "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n"
+                                                    + "                </div>\n"
+                                                    + "          </div>\n"
+                                                    + "      <div class=\"product-info\">\n"
+                                                    + "          <h4 class=\"product-title\">\n"
+                                                    + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                    + "                 " + prod.productName + "\n"
+                                                    + "              </a>\n"
+                                                    + "          </h4>\n"
+                                                    + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                                    + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
+                                                    + renderColor
+                                                    + "          </div>\n"
+                                                    + "      </div>\n"
+                                                    + "    </div>\n"
+                                                    + "</div>";
+                                        } else {
+                                            result += "<div class=\"col-md-4 col-sm-6\">\n"
+                                                    + "     <div class=\"product-item\">\n"
+                                                    + "          <div class=\"item-thumb\">\n"
+                                                    + "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n"
+                                                    + "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n"
+                                                    + "                    class=\"img-responsive\" \n"
+                                                    + "                    alt=\"" + prod.urlImg + "\"\n"
+                                                    + "                    fs-product-for-img=\"" + prod.productID + "\"/>\n"
+                                                    + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
+                                                    + "                     data-toggle=\"modal\" \n"
+                                                    + "                     fs-product=\"" + prod.productID + "\" \n"
+                                                    + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                    + "                </div>\n"
+                                                    + "                <div class=\"product-overlay\">\n"
+                                                    + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
+                                                    + "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n"
+                                                    + "                </div>\n"
+                                                    + "          </div>\n"
+                                                    + "      <div class=\"product-info\">\n"
+                                                    + "          <h4 class=\"product-title\">\n"
+                                                    + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                    + "                 " + prod.productName + "\n"
+                                                    + "              </a>\n"
+                                                    + "          </h4>\n"
+                                                    + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                                    + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
+                                                    + renderColor
+                                                    + "          </div>\n"
+                                                    + "      </div>\n"
+                                                    + "    </div>\n"
+                                                    + "</div>";
+                                        }
+                                    });
+                                    $("#fs-change-data-here").html(result);
+
+                                    $("#fs-price-from").val("");
+                                    $("#fs-price-to").val("");
+                                }
+                            }, 400);
+                        }
+                    });
+                }
+
+            });
+
+        }
+    });
+
+    /* FILTER PRODUCT BY COLOR */
+    $('.fs-color-checkbox').change(function () {
+        if (this.checked) { //Check
+            colorFilterArr.push($(this).val());
+        } else { //Bỏ Check
+            var index = colorFilterArr.indexOf($(this).val());
+            if (index > -1) {
+                colorFilterArr.splice(index, 1);
+            }
+        }
+
+        var page = 1;
+        var fromPrice = $("#fs-price-from-text").text();                        //Lọc giá Product "Từ"
+        var toPrice = $("#fs-price-to-text").text();                            //Lọc giá Product "Đến"
+        var cateID = $("#fs-price-from").attr("fs-category");
+        var sortBy = $("#fs-sort-product-by").val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
+        var itemPerPage = $("#fs-number-of-item-on-page").val();
+
+        $.ajax({
+            url: "ajax/getNumberOfProductsByFilter_OfACategory.html",
+            method: "POST",
+            data: {
+                cateID: cateID,
+                fromPrice: fromPrice,
+                toPrice: toPrice,
+                colorFilterArr: colorFilterArr,
+                sizeFilterArr: sizeFilterArr
+            },
+            success: function (numberOfProducts) {
+                $.ajax({
+                    url: "ajax/productPagination.html",
+                    method: "POST",
+                    data: {
+                        cateID: cateID,
+                        page: page,
+                        itemPerPage: itemPerPage,
+                        sortBy: sortBy,
+                        fromPrice: fromPrice,
+                        toPrice: toPrice,
+                        colorFilterArr: colorFilterArr,
+                        sizeFilterArr: sizeFilterArr
+                    },
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                        $("#fs-ajax-loading").css("display", "block");
+                    },
+                    success: function (response) {
+
+                        setTimeout(function () {
+                            $("#fs-ajax-loading").css("display", "none");
+                            if (response.length == 0) {
+                                $("#fs-change-data-here").html("<div class='col-xs-12'><h1>Nothing To Show!</h1></div>");
+                            } else {
+                                //Tổng số sản phẩm
+                                var numberOfPages = Math.ceil(parseInt(numberOfProducts) / itemPerPage);
+
+                                //Change pagination
+                                var pagination = "<li><span class=\"fs-page-number fs-page-number-active\" fs-page-number=\"1\" fs-category=\"" + cateID + "\">1</span></li>";
+                                if (numberOfPages > 1) {
+                                    for (var i = 2; i <= numberOfPages; i++) {
+                                        pagination += "<li><span class=\"fs-page-number\" fs-page-number=\"" + i + "\" fs-category=\"" + cateID + "\">" + i + "</span></li>";
+                                    }
+                                }
+
+                                $(".fs-ul-page-nav").html(pagination);
+
+                                //change productPageInfo
+                                var from = (page - 1) * itemPerPage + 1;
+                                var to = (page - 1) * itemPerPage + parseInt(itemPerPage);
+                                if (to > parseInt(numberOfProducts)) {
+                                    to = parseInt(numberOfProducts);
+                                }
+                                var currentProductPageInfo = from + " - " + to;
+                                $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
+                                $(".fs-number-of-products").text(numberOfProducts);
+
+                                //Change product content
+                                var result = "";
+                                $.each(response, function (i, prod) {
+                                    var renderColor = "";
+                                    if (prod.productColorList.length > 1) {
+                                        $.each(prod.productColorList, function (j, color) {
+                                            renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
+                                                    + "              class=\"img-responsive fs-index-color-img\" \n"
+                                                    + "              fs-index-color-img=\"" + color.colorID + "\" \n"
+                                                    + "              fs-product=\"" + prod.productID + "\" \n"
+                                                    + "              alt=\"" + color.urlColorImg + "\" \n"
+                                                    + "              title=\"" + color.color + "\"/>";
+                                        });
+                                    }
+
+                                    if (prod.productDiscount == 0) {
+                                        result += "<div class=\"col-md-4 col-sm-6\">\n"
+                                                + "     <div class=\"product-item\">\n"
+                                                + "          <div class=\"item-thumb\">\n"
+                                                + "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n"
+                                                + "                    class=\"img-responsive\" \n"
+                                                + "                    alt=\"" + prod.urlImg + "\"\n"
+                                                + "                    fs-product-for-img=\"" + prod.productID + "\"/>\n"
+                                                + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
+                                                + "                     data-toggle=\"modal\" \n"
+                                                + "                     fs-product=\"" + prod.productID + "\" \n"
+                                                + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                + "                </div>\n"
+                                                + "                <div class=\"product-overlay\">\n"
+                                                + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
+                                                + "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n"
+                                                + "                </div>\n"
+                                                + "          </div>\n"
+                                                + "      <div class=\"product-info\">\n"
+                                                + "          <h4 class=\"product-title\">\n"
+                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                + "                 " + prod.productName + "\n"
+                                                + "              </a>\n"
+                                                + "          </h4>\n"
+                                                + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                                + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
+                                                + renderColor
+                                                + "          </div>\n"
+                                                + "      </div>\n"
+                                                + "    </div>\n"
+                                                + "</div>";
+                                    } else {
+                                        result += "<div class=\"col-md-4 col-sm-6\">\n"
+                                                + "     <div class=\"product-item\">\n"
+                                                + "          <div class=\"item-thumb\">\n"
+                                                + "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n"
+                                                + "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n"
+                                                + "                    class=\"img-responsive\" \n"
+                                                + "                    alt=\"" + prod.urlImg + "\"\n"
+                                                + "                    fs-product-for-img=\"" + prod.productID + "\"/>\n"
+                                                + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
+                                                + "                     data-toggle=\"modal\" \n"
+                                                + "                     fs-product=\"" + prod.productID + "\" \n"
+                                                + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                + "                </div>\n"
+                                                + "                <div class=\"product-overlay\">\n"
+                                                + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
+                                                + "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n"
+                                                + "                </div>\n"
+                                                + "          </div>\n"
+                                                + "      <div class=\"product-info\">\n"
+                                                + "          <h4 class=\"product-title\">\n"
+                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                + "                 " + prod.productName + "\n"
+                                                + "              </a>\n"
+                                                + "          </h4>\n"
+                                                + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                                + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
+                                                + renderColor
+                                                + "          </div>\n"
+                                                + "      </div>\n"
+                                                + "    </div>\n"
+                                                + "</div>";
+                                    }
+                                });
+                                $("#fs-change-data-here").html(result);
+                            }
+                        }, 400);
+                    }
+                });
+            }
+        });
+    });
+
+    /* FILTER PRODUCT BY SIZE */
+    $('.fs-size-checkbox').change(function () {
+        if (this.checked) { //Check
+            sizeFilterArr.push($(this).val());
+        } else { //Bỏ Check
+            var index = sizeFilterArr.indexOf($(this).val());
+            if (index > -1) {
+                sizeFilterArr.splice(index, 1);
+            }
+        }
+
+        var page = 1;
+        var fromPrice = $("#fs-price-from-text").text();                        //Lọc giá Product "Từ"
+        var toPrice = $("#fs-price-to-text").text();                            //Lọc giá Product "Đến"
+        var cateID = $("#fs-price-from").attr("fs-category");
+        var sortBy = $("#fs-sort-product-by").val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
+        var itemPerPage = $("#fs-number-of-item-on-page").val();
+
+        $.ajax({
+            url: "ajax/getNumberOfProductsByFilter_OfACategory.html",
+            method: "POST",
+            data: {
+                cateID: cateID,
+                fromPrice: fromPrice,
+                toPrice: toPrice,
+                colorFilterArr: colorFilterArr,
+                sizeFilterArr: sizeFilterArr
+            },
+            success: function (numberOfProducts) {
+                $.ajax({
+                    url: "ajax/productPagination.html",
+                    method: "POST",
+                    data: {
+                        cateID: cateID,
+                        page: page,
+                        itemPerPage: itemPerPage,
+                        sortBy: sortBy,
+                        fromPrice: fromPrice,
+                        toPrice: toPrice,
+                        colorFilterArr: colorFilterArr,
+                        sizeFilterArr: sizeFilterArr
+                    },
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                        $("#fs-ajax-loading").css("display", "block");
+                    },
+                    success: function (response) {
+
+                        setTimeout(function () {
+                            $("#fs-ajax-loading").css("display", "none");
+                            if (response.length == 0) {
+                                $("#fs-change-data-here").html("<div class='col-xs-12'><h1>Nothing To Show!</h1></div>");
+                            } else {
+                                //Tổng số sản phẩm
+                                var numberOfPages = Math.ceil(parseInt(numberOfProducts) / itemPerPage);
+
+                                //Change pagination
+                                var pagination = "<li><span class=\"fs-page-number fs-page-number-active\" fs-page-number=\"1\" fs-category=\"" + cateID + "\">1</span></li>";
+
+                                if (numberOfPages > 1) {
+                                    for (var i = 2; i <= numberOfPages; i++) {
+                                        pagination += "<li><span class=\"fs-page-number\" fs-page-number=\"" + i + "\" fs-category=\"" + cateID + "\">" + i + "</span></li>";
+                                    }
+                                }
+                                $(".fs-ul-page-nav").html(pagination);
+
+                                //change productPageInfo
+                                var from = (page - 1) * itemPerPage + 1;
+                                var to = (page - 1) * itemPerPage + parseInt(itemPerPage);
+                                if (to > parseInt(numberOfProducts)) {
+                                    to = parseInt(numberOfProducts);
+                                }
+                                var currentProductPageInfo = from + " - " + to;
+                                $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
+                                $(".fs-number-of-products").text(numberOfProducts);
+
+                                //Change product content
+                                var result = "";
+                                $.each(response, function (i, prod) {
+                                    var renderColor = "";
+                                    if (prod.productColorList.length > 1) {
+                                        $.each(prod.productColorList, function (j, color) {
+                                            renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
+                                                    + "              class=\"img-responsive fs-index-color-img\" \n"
+                                                    + "              fs-index-color-img=\"" + color.colorID + "\" \n"
+                                                    + "              fs-product=\"" + prod.productID + "\" \n"
+                                                    + "              alt=\"" + color.urlColorImg + "\" \n"
+                                                    + "              title=\"" + color.color + "\"/>";
+                                        });
+                                    }
+
+                                    if (prod.productDiscount == 0) {
+                                        result += "<div class=\"col-md-4 col-sm-6\">\n"
+                                                + "     <div class=\"product-item\">\n"
+                                                + "          <div class=\"item-thumb\">\n"
+                                                + "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n"
+                                                + "                    class=\"img-responsive\" \n"
+                                                + "                    alt=\"" + prod.urlImg + "\"\n"
+                                                + "                    fs-product-for-img=\"" + prod.productID + "\"/>\n"
+                                                + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
+                                                + "                     data-toggle=\"modal\" \n"
+                                                + "                     fs-product=\"" + prod.productID + "\" \n"
+                                                + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                + "                </div>\n"
+                                                + "                <div class=\"product-overlay\">\n"
+                                                + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
+                                                + "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n"
+                                                + "                </div>\n"
+                                                + "          </div>\n"
+                                                + "      <div class=\"product-info\">\n"
+                                                + "          <h4 class=\"product-title\">\n"
+                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                + "                 " + prod.productName + "\n"
+                                                + "              </a>\n"
+                                                + "          </h4>\n"
+                                                + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                                + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
+                                                + renderColor
+                                                + "          </div>\n"
+                                                + "      </div>\n"
+                                                + "    </div>\n"
+                                                + "</div>";
+                                    } else {
+                                        result += "<div class=\"col-md-4 col-sm-6\">\n"
+                                                + "     <div class=\"product-item\">\n"
+                                                + "          <div class=\"item-thumb\">\n"
+                                                + "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n"
+                                                + "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n"
+                                                + "                    class=\"img-responsive\" \n"
+                                                + "                    alt=\"" + prod.urlImg + "\"\n"
+                                                + "                    fs-product-for-img=\"" + prod.productID + "\"/>\n"
+                                                + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
+                                                + "                     data-toggle=\"modal\" \n"
+                                                + "                     fs-product=\"" + prod.productID + "\" \n"
+                                                + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                + "                </div>\n"
+                                                + "                <div class=\"product-overlay\">\n"
+                                                + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
+                                                + "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n"
+                                                + "                </div>\n"
+                                                + "          </div>\n"
+                                                + "      <div class=\"product-info\">\n"
+                                                + "          <h4 class=\"product-title\">\n"
+                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                + "                 " + prod.productName + "\n"
+                                                + "              </a>\n"
+                                                + "          </h4>\n"
+                                                + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                                + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
+                                                + renderColor
+                                                + "          </div>\n"
+                                                + "      </div>\n"
+                                                + "    </div>\n"
+                                                + "</div>";
+                                    }
+                                });
+                                $("#fs-change-data-here").html(result);
+                            }
+                        }, 400);
+                    }
+                });
+            }
+        });
+    });
+    /*========================================NGAN - ORDER====================================================*/
+    //Load cart in header
     $("#cart").load("orders/ajax/cart.html");
+
+    //checkout.jsp
+    //Discount in checkout.jsp
+    //Load form discount in checkout
     $('#diff-discount').on("click", function () {
         $('.discount-code').toggle("slow");
     });
-
     $("#coupon_code").keyup(function () {
         $("#fs-checkout-discountvou-error").text("");
     });
+    $("input[name=address-chose]").on("click", function () {
+        var checked = $('input[name=address-chose]:checked').val();
+        if (checked === "difference") {
+            $('.shipping-address').css("display", "list-item");
+        } else {
+            $('.shipping-address').prop("style", false);
+        }
+    });
+//    $("#discount-order").on("click", function () {
+//        $(".cart-table").remove(".foot");
+//        $(".cart-table").add("<tfoot class=\"foot\"></tfoot>");
+//        var discountCode = $("#coupon_code").val();
+//        if (discountCode === "") {
+//            $("#fs-checkout-discountvou-error").text("You must enter your discount code!");
+//        } else {
+//            $.ajax({
+//                url: "orders/ajax/discount.html",
+//                method: "POST",
+//                data: {discountCode: discountCode},
+//                dataType: 'html',
+//                success: function (response) {
+//                    if (response !== "error" && response !== "empty") {
+//                        $(".discount-ul").removeClass(".discount-inputs");
+//                        $(".discount-ul").removeClass(".discount-buttons");
+//                        $(".discount-ul").hide().html("<li class=\"col-md-6 col-sm-6 discount-inputs\"><div class=\"discountShow\" style=\"padding-bottom: 15px;\">\n"
+//                                + "<input type=\"hidden\" id=\"discount-code-input\" name=\"discount-code-input\" value=\"" + discountCode + "\"/>\n"
+//                                + "<b>Your Discount Code: " + discountCode + "</b>&nbsp<button type=\"button\" class=\"fa fa-times\" id=\"cancel-discount\"  onclick=\"enterDiscountAgain();\"></button>\n"
+//                                + "</div></li>").fadeIn(1000);
+//                        $(".foot").hide().html(response).fadeIn(1000);
+//                    } else {
+//                        $.get("orders/ajax/nodiscount.html", function (responsenodiscount) {
+//                            if (response === "error") {
+//                                $("#fs-checkout-discountvou-error").text("Discount Code not existed!");
+//                                $(".foot").hide().html(responsenodiscount).fadeIn(1000);
+//                            } else if (response === "empty") {
+//                                $("#fs-checkout-discountvou-error").text("Your Discount Code is out of quantity");
+//                                $(".foot").hide().html(responsenodiscount).fadeIn(1000);
+//                            }
+//                        });
+//                    }
+//                }
+//            });
+//        }
+//    });
+//    $("#cancel-discount").on("click", function () {
+//        $(".discount-ul").removeClass(".discount-inputs");
+//        $(".discount-ul").hide().html("<li class=\"col-md-6 col-sm-6 discount-inputs\">\n"
+//                + "<label>Your Discount Code</label>\n"
+//                + "<div class=\"input-box\">\n"
+//                + "<p class=\"help-block\" id=\"fs-checkout-discountvou-error\"></p>\n"
+//                + "<input class=\"input-text\" id=\"coupon_code\" name=\"coupon_code\" value=\"\"/>\n"
+//                + "</div>\n"
+//                + "</li>\n"
+//                + "<li class=\"col-md-6 col-sm-6 discount-buttons\" style=\"padding-top: 27px;\">\n"
+//                + "<div class=\"buttons-set\">\n"
+//                + "<button style=\"height: 40px;\" type=\"button\" title=\"Apply Discount Code\" class=\"btn-black\" id=\"discount-order\" onclick=\"discountClick();\"><span><span>Apply Discount Code</span></span></button>\n"
+//                + "</div></li>").fadeIn(1000);
+//        $.get("orders/ajax/nodiscount.html", function (responsenodiscount) {
+//            $(".foot").hide().html(responsenodiscount).fadeIn(1000);
+//        });
+//    });
+
+    //Cancel Order side client in order-history-detail.jsp 
+    $('#btnClientCancelOrder').on("click", function () {
+        var orderID = $(this).val();
+        var cancelConfirm = confirm("Are you sure to cancel this order?");
+        if (cancelConfirm == true) {
+            window.location = "orders/cancelorder/" + orderID + ".html";
+        }
+    });
+
+    //Cart in modal.jsp
+    $(".fs-modal-btn-addtobag").on("click", function () {
+        var colorID = $(".fs-product-modal-color .fs-product-selected").find("img").attr("fs-color");
+        var sizeID = $("#fs-product-modal-size .fs-product-selected").attr("fs-size");
+        var productID = $(".fs-product-name").attr("fs-product-id");
+        var quantity = $(".fs-modal-input-number").val();
+        if (colorID == null && sizeID == null) {
+            $(".fs-modal-error").css("color", "red"); //green
+            $(".fs-modal-error").text("YOU MUST CHOOSE COLOR AND SIZE");
+        } else {
+            if (colorID == null) {
+                $(".fs-modal-error").css("color", "red"); //green
+                $(".fs-modal-error").text("YOU MUST CHOOSE COLOR");
+            }
+            if (sizeID == null) {
+                $(".fs-modal-error").css("color", "red"); //green
+                $(".fs-modal-error").text("YOU MUST CHOOSE SIZE");
+            }
+            $.ajax({
+                url: "orders/ajax/addtocart.html",
+                method: "POST",
+                data: {productID: productID, sizeID: sizeID, colorID: colorID, quantity: quantity},
+                dataType: 'html',
+                success: function (response) {
+                    if (response == "3") {
+                        $(".fs-modal-error").css("color", "red"); //green
+                        $(".fs-modal-error").text("PRODUCT ERROR!");
+                    } else if (response == "2") {
+                        $(".fs-modal-error").css("color", "red"); //green
+                        $(".fs-modal-error").text("COLOR AND SIZE ERROR!");
+                    } else if (response == "1") {
+                        $(".fs-modal-error").css("color", "red"); //green
+                        $(".fs-modal-error").text("NOT ENOUGH STOCK! PLEASE ENTER DIFFERENT QUANTITY");
+                    } else {
+                        $(".fs-modal-error").css("color", "green"); //red
+                        $(".fs-modal-error").text("ADD PRODUCT TO CART SUCCESSFULLY!");
+                        $("#cart").load("orders/ajax/cart.html");
+                    }
+                }
+            });
+        }
+    });
+    $(".fs-modal-close").on("click", function () {
+        $(".fs-modal-error").text("");
+    });
     /*======================================END NGAN - ORDER==================================================*/
-    
+
     /*========================================DUONG - USER====================================================*/
+    //THÔNG BÁO KHI CLICK VÀO ADD ADDRESS KHI VƯỢT QUÁ MỨC CHO PHÉP
     $(".fs-add-address-user").on("click", function () {
         var userID = $(this).attr("fs-userID");
-        var modal = $(this).attr("fs-message"); 
+        var modal = $(this).attr("fs-message");
         $.ajax({
-            url: "user/address-add/" +userID+ ".html",
+            url: "user/address-add/" + userID + ".html",
             method: "GET",
             data: {userID: userID},
             success: function (response) {
@@ -470,10 +1562,519 @@ $(document).ready(function () {
             }
         });
     });
+
+    //CUỘN LẠI, HIỆN RA TABLE ADDRESS-LIST
+
+//    $(".clickable").click(function(){
+    $(".fs-panel").on("click", ".panel-heading span.clickable", function () {
+        var abc = $(this);
+        if (!abc.hasClass("panel-collapsed")) {
+            abc.closest(".panel").find(".panel-body").slideUp();
+            abc.addClass("panel-collapsed");
+            abc.find("i").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
+        } else {
+            abc.closest(".panel").find(".panel-body").slideDown();
+            abc.removeClass("panel-collapsed");
+            abc.find("i").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
+        }
+    });
+
+    $(".fs-panel-add").on("click", ".panel-heading span.clickable", function () {
+        var abc = $(this);
+        if (!abc.hasClass("panel-collapsed")) {
+            abc.closest(".panel").find(".panel-body").slideUp();
+            abc.addClass("panel-collapsed");
+            abc.find("i").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
+        } else {
+            abc.closest(".panel").find(".panel-body").slideDown();
+            abc.removeClass("panel-collapsed");
+            abc.find("i").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
+        }
+    });
+
+    $(".panel-heading span.clickable").click();
+
+
+    // CẢNH CÁO KHI BẤM XÓA
+
+    $("#fs-delete-button-AD").click(function () {
+        swal({
+            title: "Are you sure?",
+            text: "You will sure delete record this",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, delete!",
+            cancelButtonText: "No, cancel!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+        function (isConfirm) {
+            if (isConfirm) {
+                swal("Deleted!", "Your imaginary file has been deleted.", "success");
+            } else {
+                swal("Cancelled", "Your imaginary file is safe :)", "error");
+            }
+        });
+    });
+
+    // BẮT LỖI FORM LOGIN USER MODAL
+
+    function checkEmail(email) {
+        email = $("#fs-email-login-user").val();
+        var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
+        if (email === "") {
+            $("#fs-email-login-user-error").text("Email cannot be empty!");
+            $("#fs-email-login-user").focus();
+            var div = $("#fs-email-login-user").closest("div.fs-email-user");
+            div.removeClass("has-success");
+            $("#glypcn-fs-login-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        } else if (!pattern.test(email)) {
+            $("#fs-email-login-user-error").text("Please enter valid Email!");
+            $("#fs-email-login-user").focus();
+            var div = $("#fs-email-login-user").closest("div.fs-email-user");
+            div.removeClass("has-success");
+            $("#glypcn-fs-login-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        } else {
+            $("#fs-email-login-user-error").text("");
+            var div = $("#fs-email-login-user").closest("div.fs-email-user");
+            div.removeClass("has-error");
+            div.addClass("has-success has-feedback");
+            $("#glypcn-fs-login-user").remove();
+            div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+            return true;
+        }
+    }
+
+    // VALIDATION CLICK BUTTON LOGIN
+
+    $(".fs-button-login-user").click(function (e) {
+        e.preventDefault();
+        var email = $("#fs-email-login-user").val();
+        var pass = $("#fs-pass-login-user").val();
+        
+        if (!checkEmail(email)) {
+            return false;
+        }
+
+        else if (pass === "") {
+            $("#fs-pass-login-user-error").text("Password cannot be empty!");
+            $("#fs-pass-login-user").focus();
+            var div = $("#fs-pass-login-user").closest("div.fs-pass-user");
+            div.removeClass("has-success");
+            $("#glypcn-fs-login-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+
+        } else if (pass.length < 6 || pass.length > 100) {
+            $("#fs-pass-login-user-error").text("Password 6 to 100 characters!");
+            $("#fs-pass-login-user").focus();
+            var div = $("#fs-pass-login-user").closest("div.fs-pass-user");
+            div.removeClass("has-success");
+            $("#glypcn-fs-login-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        }
+//        else if(!checkLOGIN(email,pass)){
+//            return false;
+//        }
+        else {
+            $("#fs-form-login-user").submit();
+            $("#fs-pass-login-user-error").text("");
+            var div = $("#fs-pass-login-user").closest("div.fs-pass-user");
+            div.removeClass("has-error");
+            div.addClass("has-success has-feedback");
+            $("#glypcn-fs-login-user").remove();
+            div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+            return true;
+        }
+    });
+
+    // Test thử
+    
+//        function checkLOGIN(email,pass){
+//        $.ajax({
+//            url: "user/checkLog.html",
+//            method: "POST",
+//            data: {email: email},
+//            dataType: "JSON",
+//            success: function (response) {
+//                if(email === response.email){
+//                    if(pass === response.password){
+//                        return true;
+//                    }else{
+//                        alert("sai");
+//                        return false;
+//                    }
+//            }else{
+//                    alert("sai email");
+//                    return false;
+//            }
+//            }
+//    });
+//    
+//    }
+    
+    // VALIDATION KEYUP 
+
+    $("#fs-email-login-user").keyup(function () {
+        var email = $("#fs-email-login-user").val();
+       
+        if (!checkEmail(email)) {
+            return false;
+        }
+    });
+
+    $("#fs-pass-login-user").keyup(function () {
+        var pass = $("#fs-pass-login-user").val();
+
+        if (pass === "") {
+            $("#fs-pass-login-user-error").text("Password cannot be empty!");
+            $("#fs-pass-login-user").focus();
+            var div = $("#fs-pass-login-user").closest("div.fs-pass-user");
+            div.removeClass("has-success");
+            $("#glypcn-fs-login-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+
+        } else if (pass.length < 6 || pass.length > 100) {
+            $("#fs-pass-login-user-error").text("Password 6 to 100 characters!");
+            $("#fs-pass-login-user").focus();
+            var div = $("#fs-pass-login-user").closest("div.fs-pass-user");
+            div.removeClass("has-success");
+            $("#glypcn-fs-login-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        }
+
+
+        else {
+            $("#fs-pass-login-user-error").text("");
+            var div = $("#fs-pass-login-user").closest("div.fs-pass-user");
+            div.removeClass("has-error");
+            div.addClass("has-success has-feedback");
+            $("#glypcn-fs-login-user").remove();
+            div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+            return true;
+        }
+    });
+    
+    // BẮT VALIDATION TRÊN FORM CREATE
+    
+    function checkPass(password){
+        password = $("#fs-create-password").val();
+        
+        if (password === "") {
+            $("#fs-pass-create-user-error").text("Password cannot be empty!");
+            $("#fs-create-password").focus();
+            var div = $("#fs-create-password").closest("div.fs-password-create");
+            div.removeClass("has-success");
+            $("#glypcn-fs-create-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+
+        } else if (password.length < 6 || password.length > 100) {
+            $("#fs-pass-create-user-error").text("Password 6 to 100 characters!");
+            $("#fs-create-password").focus();
+             var div = $("#fs-create-password").closest("div.fs-password-create");
+            div.removeClass("has-success");
+            $("#glypcn-fs-create-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        }
+        else {
+            $("#fs-pass-create-user-error").text("");
+            var div = $("#fs-create-password").closest("div.fs-password-create");
+            div.removeClass("has-error");
+            div.addClass("has-success has-feedback");
+            $("#glypcn-fs-create-user").remove();
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+            return true;
+        }
+    }
+    
+    function checkRePass(repassword){
+        repassword = $("#fs-create-repassword").val();
+        
+        if (repassword === "") {
+            $("#fs-repass-create-user-error").text("Repassword cannot be empty!");
+            $("#fs-create-repassword").focus();
+            var div = $("#fs-create-repassword").closest("div.fs-repassword-create");
+            div.removeClass("has-success");
+            $("#glypcn-fs-create-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+
+        } else if (repassword.length < 6 || repassword.length > 100) {
+            $("#fs-repass-create-user-error").text("Password 6 to 100 characters!");
+            $("#fs-create-repassword").focus();
+            var div = $("#fs-create-repassword").closest("div.fs-repassword-create");
+            div.removeClass("has-success");
+            $("#glypcn-fs-create-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        }
+        else {
+            $("#fs-repass-create-user-error").text("");
+            var div = $("#fs-create-repassword").closest("div.fs-repassword-create");
+            div.removeClass("has-error");
+            div.addClass("has-success has-feedback");
+            $("#glypcn-fs-create-user").remove();
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+            return true;
+        }
+    }
+    
+    function checkFirstName(firstname){
+        firstname = $("#fs-create-firstname").val();
+        
+        if (firstname === "") {
+            $("#fs-fname-create-user-error").text("First Name cannot be empty!");
+            $("#fs-create-firstname").focus();
+            var div = $("#fs-create-firstname").closest("div.fs-firstname-create");
+            div.removeClass("has-success");
+            $("#glypcn-fs-create-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+
+        } else if (firstname.length < 2 || firstname.length > 50) {
+            $("#fs-fname-create-user-error").text("First Name 2 to 50 characters!");
+            $("#fs-create-firstname").focus();
+            var div = $("#fs-create-firstname").closest("div.fs-firstname-create");
+            div.removeClass("has-success");
+            $("#glypcn-fs-create-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        }
+        else {
+            $("#fs-fname-create-user-error").text("");
+            var div = $("#fs-create-firstname").closest("div.fs-firstname-create");
+            div.removeClass("has-error");
+            div.addClass("has-success has-feedback");
+            $("#glypcn-fs-create-user").remove();
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+            return true;
+        }
+    }
+    
+    function checkLastName(lastname){
+        lastname = $("#fs-create-lastname").val();
+        
+        if (lastname === "") {
+            $("#fs-lname-create-user-error").text("Last Name cannot be empty!");
+            $("#fs-create-lastname").focus();
+            var div = $("#fs-create-lastname").closest("div.fs-lastname-create");
+            div.removeClass("has-success");
+            $("#glypcn-fs-create-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+
+        } else if (lastname.length < 2 || lastname.length > 50) {
+            $("#fs-lname-create-user-error").text("Last Name 2 to 50 characters!");
+            $("#fs-create-lastname").focus();
+            var div = $("#fs-create-lastname").closest("div.fs-lastname-create");
+            div.removeClass("has-success");
+            $("#glypcn-fs-create-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        }
+        else {
+            $("#fs-lname-create-user-error").text("");
+            var div = $("#fs-create-lastname").closest("div.fs-lastname-create");
+            div.removeClass("has-error");
+            div.addClass("has-success has-feedback");
+            $("#glypcn-fs-create-user").remove();
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+            return true;
+        }
+    }
+    
+    function checkBirthDay(birthday){
+        birthday = $("#fs-create-birthday").val();
+        
+        if (birthday === "") {
+            $("#fs-bday-create-user-error").text("BirthDay cannot be empty!");
+            $("#fs-create-birthday").focus();
+            var div = $("#fs-create-birthday").closest("div.fs-birthday-create");
+            div.removeClass("has-success");
+            $("#glypcn-fs-create-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+
+        } 
+        else {
+            $("#fs-bday-create-user-error").text("");
+            var div = $("#fs-create-birthday").closest("div.fs-birthday-create");
+            div.removeClass("has-error");
+            div.addClass("has-success has-feedback");
+            $("#glypcn-fs-create-user").remove();
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+            return true;
+        }
+    }
+    
+    function checkPhone(phone){
+//        var regex = new RegExp(/^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/);
+        var regex = new RegExp(/[^ \-\.]^(01[2689]|09)[0-9]{8}$/);
+        phone = $("#fs-create-phone").val();
+        
+        if (phone === "") {
+            $("#fs-phone-create-user-error").text("Phone cannot be empty!");
+            $("#fs-create-phone").focus();
+            var div = $("#fs-create-phone").closest("div.fs-phone-create");
+            div.removeClass("has-success");
+            $("#glypcn-fs-create-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+
+        } else if(!regex.test(phone)){
+             $("#fs-phone-create-user-error").text("Please enter valid phone!");
+            $("#fs-create-phone").focus();
+            var div = $("#fs-create-phone").closest("div.fs-phone-create");
+            div.removeClass("has-success");
+            $("#glypcn-fs-create-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        }
+        else {
+             $("#fs-phone-create-user-error").text("");
+            var div = $("#fs-create-phone").closest("div.fs-phone-create");
+            div.removeClass("has-error");
+            div.addClass("has-success has-feedback");
+            $("#glypcn-fs-create-user").remove();
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+            return true;
+        }
+        
+    }
+    
+    function checkAddress(address){
+        address = $("#fs-create-address").val();
+        
+        if (address === "") {
+            $("#fs-address-create-user-error").text("Address cannot be empty!");
+            $("#fs-create-address").focus();
+            var div = $("#fs-create-address").closest("div.fs-address-create");
+            div.removeClass("has-success");
+            $("#glypcn-fs-create-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+
+        } else if(address.length < 10 || address.length > 255){
+            $("#fs-address-create-user-error").text("Address has 10 - 255 characters!");
+            $("#fs-create-address").focus();
+            var div = $("#fs-create-address").closest("div.fs-address-create");
+            div.removeClass("has-success");
+            $("#glypcn-fs-create-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        }
+        else {
+            $("#fs-address-create-user-error").text("");
+            var div = $("#fs-create-address").closest("div.fs-address-create");
+            div.removeClass("has-error");
+            div.addClass("has-success has-feedback");
+            $("#glypcn-fs-create-user").remove();
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+            return true;
+        }
+    }
+    
+    $("#fs-form-create-user").click(function(e){
+        
+    });
     
     
+    
+//    $(".fs-button-login-user").click(function(){
+////        e.preventDefault();
+//       $.ajax({
+//            url: "user/login.html",
+//            method: "POST",
+////            data: {userID: userID},
+//            success: function (response) {
+//                alert("a");
+//            }
+//        });
+//            
+//    });
+
+    // HIỆN THỊ MODAL BOOTSTRAP UPDATE
+
+//    $(".fs-update-button").click(function (){
+//        $("#ADModal").modal("show");
+//    });
+    // Modal BootStrap Tab LOGIN, REGISTER
+
+//    $(".nav-tabs").on("click","")
+
+
+//$("#txtaddress").keyup(function () {
+//        var address = $("txtaddress").val();
+//        var userID = $(this).attr("fs-userID");
+//
+//        $.ajax({
+//            url: "user/address-add/" + userID + ".html",
+//            method: "POST",
+//            data: {userID: userID, address: address},
+//            success: function (response) {
+//                alert('trùng địa chỉ');
+//            }
+//        });
+//
+//    });
+//    
+//    $("#txtphone").keyup(function () {
+//        var phone = $("txtphone").val();
+//        var userID = $(this).attr("fs-userID");
+//
+//        $.ajax({
+//            url: "user/address-add/" + userID + ".html",
+//            method: "POST",
+//            data: {userID: userID, phone: phone},
+//            success: function (response) {
+//                alert('trùng số điện thoại');
+//            }
+//        });
+//
+//    });
+//    
+//    $("form:form").submit(function( event ){
+//        if($("#txtaddress").keyup() && $("#txtphone").keyup()){
+//            $("span").text("trùng address").show();
+//            return; 
+//        }
+//        
+//        event.preventDefault();
+//        
+//    });
+
+
 //    fs-add-address-user
-    
+
     /*========================================END DUONG - USER====================================================*/
     
     /*========================================THANH - BLOG====================================================*/

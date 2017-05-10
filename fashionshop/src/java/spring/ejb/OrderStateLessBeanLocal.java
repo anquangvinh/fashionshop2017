@@ -7,14 +7,14 @@ package spring.ejb;
 
 import java.util.List;
 import javax.ejb.Local;
+import spring.entity.CartLineInfo;
 import spring.entity.Categories;
 import spring.entity.DiscountVoucher;
 import spring.entity.Orders;
 import spring.entity.OrdersDetail;
+import spring.entity.ProductColors;
 import spring.entity.Products;
 import spring.entity.SizesByColor;
-import spring.entity.SubCategories;
-import spring.entity.UserAddresses;
 
 /**
  *
@@ -26,6 +26,10 @@ public interface OrderStateLessBeanLocal {
     public List<Categories> getAllCategory();
     public List<DiscountVoucher> getAllDiscountVoucher();
     public List<OrdersDetail> getAllOrderDetailByOrderID(int orderID);
+    public List<Orders> getAllOrderByUserID(int userID);
+    public List<Products> getListProductsByName(String productName);
+    public List<ProductColors> getListProductColorsByProductID(int productID);
+    public List<SizesByColor> getListSizesByColorByColorID(int colorID);
     
     public Orders getOrderByID(int orderID);
     public Products getProductByID(int productID);
@@ -34,9 +38,11 @@ public interface OrderStateLessBeanLocal {
     public SizesByColor getSizesByColorBySizeIDandColorID(int sizeId, int colorId);
     
     public int createDiscountVoucher(DiscountVoucher newDiscountVoucher);
+    public int createOrderDetail(CartLineInfo cartLineInfo, Orders orders);
     public int updateDiscountVoucher(DiscountVoucher targetDiscountVoucher);
     
-    public float sumTotalOrderDetail(List<OrdersDetail> ordersDetailList);
     public boolean confirmStatusOrder(Orders orders, short status);
     public boolean confirmStatusOrderDetail(OrdersDetail ordersDetail, short status);
+    
+    public String createPDF(String html);
 }

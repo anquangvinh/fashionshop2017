@@ -9,7 +9,7 @@
                 <h1 class="page-header"> 
                     <strong>Orders</strong> 
                     <i class="fa fa-caret-right fa-style" aria-hidden="true" style="color: #337ab7"></i> 
-                    <span style="font-size: 0.9em">List Detail - Create New</span>
+                    <span style="font-size: 0.9em" id="productOrDetailAddHeader" fs-Order-ID="${orderID}">List Detail Order NO.${orderID} - Create New</span>
                 </h1>
             </div>
             <!-- /.col-lg-12 -->
@@ -17,79 +17,84 @@
         <!-- /.row -->
 
         <div class="row">
-            <div class="col-lg-12">
-                <div class="col-lg-6">
-                    <form:form action="" method="POST" modelAttribute="orderDetail">
-                        <div class="form-group">
-                            <label>Category</label>
-                            <form:select path="" 
-                                         id="category"
-                                         name="category"
-                                         items="${categories}" 
-                                         itemValue="cateID" 
-                                         itemLabel="cateName" 
-                                         cssClass="form-control"/>
-                        </div>
-                        <div class="form-group">
-                            <label>Sub-Category</label>
-                            <form:select path="" 
-                                         id="subcategory"
-                                         name="subcategory"
-                                         items="${categories}" 
-                                         itemValue="cateID" 
-                                         itemLabel="cateName" 
-                                         cssClass="form-control"/>
-                        </div>
-                        <button type="submit" class="btn btn-success">Create</button>
-                        <button type="reset" class="btn btn-default">Reset</button>
-                    </form:form>
-<!--                    <form role="form">
-                        <div class="form-group">
-                            <label>Category</label>
-                            <select class="form-control">
-                                <option>Category 1</option>
-                                <option>Category 2</option>
-                                <option>Category 3</option>
-                                <option>Category 4</option>
-                                <option>Category 5</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Sub-Category</label>
-                            <select class="form-control">
-                                <option>Sub-Category 1</option>
-                                <option>Sub-Category 2</option>
-                                <option>Sub-Category 3</option>
-                                <option>Sub-Category 4</option>
-                                <option>Sub-Category 5</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Product</label>
-                            <input class="form-control" placeholder="Enter Product Name">
-
-                            Error Message
-                            <p class="help-block">Error Message will be here!!!</p>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Status</label>
-                            <div>
-                                <label class="radio-inline">
-                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="option1" checked>Visible
-                                </label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="option2">Invisible
-                                </label>
-                            </div>
-
-                        </div>
-
-                        <button type="submit" class="btn btn-success">Create</button>
-                        <button type="reset" class="btn btn-default">Reset</button>
-                    </form>-->
+            <div class="col-lg-12 row">
+                <p class="help-block" id="order-detail-add-error" style="color: red; font-weight: 700;"></p>
+                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-4">
+                    <select class="form-control input-md" id="searchType" name="searchType">
+                        <option value="1">Search By Product Name</option>
+                        <option value="2">Search By Product ID</option>
+                    </select>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-4">
+                    <input class="form-control" type="text" id="searchText" name="searchText" value=""/>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                    <button id="btnSearchProduct" class="btn btn-primary">SEARCH</button>
+                </div>
+            </div>
+            <div class="col-lg-12 divTableProductSearchOrderDetailAdd" style="padding-top: 30px;">
+                <table width="100%" class="table table-striped table-bordered table-hover" id="tableProductOrderDetailAdd">
+                    <thead>
+                        <tr>
+                            <th class="text-center fs-valign-middle">ID</th>
+                            <th class="text-center fs-valign-middle">Product Name</th>
+                            <th class="text-center fs-valign-middle">Category</th>
+                            <th class="text-center fs-valign-middle">Product Discount</th>
+                            <th class="text-center fs-valign-middle">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bodyProductOrDetailAdd">
+<!--                        <tr>
+                            <td class="proID">1</td>
+                            <td>a</td>
+                            <td>a</td>
+                            <td>a</td>
+                            <td>a</td>
+                        </tr>
+                        <tr>
+                            <td class="proID">1</td>
+                            <td>a</td>
+                            <td>a</td>
+                            <td>a</td>
+                            <td>a</td>
+                        </tr>-->
+                    </tbody>
+                </table>
+                <div class="form-group row">
+                    <p class="help-block" id="order-detail-add-color-error" style="color: red; font-weight: 700;"></p>
+                    <div class="col-lg-3">
+                        <label>Product Color</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <select class="form-control input-sm" id="productOrDetailAddColor" name="productOrDetailAddColor">
+                        </select>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group row">
+                    <p class="help-block" id="order-detail-add-size-error" style="color: red; font-weight: 700;"></p>
+                    <div class="col-lg-3">
+                        <label>Product Size</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <select class="form-control input-sm" id="productOrDetailAddSize" name="productOrDetailAddSize">
+                        </select>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group">
+                    <p class="help-block" id="order-detail-add-quantity-error" style="color: red; font-weight: 700;"></p>
+                    <div class="col-lg-3">
+                        <label>Quantity</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input class="form-control" type="text" id="productOrDetailAddQuantity" name="productOrDetailAddQuantity" value=""/>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group" style="padding-top: 20px;">
+                    <button onclick="window.location = 'admin/orders/orderlistdetail/${orderID}.html'" class="btn btn-primary">BACK TO ORDER DETAILS</button>
+                    <button id="btnAddOrderDetail" class="btn btn-primary">ADD ORDER DETAIL</button>
                 </div>
             </div>
             <!-- /.col-lg-12 -->
@@ -99,18 +104,3 @@
     <!-- /.container-fluid -->
 </div>
 <!-- /#page-wrapper -->
-<script type="text/javascript">
-//    $category = $('#category');
-//    $category.change(
-//        function(){
-//            $.ajax({
-//               type: 'GET',
-//               url: "admin/orders/getSubCategoryByCateID.html",
-//               data: {cateID: $category.attr("selectedIndex")},
-//               success: function (data) {
-//                        $('#subcategory').html()
-//                    }
-//            });
-//        }
-//    );
-</script>
