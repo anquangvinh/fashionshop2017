@@ -387,6 +387,16 @@ $(document).ready(function () {
         }
     });
 
+    $('input[id="fs-edit-product-color-img"]').fileuploader({
+        limit: 1,
+        extensions: ['jpg', 'jpeg', 'png']
+    });
+
+    $('input[id="fs-sub-img"]').fileuploader({
+        limit: 1,
+        extensions: ['jpg', 'jpeg', 'png']
+    });
+
     var fs_count_div_color = 0;
     /* XỬ LÝ BUTTON ADD-MORE-SIZE - PRODUCT CREATE */
     $("#fs-fieldset-detail").on("click", ".fs-add-more-size", function () {
@@ -426,7 +436,7 @@ $(document).ready(function () {
     /* XỬ LÝ BUTTON ADD-MORE-COLOR - PRODUCT CREATE */
     $("#fs-add-more-color").click(function () {
         fs_count_div_color = $(this).parent().siblings("#fs-more-color").find(".fs-div-color").length + 1;
-        var addMoreColor = "<div class=\"col-xs-12 fs-div-color\" style=\"padding: 5px 0; border: 1px #CCC dashed; margin-bottom: 10px\" fs-big-div-color=\""+ fs_count_div_color +"\">\n\
+        var addMoreColor = "<div class=\"col-xs-12 fs-div-color\" style=\"padding: 5px 0; border: 1px #CCC dashed; margin-bottom: 10px\" fs-big-div-color=\"" + fs_count_div_color + "\">\n\
                                 <div class=\"col-md-6 fs-right-border\">\n\
                                     <div class=\"form-group\">\n\
                                         <label>Color</label>\n\
@@ -635,37 +645,66 @@ $(document).ready(function () {
         }
     });
 
-    /* Xử lý choose TASK - PRODUCT-UPDATE */
-    $("#fs-select-product-update-task").change(function () {
+    /* TRANG PRODUCT-UPDATE */
+    /* Xử lý choose "FIRST" TASK */
+    $("#fs-product-update-page").on("change", "#fs-select-product-update-choose-first-task", function () {
+        $(".fs-select-product-update-task").addClass("fs-display-none");
+        $("#fs-select-product-update-choose-color").val(0);
         var select = $(this).val();
         if (select == 1) {
             $("#fs-edit-product-general-info").removeClass("fs-display-none");
+            $("#fs-select-product-update-choose-color").addClass("fs-display-none");
         } else {
-            if (!$("#fs-edit-product-general-info").hasClass("fs-display-none")) {
-                $("#fs-edit-product-general-info").addClass("fs-display-none");
-            }
+            $("#fs-edit-product-general-info").addClass("fs-display-none");
         }
 
         if (select == 2) {
-            $("#fs-select-product-update-color").removeClass("fs-display-none");
-            $("#fs-select-product-update-color").focus();
+            $("#fs-edit-product-color").removeClass("fs-display-none");
+            $("#fs-select-product-update-choose-color").addClass("fs-display-none");
         } else {
-            if (!$("#fs-select-product-update-color").hasClass("fs-display-none")) {
-                $("#fs-select-product-update-color").addClass("fs-display-none");
-            }
+            $("#fs-edit-product-color").addClass("fs-display-none");
         }
+        
+        if(select == 3 || select == 4){
+            $("#fs-select-product-update-choose-color").removeClass("fs-display-none");
+        }
+        
+        if(select == 0){
+            $("#fs-select-product-update-choose-color").addClass("fs-display-none");
+        }
+        
     });
 
-    $("#fs-select-product-update-color").change(function () {
-        var select = $(this).val();
-        if (select == 1) {
-            $("#fs-edit-product-detail-info").removeClass("fs-display-none");
+    /*Xử lý choose Color*/
+    $("#fs-product-update-page").on("change", "#fs-select-product-update-choose-color", function () {
+        var task = $("#fs-select-product-update-choose-first-task").val();
+        var colorID = $("#fs-select-product-update-choose-color").val();
+        
+        if (task == 3) {
+            $("#fs-edit-product-size").removeClass("fs-display-none");
+            $(".fs-edit-product-table-size").addClass("fs-display-none");
+            $("#fs-edit-product-table-size-" + colorID).removeClass("fs-display-none");
         } else {
-            if (!$("#fs-edit-product-detail-info").hasClass("fs-display-none")) {
-                $("#fs-edit-product-detail-info").addClass("fs-display-none");
-            }
+            $("#fs-edit-product-size").addClass("fs-display-none");
         }
+        
+       if(task == 4){
+           $("#fs-edit-product-sub-img").removeClass("fs-display-none");
+           $(".fs-edit-product-table-sub-img").addClass("fs-display-none");
+           $("#fs-edit-product-table-sub-img-" + colorID).removeClass("fs-display-none");
+       } else {
+           $("#fs-edit-product-sub-img").addClass("fs-display-none");
+       }
+       
+       if(colorID == 0){
+           $(".fs-select-product-update-task").addClass("fs-display-none");
+       }
     });
+
+    $("#fs-edit-product-table-color tbody").sortable();
+
+    $(".fs-edit-product-table-sub-img tbody").sortable();
+
     /*==========================END VINH - PRODUCT============================*/
 
     /*=============================== THANH - BLOG =================================*/
@@ -871,7 +910,7 @@ $(document).ready(function () {
 
 
     /*===============================END THANH - BLOG =================================*/
-    
+
     /*==============================DUONG - USER============================*/
     /* 
      * AJAX - EVENT ONCHANGE SELECT USER "STATUS" 
@@ -917,12 +956,12 @@ $(document).ready(function () {
     });
 
     //function load data từ 1 dataSource lên table
-    function renderTableFromJson (json) {
+    function renderTableFromJson(json) {
         var beginStr = '<table class="table table-striped table table-bordered table table-hover" >' +
-                    '<tr>' +
-                        '<th>Address</th>' +
-                        '<th>Phone</th>' +
-                    '</tr>';
+                '<tr>' +
+                '<th>Address</th>' +
+                '<th>Phone</th>' +
+                '</tr>';
 
         var endStr = '</table>';
         var dataStr = '';
@@ -963,7 +1002,7 @@ $(document).ready(function () {
             tr.addClass('shown');
         }
     });
-    
+
     /*==============================END DUONG - USER============================*/
 
 });
