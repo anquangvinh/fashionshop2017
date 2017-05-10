@@ -191,7 +191,9 @@ public class Blog_Controller {
             }
         }
         newBlogs.setBlogTitleNA(shareFunc.changeText(newBlogs.getBlogTitle()));
+        newBlogs.setContent(Request.getParameter("editor1"));
         newBlogs.setPostedDate(new Date());
+        newBlogs.setBlogViews(0);
         try {
             if (image.isEmpty()) {
                 newBlogs.setBlogImg("defaultProduct.png");
@@ -237,7 +239,8 @@ public class Blog_Controller {
         String formattedDate = dateFormat.format(date);
         model.addAttribute("formattedDate", formattedDate);
         model.addAttribute("targetBlogs", targetBlogs);
-
+        model.addAttribute("editor1", targetBlogs.getContent());
+        
         return "admin/pages/blog-update";
     }
 
@@ -245,11 +248,12 @@ public class Blog_Controller {
     public String blogUpdate(@ModelAttribute("targetBlogs") Blogs updatedTargetBlogs,
             @PathVariable("blogID") Integer blogID,
             @RequestParam("upImage") MultipartFile image,
-            RedirectAttributes redirectAttr) {
+            RedirectAttributes redirectAttr, HttpServletRequest Request) {
         Blogs normalTargetProduct = blogsSB.findBlogsByID(blogID); //Blogs Khi chưa chỉnh sửa
 
         updatedTargetBlogs.setBlogTitleNA(shareFunc.changeText(updatedTargetBlogs.getBlogTitle()));
            updatedTargetBlogs.setPostedDate(new Date());
+           updatedTargetBlogs.setContent(Request.getParameter("editor1"));
         try {
             if (!image.isEmpty()) {
                 updatedTargetBlogs.setBlogImg(image.getOriginalFilename());

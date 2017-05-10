@@ -25,9 +25,15 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         session.setAttribute("request_url", base);
         
         if (session.getAttribute("email") != null) {
+//            if(session.getAttribute("request_url").equals(request.getContextPath() + "/admin/login.html")){
+//                response.sendRedirect(request.getContextPath() + "/admin/user/list.html");
+//                return true;
+//            }
             return true;
         } else {
             response.sendRedirect(request.getContextPath() + "/admin/login.html");
+//            session.setAttribute("urlLogin", request.getContextPath() + "/admin/login.html");
+//            session.setAttribute("a", request.getContextPath() + "/admin/login.html");
             //request.getContextPath(): get lấy đường link gốc (contextPath) của request. ở đây là http://localhost:8080/fashionshop
             return false;
         }

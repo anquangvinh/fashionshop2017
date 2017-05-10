@@ -17,13 +17,13 @@
                             ${error}
                             <ul class="form-list row">
                                 <li class="col-md-6 col-sm-6">
-                                    <label >Address 1 <em>*</em></label>
-                                    <form:input path="address" cssClass="input-text" />
+                                    <label >Address <em>*</em></label>
+                                    <form:input path="address" id="txt-address" cssClass="input-text" />
                                 </li>
 
                                 <li class="col-md-6 col-sm-6">
-                                    <label >Phone Number <em>*</em></label>
-                                    <form:input path="phoneNumber" cssClass="input-text" />
+                                    <label ><i class="fa fa-phone"></i> Phone Number <em>*</em></label>
+                                    <form:input path="phoneNumber" id="txt-phone" cssClass="input-text" />
                                 </li>
                             </ul>
                             <div class="buttons-set">

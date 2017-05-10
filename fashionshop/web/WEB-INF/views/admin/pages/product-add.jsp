@@ -3,7 +3,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!-- Page Content -->
 <div id="page-wrapper">
-    <div class="container-fluid">
+    <div class="container-fluid" id="fs-product-add-page">
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header"> 
@@ -89,18 +89,19 @@
                         </div>
 
                         <div class="col-md-7">
-                            <div class="form-group">
-                                <label for="description">Description</label>
-                                <textarea name="description" class="form-control" rows="5" id="fs-product-description"></textarea>
-                            </div>
-
                             <div class="form-group text-right">
-                                <button type="button" class="btn btn-primary next" title="Go to next step">
-                                    <i class="fa fa-arrow-circle-right" style="font-size: 18px"></i> <b>Next</b>
-                                </button>
-                            </div>
-                        </div>
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea name="description" class="form-control" rows="5" id="fs-product-description"></textarea>
+                                </div>
 
+                                <div class="form-group text-right">
+                                    <button type="button" class="btn btn-primary next" title="Go to next step">
+                                        <i class="fa fa-arrow-circle-right" style="font-size: 18px"></i> <b>Next</b>
+                                    </button>
+                                </div>
+                            </div>
+                         </div>
                     </div>
                 </fieldset><!-- /fieldset -->
 

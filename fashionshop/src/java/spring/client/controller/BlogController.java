@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import spring.ejb.BlogCategoriesSBLocal;
 import spring.ejb.BlogsSBLocal;
+import spring.ejb.ProductStateLessBeanLocal;
 import spring.ejb.UsersStateLessBeanLocal;
 import spring.entity.BlogCategories;
 import spring.entity.Blogs;
+import spring.entity.Categories;
 import spring.functions.SharedFunctions;
 
 @Controller
@@ -30,65 +32,65 @@ public class BlogController {
 
     BlogCategoriesSBLocal categoriesSB = lookupBlogCategoriesSBLocal();
     BlogsSBLocal blogsSB = lookupBlogsSBLocal();
-    
-        UsersStateLessBeanLocal usersStateLessBean = lookupUsersStateLessBeanLocal();
+    ProductStateLessBeanLocal productStateLessBean = lookupProductStateLessBeanLocal();
+    UsersStateLessBeanLocal usersStateLessBean = lookupUsersStateLessBeanLocal();
     BlogCategoriesSBLocal blogCategoriesSB = lookupBlogCategoriesSBLocal();
-    
-       @Autowired
-    SharedFunctions shareFunc;
-       
-         @Autowired
-    ServletContext app;
-         
-         
 
-//    @RequestMapping(value = "/blog")
-//    public String blog(@PathVariable("blogCateID") Integer blogCateID, ModelMap model) {
-//        List<Blogs> getBlogsListByCate = blogsSB.getListBlogsByCategory(blogCateID);
-//        model.addAttribute("blogsListClient", getBlogsListByCate);  
-//        return "client/pages/blog";
-//    }
-//    @RequestMapping(value = "/blog")
-//    public String blog(ModelMap model) {
-//        List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
-//        model.addAttribute("blogCateListClient", getBlogCateList); 
-//        return "client/pages/blog";
-//    }
-    
+    @Autowired
+    SharedFunctions shareFunc;
+
+    @Autowired
+    ServletContext app;
+
     @RequestMapping(value = "/blog")
     public String blog(ModelMap model) {
         List<Blogs> getShowAllBlogs = blogsSB.getAllBlogs();
         List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
+        //2 dòng này thêm để render ra menu chính
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
         model.addAttribute("blogListClient", getShowAllBlogs);
-        model.addAttribute("blogCateListClient", getBlogCateList); 
+        model.addAttribute("blogCateListClient", getBlogCateList);
+        model.addAttribute("PopularPosts", blogsSB.getAllBlogs());
         return "client/pages/blog";
     }
-    
-        @RequestMapping(value = "/blog-categories/{blogCateID}", method = RequestMethod.POST)
-    public String blog_categories(ModelMap model, @PathVariable("blogCateID") Integer blogCateID) {
-        BlogCategories blogCategories= blogCategoriesSB.findCategoryByID(blogCateID);
-        if (blogCategories != null) {
-            model.addAttribute("listBlog",blogCategories.getBlogList());
-        }
-//            BlogCategories blogCategories= blogCategoriesSB.findCategoryByID(blogCateID);
-//        if (blogCategories != null) {
-//            model.addAttribute("listBlog",blogCategories.getBlogList());
-//        }
-//        List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
-//        model.addAttribute("blogCateListClient", getBlogCateList); 
+
+    @RequestMapping(value = "blog-categories/{blogCateID}")
+    public String blog_categories(@PathVariable("blogCateID") Integer blogCateID, ModelMap model) {
+        List<Blogs> getBlogsListByCate = blogsSB.getListBlogsByCategory(blogCateID);
+        List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
+//        model.addAttribute("PopularPostsBlogCate", blogsSB.getAllBlogs());
+        model.addAttribute("getBlogCateList", getBlogCateList);
+        model.addAttribute("getBlogsListByCate", getBlogsListByCate);
+        model.addAttribute("PopularPosts", blogsSB.getAllBlogs());
+      //2 dòng này thêm để render ra menu chính
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
         return "client/pages/blog-categories";
     }
-    
 
-    @RequestMapping(value = "/blog/detail")
+    @RequestMapping(value = "blog-detail/{blogID}")
+    public String blogdetail(@PathVariable("blogID") Integer blogID, ModelMap model) {
+        Blogs getShowAllBlogsDetail = blogsSB.findBlogsByID(blogID);
+        List<BlogCategories> getBlogCateListDetail = blogCategoriesSB.getBlogCategoriesList();
+        model.addAttribute("getShowAllBlogsDetail", getShowAllBlogsDetail);
+        model.addAttribute("getBlogCateListDetail", getBlogCateListDetail);
+        model.addAttribute("PopularPosts", blogsSB.getAllBlogs());
+        if (getShowAllBlogsDetail != null) {
+            Blogs blogUpdateView = getShowAllBlogsDetail;
+            blogUpdateView.setBlogViews(getShowAllBlogsDetail.getBlogViews() + 1);
+            blogsSB.editBlogs(blogUpdateView);
+        }
+        return "client/pages/blog-details";
+    }
+
+    @RequestMapping(value = "blog-detail")
     public String blogdetail(ModelMap model) {
-//        , @PathVariable("blogCateID") Integer blogCateID 
-//           List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
-//           Blogs bloglistdetail = blogsSB.findBlogsByID(id);
-//           if (id == null){
-//               model.addAttribute("")
-//           }
-//        model.addAttribute("blogCateListClientDetail", getBlogCateList); 
+        model.addAttribute("getBlogCateListDetail", blogCategoriesSB.getBlogCategoriesList());
+        model.addAttribute("getShowAllBlogsDetail", blogsSB.getAllBlogs());
+        //2 dòng này thêm để render ra menu chính
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
         return "client/pages/blog-details";
     }
 
@@ -113,9 +115,19 @@ public class BlogController {
     }
 
     private UsersStateLessBeanLocal lookupUsersStateLessBeanLocal() {
- try {
+        try {
             Context c = new InitialContext();
             return (UsersStateLessBeanLocal) c.lookup("java:global/fashionshop/UsersStateLessBean!spring.ejb.UsersStateLessBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+    
+    private ProductStateLessBeanLocal lookupProductStateLessBeanLocal() {
+        try {
+            Context c = new InitialContext();
+            return (ProductStateLessBeanLocal) c.lookup("java:global/fashionshop/ProductStateLessBean!spring.ejb.ProductStateLessBeanLocal");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);

@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!-- SLIDER -->
 <div class="slider-wrap">
@@ -233,8 +234,8 @@
                                          fs-product="${product.productID}" 
                                          fs-product-modal-color="${product.productColorList[0].colorID}" 
                                          data-toggle="modal" >
-<!--                                         data-target="#productModal"-->
-                                         
+                                        <!--                                         data-target="#productModal"-->
+
                                     </div>
                                     <div class="product-overlay">
                                         <a href="#" class="addcart fa fa-shopping-cart"></a>
@@ -311,62 +312,69 @@
 <div class="home-blog">
     <div class="container">
         <h5 class="heading space40"><span>Latest from our blog</span></h5>
+
         <div class="row">
-            <div class="col-md-4 col-sm-4">
-                <article class="home-post text-center">
-                    <div class="post-thumb">
-                        <a href="./blog-single.html">
-                            <img src="assets/images/blog/1/1.jpg" class="img-responsive" alt=""/>
-                            <div class="overlay-rmore fa fa-link"></div>
-                        </a>
-                    </div>
-                    <div class="post-excerpt">
-                        <h4><a href="./blog-single.html">A Beautiful & Creative design</a></h4>
-                        <div class="hp-meta">
-                            <span><i class="fa fa-edit"></i> September 25, 1989</span>
-                            <span><i class="fa fa-comment-o"></i> <a href="#">2037 Comments</a></span>
+            <c:forEach items="${blogListIndex}" var="blog" begin="0" end="2" varStatus="no">
+                <div class="col-md-4 col-sm-4">
+                    <article class="home-post text-center">
+                        <div class="post-thumb">
+                            <a href="./blog-detail/${blog.blogID}.html">
+                                <img src="assets/images/blog/1/${blog.blogImg}" class="img-responsive" alt=""/>
+                                <div class="overlay-rmore fa fa-link"></div>
+                            </a>
                         </div>
-                        <p>Fusce id viverra leo, quis sollicitudin risus. Sed maximus dictum semper. Sed laoreet euismod dui [..]</p>
-                    </div>
-                </article>
-            </div>
-            <div class="col-md-4 col-sm-4">
-                <article class="home-post text-center">
-                    <div class="post-thumb">
-                        <a href="./blog-single.html">
-                            <img src="assets/images/blog/1/2.jpg" class="img-responsive" alt=""/>
-                            <div class="overlay-rmore fa fa-link"></div>
-                        </a>
-                    </div>
-                    <div class="post-excerpt">
-                        <h4><a href="./blog-single.html">A Beautiful & Creative design</a></h4>
-                        <div class="hp-meta">
-                            <span><i class="fa fa-edit"></i> September 25, 1989</span>
-                            <span><i class="fa fa-comment-o"></i> <a href="#">2037 Comments</a></span>
+                        <div class="post-excerpt">
+                            <h4><a href="./blog-detail/${blog.blogID}.html">${blog.blogTitle}</a></h4>
+                            <div class="hp-meta">
+<!--                                <span><i class="fa fa-edit"></i>${blog.postedDate}</span>  -->
+                                <span><fmt:formatDate pattern="dd/MM/yyyy" value="${blog.postedDate}"/></span>
+                            </div>
+                            <p>${blog.blogSummary}</p>
                         </div>
-                        <p>Fusce id viverra leo, quis sollicitudin risus. Sed maximus dictum semper. Sed laoreet euismod dui [..]</p>
-                    </div>
-                </article>
-            </div>
-            <div class="col-md-4 col-sm-4">
-                <article class="home-post text-center">
-                    <div class="post-thumb">
-                        <a href="./blog-single.html">
-                            <img src="assets/images/blog/1/3.jpg" class="img-responsive" alt=""/>
-                            <div class="overlay-rmore fa fa-link"></div>
-                        </a>
-                    </div>
-                    <div class="post-excerpt">
-                        <h4><a href="./blog-single.html">A Beautiful & Creative design</a></h4>
-                        <div class="hp-meta">
-                            <span><i class="fa fa-edit"></i> September 25, 1989</span>
-                            <span><i class="fa fa-comment-o"></i> <a href="#">2037 Comments</a></span>
-                        </div>
-                        <p>Fusce id viverra leo, quis sollicitudin risus. Sed maximus dictum semper. Sed laoreet euismod dui [..]</p>
-                    </div>
-                </article>
-            </div>
+                    </article>   
+                </div>
+            </c:forEach>
         </div>
+
+
+        <!--        <div class="col-md-4 col-sm-4">
+                        <article class="home-post text-center">
+                            <div class="post-thumb">
+                                <a href="./blog-single.html">
+                                    <img src="assets/images/blog/1/2.jpg" class="img-responsive" alt=""/>
+                                    <div class="overlay-rmore fa fa-link"></div>
+                                </a>
+                            </div>
+                            <div class="post-excerpt">
+                                <h4><a href="./blog-single.html">${blog.blogTitle}</a></h4>
+                                <div class="hp-meta">
+                                    <span><i class="fa fa-edit"></i> ${blog.postedDate}</span>
+                                    <span><i class="fa fa-comment-o"></i> <a href="#">2037 Comments</a></span>
+                                </div>
+                                <p>${blog.blogSummary}</p>
+                            </div>
+                        </article>
+                </div>-->
+
+        <!--        <div class="col-md-4 col-sm-4">
+                    <article class="home-post text-center">
+                        <div class="post-thumb">
+                            <a href="./blog-single.html">
+                                <img src="assets/images/blog/1/3.jpg" class="img-responsive" alt=""/>
+                                <div class="overlay-rmore fa fa-link"></div>
+                            </a>
+                        </div>
+                        <div class="post-excerpt">
+                            <h4><a href="./blog-single.html">A Beautiful & Creative design</a></h4>
+                            <div class="hp-meta">
+                                <span><i class="fa fa-edit"></i> September 25, 1989</span>
+                                <span><i class="fa fa-comment-o"></i> <a href="#">2037 Comments</a></span>
+                            </div>
+                            <p>Fusce id viverra leo, quis sollicitudin risus. Sed maximus dictum semper. Sed laoreet euismod dui [..]</p>
+                        </div>
+                    </article>
+                </div>-->
+
     </div>
 </div>
 
@@ -388,7 +396,7 @@
                                      fs-product="${ltp.productID}" 
                                      fs-product-modal-color="${ltp.productColorList[0].colorID}" 
                                      data-toggle="modal" ></div>
-<!--                                     data-target="#productModal"-->
+                                <!--                                     data-target="#productModal"-->
                                 <div class="product-overlay">
                                     <a href="#" class="addcart fa fa-shopping-cart"></a>
                                     <a href="#" class="compare fa fa-signal"></a>
@@ -479,16 +487,8 @@
             <div class="col-md-4 col-sm-4">
                 <h6>Recent Products</h6>
                 <div class="f-widget-content">
-                    <ul>
-                        <li>
-                            <div class="fw-thumb">
-                                <img src="assets/images/products/fashion/4.jpg" alt=""/>
-                            </div>
-                            <div class="fw-info">
-                                <h4><a href="./single-product.html">Product fashion</a></h4>
-                                <span class="fw-price">$ 99.00</span>
-                            </div>
-                        </li>
+                    <ul id="fs-recent-product-index-page">
+                        
                     </ul>
                 </div>
             </div>

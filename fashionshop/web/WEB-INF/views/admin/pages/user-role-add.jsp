@@ -18,18 +18,18 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="col-lg-6">
-                    <form:form action="admin/user/role/create.html" method="post" modelAttribute="role">
-                        ${error}
+                    <form:form id="fs-form-create-role" action="admin/user/role/create.html" method="post" modelAttribute="role">
+                        <p>${error}</p>
                         <div class="form-group">
                             <label>Role Name:</label>
-                            <form:input cssClass="form-control" path="roleName" />
-
+                            <div class="fs-aaa">
+                            <form:input cssClass="form-control" path="roleName" id="fs-roleName-create" placeholder="Enter Role Name" />
+                            </div>
                             <!--Error Message-->
-                            <!--<p class="help-block">Error Message will be here!!!</p>-->
+                            <p class="help-block" id="fs-create-roleName-error"></p>
                         </div>
-
-                        <button type="submit" class="btn btn-success">Create</button>
-                        <button type="reset" class="btn btn-default">Reset</button>
+                            <button type="submit" id="fs-button-create-role" class="btn btn-success"><i class="fa fa-plus"></i> Create</button>
+                            <button type="reset" class="btn btn-default"><i class="fa fa-repeat"></i> Reset</button>
                     </form:form>
                 </div>
             </div>

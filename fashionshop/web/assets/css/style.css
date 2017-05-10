@@ -37,7 +37,7 @@ Author: JTHEMES
 
 body {
     font-family: 'Raleway', sans-serif;
-    font-size: 13px;
+    font-size: 14px;
     color: #444;
     background: #FFF url("../images/pattern/wood_pattern.png") 
 }
@@ -48,7 +48,7 @@ h1,h2,h3,h4,h5,h6 {
 
 p {
     color: #666666;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 22px;
 }
 
@@ -187,7 +187,7 @@ header {
     line-height: 32px;
     text-align: center;
     margin-left: 3px;
-    font-size: 13px;
+    font-size: 14px;
     color: #444;
     cursor: pointer;
     transition: .4s;
@@ -463,15 +463,15 @@ h5.heading2 span {
 
 .product-price em {
     font-family: Raleway;
-    font-size: 13px;
+    font-size: 14px;
     color: #666;
     font-weight: 400;
-    font-size: 13px;
+    font-size: 14px;
     font-style: normal;
 }
 
 .product-price .cutprice {
-    font-size: 13px;
+    font-size: 14px;
     color: #888888;
     text-decoration: line-through;
 }
@@ -655,7 +655,7 @@ h5.heading2 span {
     line-height: 34px;
     display: table;
     padding: 0 15px;
-    font-size: 13px;
+    font-size: 14px;
     color: #333333;
     position: relative;
     font-weight: 500;
@@ -760,7 +760,7 @@ h5.heading2 span {
 
 .pi-wrap p {
     color: #CCC;
-    font-size: 13px;
+    font-size: 14px;
     padding: 20px 0 0;
     margin: 0;
 }
@@ -797,7 +797,7 @@ h5.heading2 span {
 
 .hp-meta span {
     color: #888888;
-    font-size: 13px;
+    font-size: 14px;
     margin: 0 3px;
 }
 
@@ -1058,7 +1058,7 @@ h5.heading2 span {
 }
 
 .quote-info cite {
-    font-size: 13px;
+    font-size: 14px;
     color: #d6644a;
     font-style: normal;
 }
@@ -1227,7 +1227,7 @@ footer {
 
 .tweets_txt,
 .widget-footer p {
-    font-size: 13px;
+    font-size: 14px;
     color: #bbb;
 }
 
@@ -1294,7 +1294,7 @@ footer {
 .widget-tags li a {
     height: 30px;
     border: 1px solid #393939;
-    font-size: 13px;
+    font-size: 14px;
     color: #888;
     line-height: 28px;
     padding: 0 10px;
@@ -1522,7 +1522,7 @@ footer {
     width: 331px;
     height: 50px;
     font-family: Raleway;
-    font-size: 13px;
+    font-size: 14px;
     padding: 0 20px;
     line-height: 48px;
 }
@@ -1578,7 +1578,7 @@ footer {
 
 .cart-info small {
     color: #444;
-    font-size: 13px;
+    font-size: 14px;
     text-transform: none;
     border-bottom: 1px solid #e8e8e8;
     padding-bottom: 12px;
@@ -1702,7 +1702,7 @@ footer {
 }
 
 .text-style1 p {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: bold;
     color: #fff;
     text-transform: uppercase;
@@ -1727,7 +1727,7 @@ footer {
 }
 
 .text-style2 p {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: bold;
     color: #fff;
     text-transform: uppercase;
@@ -1959,7 +1959,7 @@ footer {
 #policy2 .pi-wrap p {
     margin: 0 0 0 65px;
     color: #666666;
-    font-size: 13px;
+    font-size: 14px;
     padding: 20px 0 0;
     line-height: 18px;
 }
@@ -2046,7 +2046,7 @@ footer {
 
 .quote-simple .quote-info p {
     color: #666666;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .f-categories {
@@ -2073,7 +2073,7 @@ footer {
 }
 
 .text-style4 p {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: bold;
     color: #fff;
     text-transform: uppercase;
@@ -2265,7 +2265,7 @@ footer {
     border-bottom: 1px solid #ededed;
     padding: 10px 40px 10px 20px !important;
     font-family: Raleway;
-    font-size: 13px;
+    font-size: 14px;
     color: #666;
     display: table;
     width: 100%;
@@ -2288,7 +2288,7 @@ footer {
     border-bottom: 1px solid #ededed;
     padding: 10px 0 10px 17px;
     font-family: Raleway;
-    font-size: 13px;
+    font-size: 14px;
     color: #666;
     text-transform: none;
     position: relative !important;
@@ -2372,7 +2372,7 @@ footer {
 #home2 .home-carousel .slick-next:after {
     content: "\f054";
     font-family: 'FontAwesome';
-    font-size: 13px;
+    font-size: 14px;
 }
 
 #home2 .home-carousel .slick-prev {
@@ -2397,7 +2397,7 @@ footer {
 #home2 .home-carousel .slick-prev:after {
     content: "\f053";
     font-family: 'FontAwesome';
-    font-size: 13px;
+    font-size: 14px;
 }
 
 #home2 .home-carousel .slick-next:hover ,
@@ -2505,7 +2505,7 @@ footer {
     border: medium none;
     background: transparent;
     color: #888;
-    font-size: 13px;
+    font-size: 14px;
     height: 35px;
     line-height: 33px;
     position: absolute;
@@ -2670,7 +2670,7 @@ footer {
 .color-list li a ,
 .size-list li a ,
 .cat-list 	li a {
-    font-size: 13px;
+    font-size: 14px;
     color: #666666;
 }
 
@@ -3112,7 +3112,7 @@ footer {
 }
 
 .ps-price span {
-    font-size: 13px;
+    font-size: 14px;
     text-decoration: line-through;
     color: #aaa;
 }
@@ -3187,13 +3187,13 @@ footer {
 
 .ps-slider div span a i {
     color: #333333;
-    font-size: 13px;
+    font-size: 14px;
     margin-right: 5px;
 }
 
 .ps-slider div span a {
     color: #666666;
-    font-size: 13px;
+    font-size: 14px;
     margin-right: 27px;
 }
 
@@ -3550,7 +3550,7 @@ footer {
 }
 
 .ul i {
-    font-size: 13px;
+    font-size: 14px;
     color: #aaaaaa;
     margin-right: 7px;
 }
@@ -3673,7 +3673,7 @@ footer {
     border: medium none;
     background: transparent;
     color: #888;
-    font-size: 13px;
+    font-size: 14px;
     height: 35px;
     line-height: 33px;
     position: absolute;
@@ -3736,7 +3736,7 @@ footer {
     font-weight: 400;
     text-align: center;
     font-family: Montserrat;
-    font-size: 13px;
+    font-size: 14px;
     color: #fff;
     text-shadow: 1px 1px 2px rgba(0,0,0,.08);
     position: absolute;
@@ -3831,7 +3831,7 @@ footer {
     padding: 0px;
     font-family: "Raleway",sans-serif;
     color: #666;
-    font-size: 13px;
+    font-size: 14px;
     margin: 0px 0px 35px;
 }
 
@@ -4019,7 +4019,7 @@ button.close {
 
 .top-product-carousel .slick-next::after ,
 .top-product-carousel .slick-prev::after {
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .top-product-carousel .slick-next:hover,
@@ -4176,7 +4176,7 @@ button.close {
     top: -12px;
     padding: 0 7px;
     font-family: Raleway;
-    font-size: 13px;
+    font-size: 14px;
     text-transform: none;
     margin-left: -25px;
 }
@@ -4201,7 +4201,7 @@ button.close {
     top: -12px;
     padding: 0 7px;
     font-family: Raleway;
-    font-size: 13px;
+    font-size: 14px;
     text-transform: none;
     margin-left: -25px;
 }
@@ -4272,7 +4272,7 @@ button.close {
     color: #fff;
     font-family: 'Montserrat', sans-serif;
     text-transform: uppercase;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .filter-wrap .col-md-5 ,
@@ -4348,7 +4348,7 @@ input.css-checkbox[type="radio"] + label.css-label {
     line-height: 12px;
     background-repeat: no-repeat;
     background-position: 0px 0px;
-    font-size: 13px;
+    font-size: 14px;
     vertical-align: middle;
     cursor: pointer;
     font-weight: 400;
@@ -4695,7 +4695,7 @@ label.css-label {
     }
 
     .c-text p {
-        font-size: 13px;
+        font-size: 14px;
     }
 
     .text-style1 h6 {
