@@ -2,7 +2,7 @@
 <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-ku">
         <div class="modal-content">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            <button type="button" class="close fs-modal-close" data-dismiss="modal" aria-hidden="true">
                 <i class="fa fa-times"></i>
             </button>
             <div class="row">
@@ -17,6 +17,7 @@
                 </div>
                 <div class="col-md-7 col-sm-6">
                     <div class="product-single fs-modal-product">
+                        <p class="help-block fs-modal-error" style="font-weight: 700;"></p>
                         <div class="ps-header">
                             <h3 class="fs-product-name"></h3>
                             <div class="ps-price fs-product-price"></div>
@@ -72,7 +73,9 @@
                         </div>
                         <div class="space20"></div>
                         <div class="sep"></div>
-                        <a class="fs-modal-btn-addtobag" href="#">Add to Bag</a>
+                        <!--<form method="POST" action="">-->
+                            <a class="fs-modal-btn-addtobag" href="#">Add to Bag</a>
+                        <!--</form>-->
                         <a class="fs-product-modal-link-to-detail" href="#">Go to Details</a>
                     </div>
                 </div>

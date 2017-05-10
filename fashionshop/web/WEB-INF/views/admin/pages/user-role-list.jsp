@@ -31,9 +31,14 @@
                                 <td class="text-center fs-valign-middle">${no.index + 1}</td>
                                 <td class="text-center fs-valign-middle">${roles.roleName}</td>
                                 <td class="text-center fs-valign-middle">
-                                    <a href="admin/user/role/edit/${roles.roleID}.html" class="btn btn-warning">Update</a>
-                                    <a href="#" class="btn btn-danger">Delete</a>
-                                </td>
+                                    <a href="admin/user/role/edit/${roles.roleID}.html" class="btn btn-warning"><i class="fa fa-edit"></i> Update</a>
+                                    <c:if test="${empty roles.userList}">
+                                        <a class="btn fs-button-detele-role btn-danger" id="fs-delete-button-role" fs-roleID="${roles.roleID}"><i class="fa fa-remove"></i> Delete</a>
+                                    </c:if>
+                                    <c:if test="${not empty roles.userList}">
+                                        <a class="btn fs-button-detele-role btn-danger disabled" fs-roleID="${roles.roleID}"><i class="fa fa-remove"></i> Delete</a>
+                                    </c:if>
+                                      </td>
                             </tr>
                         </c:forEach>
                     </tbody>

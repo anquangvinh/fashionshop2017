@@ -50,6 +50,21 @@ public class User_Controller {
         return "admin/pages/user-role-list";
     }
 
+    @ResponseBody
+    @RequestMapping(value = "checkRoleName", method = RequestMethod.POST)
+    public String roleCheck(ModelMap model){
+        List<Roles> roleNameList = rolesStateLessBean.findRName();
+        ObjectMapper om  = new ObjectMapper();
+        String json = "";
+        try {
+            json = om.writeValueAsString(roleNameList);
+        } catch (Exception e) {
+            Logger.getLogger(User_Controller.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return json;
+    }
+    
+    
     @RequestMapping(value = "role/create", method = RequestMethod.GET)
     public String userRoleAdd(ModelMap model) {
         Roles role = new Roles();
@@ -80,9 +95,11 @@ public class User_Controller {
     public String userStatusUpdate(@RequestParam("userID") Integer userID,
             @RequestParam("status") Short status) {
         if (usersStateLessBean.updateStatusUser(userID, status)) {
-            return "ok";
+            return "OK";
+//            return "redirect:/admin/user/list.html";
         } else {
-            return "fail";
+            return "FAIL";
+//             return "redirect:/admin/user/list.html";
         }
     }
 
@@ -91,9 +108,9 @@ public class User_Controller {
     public String userRoleUpdate(ModelMap model, @RequestParam("userID") Integer userID,
             @RequestParam("roleID") Integer roleID) {
         if (rolesStateLessBean.editRolesForUsers(userID, roleID)) {
-            return "thành công";
+            return "OK";
         }
-        return "thất bại";
+        return "FAIL";
     }
 
     @RequestMapping(value = "role/edit/{roleID}", method = RequestMethod.GET)
@@ -121,11 +138,30 @@ public class User_Controller {
     @RequestMapping(value = "ajax/getUserAddress", method = RequestMethod.POST)
     public String getUserAddress(@RequestParam("userID") Integer userID){
         List<UserAddresses> userAddressList = usersStateLessBean.getUserByID(userID).getUserAddressList();
+        List<Users> userIDList = usersStateLessBean.getAllUserID(userID);
+
+        ObjectMapper om = new ObjectMapper();
+        String json = "";
+//        String json1 = "";
+        try {
+            json = om.writeValueAsString(userAddressList); //Chuyển list sang chuỗi JSON (com.fasterxml.jackson.databind.ObjectMapper;)
+//            json1 = om.writeValueAsString(userIDList);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(User_Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return json;
+    }
+    
+    @ResponseBody 
+    @RequestMapping(value = "ajax/getUsersByID", method = RequestMethod.POST)
+    public String getUsersByID(@RequestParam("userID") Integer userID){
+        List<Users> userIDList = usersStateLessBean.getAllUserID(userID);
         
         ObjectMapper om = new ObjectMapper();
         String json = ""; 
         try {
-            json = om.writeValueAsString(userAddressList); //Chuyển list sang chuỗi JSON (com.fasterxml.jackson.databind.ObjectMapper;)
+            json = om.writeValueAsString(userIDList); //Chuyển list sang chuỗi JSON (com.fasterxml.jackson.databind.ObjectMapper;)
         } catch (JsonProcessingException ex) {
             Logger.getLogger(User_Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -138,6 +174,22 @@ public class User_Controller {
         return rolesStateLessBean.getRole();
     }
 
+    
+    @RequestMapping(value = "role/delete/{roleID}", method = RequestMethod.POST)
+    public String deteleRoleID(@PathVariable("roleID") int roleID, ModelMap model){
+        
+        int error = rolesStateLessBean.deleteRole(roleID);
+        if(error == 2){
+            model.addAttribute("error", "Không thể xóa");
+        }else if(error == 1){
+            model.addAttribute("error", "OK");
+        }else{
+            model.addAttribute("error", "lỗi");
+        }
+        
+        return "redirect:/admin/user/role.html";
+    }
+    
     private UsersStateLessBeanLocal lookupUsersStateLessBeanLocal() {
         try {
             Context c = new InitialContext();

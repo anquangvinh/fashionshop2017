@@ -43,7 +43,7 @@
                             ${error}
                             <ul class="form-list row">
                                 <li class="col-md-12 col-sm-12">
-                                    <label>Email <em>*</em></label>
+                                    <label><i class="fa fa-envelope"></i> Email <em>*</em></label>
                                     <form:input path="email" cssClass="input-text"/>
                                 </li>
                                 <li class="col-md-6 col-sm-12">
@@ -55,20 +55,20 @@
                                     <form:input path="lastName" cssClass="input-text" />
                                 </li>
                                 <li class="col-md-6 col-sm-12">  
-                                    <label>Gender</label>
+                                    <label><i class="fa fa-venus-mars"></i> Gender</label>
                                     <br>
                                     <div class="text-center fs-login-gender">
                                         <label>
-                                            <form:radiobutton path="gender" value="1" checked="checked" />Male 
+                                            <form:radiobutton path="gender" value="1" checked="checked" /><i class="fa fa-male"></i> Male 
                                         </label>
                                         &nbsp;&nbsp;&nbsp;
                                         <label>
-                                            <form:radiobutton path="gender" value="0" />Female 
+                                            <form:radiobutton path="gender" value="0" /><i class="fa fa-female"></i> Female 
                                         </label>
                                     </div>
                                 </li>
                                 <li class="col-md-6 col-sm-12">  
-                                    <label>Birthday</label>
+                                    <label><i class="fa fa-birthday-cake"></i> Birthday</label>
                                     <form:input path="birthday" id="txtBirthday" cssClass="input-text" />
                                 </li>
 <!--                                

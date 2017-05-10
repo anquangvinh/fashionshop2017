@@ -37,5 +37,6 @@ public interface UsersStateLessBeanLocal {
     
     int checkLoginUser(String email, String pass);
     void changePass(int userID, String newpass);
+    List<Users> getAllUserID(int userID);
 //    boolean changePass(int userID, String pass, String repass);
 }

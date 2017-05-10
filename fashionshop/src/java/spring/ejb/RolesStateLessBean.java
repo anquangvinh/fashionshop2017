@@ -90,6 +90,7 @@ public class RolesStateLessBean implements RolesStateLessBeanLocal {
                 error = 0;
             }
         }
+        else{
         
         if(rolenew != null){
             error = 2; // trùng
@@ -101,8 +102,41 @@ public class RolesStateLessBean implements RolesStateLessBeanLocal {
                 error = 2;
             }
         }
-        
+        }
         return error;
+    }
+
+    @Override
+    public List<Users> listRoleUserID(int roleID) {
+       Query q = getEm().createQuery("SELECT u.userID FROM Users u WHERE u.role.roleID = :roleID", Users.class);
+       q.setParameter("roleID", roleID);
+       return q.getResultList();
+    }
+
+    @Override
+    public int deleteRole(int roleID) {
+        int error;
+        List<Users> listRoleUser = listRoleUserID(roleID);
+        if(listRoleUser.isEmpty()){
+            try {
+                Roles role = findRoles(roleID);
+                if(role != null){
+                    getEm().remove(role);   
+                }
+                error = 1; //xóa thành công
+            } catch (Exception e) {
+                error = 0;
+            }
+        }else{
+            error = 2; //không được xóa
+        }
+        return error;
+    }
+
+    @Override
+    public List<Roles> findRName() {
+        Query q = getEm().createQuery("SELECT r.roleName FROM Roles r", Roles.class);
+        return q.getResultList();
     }
     
     

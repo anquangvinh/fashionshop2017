@@ -18,6 +18,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import spring.ejb.RolesStateLessBeanLocal;
 import spring.ejb.UsersStateLessBeanLocal;
 import spring.functions.SharedFunctions;
@@ -41,21 +42,36 @@ public class LoginController {
             @RequestParam("email") String email,
             @RequestParam("password") String password,
             HttpSession session,
-            HttpServletRequest request) {
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
         int error = usersStateLessBean.login(email, sharedFunc.encodePassword(password));
         if (error == 1) {
             session.setAttribute("email", email);
-            return "redirect:" + session.getAttribute("request_url");
+//            Object a = session.getAttribute("urlLogin");
+//            if (session.getAttribute("request_url").equals(a)) {
+//                return "redirect:/admin/user/list.html";
+//            } else {
+                return "redirect:" + session.getAttribute("request_url");
+//            }
         } else if (error == 2) {
-            model.addAttribute("error", "sai email");
+            model.addAttribute("error", "<div class=\"alert alert-danger\">FAILED!. Error Email Wrong!</div>");
+//            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-danger\">FAILED!. Error Email Wrong!</div>");
         } else if (error == 3) {
-            model.addAttribute("error", "You are not allow here!");
+            model.addAttribute("error", "<div class=\"alert alert-danger\">FAILED!. Error Wrong!</div>");
+//            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-danger\">FAILED!. Error Wrong!</div>");
         } else {
-            model.addAttribute("error", "sai pass");
+//            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-danger\">FAILED!. Error Password Wrong!</div>");
+            model.addAttribute("error", "<div class=\"alert alert-danger\">FAILED!. Error Password Wrong!</div>");
         }
         return "admin/login";
     }
 
+    @RequestMapping(value = "/admin/logout")
+    public String logOut(HttpSession session){
+        session.removeAttribute("email");
+        
+        return "redirect:/admin/login.html";
+    }
     private UsersStateLessBeanLocal lookupUsersStateLessBeanLocal() {
         try {
             Context c = new InitialContext();

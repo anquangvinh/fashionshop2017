@@ -230,4 +230,11 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
         return error;
     }
 
+    @Override
+    public List<Users> getAllUserID(int userID) {
+        Query q = getEm().createQuery("SELECT u FROM Users u WHERE u.userID = :userID", Users.class);
+        q.setParameter("userID", userID);
+        return q.getResultList();
+    }
+
 }
