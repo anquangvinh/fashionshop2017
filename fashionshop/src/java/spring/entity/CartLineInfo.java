@@ -42,7 +42,11 @@ public class CartLineInfo {
         this.quantity = quantity;
     }
     
-    public float getAmount(){
-        return this.product.getPrice() * this.quantity;
+    public float getSubTotal(){
+        return ((product.getPrice() * quantity)-((product.getPrice() * (product.getProductDiscount()/100))*quantity));
+    }
+    
+    public float getProductDiscount(){
+        return this.product.getProductDiscountPrice() * this.quantity;
     }
 }

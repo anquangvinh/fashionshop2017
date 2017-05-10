@@ -62,6 +62,10 @@ public class Products implements Serializable {
     @JsonManagedReference
     private List<WishList> wishList;
 
+    public float getProductDiscountPrice(){
+        return (price * (Float.parseFloat(productDiscount.toString())/100));
+    }
+    
     public Integer getProductID() {
         return productID;
     }

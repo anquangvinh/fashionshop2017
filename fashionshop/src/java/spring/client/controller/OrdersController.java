@@ -9,7 +9,6 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,7 +21,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import spring.ejb.OrderStateFulBeanLocal;
 import spring.ejb.OrderStateLessBeanLocal;
 import spring.ejb.ProductStateLessBeanLocal;
-import spring.ejb.UserAddressesStateLessBean;
 import spring.ejb.UserAddressesStateLessBeanLocal;
 import spring.ejb.UsersStateLessBeanLocal;
 import spring.entity.CartLineInfo;
@@ -59,23 +57,54 @@ public class OrdersController {
                 return "redirect:/" + pro.getProductID() + "-" + pro.getProductColorList().get(0).getColorID() + "-" + pro.getProductNameNA() + ".html";
             } else {
                 if (sizesByColor != null) {
+                    if (sizesByColor.getQuantity() < newCartLineInfoByID.getQuantity()) {
+                        flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
+                                  + "<strong>Danger!</strong> Not enough stock! Please enter different quantity.\n"
+                                  + "</div>");
+                        return "redirect:/" + pro.getProductID() + "-" + pro.getProductColorList().get(0).getColorID() + "-" + pro.getProductNameNA() + ".html";
+                    }
                     CartLineInfo cartLineInfo = new CartLineInfo();
                     cartLineInfo.setProduct(pro);
                     cartLineInfo.setSizesByColor(sizesByColor);
                     cartLineInfo.setQuantity(newCartLineInfoByID.getQuantity());
                     orderStateFulBean.addProduct(cartLineInfo);
                     flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
-                            + "<strong>Success!</strong> Add Product to Cart Successfully!.\n"
-                            + "</div>");
+                              + "<strong>Success!</strong> Add Product to Cart Successfully!\n"
+                              + "</div>");
                     return "redirect:/" + pro.getProductID() + "-" + pro.getProductColorList().get(0).getColorID() + "-" + pro.getProductNameNA() + ".html";
                 }
                 flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
-                        + "<strong>Danger!</strong> Color and Size error!.\n"
-                        + "</div>");
+                          + "<strong>Danger!</strong> Color and Size error!\n"
+                          + "</div>");
                 return "redirect:/" + pro.getProductID() + "-" + pro.getProductColorList().get(0).getColorID() + "-" + pro.getProductNameNA() + ".html";
             }
         }
         return "redirect:/index.html";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "ajax/addtocart", method = RequestMethod.POST)
+    public String ajaxAddtocart(@RequestParam("productID") Integer productID,
+              @RequestParam("sizeID") Integer sizeID,
+              @RequestParam("colorID") Integer colorID,
+              @RequestParam("quantity") Integer quantity) {
+        Products pro = orderStateLessBean.getProductByID(productID);
+        SizesByColor sizesByColor = orderStateLessBean.getSizesByColorBySizeIDandColorID(sizeID, colorID);
+        if (pro != null) {
+            if (sizesByColor != null) {
+                if (sizesByColor.getQuantity() < quantity) { 
+                    return "1"; //Not enough stock! Please enter different quantity.
+                }
+                CartLineInfo cartLineInfo = new CartLineInfo();
+                cartLineInfo.setProduct(pro);
+                cartLineInfo.setSizesByColor(sizesByColor);
+                cartLineInfo.setQuantity(quantity);
+                orderStateFulBean.addProduct(cartLineInfo); 
+                return "0"; //Add Product to Cart Successfully!
+            }
+            return "2"; //Color and Size error!
+        }
+        return "3";
     }
 
     @RequestMapping(value = "checkout", method = RequestMethod.GET)
@@ -101,17 +130,23 @@ public class OrdersController {
 
     @RequestMapping(value = "checkout", method = RequestMethod.POST)
     public String checkoutPost(ModelMap model, HttpServletRequest request, RedirectAttributes flashAttr) {
+        String addressChoice = request.getParameter("address-chose");
+        if (addressChoice == null) {
+            flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
+                      + "<strong>You must choose your ADDRESS METHOD!</strong>\n"
+                      + "</div>");
+            return "redirect:/orders/checkout.html";
+        }
         String success_orderID = "";
         String email = (String) request.getSession().getAttribute("emailUser");
         Users users = usersStateLessBean.findUserByEmail(email);
-        String addressChose = request.getParameter("address-chose");
         String discountCode = request.getParameter("discount-code-input");
         DiscountVoucher discountVoucher = null;
         if (discountCode != null) {
             discountVoucher = orderStateLessBean.getDiscountVoucherByID(discountCode);
         }
         String note = request.getParameter("note");
-        if (addressChose.equals("difference")) {
+        if (addressChoice.equals("difference")) {
             String firstname = request.getParameter("diffFirstname");
             String lastname = request.getParameter("diffLastname");
             String address = request.getParameter("diffAddress");
@@ -133,7 +168,7 @@ public class OrdersController {
             orders.setStatus(Short.parseShort("2"));
             success_orderID = orderStateFulBean.completePurchase(orders);
         } else {
-            UserAddresses userAddresses = userAddressesStateLessBean.findAddressID(Integer.parseInt(addressChose));
+            UserAddresses userAddresses = userAddressesStateLessBean.findAddressID(Integer.parseInt(addressChoice));
             if (userAddresses != null) {
                 String firstname = users.getFirstName();
                 String lastname = users.getLastName();
@@ -159,6 +194,9 @@ public class OrdersController {
             }
         }
         if (success_orderID.equals("000")) {
+            flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
+                      + "<strong>ERROR</strong>\n"
+                      + "</div>");
             return "redirect:/orders/checkout.html";
         } else {
             return "redirect:/orders/checkout-success/" + success_orderID + ".html";
@@ -235,15 +273,36 @@ public class OrdersController {
         if (email == null) {
             return "redirect:/user/login.html";
         }
-        HashMap<Orders, Float> order_total = new HashMap<>();
-        for (Orders orders : usersStateLessBean.findUserByEmail(email).getOrdersList()) {
-            order_total.put(orders, orderStateLessBean.sumTotalOrderDetail(orders.getOrderDetailList()));
-        }
+
+        model.addAttribute("orderList", orderStateLessBean.getAllOrderByUserID(usersStateLessBean.findUserByEmail(email).getUserID()));
         //2 dòng này thêm để render ra menu chính
         List<Categories> cateList = productStateLessBean.categoryList();
         model.addAttribute("cateList", cateList);
         model.addAttribute("orderList", order_total);
+
         return "client/pages/order-history";
+    }
+
+    @RequestMapping(value = "order-history-detail/{orderID}")
+    public String orderhistorydetail(ModelMap model, @PathVariable("orderID") Integer orderID, HttpServletRequest request) {
+        String email = (String) request.getSession().getAttribute("emailUser");
+        if (email == null) {
+            return "redirect:/user/login.html";
+        }
+        model.addAttribute("orderdetailList", orderStateLessBean.getAllOrderDetailByOrderID(orderID));
+        model.addAttribute("order", orderStateLessBean.getOrderByID(orderID));
+        return "client/pages/order-history-detail";
+    }
+
+    @RequestMapping(value = "cancelorder/{orderID}", method = RequestMethod.GET)
+    public String cancelorder(@PathVariable("orderID") Integer orderID) {
+        Orders order = orderStateLessBean.getOrderByID(orderID);
+        if (order != null) {
+            if (orderStateLessBean.confirmStatusOrder(order, Short.parseShort("0"))) {
+                return "redirect:/orders/order-history.html";
+            }
+        }
+        return "redirect:/orders/order-history.html";
     }
 
     @ResponseBody
@@ -314,20 +373,20 @@ public class OrdersController {
             if (discountVoucher.getQuantity() == 0) {
                 return "empty";
             } else {
-                float discountTotal = orderStateFulBean.subTotal() * discountVoucher.getDiscount();
+                float discountTotal = orderStateFulBean.subTotal() * discountVoucher.getFloatDiscount();
                 float orderTotal = orderStateFulBean.subTotal() - discountTotal;
                 String str_show_discount = "<tr>\n"
-                        + "                                    <th>Discount</th>\n"
-                        + "                                    <td>\n"
-                        + "                                        <div class=\"\">$" + discountTotal + "</div>\n"
-                        + "                                    </td> \n"
-                        + "                                </tr>\n"
-                        + "                                <tr>\n"
-                        + "                                    <th>Order Total</th>\n"
-                        + "                                    <td>\n"
-                        + "                                        <div class=\"grandTotal\">$" + orderTotal + "</div>\n"
-                        + "                                    </td> \n"
-                        + "                                </tr>";
+                          + "                                    <th>Discount</th>\n"
+                          + "                                    <td>\n"
+                          + "                                        <div class=\"\">-$" + discountTotal + "</div>\n"
+                          + "                                    </td> \n"
+                          + "                                </tr>\n"
+                          + "                                <tr>\n"
+                          + "                                    <th>Order Total</th>\n"
+                          + "                                    <td>\n"
+                          + "                                        <div class=\"grandTotal\">$" + orderTotal + "</div>\n"
+                          + "                                    </td> \n"
+                          + "                                </tr>";
                 return str_show_discount;
             }
         }

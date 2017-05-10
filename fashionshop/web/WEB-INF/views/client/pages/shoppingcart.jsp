@@ -21,7 +21,8 @@
                                 <th>Product Image</th>
                                 <th>Product Name</th>
                                 <th>Quantity</th>
-                                <th>Unit Price</th>
+                                <th>Price for one</th>
+                                <th>Product discount</th>
                                 <th>Subtotal</th>
                                 <th>Remove</th>
                             </tr>
@@ -45,7 +46,7 @@
                                                  style="width: 20px; height: 20px; display: inline;"/>
                                         </p>
                                     </td>
-                                    <td align="center">
+                                    <td style="width: 100px;" align="center">
                                         <select name="${item.getProduct().productID}-${item.getSizesByColor().getSizeID()}-${item.getSizesByColor().getColor().getColorID()}">
                                             <%
                                                 CartLineInfo cartLineInfo = (CartLineInfo) pageContext.getAttribute("item");
@@ -64,24 +65,37 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <div class="item-price">${item.getProduct().getPrice()}</div>
+                                        <div class="item-price">$${item.getProduct().getPrice()}</div>
                                     </td>
                                     <td>
-                                        <div class="item-price">${item.getAmount()}</div>
+                                        <div class="item-price">-$${item.getProductDiscount()}</div>
+                                    </td>
+                                    <td>
+                                        <div class="item-price">$${item.getSubTotal()}</div>
                                     </td>
                                     <td><a href="orders/deleteitemCart/${item.getProduct().productID}/${item.getSizesByColor().getSizeID()}/${item.getSizesByColor().getColor().getColorID()}.html"><i class="fa fa-trash-o"></i></a></td>
                                 </tr>
                             </c:forEach>
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5" align="right" style="padding-left: 750px;"><strong>Grand Total</strong></td>
+                                <td><strong>$${grandTotal}</strong></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
                     </table>
                     <div class="table-btn">
                         <a href="index.html" class="btn-black pull-left">Continue Shopping</a>
                         <button type="submit" class="btn-black pull-right">Update Shopping Cart</button>
                     </div>
                 </form>
-                <div class="clearfix space20"></div>
-                <div class="row shipping-info-wrap">
-                    <div class="col-md-4 col-sm-4 col-xs-12">
+                <div class="table-btn" style="padding-top: 10px;">
+                    <button onclick="btnCheckoutClick();" class="btn btn-danger pull-right" style="color: #fff !important;">PROCEED TO CHECKOUT</button>
+                </div>
+                <div class="clearfix space10"></div>
+<!--                <div class="row shipping-info-wrap" align="center">
+                    <div>
                         <div class="totals">
                             <ul class="checkout-types">
                                 <li class="space10">
@@ -95,7 +109,7 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <div class="space40"></div>
                 <div class="row">
                     <div class="col-md-12 col-sm-12">

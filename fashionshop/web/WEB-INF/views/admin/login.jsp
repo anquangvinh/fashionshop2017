@@ -45,7 +45,7 @@
                                         <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
                                     </div>
                                     <div class="form-group">
-                                        <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                                        <input class="form-control" placeholder="Password" name="password" type="password">
                                     </div>
                                     <div class="checkbox">
                                         <label>
