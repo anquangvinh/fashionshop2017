@@ -61,11 +61,11 @@
                     <div class="post-media">
                         <div class="blog-slider">
                             <div class="item">						
-                                <img src="" class="img-responsive" alt="">
+                          
                                 <img src="assets/images/blog/1/a3size.jpg" alt=""/>
                             </div>
                             <div class="item">						
-                                <img src="" class="img-responsive" alt="">
+                            
                                 <img src="assets/images/blog/1/a2size.jpg" alt=""/>
                             </div>
                             <div class="item">						

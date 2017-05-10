@@ -38,6 +38,12 @@ public class BlogsSB implements BlogsSBLocal {
         Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE b.status = 0 ORDER BY b.blogID DESC", Blogs.class);
         return q.getResultList();
     }
+    
+    @Override
+    public List<Blogs> getAllBlogsAdmin() {
+        Query q = getEntityManager().createQuery("SELECT b FROM Blogs b", Blogs.class);
+        return q.getResultList();
+    }
 
     @Override
     public List<Blogs> getListBlogsByCategory(int blogCateID) {
@@ -66,6 +72,7 @@ public class BlogsSB implements BlogsSBLocal {
     public boolean editBlogs(Blogs targetBlogs) {
         try {
             getEntityManager().merge(targetBlogs);
+            getEntityManager().flush();
             return true;
         } catch (Exception e) {
             return false;

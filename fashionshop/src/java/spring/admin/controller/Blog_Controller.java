@@ -120,7 +120,7 @@ public class Blog_Controller {
 
     @RequestMapping(value = "list")
     public String blogList(ModelMap model) {
-        model.addAttribute("blogsList", blogsSB.getAllBlogs());
+        model.addAttribute("blogsList", blogsSB.getAllBlogsAdmin());
         return "admin/pages/blog-list";
     }
 

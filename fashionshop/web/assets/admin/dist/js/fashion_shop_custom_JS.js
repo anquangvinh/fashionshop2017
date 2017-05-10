@@ -1038,7 +1038,10 @@ $(document).ready(function () {
             $("#fs-blog-summary-error").text("");
         }
     });
-
+    $("#tableBlogList").DataTable({
+       responsive: true,
+       columnDefs:[{orderable: false, targets: 5}]
+    });
 
     /*===============================END THANH - BLOG =================================*/
 

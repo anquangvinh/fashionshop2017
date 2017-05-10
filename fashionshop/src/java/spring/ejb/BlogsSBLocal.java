@@ -18,6 +18,7 @@ public interface BlogsSBLocal {
 
     public List<Blogs> getAllBlogs();
     public List<Blogs> getAllBlogsIndex();
+    public List<Blogs> getAllBlogsAdmin();
 
     List<Blogs> getListBlogsByCategory(int blogCateID);
 
