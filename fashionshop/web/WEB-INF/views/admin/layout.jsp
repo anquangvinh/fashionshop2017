@@ -36,10 +36,10 @@
 
         <!-- Custom Fonts -->
         <link href="assets/admin/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-        
+
         <!-- fileUploader -->
         <link href="assets/admin/dist/css/jquery.fileuploader.css" rel="stylesheet" type="text/css"/>
-        
+
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -47,6 +47,9 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 
+        <!--Thông báo css cập nhật thành công-->
+        <link href="assets/css/sweetalert.css" rel="stylesheet" type="text/css"/>
+        <script src="assets/js/sweetalert.min.js"></script>
     </head>
 
     <body>
@@ -63,7 +66,7 @@
         <!-- /#wrapper -->
         <script src="assets/ckeditor/ckeditor.js" type="text/javascript"></script>
         <script src="assets/ckfinder/ckfinder.js" type="text/javascript"></script>
-        
+
         <!-- jQuery -->
         <script src="assets/admin/vendor/jquery/jquery.min.js"></script>
         <script src="assets/js/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
@@ -78,15 +81,17 @@
         <script src="assets/admin/vendor/datatables/js/jquery.dataTables.min.js"></script>
         <script src="assets/admin/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
         <script src="assets/admin/vendor/datatables-responsive/dataTables.responsive.js"></script>
-        
+
         <!-- fileUploader -->
         <script src="assets/admin/dist/js/jquery.fileuploader.min.js" type="text/javascript"></script>
-        
+
         <!-- Custom Theme JavaScript -->
         <script src="assets/admin/dist/js/sb-admin-2.js"></script>
 
         <!-- Page-Level Demo Scripts - Tables - Use for reference -->
         <script src="assets/admin/dist/js/fashion_shop_custom_JS.js" type="text/javascript"></script>
+
+
     </body>
 
 </html>

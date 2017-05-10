@@ -18,11 +18,12 @@
                             <ul class="form-list row">
                                 <li class="col-md-6 col-sm-6">
                                     <label >Address <em>*</em></label>
-                                    <form:input path="address" cssClass="input-text" />
+                                    <form:input path="address" id="txtaddress"  cssClass="input-text" fs-userID="${findUsersID}"/>
+                                    <span></span>
                                 </li>
                                 <li class="col-md-6 col-sm-6">
                                     <label >Phone Number <em>*</em></label>
-                                    <form:input path="phoneNumber" cssClass="input-text" />
+                                    <form:input path="phoneNumber" id="txtphone" cssClass="input-text" fs-userID="${findUsersID}" />
                                 </li>
                             </ul>
                             <div class="buttons-set">

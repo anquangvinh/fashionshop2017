@@ -60,9 +60,7 @@
 /*
    show information User-address, Wish List
 */
-  td.details-control{
-    /*background: url("./images/details_open.png") no-repeat center center;*/
-    /*background-image: url(/images/details_open.gif);*/
+td.details-control{
     background: url('../../../images/details_open.gif') no-repeat center center;
     cursor: pointer;
 }
@@ -73,9 +71,6 @@
 
 tr.shown td.details-control{
     background: url('../../../images/details_close.gif') no-repeat center center;
-    /*background: url("./images/details_close.png") no-repeat center center;*/
-        /*background-image: url(/images/details_close.gif);*/
-
 }
 
 .fs-thumb-image {
@@ -110,7 +105,7 @@ tr.shown td.details-control{
         top: 15px; 
         left: 40px;
     }
-    
+
     .fs-right-border {
         border-right: 1px solid #ccc;
     }
@@ -168,4 +163,9 @@ tr.shown td.details-control{
 #productList_dataTable_filter {
     text-align: center !important;
 }
+
+
+
+
+
 

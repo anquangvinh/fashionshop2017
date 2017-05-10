@@ -21,11 +21,11 @@
                                 <li>                                               
                                     <a href="user/change-password/${findUsersID}.html"> <i class="fa fa-edit"></i> Change your password</a>
                                 </li>
+<!--                                <li>                                              
+                                    <a class="fs-add-address-user" fs-message="</${message}" fs-userID="</${findUsersID}" href="user/address-add/</${findUsersID}.html"> <i class="fa fa-edit"></i> Add new your address book entries</a>
+                                </li>-->
                                 <li>                                              
-                                    <a class="fs-add-address-user" fs-message="${message}" fs-userID="${findUsersID}" href="user/address-add/${findUsersID}.html"> <i class="fa fa-edit"></i> Add new your address book entries</a>
-                                </li>
-                                <li>                                              
-                                    <a href="user/address-list/${findUsersID}.html"> <i class="fa fa-edit"></i> Modify your address book entries</a>
+                                    <a href="user/address-list/${findUsersID}.html"> <i class="fa fa-edit"></i> Manage address book entries</a>
                                 </li>
                             </ul>
                         </div>                                    
@@ -36,18 +36,18 @@
                         <div class="details-box">
                             <ul>
                                 <li>
-                                    <a href="order-history.html"> <i class="fa fa-edit"></i> View your order history</a>
+                                    <a href="orders/order-history.html"> <i class="fa fa-edit"></i> View your order history</a>
                                 </li>
-                                <li>
+<!--                                <li>
                                     <a href="review-rating.html"> <i class="fa fa-edit"></i> Your reviews and ratings</a>
-                                </li>
-                                <li>
+                                </li>-->
+<!--                                <li>
                                     <a href="return.html"> <i class="fa fa-edit"></i> View your retun requests</a>
-                                </li>
+                                </li>-->
                             </ul>
                         </div>                                    
                     </div>
-                    <h4 class="accordion-toggle"><span>03</span>Newsletter</h4>
+<!--                    <h4 class="accordion-toggle"><span>03</span>Newsletter</h4>
                     <div class="accordion-content">
                         <div class="details-box">
                             <ul>
@@ -56,7 +56,7 @@
                                 </li>                                           
                             </ul>
                         </div>
-                    </div>                                
+                    </div>                                -->
                 </div>
             </div>
 
