@@ -28,4 +28,10 @@ public interface RolesStateLessBeanLocal {
     List<Roles> getRole();
     
     int editRoles(Roles role);
+    
+    List<Users> listRoleUserID(int roleID);
+    
+    int deleteRole(int roleID);
+    
+    List<Roles> findRName();
 }

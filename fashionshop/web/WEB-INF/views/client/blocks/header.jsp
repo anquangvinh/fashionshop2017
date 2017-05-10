@@ -1,5 +1,7 @@
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<jsp:include page="loginModal.jsp"></jsp:include>
 <!-- TOPBAR -->
 <div class="top_bar">
     <div class="container">
@@ -20,17 +22,17 @@
                             <li>
                                 <div class="tbr-info">
                                     <c:if test="${empty emailUser}">
-                                        <span><a class="" href="user/login.html">Login </a></i></span>
+                                        <span class="fa fa-user"><a class="fs-login-page" href="#loginModal" data-toggle="modal" data-target="#loginModal" > Login </a></span>
                                     </c:if>
                                     <c:if test="${not empty emailUser}">
-                                        <span>Account <i class="fa fa-caret-down"></i></span>
+                                        <span>${USfirstname} <i class="fa fa-caret-down"></i></span>
                                         </c:if>
 
                                     <div class="tbr-inner">
                                         <c:if test="${not empty emailUser}">
                                             <a href="user/myaccount.html">My Account</a>
                                             <a href="#">My Wishlist</a>
-                                            <a href="#">Checkout</a>
+                                            <a href="orders/order-history.html">Order History</a>
                                             <a href="user/logout.html">LogOut</a>
                                         </c:if>
 

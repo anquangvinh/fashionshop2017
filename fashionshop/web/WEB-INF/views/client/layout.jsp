@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
+<%--<%@include file="../client/blocks/loginModal.jsp" %>--%>
 <!DOCTYPE html>
 <!--[if IE 8]>			<html class="ie ie8"> <![endif]-->
 <!--[if IE 9]>			<html class="ie ie9"> <![endif]-->
@@ -43,6 +44,11 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
                 <![endif]-->
 
+        <link href="assets/css/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+        
+        <!--Thông báo css cập nhật thành công-->
+        <link href="assets/css/sweetalert.css" rel="stylesheet" type="text/css"/>
+        <script src="assets/js/sweetalert.min.js"></script>
     </head>
     <body>
 

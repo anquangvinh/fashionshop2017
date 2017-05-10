@@ -132,6 +132,149 @@ a.fs-product-modal-link-to-detail{
     margin: auto;
 }
 
+/* CSS FOR USER-LOGIN-MODAL: */
+
+.fs-login-page{
+    text-decoration: none;
+    /*color: #00FFFF;*/
+    color: #007fff;
+    font-size: 16px;
+    font-family: sans-serif,Arial;
+}
+
+/*.login-register-form-section {
+        max-width: 350px;
+        margin: 0 auto;
+    }
+    .login-register-form-section i {
+        width: 10px;
+    }
+    .login-register-form-section .nav-tabs > li > a {
+        color: #2abb9b;
+    }
+ 
+    .login-register-form-section .nav-tabs > li.active > a {
+        background-color: #2abb9b;
+        border-color: #2abb9b;
+        color: white;
+    }
+    .login-register-form-section .nav-tabs > li > a, 
+    .login-register-form-section .nav-tabs > li.active > a {
+        width: 160px;
+        text-align: center; 
+        border-radius: 0;
+    }
+    .login-register-form-section .nav-tabs {
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+    .login-register-form-section .btn-custom {
+        width: 100%;
+        background-color: #2abb9b;
+        border-color: #2abb9b;
+        margin-bottom: 0.5em;
+        border-radius: 0;
+    }
+    .login-register-form-section .btn-custom:hover {
+        width: 100%;
+        background-color: #48A497;
+        border-color: #2abb9b;
+    }*/
+
+.btn-custom,.btn-custom: hover, .btn-custom: active, .btn-custom: focus {
+    background-color: #ff8627;
+    color: #ffffff;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    transition: background-color 300ms linear 0s;
+    display: block;
+    width: 100%;
+}
+
+
+.login-tab {
+    margin: 0 auto;
+    max-width: 380px;
+}
+
+.login-modal-header {
+    background: #27ae60;
+    color: #fff;
+}
+
+.login-modal-header .modal-title {
+    color: #fff;
+}
+
+.login-modal-header .close {
+    color: #fff;
+}
+
+
+.login-modal .fs-login-modal {
+    max-width: 340px;
+}
+
+.tab-pane .fs-login-modal {
+    margin: 0 auto;
+}
+
+.form-row {
+    margin-bottom: 0.9375rem;
+}
+
+// FORM CHANGE PASS
+/*input.input--medium{
+    height:calc(3em + 0.3em);
+    line-height:3;
+}
+
+.border--primary{
+    border-color:#003b6f;
+}
+
+.h-align-right{
+    text-align:right;
+}
+
+.button--medium{height:calc(3em + 0.3em);line-height:3;padding-right:1em;padding-left:1em;}
+
+.font--uppercase{text-transform:uppercase;}
+.cta-primary:hover{background-color:#001f3c;border-color:#ebebeb;color:#f5f3f3;}
+.cta-primary:hover{background-color:#f5f3f3;border-color:#ebebeb;color:#001f3c;}
+.cta-primary:hover{opacity:1;}*/
+
+//FORM ADDRESS-LIST
+
+/*header.fs-lv-bg{
+    background: Lavender;
+    color: #262626;
+}
+
+h1.fs-site-title{
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}*/
+
+/*#fs-header{
+    margin: 0;
+    max-width: 100%;
+    padding: 5px;
+    text-align: center;
+    overflow: auto;
+}*/
+
+/*.clickable{
+    cursor: pointer;   
+}
+
+.panel-heading span {
+	margin-top: -20px;
+	font-size: 15px;
+}*/
+
 .fs-page-number {
     cursor: pointer;
 }
