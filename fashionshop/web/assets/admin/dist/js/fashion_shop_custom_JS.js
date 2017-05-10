@@ -387,6 +387,16 @@ $(document).ready(function () {
         }
     });
 
+    $('input[id="fs-edit-product-color-img"]').fileuploader({
+        limit: 1,
+        extensions: ['jpg', 'jpeg', 'png']
+    });
+
+    $('input[id="fs-sub-img"]').fileuploader({
+        limit: 1,
+        extensions: ['jpg', 'jpeg', 'png']
+    });
+
     var fs_count_div_color = 0;
     /* XỬ LÝ BUTTON ADD-MORE-SIZE - PRODUCT CREATE */
     $("#fs-fieldset-detail").on("click", ".fs-add-more-size", function () {
@@ -635,37 +645,66 @@ $(document).ready(function () {
         }
     });
 
-    /* Xử lý choose TASK - PRODUCT-UPDATE */
-    $("#fs-select-product-update-task").change(function () {
+    /* TRANG PRODUCT-UPDATE */
+    /* Xử lý choose "FIRST" TASK */
+    $("#fs-product-update-page").on("change", "#fs-select-product-update-choose-first-task", function () {
+        $(".fs-select-product-update-task").addClass("fs-display-none");
+        $("#fs-select-product-update-choose-color").val(0);
         var select = $(this).val();
         if (select == 1) {
             $("#fs-edit-product-general-info").removeClass("fs-display-none");
+            $("#fs-select-product-update-choose-color").addClass("fs-display-none");
         } else {
-            if (!$("#fs-edit-product-general-info").hasClass("fs-display-none")) {
-                $("#fs-edit-product-general-info").addClass("fs-display-none");
-            }
+            $("#fs-edit-product-general-info").addClass("fs-display-none");
         }
 
         if (select == 2) {
-            $("#fs-select-product-update-color").removeClass("fs-display-none");
-            $("#fs-select-product-update-color").focus();
+            $("#fs-edit-product-color").removeClass("fs-display-none");
+            $("#fs-select-product-update-choose-color").addClass("fs-display-none");
         } else {
-            if (!$("#fs-select-product-update-color").hasClass("fs-display-none")) {
-                $("#fs-select-product-update-color").addClass("fs-display-none");
-            }
+            $("#fs-edit-product-color").addClass("fs-display-none");
         }
+        
+        if(select == 3 || select == 4){
+            $("#fs-select-product-update-choose-color").removeClass("fs-display-none");
+        }
+        
+        if(select == 0){
+            $("#fs-select-product-update-choose-color").addClass("fs-display-none");
+        }
+        
     });
 
-    $("#fs-select-product-update-color").change(function () {
-        var select = $(this).val();
-        if (select == 1) {
-            $("#fs-edit-product-detail-info").removeClass("fs-display-none");
+    /*Xử lý choose Color*/
+    $("#fs-product-update-page").on("change", "#fs-select-product-update-choose-color", function () {
+        var task = $("#fs-select-product-update-choose-first-task").val();
+        var colorID = $("#fs-select-product-update-choose-color").val();
+        
+        if (task == 3) {
+            $("#fs-edit-product-size").removeClass("fs-display-none");
+            $(".fs-edit-product-table-size").addClass("fs-display-none");
+            $("#fs-edit-product-table-size-" + colorID).removeClass("fs-display-none");
         } else {
-            if (!$("#fs-edit-product-detail-info").hasClass("fs-display-none")) {
-                $("#fs-edit-product-detail-info").addClass("fs-display-none");
-            }
+            $("#fs-edit-product-size").addClass("fs-display-none");
         }
+        
+       if(task == 4){
+           $("#fs-edit-product-sub-img").removeClass("fs-display-none");
+           $(".fs-edit-product-table-sub-img").addClass("fs-display-none");
+           $("#fs-edit-product-table-sub-img-" + colorID).removeClass("fs-display-none");
+       } else {
+           $("#fs-edit-product-sub-img").addClass("fs-display-none");
+       }
+       
+       if(colorID == 0){
+           $(".fs-select-product-update-task").addClass("fs-display-none");
+       }
     });
+
+    $("#fs-edit-product-table-color tbody").sortable();
+
+    $(".fs-edit-product-table-sub-img tbody").sortable();
+
     /*==========================END VINH - PRODUCT============================*/
 
     /*=============================== THANH - BLOG =================================*/

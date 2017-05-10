@@ -58,8 +58,6 @@ public interface ProductStateLessBeanLocal {
 
     Products findProductByID(int productID);
 
-    List<Products> getProductByCategory(int cateID);
-
     List<Object> getTop3ProductBestSeller();
 
     List<Products> getTop3ProductMostViewed();
@@ -69,7 +67,15 @@ public interface ProductStateLessBeanLocal {
     boolean checkDuplicateProductName(String name);
 
     boolean createNewProduct(Products newProduct);
-    
+
     void updateProductStatus(int productID, short productStatus);
+
+    Float getMaxPriceOfProduct_ByCate(int cateID);
+
+    Float getMinPriceOfProduct_ByCate(int cateID);
+
+    List<Object[]> productsByFilter_OfACategory(int cateID, float fromPrice, float toPrice, String filterColor, String filterSize);
+
+    List<Object[]> filterProductByCategory(int cateID, int page, int itemPerPage, float fromPrice, float toPrice, String filterColor, String filterSize, int sortBy);
 
 }

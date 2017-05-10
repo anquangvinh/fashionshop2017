@@ -40,7 +40,7 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
         Query q = getEntityManager().createQuery("SELECT c FROM Categories c", Categories.class);
         return q.getResultList();
     }
-    
+
     @Override
     public Categories findCategoryByID(int cateID) {
         return getEntityManager().find(Categories.class, cateID);
@@ -189,69 +189,58 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
     @Override
     public List<Products> productList(String role) {
         Query q;
-        if(role.equals("client")){
+        if (role.equals("client")) {
             q = getEntityManager().createQuery("SELECT p FROM Products p WHERE p.status = 1 ORDER BY p.productID DESC", Products.class);
         } else {
             q = getEntityManager().createQuery("SELECT p FROM Products p ORDER BY p.productID DESC", Products.class);
         }
-        
+
         return q.getResultList();
     }
-    
+
     @Override
-    public Products findProductByID(int productID){
+    public Products findProductByID(int productID) {
         return getEntityManager().find(Products.class, productID);
     }
-    
+
     @Override
-    public List<Products> getProductByCategory(int cateID){
-        Categories cate = findCategoryByID(cateID);
-        if(cate != null){
-            List<Products> productsListByCategory = cate.getProductList();
-            return productsListByCategory;
-        } else {
-            return null;
-        }   
-    }
-    
-    @Override
-    public List<Object> getTop3ProductBestSeller(){
+    public List<Object> getTop3ProductBestSeller() {
         String sql = "SELECT p.productID, p.productName, p.productNameNA, p.price, p.urlImg, sum(od.quantity) as tongsoluong "
                 + "FROM OrdersDetail od JOIN od.product p "
                 + "WHERE p.status = 1 "
                 + "GROUP BY p.productID, p.productName, p.productNameNA, p.price, p.urlImg "
                 + "ORDER BY tongsoluong DESC";
         Query q = getEntityManager().createQuery(sql).setMaxResults(3);
-        
+
         return q.getResultList();
     }
-    
+
     @Override
-    public List<Products> getTop3ProductMostViewed(){
+    public List<Products> getTop3ProductMostViewed() {
         String sql = "SELECT p FROM Products p WHERE p.status = 1 ORDER BY p.productViews DESC";
         Query q = getEntityManager().createQuery(sql, Products.class).setMaxResults(3);
-        
+
         return q.getResultList();
     }
-    
+
     @Override
-    public ProductColors findProductColorByColorID(int colorID){
+    public ProductColors findProductColorByColorID(int colorID) {
         ProductColors productColor = getEntityManager().find(ProductColors.class, colorID);
         return productColor;
     }
-    
+
     @Override
-    public boolean checkDuplicateProductName(String name){
+    public boolean checkDuplicateProductName(String name) {
         String sql = "SELECT p FROM Products p WHERE p.productName LIKE :productName";
         Query q = getEntityManager().createQuery(sql, Products.class);
         q.setParameter("productName", name);
-        
+
         int count = q.getResultList().size();
         return count == 1;
     }
-    
+
     @Override
-    public boolean createNewProduct(Products newProduct){   
+    public boolean createNewProduct(Products newProduct) {
         try {
             getEntityManager().persist(newProduct);
             getEntityManager().flush();
@@ -260,12 +249,100 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
             return false;
         }
     }
-    
+
     @Override
-    public void updateProductStatus(int productID, short productStatus){
+    public void updateProductStatus(int productID, short productStatus) {
         Products targetProduct = findProductByID(productID);
-        
+
         targetProduct.setStatus(productStatus);
         getEntityManager().merge(targetProduct);
     }
+
+    @Override
+    public Float getMaxPriceOfProduct_ByCate(int cateID) {
+        String sql = "SELECT MAX(p.price) FROM Products p WHERE p.category.cateID = :cateID";
+        Query q = getEntityManager().createQuery(sql, Products.class);
+        q.setParameter("cateID", cateID);
+        Float price = (Float) q.getResultList().get(0);
+        return price;
+    }
+
+    @Override
+    public Float getMinPriceOfProduct_ByCate(int cateID) {
+        String sql = "SELECT MIN(p.price) FROM Products p WHERE p.category.cateID = :cateID";
+        Query q = getEntityManager().createQuery(sql, Products.class);
+        q.setParameter("cateID", cateID);
+        Float price = (Float) q.getResultList().get(0);
+        return price;
+    }
+
+    @Override
+    public List<Object[]> productsByFilter_OfACategory(int cateID, float fromPrice, float toPrice, String filterColor, String filterSize) {
+        String sql = "SELECT DISTINCT"
+                + "         p.productID, p.price\n"
+                + "FROM Products p\n"
+                + "JOIN p.productColorList pc\n"
+                + "JOIN pc.sizeList ps\n"
+                + "WHERE p.category.cateID = :cateID "
+                + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
+                + filterColor
+                + filterSize
+                + "AND p.status = 1";
+        Query q = getEntityManager().createQuery(sql, Products.class);
+        q.setParameter("cateID", cateID);
+        q.setParameter("fromPrice", fromPrice);
+        q.setParameter("toPrice", toPrice);
+
+        return q.getResultList();
+    }
+
+    @Override
+    public List<Object[]> filterProductByCategory(int cateID, int page, int itemPerPage,
+                                                    float fromPrice, float toPrice,
+                                                    String filterColor, String filterSize, int sortBy) {
+        String sql;
+        if (sortBy == 1) {//1: Newest; 2: Low to High Price; 3: High to Low Price
+            sql = "SELECT DISTINCT"
+                + "         p.productID, p.price\n"
+                + "FROM Products p\n"
+                + "JOIN p.productColorList pc\n"
+                + "JOIN pc.sizeList ps\n"
+                + "WHERE p.category.cateID = :cateID "
+                + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
+                + filterColor
+                + filterSize
+                + "AND p.status = 1 ORDER BY p.productID DESC";
+        } else if (sortBy == 2) {
+            sql = "SELECT DISTINCT"
+                + "         p.productID, p.price\n"
+                + "FROM Products p\n"
+                + "JOIN p.productColorList pc\n"
+                + "JOIN pc.sizeList ps\n"
+                + "WHERE p.category.cateID = :cateID "
+                + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
+                + filterColor
+                + filterSize
+                + "AND p.status = 1 ORDER BY p.price ASC";
+        } else {
+            sql = "SELECT DISTINCT"
+                + "         p.productID, p.price\n"
+                + "FROM Products p\n"
+                + "JOIN p.productColorList pc\n"
+                + "JOIN pc.sizeList ps\n"
+                + "WHERE p.category.cateID = :cateID "
+                + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
+                + filterColor
+                + filterSize
+                + "AND p.status = 1 ORDER BY p.price DESC";
+        }
+        int firstResult = (page - 1) * itemPerPage;
+        Query q = getEntityManager().createQuery(sql);
+        q.setParameter("cateID", cateID);
+        q.setParameter("fromPrice", fromPrice);
+        q.setParameter("toPrice", toPrice);
+        q.setFirstResult(firstResult);
+        q.setMaxResults(itemPerPage);
+        return q.getResultList();
+    }
+
 }

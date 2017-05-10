@@ -3,7 +3,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!-- Page Content -->
 <div id="page-wrapper">
-    <div class="container-fluid">
+    <div class="container-fluid" id="fs-product-add-page">
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header"> 
