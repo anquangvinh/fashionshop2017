@@ -22,45 +22,48 @@
                 <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
                     <thead>
                         <tr>
-                            <th>No.</th>
-                            <th>Category</th>
-                            <th>Poster</th>
-                            <th>Title</th>
-                            <th>Summary</th>
-                            <th>Image</th>
-                            <th>Content</th>
-                            <th>Posted Date</th>
-                            <th>Views</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <th class="text-center fs-valign-middle">No.</th>
+                            <th class="text-center fs-valign-middle">Category</th>
+                            <th class="text-center fs-valign-middle">Poster</th>
+                            <th class="text-center fs-valign-middle">Title</th>
+                            <th class="text-center fs-valign-middle">Summary</th>
+                            <th class="text-center fs-valign-middle">Image</th>
+                            <th class="text-center fs-valign-middle">Content</th>
+                            <th class="text-center fs-valign-middle">Posted Date</th>
+                            <th class="text-center fs-valign-middle">Views</th>
+                            <th class="text-center fs-valign-middle">Status</th>
+                            <th class="text-center fs-valign-middle">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
+
                         <c:forEach items="${blogsList}" var="blogs">
                             <tr>
-                                <td>${blogs.blogID}</td>
+                                <td class="text-center fs-valign-middle">${blogs.blogID}</td>
 
-                                <td>
+                                <td class="text-center fs-valign-middle">
                                     ${blogs.blogCategory.blogCateName}
                                 </td>  
-                                <td>${blogs.user.userID}</td>
-                                <td>${blogs.blogTitle}</td>
-                                <td>${blogs.blogSummary}</td>
-                                <td>${blogs.blogImg}</td>
-                                <td>${blogs.content}</td>
-                                <td>  
+                                <td class="text-center fs-valign-middle">${blogs.user.lastName} ${blogs.user.firstName}</td>
+                                <td class="text-center fs-valign-middle">${blogs.blogTitle}</td>
+                                <td class="text-center fs-valign-middle">${blogs.blogSummary}</td>
+                                <td class="text-center fs-valign-middle">
+                                     <img class="responsive" style="width: 100px" src="assets/images/blog/1/${blogs.blogImg}" alt=""/>
+                                </td>
+                                <td class="text-center fs-valign-middle">${blogs.content}</td>
+                                <td class="text-center fs-valign-middle">  
                                     <fmt:formatDate value="${blogs.postedDate}" pattern="dd-MM-YYYY" />
                                 </td>
-                                <td>${blogs.blogViews}</td>
-                                <td>
+                                <td class="text-center fs-valign-middle">${blogs.blogViews}</td>
+                                <td class="text-center fs-valign-middle">
                                     ${blogs.status}
                                 </td>
                                 <td>
-                                    <a href="admin/blog/edit/${blogs.blogID}.html" class="btn btn-primary">Update</a>
+                                    <a href="admin/blog/edit/${blogs.blogID}.html" class="btn btn-warning">Update  <i class="fa fa-edit"></i></a>
                                 </td>
                             </tr>
                         </c:forEach>
-
+            
                     </tbody>
                 </table>
 

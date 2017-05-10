@@ -5,7 +5,6 @@
  */
 package spring.ejb;
 
-import java.security.Principal;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -30,12 +29,18 @@ public class BlogsSB implements BlogsSBLocal {
 
     @Override
     public List<Blogs> getAllBlogs() {
-        Query q = getEntityManager().createQuery("SELECT b FROM Blogs b", Blogs.class);
+        Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE b.status = 0 ORDER BY b.blogViews DESC", Blogs.class);
         return q.getResultList();
     }
     
     @Override
-    public List<Blogs> getListBlogsByCategory(int blogCateID){
+    public List<Blogs> getAllBlogsIndex() {
+        Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE b.status = 0 ORDER BY b.blogID DESC", Blogs.class);
+        return q.getResultList();
+    }
+
+    @Override
+    public List<Blogs> getListBlogsByCategory(int blogCateID) {
         BlogCategories blogcategories = getEntityManager().find(BlogCategories.class, blogCateID);
         return blogcategories.getBlogList();
     }
@@ -50,7 +55,6 @@ public class BlogsSB implements BlogsSBLocal {
         }
     }
 
-
     @Override
     public Blogs findBlogsByID(int id) {
         Query q = em.createQuery("SELECT b FROM Blogs b WHERE b.blogID = :blogID", Blogs.class);
@@ -60,12 +64,13 @@ public class BlogsSB implements BlogsSBLocal {
 
     @Override
     public boolean editBlogs(Blogs targetBlogs) {
-    try {
-            em.merge(targetBlogs);
+        try {
+            getEntityManager().merge(targetBlogs);
             return true;
         } catch (Exception e) {
             return false;
-        }    }
+        }
+    }
 
     @Override
     public List<Blogs> findBlogsByTitle(String blogTitle) {
@@ -75,6 +80,4 @@ public class BlogsSB implements BlogsSBLocal {
     }
 
     
-
-
 }

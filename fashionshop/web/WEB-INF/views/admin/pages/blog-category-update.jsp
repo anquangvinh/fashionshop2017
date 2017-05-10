@@ -24,21 +24,10 @@
                             <p class="help-block" id="fs-blog-category-error"></p>                      
                             <form:input id="fs-blog-category-update" class="form-control" path="blogCateName"/>
                         </div>
-                        <div class="form-group">
-                            <label>Status</label>
-                            <div>
-                                <label class="radio-inline">
-                                    <form:radiobutton path="status" value="0" id="rdoEnable" label="Enable" />
-                                </label>
-                                <label class="radio-inline">
-                                    <form:radiobutton path="status" value="1" id="rdoDisable" label="Disable" />
-                                </label>
-                            </div>
+                             ${status}
 
-                        </div>
-
-                                    <form:button type="submit" id="fs-button-update-blog-category" class="btn btn-warning">Update</form:button>
-                                    <form:button type="reset" class="btn btn-default">Reset</form:button>
+                                    <form:button type="submit" id="fs-button-update-blog-category" class="btn btn-warning">Update  <i class="fa fa-edit"></i></form:button>
+                                    <form:button type="reset" class="btn btn-default">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Reset&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </form:button>
                     </form:form>
                 </div>
             </div>

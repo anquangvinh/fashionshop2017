@@ -9,13 +9,12 @@
                     <strong>Blog Category</strong> 
                     <i class="fa fa-caret-right fa-style" aria-hidden="true" style="color: #337ab7"></i> 
                     <span style="font-size: 0.9em">List</span>
-                    
+
                 </h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
         <!-- /.row -->
-                      <a href="http://localhost:39356/fashionshop/admin/blog/category/create.html" class="btn btn-primary">Create</a>
         <div class="row">
             <div class="col-lg-12">
                 <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
@@ -23,7 +22,6 @@
                         <tr>
                             <th>No.</th>
                             <th>Category</th>
-                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -34,14 +32,16 @@
                                 <td>
                                     <a href="admin/blog/list/${blogscate.blogCateID}.html">${blogscate.blogCateName}</a>
                                 </td>  
-                                <td>${blogscate.status}</td>
                                 <td>
-                                     <a href="admin/blog/category/edit/${blogscate.blogCateID}.html" class="btn btn-primary">Update</a>
+                                    <a href="admin/blog/category/edit/${blogscate.blogCateID}.html" class="btn btn-warning">Update <i class="fa fa-edit"></i></a>
+                                        <c:if test=" empty blogscate.userList " >
+                                        <a href="#" class="btn btn-danger disabled">Delete</a>
+                                    </c:if>
                                 </td>
                             </tr>
                         </c:forEach>
 
-                        </tbody>
+                    </tbody>
                 </table>
                 <!-- /.table-responsive -->
             </div>
