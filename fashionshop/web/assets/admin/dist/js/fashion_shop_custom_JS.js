@@ -718,6 +718,10 @@ $(document).ready(function () {
 //        changeYear: true
 //    });
     /* BẮT validation CKSinder */
+    
+
+        
+     
 
     /* BẮT validation CREATE BLOG CATEGORY */
     // blog-category-add
@@ -733,13 +737,14 @@ $(document).ready(function () {
         }
     });
 
-    $("#fs-blog-category").keyup(function () {
+    $("#fs-blog-category").keyup(function (e) {
         var blogCateVal = $("#fs-blog-category").val();
         if (blogCateVal == "") {
             $("#fs-blog-category-error").text("Category cannot be empty!");
         } else if (blogCateVal.length < 5 || blogCateVal.length > 20) {
             $("#fs-blog-category-error").text("Category has 5 - 20 characters!");
-        } else {
+        }
+        else {
             $("#fs-blog-category-error").text("");
         }
     });
@@ -788,232 +793,126 @@ $(document).ready(function () {
 
     // blog-category-update-end
     /* BẮT validation CREATE BLOG */
-//    $("#fs-button-create-blog").click(function (e) {
-//        e.preventDefault();
-//        var categoryID = $("#fs-select-box-blog-category").val();
-//        if (categoryID == 0) {
-//            $("#fs-select-box-blog-category-error").text("Please select a Category!.");
-//        } else {
-//            $("#fs-form-create-blog").submit();
-//        }
-//    });
-//
-//    $("#fs-select-box-blog-category").change(function () {
-//        var categoryID = $("#fs-select-box-blog-category").val();
-//        if (categoryID == 0) {
-//            $("#fs-select-box-blog-category-error").text("Please select a Category!.");
-//        } else {
-//            $("#fs-select-box-blog-category-error").text("");
-//        }
-//    });
-////// Line Title add
-//    $("#fs-button-create-blog").click(function (e) {
-//        e.preventDefault();
-//        var blogCateVal = $("#fs-blog-line-title").val();
-//        if (blogCateVal == "") {
-//            $("#fs-blog-title-error").text("Title cannot be empty!");
-//        } else if (blogCateVal.length < 5 || blogCateVal.length > 100)
-//        {
-//            $("#fs-blog-title-error").text("Title has 5 - 100 characters!");
-//        }
-//        else
-//        {
-//            $("form[name=\"blogForm\"]").submit();
-//        }
-//    });
-//
-//    $("#fs-blog-line-title").keyup(function () {
-//        var blogCateVal = $("#fs-blog-line-title").val();
-//        if (blogCateVal == "") {
-//            $("#fs-blog-title-error").text("Title cannot be empty!");
-//        } else if (blogCateVal.length < 5 || blogCateVal.length > 100) {
-//            $("#fs-blog-title-error").text("Title has 5 - 100 characters!");
-//        } else {
-//            $("#fs-blog-title-error").text("");
-//        }
-//    });
-//// Line Summary add
-//    $("#fs-button-create-blog").click(function (e) {
-//        e.preventDefault();
-//        var blogCateValSummary = $("#fs-blog-line-summary").val();
-//        if (blogCateValSummary == "") {
-//            $("#fs-blog-summary-error").text("Summary cannot be empty!");
-//        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 1000) {
-//            $("#fs-blog-summary-error").text("Summary has 15 - 1000 characters!");
-//        } else {
-//            $("form[name=\"blogForm\"]").submit();
-//        }
-//    });
-////
-//    $("#fs-blog-line-summary").keyup(function () {
-//        var blogCateValSummary = $("#fs-blog-line-summary").val();
-//        if (blogCateValSummary == "") {
-//            $("#fs-blog-summary-error").text("Summary cannot be empty!");
-//        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 1000) {
-//            $("#fs-blog-summary-error").text("Summary has 15 - 1000 characters!");
-//        } else {
-//            $("#fs-blog-summary-error").text("");
-//        }
-//    });
-
-
-    $("#fs-form-create-blog").on("click", ".next", function () {
-        var cateID = $("#fs-select-box-blog-category").val();
-        var titleID = $("#fs-blog-line-title").val();
-        var summary = $("#fs-blog-line-summary").val();
+    $("#fs-button-create-blog").click(function (e) {
+        e.preventDefault();
+        var categoryID = $("#fs-select-box-blog-category").val();
+        var blogTitle = $("#fs-blog-line-title").val();
+        var blogCateValSummary = $("#fs-blog-line-summary").val();
         var blogImg = $("#upImage").val();
-        var count = 0;
-
-
-        if (cateID == 0) {
-            $("p#fs-select-box-blog-category-error").text("Please choose a Category!");
-            $("#fs-select-box-blog-category").focus();
-            count++;
-        } else {
-            $("p#fs-select-box-blog-category-error").text("");
-        }
-
-        if (titleID == "") {
+        var blogContent = $("editor1").val();
+        if (categoryID == 0) {
+            $("#fs-select-box-blog-category-error").text("Please select a Category!.");
+        } else if (blogTitle == "") {
             $("#fs-blog-title-error").text("Title cannot be empty!");
-            $("#fs-blog-line-title").focus();
-            count++;
-        } else if (titleID.length < 5 || titleID.length > 50) {
-            $("#fs-blog-title-error").text("Title must have 5 - 50 characters!");
-            $("#fs-blog-line-title").focus();
-        } else {
-            $("#fs-blog-title-error").text("");
         }
-
-        if (summary == "") {
+        else if (blogTitle.length < 5 || blogTitle.length > 100) {
+            $("#fs-blog-title-error").text("Title has 5 - 100 characters!");
+        }
+        else if (blogCateValSummary == "") {
             $("#fs-blog-summary-error").text("Summary cannot be empty!");
-            $("#fs-blog-line-summary").focus();
-            count++;
-        } else if (summary.length < 50 || summary.length > 1000) {
-            $("#fs-blog-summary-error").text("Summary  must have 50 - 700 characters!");
-            $("#fs-blog-line-summary").focus();
-        } else {
-            $("#fs-blog-summary-error").text("");
         }
-
-        if (blogImg == "") {
+        else if (blogCateValSummary.length < 15 || blogCateValSummary.length > 1000) {
+            $("#fs-blog-summary-error").text("Summary has 15 - 1000 characters!");
+        }
+        else if (blogCateValSummary == "") {
+            $("#fs-blog-summary-error").text("Summary cannot be empty!");
+        }
+        else if (blogImg == "") {
             $("#fs-error-mess-blog-img").text("Image cannot be empty!");
-            $("#upImage").focus();
-            count++;
-        } else {
-            $("#fs-error-mess-blog-img").text("");
+        }
+        else if (blogContent == ""){
+//              $("#fs-form-create-blog").validate(
+//            {
+//                ignore: [],
+//              debug: false,
+//                rules: { 
+//
+//                    editor1:{
+//                         required: function() 
+//                        {
+//                         CKEDITOR.instances.editor1.updateElement();
+//                        },
+//
+//                         minlength:10
+//                    }
+//                },
+//                messages:
+//                    {
+//
+//                    editor1:{
+//                        required:"Please enter Text",
+//                        minlength:"Please enter 10 characters"
+//
+//
+//                    }
+//                }
+//            });
+        }
+        else {
+            $("#fs-form-create-blog").submit();
         }
     });
-
-    // keyup
-    $("#fs-form-create-blog").on("change", "#fs-select-box-blog-category", function () {
-        var subCateID = $("#fs-select-box-blog-category").val();
-        if (subCateID == 0) {
-            $("p#fs-select-box-blog-category-error").text("Please choose a SubCategory!");
+//
+    $("#fs-select-box-blog-category").change(function () {
+        var categoryID = $("#fs-select-box-blog-category").val();
+        if (categoryID == 0) {
+            $("#fs-select-box-blog-category-error").text("Please select a Category!.");
         } else {
-            $("p#fs-select-box-blog-category-error").text("");
+            $("#fs-select-box-blog-category-error").text("");
         }
     });
 
     $("#fs-blog-line-title").keyup(function () {
-        var titleID = $("#fs-blog-line-title").val();
-        if (titleID == "") {
+        var blogCateVal = $("#fs-blog-line-title").val();
+        if (blogCateVal == "") {
             $("#fs-blog-title-error").text("Title cannot be empty!");
-        }
-        else if (titleID.length < 5 || titleID.length > 50) {
-            $("#fs-blog-title-error").text("Title must have 5 - 50 characters!");
+        } else if (blogCateVal.length < 5 || blogCateVal.length > 100) {
+            $("#fs-blog-title-error").text("Title has 5 - 100 characters!");
         } else {
             $("#fs-blog-title-error").text("");
         }
     });
 
     $("#fs-blog-line-summary").keyup(function () {
-        var summary = $("#fs-blog-line-summary").val();
-        if (summary == "") {
+        var blogCateValSummary = $("#fs-blog-line-summary").val();
+        if (blogCateValSummary == "") {
             $("#fs-blog-summary-error").text("Summary cannot be empty!");
-        }
-        else if (summary.length < 15 || summary.length > 1000) {
+        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 1000) {
             $("#fs-blog-summary-error").text("Summary has 15 - 1000 characters!");
         } else {
             $("#fs-blog-summary-error").text("");
         }
     });
 
-    // validate CKfinder
-
-    if ($("#editor1").length) {
-        var editor1 = CKEDITOR.replace('editor1', {
-            toolbar: [
-                {name: 'document', items: ['Source']},
-                {name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']},
-                {name: 'editing', items: ['Find', 'Replace']},
-                {name: 'insert', items: ['Image', 'Table', 'HorizontalRule']},
-                '/',
-                {name: 'styles', items: ['Format', 'Font', 'FontSize']},
-                {name: 'colors', items: ['TextColor', 'BGColor']},
-                '/',
-                {name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
-                {name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote']}
-            ]
-        });
-        CKFinder.setupCKEditor(editor1, {basePath: '/fashionshop/assets/ckfinder/'});
-    }
-
-    // Button Create Blog
-    $("#fs-button-create-blog").click(function (e) {
-        e.preventDefault();
-        var count = 0;
-
-        $(".fs-blog-line-title").each(function () {
-            if ($(this).val() == "") {
-                $(this).focus();
-                $(this).siblings("p").text("Title is required!");
-                count++;
-            } else if ($(this).val().length < 5) {
-                $(this).focus();
-                $(this).siblings("p").text("Title must have 5 - 50 characters! . ");
-                count++;
-            } else {
-                $(this).siblings("p").text("");
-            }
-        });
-
-        $(".fs-blog-line-summary").each(function () {
-            if ($(this).val() == "") {
-                $(this).focus();
-                $(this).siblings("p").text("Summary is required!");
-                count++;
-            } else if ($(this).val().length < 15) {
-                $(this).focus();
-                $(this).siblings("p").text("Summary has 15 - 1000 characters!");
-                count++;
-            } else {
-                $(this).siblings("p").text("");
-            }
-        });
-
-        $(".upImage").each(function () {
-            if ($(this).val() == "") {
-                $(this).focus();
-                $(this).parent().siblings("p").text("Choose an image for Blog!");
-                count++;
-            }
-        });
-
-        if (count == 0) {
-            $("#fs-form-create-blog").submit();
-        }
-
-    });
-
     /* BẮT validation UPDATE BLOG */
-
     $("#fs-button-update-blog").click(function (e) {
         e.preventDefault();
         var categoryID = $("#fs-select-box-blog-category-update").val();
+        var blogTitle = $("#fs-blog-update-line-title").val();
+        var blogCateValSummary = $("#fs-blog-update-line-summary").val();
+        var blogImg = $("#upImage").val();
         if (categoryID == 0) {
             $("#fs-select-box-blog-category-error").text("Please select a Category!.");
-        } else {
-            $("#fs-form-create-blog").submit();
+        } else if (blogTitle == "") {
+            $("#fs-blog-title-error").text("Title cannot be empty!");
+        }
+        else if (blogTitle.length < 5 || blogTitle.length > 100) {
+            $("#fs-blog-title-error").text("Title has 5 - 100 characters!");
+        }
+        else if (blogCateValSummary == "") {
+            $("#fs-blog-summary-error").text("Summary cannot be empty!");
+        }
+        else if (blogCateValSummary.length < 15 || blogCateValSummary.length > 1000) {
+            $("#fs-blog-summary-error").text("Summary has 15 - 1000 characters!");
+        }
+        else if (blogCateValSummary == "") {
+            $("#fs-blog-summary-error").text("Summary cannot be empty!");
+        }
+        else if (blogImg == "") {
+            $("#fs-error-mess-blog-img").text("Image cannot be empty!");
+        }
+        else {
+            $("#fs-form-update-blog").submit();
         }
     });
 
@@ -1023,22 +922,6 @@ $(document).ready(function () {
             $("#fs-select-box-blog-category-error").text("Please select a Category!.");
         } else {
             $("#fs-select-box-blog-category-error").text("");
-        }
-    });
-
-    // Line Title
-    $("#fs-button-update-blog").click(function (e) {
-        e.preventDefault();
-        var blogCateVal = $("#fs-blog-update-line-title").val();
-        if (blogCateVal == "") {
-            $("#fs-blog-update-title-error").text("Title cannot be empty!");
-        } else if (blogCateVal.length < 5 || blogCateVal.length > 100)
-        {
-            $("#fs-blog-update-title-error").text("Title has 5 - 100 characters!");
-        }
-        else
-        {
-            $("form[name=\"blogupdateForm\"]").submit();
         }
     });
 
@@ -1053,30 +936,49 @@ $(document).ready(function () {
         }
     });
 
-    // Line Summary
-
-    $("#fs-button-update-blog").click(function (e) {
-        e.preventDefault();
-        var blogCateValSummary = $("#fs-blog-update-line-summary").val();
-        if (blogCateValSummary == "") {
-            $("#fs-blog-summary-error").text("Summary cannot be empty!");
-        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 1000) {
-            $("#fs-blog-summary-error").text("Summary has 15 - 1000 characters!");
-        } else {
-            $("form[name=\"blogupdateForm\"]").submit();
-        }
-    });
-
     $("#fs-blog-update-line-summary").keyup(function () {
         var blogCateValSummary = $("#fs-blog-update-line-summary").val();
         if (blogCateValSummary == "") {
             $("#fs-blog-summary-error").text("Summary cannot be empty!");
-        } else if (blogCateValSummary.length < 5 || blogCateValSummary.length > 1000) {
+        } else if (blogCateValSummary.length < 15 || blogCateValSummary.length > 1000) {
             $("#fs-blog-summary-error").text("Summary has 15 - 1000 characters!");
         } else {
             $("#fs-blog-summary-error").text("");
         }
     });
+//    $("#tableBlogList").DataTable({
+//        responsive: true,
+//        columnDefs: [{orderable: false, targets: 5}]
+//    });
+//    $("#tableBlogCategory").DataTable({
+//        responsive: true,
+//        columnDefs: [{orderable: false, targets: 2}]
+//    });
+
+    $("#upImage").on('change', function () {
+        if (typeof (FileReader) !== "undefined") {
+            var image_holder = $("#image-load");
+            image_holder.empty();
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $("<img />", {
+                    "src": e.target.result,
+                    "class": "thumb-image"
+                }).appendTo(image_holder);
+            };
+            image_holder.show();
+            reader.readAsDataURL($(this)[0].files[0]);
+        }
+        else {
+            alert("Your Browser does not support FileReader!.");
+        }
+    });
+
+// Validate Ckeditor
+      
+
+
 
 
     /*===============================END THANH - BLOG =================================*/

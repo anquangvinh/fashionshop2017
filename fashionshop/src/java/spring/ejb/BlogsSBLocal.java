@@ -18,6 +18,7 @@ public interface BlogsSBLocal {
 
     public List<Blogs> getAllBlogs();
     public List<Blogs> getAllBlogsIndex();
+    public List<Blogs> getAllBlogsAdmin();
 
     List<Blogs> getListBlogsByCategory(int blogCateID);
 
@@ -27,6 +28,6 @@ public interface BlogsSBLocal {
 
     boolean editBlogs(Blogs targetBlogs);
 
-    List<Blogs> findBlogsByTitle(String blogTitle);
+    List<Blogs> findBlogsByTitle(String blogTitle, List<Integer> monthList);
 
 }

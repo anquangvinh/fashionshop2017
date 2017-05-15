@@ -280,7 +280,6 @@ public class OrdersController {
         //2 dòng này thêm để render ra menu chính
         List<Categories> cateList = productStateLessBean.categoryList();
         model.addAttribute("cateList", cateList);
-
         return "client/pages/order-history";
     }
 

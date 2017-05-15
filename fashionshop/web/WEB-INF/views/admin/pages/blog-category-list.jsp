@@ -17,26 +17,28 @@
         <!-- /.row -->
         <div class="row">
             <div class="col-lg-12">
-                <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                <div>
+                    ${error}
+                </div>
+                <table width="100%" class="table table-striped table-bordered table-hover" id="tableBlogCategory">
                     <thead>
                         <tr>
-                            <th>No.</th>
-                            <th>Category</th>
-                            <th>Action</th>
+                            <th class="text-center fs-valign-middle" >No.</th>
+                            <th class="text-center fs-valign-middle" >Category</th>
+                            <th class="text-center fs-valign-middle" >Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <c:forEach items="${blogCategoriesList}" var="blogscate">
                             <tr>
-                                <td>${blogscate.blogCateID}</td>
-                                <td>
+                                <td class="text-center fs-valign-middle" >${blogscate.blogCateID}</td>
+                                <td class="text-center fs-valign-middle" >
                                     <a href="admin/blog/list/${blogscate.blogCateID}.html">${blogscate.blogCateName}</a>
                                 </td>  
-                                <td>
+                                <td class="text-center fs-valign-middle" >
                                     <a href="admin/blog/category/edit/${blogscate.blogCateID}.html" class="btn btn-warning">Update <i class="fa fa-edit"></i></a>
-                                        <c:if test=" empty blogscate.userList " >
-                                        <a href="#" class="btn btn-danger disabled">Delete</a>
-                                    </c:if>
+                                    <a href="admin/blog/delete/${blogscate.blogCateID}.html" class="btn btn-danger">Delete</a>
+
                                 </td>
                             </tr>
                         </c:forEach>
