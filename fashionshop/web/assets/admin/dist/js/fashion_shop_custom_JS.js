@@ -884,8 +884,6 @@ $(document).ready(function () {
         }
     });
 
-
-
     /* BẮT validation UPDATE BLOG */
     $("#fs-button-update-blog").click(function (e) {
         e.preventDefault();
@@ -1535,7 +1533,7 @@ $(document).ready(function () {
     //Thiết lập cho bảng order list
     $('#tableOrder').DataTable({
         responsive: true,
-        order: [[0, "desc"]],
+        order: [[4, "desc"]],
         columnDefs: [{"orderable": false, "targets": [2, 3, 5]}] //,{"targets":4,render: $.fn.dataTable.render.moment(dd/mm/yyyy)}
     });
 
@@ -1548,9 +1546,73 @@ $(document).ready(function () {
     //Thiết lập cho bảng discount list
     $('#tableDiscountList').DataTable({
         responsive: true,
-        columnDefs: [{"orderable": false, "targets": [3, 4]}]
+        columnDefs: [{"orderable": false, "targets": [5, 6]}]
     });
 
+    //discount-list-add.jsp
+    $("#beginDate").datepicker({
+        showAnim: "drop",
+        dateFormat: "dd-mm-yy",
+        changeMonth: true,
+        changeYear: true,
+        yearRange: new Date().getFullYear().toString() + ":" + (new Date().getFullYear() + 2).toString(),
+        minDate: new Date(),
+        onSelect: function () {
+            $('#error-discount-add').html("");
+            $("#endDate").datepicker("option", "minDate", $('input[name=beginDate]').val());
+        }
+    });
+    $("#endDate").datepicker({
+        showAnim: "drop",
+        dateFormat: "dd-mm-yy",
+        changeMonth: true,
+        changeYear: true,
+        yearRange: new Date().getFullYear().toString() + ":" + (new Date().getFullYear() + 2).toString(),
+        minDate: new Date(),
+        onSelect: function () {
+            $('#error-discount-add').html("");
+        }
+    });
+    $('#btn-create-discount').on("click", function (e) {
+        e.preventDefault();
+        var errorHead = "<div class=\"alert alert-danger\"><strong>";
+        var errorFoot = "</strong></div>";
+        var voucherID = $('input[name=voucherID]').val();
+        var discount = $('input[name=discount]').val();
+        var quantity = $('input[name=quantity]').val();
+        var beginDate = $('input[name=beginDate]').val();
+        var endDate = $('input[name=endDate]').val();
+        var description = $('input[name=description]').val();
+        if (voucherID == "") {
+            $('#error-discount-add').html(errorHead + "VOUCHER CODE REQUIRED" + errorFoot);
+        } else if (discount == "") {
+            $('#error-discount-add').html(errorHead + "DISCOUNT REQUIRED" + errorFoot);
+        } else if (!discount.match('[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)') || discount.match(',')) { //^[0-9]*$
+            $('#error-discount-add').html(errorHead + "DISCOUNT MUST BE NUMBER (Eg: 30, 30.5,...)" + errorFoot);
+        } else if (discount <= 0 || discount > 100) {
+            $('#error-discount-add').html(errorHead + "DISCOUNT RANGE 0 TO 100" + errorFoot);
+        } else if (quantity == "") {
+            $('#error-discount-add').html(errorHead + "QUANTITY REQUIRED" + errorFoot);
+        } else if (!quantity.match('^[0-9]*$')) { //[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)
+            $('#error-discount-add').html(errorHead + "QUANTITY MUST BE NUMBER" + errorFoot);
+        } else if (description.length > 500) {
+            $('#error-discount-add').html(errorHead + "DESCRIPTION LENGTH MAXIMUM 500" + errorFoot);
+        } else {
+            $('#fs-form-create-discount').submit();
+        }
+    });
+    $('input[name=voucherID]').keyup(function () {
+        $('#error-discount-add').html("");
+    });
+    $('input[name=discount]').keyup(function () {
+        $('#error-discount-add').html("");
+    });
+    $('input[name=quantity]').keyup(function () {
+        $('#error-discount-add').html("");
+    });
+    $('input[name=description]').keyup(function () {
+        $('#error-discount-add').html("");
+    });
     //Order-list-detail-add.jsp
     $('#tableProductOrderDetailAdd').DataTable({
         responsive: true,
@@ -1685,5 +1747,33 @@ $(document).ready(function () {
     $('input[name=productOrDetailAddQuantity]').keyup(function () {
         $("#order-detail-add-quantity-error").text("");
     });
+    var data = [
+        {y: "2014", a: 50, b: 90},
+        {y: "2015", a: 65, b: 75},
+        {y: "2016", a: 50, b: 50},
+        {y: "2017", a: 75, b: 60},
+        {y: "2018", a: 80, b: 65},
+        {y: "2019", a: 90, b: 70},
+        {y: "2020", a: 100, b: 75},
+        {y: "2021", a: 115, b: 75},
+        {y: "2022", a: 120, b: 85},
+        {y: "2023", a: 145, b: 85},
+        {y: "2024", a: 160, b: 95}
+    ],
+            config = {
+                data: data,
+                xkey: "y",
+                ykeys: ["a", "b"],
+                labels: ["Total Income", "Total Outcome"],
+                fillOpacity: 0.6,
+                hideHover: "auto",
+                behaveLikeLine: true,
+                resize: true,
+                pointFillColors: ["#ffffff"],
+                pointStrokeColors: ["black"],
+                lineColors: ["gray", "red"]
+            };
+    config.element = "area-chart";
+    Morris.Line(config);
     /*==============================END NGAN - ORDER============================*/
 });

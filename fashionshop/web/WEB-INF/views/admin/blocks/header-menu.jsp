@@ -71,7 +71,7 @@
                         <li>
                             <a href="admin/user/list.html"><i class="fa fa-list" aria-hidden="true"></i> List</a>
                         </li>
-                        
+
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
@@ -121,10 +121,13 @@
                         <li>
                             <a href="admin/orders/list.html"><i class="fa fa-list" aria-hidden="true"></i> List</a>
                         </li>
+                        <li>
+                            <a href="admin/orders/chart.html"><i class="fa fa-list" aria-hidden="true"></i> Statistics</a>
+                        </li>
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
-                
+
                 <li>
                     <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Discount<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
@@ -160,7 +163,7 @@
                         <li>
                             <a href="admin/blog/create.html"><i class="fa fa-plus" aria-hidden="true"></i> New</a>
                         </li>
-                            <li>
+                        <li>
                             <a href="admin/blog/ChartServlet"><i class="fa fa-list" aria-hidden="true"></i> Statistics</a>
                         </li>
                     </ul>
