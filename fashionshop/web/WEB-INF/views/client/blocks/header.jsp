@@ -138,8 +138,10 @@
                         </c:forEach>
                         <li class="dropdown">
                             <a href="blog.html" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Blog</a>
-                            <ul class="dropdown-menu submenu" role="menu">
-                                <li><a href="blog.html">Blog Posts</a>
+                            <ul class="dropdown-menu submenu" role="menu">                     
+                                    <c:forEach items="${blogCateListClient}" var="blogcateclient">
+                                            <li><a href="blog-categories/${blogcateclient.blogCateID}.html">${blogcateclient.blogCateName}</a></li>    
+                                    </c:forEach>
                             </ul>
                         </li>
                     </ul>

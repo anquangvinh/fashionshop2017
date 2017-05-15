@@ -20,9 +20,7 @@
 
         <div class="row">
             <form:form action="" id="fs-form-update-blog" name="blogupdateForm" method="POST" modelAttribute="targetBlogs" enctype="multipart/form-data">
-                <div class="col-lg-12">
-                    <div class="col-lg-6">
-                        <div class="col-md-12">
+                    <div class="col-md-5">
                             <div class="form-group">
                                 <label>Categories <span class="fs-color-red">*</span></label>
                                 <p class="help-block" id="fs-select-box-blog-category-error"></p>
@@ -57,36 +55,11 @@
                             </div>-->
                             </div>
                             <div class="form-group">
-                                <div>
                                     <label>Image <span class="fs-color-red">*</span></label>
+                                         <p id="fs-error-mess-blog-img" class="help-block"></p>
                                     <input type="file" id="upImage" name="upImage">
-                                </div>
-                                <div id="image-load"></div>
-                                <script>
-                                    $("#upImage").on('change', function () {
-                                        if (typeof (FileReader) !== "undefined") {
-                                            var image_holder = $("#image-load");
-                                            image_holder.empty();
-
-                                            var reader = new FileReader();
-                                            reader.onload = function (e) {
-                                                $("<img />", {
-                                                    "src": e.target.result,
-                                                    "class": "thumb-image"
-                                                }).appendTo(image_holder);
-                                            };
-                                            image_holder.show();
-                                            reader.readAsDataURL($(this)[0].files[0]);
-                                        }
-                                        else {
-                                            alert("Your Browser does not support FileReader!.");
-                                        }
-                                    });
-                                </script>
                             </div>
                         </div>
-                        <br/>
-                    </div>
                         <!--                        <div class="form-group">
                                                     <label>Date</label>
                         <form:input path="postedDate" cssClass="form-control" />
@@ -95,13 +68,14 @@
                         <form:errors path="postedDate"/>
                     </div>
                 </div>-->
-                        <div class="col-md-5">
+                        <div class="col-md-7">
+                             <div class="form-group text-left">
                             <div class="form-group">
                                 <label>Content <span class="fs-color-red">*</span></label>
                                 <br/>
                                 <!--CKEditor-->
                                 <form action="getContent" method="get">
-                                    <textarea cols="80" id="editor1" name="editor1" value="${editor1}" rows="10"></textarea>				
+                                    <textarea cols="80" id="editor1" name="editor1" value="${editor1}"></textarea>				
                                 </form>
                                 <ckfinder:setupCKEditor basePath="assets/ckfinder/" editor="editor1" />
                                 <ckeditor:replace replace="editor1" basePath="assets/ckeditor/" />
@@ -124,7 +98,7 @@
                                 </div>
                             </div>
                             ${status}
-                            <form:button id="fs-button-update-blog" type="submit" class="btn btn-warning" style="width: 30%" onclick="return confirm('Are you sure you want to change??!')">Update  <i class="fa fa-edit"></i></form:button>
+                            <form:button id="fs-button-update-blog" type="submit" class="btn btn-warning" style="width: 30%" >Update  <i class="fa fa-edit"></i></form:button>
                             <form:button type="reset" class="btn btn-default"> &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;Reset&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;   </form:button>
                             </div>
                     </form:form>

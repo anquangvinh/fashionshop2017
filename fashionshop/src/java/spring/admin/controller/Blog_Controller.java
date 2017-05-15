@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static javassist.CtMethod.ConstParameter.string;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -120,7 +121,7 @@ public class Blog_Controller {
 
     @RequestMapping(value = "list")
     public String blogList(ModelMap model) {
-        model.addAttribute("blogsList", blogsSB.getAllBlogs());
+        model.addAttribute("blogsList", blogsSB.getAllBlogsAdmin());
         return "admin/pages/blog-list";
     }
 
@@ -137,48 +138,7 @@ public class Blog_Controller {
         return "admin/pages/blog-add";
     }
 
-//    @RequestMapping(value = "create", method = RequestMethod.POST)
-//    public String blogAdd(@ModelAttribute("newBlogs") Blogs newBlogs,
-//            @RequestParam("upImage") MultipartFile image,
-//            RedirectAttributes redirectAttr, HttpServletRequest Request) {
-//        String email = String.valueOf(Request.getSession().getAttribute("email"));
-////        if (email != null) {
-////            Users user = usersStateLessBean.findUserByEmail(email);
-////            if(user!= null){
-////                newBlogs.setUser(user);
-////            }
-////        }
-//        newBlogs.setBlogTitleNA(shareFunc.changeText(newBlogs.getBlogTitle()));
-//        newBlogs.setPostedDate(new Date());
-//        try {
-//            if (image.isEmpty()) {
-//                newBlogs.setBlogImg("defaultProduct.png");
-//            } else if(email != null){
-//                   Users user = usersStateLessBean.findUserByEmail(email);
-//            if(user!= null){
-//                newBlogs.setUser(user);
-//            }
-//            } else {
-//                  newBlogs.setBlogImg(image.getOriginalFilename());
-//                String path = app.getRealPath("/assets/images/") + "/" + newBlogs.getBlogImg();
-//                image.transferTo(new File(path));
-//            }
-//        } catch (IOException | IllegalStateException ex) {
-//            Logger.getLogger(Blog_Controller.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//
-//        if (blogsSB.blogAdd(newBlogs)) {
-//            redirectAttr.addFlashAttribute("status", "<div class=\"col-md-12  alert alert-success\">Create New Blogs Successfully!</div>");
-//        } else {
-//            redirectAttr.addFlashAttribute("status", "<div class=\"col-md-12  alert alert-danger\">Create New Blogs FAILED!. Error was happened!</div>");
-//        }
-//        Blogs blogs = new Blogs();
-//        redirectAttr.addFlashAttribute("blogs", blogs);
-//        return "redirect:/admin/blog/create.html";
-//
-//    }
-    
-      @RequestMapping(value = "create", method = RequestMethod.POST)
+    @RequestMapping(value = "create", method = RequestMethod.POST)
     public String blogAdd(@ModelAttribute("newBlogs") Blogs newBlogs,
             @RequestParam("upImage") MultipartFile image,
             RedirectAttributes redirectAttr, HttpServletRequest Request) {
@@ -186,7 +146,7 @@ public class Blog_Controller {
         String email = String.valueOf(Request.getSession().getAttribute("email"));
         if (email != null) {
             Users user = usersStateLessBean.findUserByEmail(email);
-            if(user!= null){
+            if (user != null) {
                 newBlogs.setUser(user);
             }
         }
@@ -239,8 +199,10 @@ public class Blog_Controller {
         String formattedDate = dateFormat.format(date);
         model.addAttribute("formattedDate", formattedDate);
         model.addAttribute("targetBlogs", targetBlogs);
+        // Hien thi img trong update
+//        model.addAttribute("upImage", targetBlogs.getBlogImg());
         model.addAttribute("editor1", targetBlogs.getContent());
-        
+
         return "admin/pages/blog-update";
     }
 
@@ -251,9 +213,17 @@ public class Blog_Controller {
             RedirectAttributes redirectAttr, HttpServletRequest Request) {
         Blogs normalTargetProduct = blogsSB.findBlogsByID(blogID); //Blogs Khi chưa chỉnh sửa
 
+        String email = String.valueOf(Request.getSession().getAttribute("email"));
+        if (email != null) {
+            Users user = usersStateLessBean.findUserByEmail(email);
+            if (user != null) {
+                updatedTargetBlogs.setUser(user);
+            }
+        }
+
         updatedTargetBlogs.setBlogTitleNA(shareFunc.changeText(updatedTargetBlogs.getBlogTitle()));
-           updatedTargetBlogs.setPostedDate(new Date());
-           updatedTargetBlogs.setContent(Request.getParameter("editor1"));
+        updatedTargetBlogs.setPostedDate(new Date());
+        updatedTargetBlogs.setContent(Request.getParameter("editor1"));
         try {
             if (!image.isEmpty()) {
                 updatedTargetBlogs.setBlogImg(image.getOriginalFilename());
@@ -281,6 +251,31 @@ public class Blog_Controller {
         }
 
         return "redirect:/admin/blog/edit/" + blogID + ".html";
+    }
+
+    @RequestMapping(value = "/delete/{blogCateID}", method = RequestMethod.GET)
+    public String deleteCategory(@PathVariable("blogCateID") Integer blogCateID,
+            RedirectAttributes flashAttr) {
+        BlogCategories blogcate = blogCategoriesSB.findCategoryByID(blogCateID);
+        if (blogcate != null) {
+            int errorCheck = blogCategoriesSB.deleteCategory(blogcate);
+            if (errorCheck == 1) {
+                flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">"
+                        + "<strong>Blog category: " + blogcate.getBlogCateName() + " Deleted</strong></div>");
+                return "redirect:/admin/blog/category.html";
+            } else if (errorCheck == 0) {
+                flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">"
+                        + "<strong>All blogs in blog category must DISABLE</strong></div>");
+                return "redirect:/admin/blog/category.html";
+            }else{
+                flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">"
+                        + "<strong>Delete process have error</strong></div>");
+                return "redirect:/admin/blog/category.html";
+            }
+        }
+        flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">"
+                + "<strong>Can't find Blog Category ID</strong></div>");
+        return "redirect:/admin/blog/category.html";
     }
 
     private BlogsSBLocal lookupBlogsSBLocal() {
