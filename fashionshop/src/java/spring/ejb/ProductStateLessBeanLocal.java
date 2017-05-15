@@ -78,4 +78,12 @@ public interface ProductStateLessBeanLocal {
 
     List<Object[]> filterProductByCategory(int cateID, int page, int itemPerPage, float fromPrice, float toPrice, String filterColor, String filterSize, int sortBy);
 
+    Float getMaxPriceOfProduct_BySubCate(int subCateID);
+
+    Float getMinPriceOfProduct_BySubCate(int subCateID);
+
+    List<Object[]> filterProductBySubCategory(int subCateID, int page, int itemPerPage, float fromPrice, float toPrice, String filterColor, String filterSize, int sortBy);
+
+    List<Object[]> productsByFilter_OfASubCategory(int subCateID, float fromPrice, float toPrice, String filterColor, String filterSize);
+
 }

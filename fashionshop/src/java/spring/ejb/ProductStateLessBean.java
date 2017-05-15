@@ -345,4 +345,92 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
         return q.getResultList();
     }
 
+    
+    @Override
+    public Float getMaxPriceOfProduct_BySubCate(int subCateID) {
+        String sql = "SELECT MAX(p.price) FROM Products p WHERE p.subCate.subCateID = :subCateID";
+        Query q = getEntityManager().createQuery(sql, Products.class);
+        q.setParameter("subCateID", subCateID);
+        Float price = (Float) q.getResultList().get(0);
+        return price;
+    }
+
+    @Override
+    public Float getMinPriceOfProduct_BySubCate(int subCateID) {
+        String sql = "SELECT MIN(p.price) FROM Products p WHERE p.subCate.subCateID = :subCateID";
+        Query q = getEntityManager().createQuery(sql, Products.class);
+        q.setParameter("subCateID", subCateID);
+        Float price = (Float) q.getResultList().get(0);
+        return price;
+    }
+    
+    @Override
+    public List<Object[]> filterProductBySubCategory(int subCateID, int page, int itemPerPage,
+                                                    float fromPrice, float toPrice,
+                                                    String filterColor, String filterSize, int sortBy) {
+        String sql;
+        if (sortBy == 1) {//1: Newest; 2: Low to High Price; 3: High to Low Price
+            sql = "SELECT DISTINCT"
+                + "         p.productID, p.price\n"
+                + "FROM Products p\n"
+                + "JOIN p.productColorList pc\n"
+                + "JOIN pc.sizeList ps\n"
+                + "WHERE p.subCate.subCateID = :subCateID "
+                + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
+                + filterColor
+                + filterSize
+                + "AND p.status = 1 ORDER BY p.productID DESC";
+        } else if (sortBy == 2) {
+            sql = "SELECT DISTINCT"
+                + "         p.productID, p.price\n"
+                + "FROM Products p\n"
+                + "JOIN p.productColorList pc\n"
+                + "JOIN pc.sizeList ps\n"
+                + "WHERE p.subCate.subCateID = :subCateID "
+                + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
+                + filterColor
+                + filterSize
+                + "AND p.status = 1 ORDER BY p.price ASC";
+        } else {
+            sql = "SELECT DISTINCT"
+                + "         p.productID, p.price\n"
+                + "FROM Products p\n"
+                + "JOIN p.productColorList pc\n"
+                + "JOIN pc.sizeList ps\n"
+                + "WHERE p.subCate.subCateID = :subCateID "
+                + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
+                + filterColor
+                + filterSize
+                + "AND p.status = 1 ORDER BY p.price DESC";
+        }
+        int firstResult = (page - 1) * itemPerPage;
+        Query q = getEntityManager().createQuery(sql);
+        q.setParameter("subCateID", subCateID);
+        q.setParameter("fromPrice", fromPrice);
+        q.setParameter("toPrice", toPrice);
+        q.setFirstResult(firstResult);
+        q.setMaxResults(itemPerPage);
+        return q.getResultList();
+    }
+    
+    @Override
+    public List<Object[]> productsByFilter_OfASubCategory(int subCateID, float fromPrice, float toPrice, String filterColor, String filterSize) {
+        String sql = "SELECT DISTINCT"
+                + "         p.productID, p.price\n"
+                + "FROM Products p\n"
+                + "JOIN p.productColorList pc\n"
+                + "JOIN pc.sizeList ps\n"
+                + "WHERE p.subCate.subCateID = :subCateID "
+                + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
+                + filterColor
+                + filterSize
+                + "AND p.status = 1";
+        Query q = getEntityManager().createQuery(sql, Products.class);
+        q.setParameter("subCateID", subCateID);
+        q.setParameter("fromPrice", fromPrice);
+        q.setParameter("toPrice", toPrice);
+
+        return q.getResultList();
+    }
+    
 }

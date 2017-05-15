@@ -132,6 +132,10 @@ a.fs-product-modal-link-to-detail{
     margin: auto;
 }
 
+.overlay-rmore {
+    line-height: 54px !important;
+}
+
 /*CSS FOR USER-LOGIN-MODAL:*/ 
 .fs-login-page:hover, .fs-login-page:visited {
     color: #cccccc !important;
@@ -187,7 +191,6 @@ a.fs-product-modal-link-to-detail{
 }
 
 /*CHỈNH VỊ TRÍ CỐ ĐỊNH CHO BIRTHDAY*/
-
 
 /* FORM CHANGE PASS*/
 .border--primary{

@@ -45,11 +45,15 @@ public class ProductController {
         int page = 1;
         int itemPerPage = 6;
         String currentProductPageInfo = ((page - 1) * itemPerPage + 1) + " - " + (((page - 1) * itemPerPage) + itemPerPage);
+
         List<Categories> cateList = productStateLessBean.categoryList();
+
         List<Products> allProductByCate = productStateLessBean.findCategoryByID(cateID).getProductList();
         int allProducts = allProductByCate.size();
+
         float fromPrice = productStateLessBean.getMinPriceOfProduct_ByCate(cateID);
         float toPrice = productStateLessBean.getMaxPriceOfProduct_ByCate(cateID);
+
         List<Object[]> productIDList = productStateLessBean.filterProductByCategory(cateID, page, itemPerPage, fromPrice, toPrice, "", "", 1);
         List<Products> finalProductList = new ArrayList<>();
         for (Object[] prod : productIDList) {
@@ -122,6 +126,96 @@ public class ProductController {
             //đưa về trang lỗi.
         }
         return "client/pages/categories-grid";
+    }
+
+    @RequestMapping(value = "/subCategory/{categoryNameNA}-{subCateID}-{subCateNameNA}")
+    public String subCategoryList(ModelMap model,
+            @PathVariable("subCateID") Integer subCateID) {
+        if (productStateLessBean.findSubCategoryByID(subCateID) != null) {
+            //2 dòng này thêm để render ra menu chính
+            List<Categories> cateList = productStateLessBean.categoryList();
+            model.addAttribute("cateList", cateList);
+
+            int page = 1;
+            int itemPerPage = 6;
+            String currentProductPageInfo = ((page - 1) * itemPerPage + 1) + " - " + (((page - 1) * itemPerPage) + itemPerPage);
+
+            List<Products> allProductBySubCate = productStateLessBean.findSubCategoryByID(subCateID).getProductList();
+            int numberOfProducts = allProductBySubCate.size();
+
+            float fromPrice = productStateLessBean.getMinPriceOfProduct_BySubCate(subCateID);
+            float toPrice = productStateLessBean.getMaxPriceOfProduct_BySubCate(subCateID);
+
+            List<Object[]> productIDList = productStateLessBean.filterProductBySubCategory(subCateID, page, itemPerPage, fromPrice, toPrice, "", "", 1);
+            List<Products> finalProductList = new ArrayList<>();
+
+            for (Object[] prod : productIDList) {
+                Products product = productStateLessBean.findProductByID((Integer) prod[0]);
+                finalProductList.add(product);
+            }
+            Set<String> colorSet = new HashSet<>();
+            Set<String> sizeSet = new HashSet<>();
+
+            //get List of Color
+            for (Products p : allProductBySubCate) {
+                for (ProductColors pc : p.getProductColorList()) {
+                    colorSet.add(pc.getColor());
+                    for (SizesByColor size : pc.getSizeList()) {
+                        sizeSet.add(size.getProductSize());
+                    }
+                }
+            }
+
+            List<SizeLetterOrder> newSizeList = new ArrayList<>();
+            for (String s : sizeSet) {
+                SizeLetterOrder slo = new SizeLetterOrder();
+                if (s.equals("XXS")) {
+                    slo.setSizeLetter("XXS");
+                    slo.setOrder(0);
+                } else if (s.equals("XS")) {
+                    slo.setSizeLetter("XS");
+                    slo.setOrder(1);
+                } else if (s.equals("S")) {
+                    slo.setSizeLetter("S");
+                    slo.setOrder(2);
+                } else if (s.equals("M")) {
+                    slo.setSizeLetter("M");
+                    slo.setOrder(3);
+                } else if (s.equals("L")) {
+                    slo.setSizeLetter("L");
+                    slo.setOrder(4);
+                } else if (s.equals("XL")) {
+                    slo.setSizeLetter("XL");
+                    slo.setOrder(5);
+                } else if (s.equals("XXL")) {
+                    slo.setSizeLetter("XXL");
+                    slo.setOrder(6);
+                } else if (s.equals("XXXL")) {
+                    slo.setSizeLetter("XXXL");
+                    slo.setOrder(7);
+                }
+                newSizeList.add(slo);
+            }
+
+            Collections.sort(newSizeList, new Comparator<SizeLetterOrder>() {
+                @Override
+                public int compare(SizeLetterOrder o1, SizeLetterOrder o2) {
+                    return o1.getOrder() - o2.getOrder();
+                }
+            });
+            model.addAttribute("subCateID", subCateID);
+            model.addAttribute("allProducts", numberOfProducts);
+            model.addAttribute("currentProductPageInfo", currentProductPageInfo);
+            model.addAttribute("productsList", finalProductList);
+            model.addAttribute("colorList", colorSet);
+            model.addAttribute("sizeList", newSizeList);
+            model.addAttribute("maxPrice", productStateLessBean.getMaxPriceOfProduct_BySubCate(subCateID));
+            model.addAttribute("minPrice", productStateLessBean.getMinPriceOfProduct_BySubCate(subCateID));
+            return "client/pages/sub-categories-grid";
+        } else {
+            return "Ve Trang 404!";
+        }
+
     }
 
     @RequestMapping(value = "/{productID:[0-9]+}-{colorID:[0-9]+}-{productNameNA:[A-Za-z0-9-]+}")
@@ -288,8 +382,118 @@ public class ProductController {
             contentSizeStr = contentSizeStr.substring(0, contentSizeStr.length() - 1);
             filterSize = beginSizeStr + contentSizeStr + endSizeStr;
         }
-        
+
         List<Object[]> allProductFilteredByPrice = productStateLessBean.productsByFilter_OfACategory(cateID, fromPrice, toPrice, filterColor, filterSize);
+
+        int numberOfProducts = allProductFilteredByPrice.size();
+        return "" + numberOfProducts;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/ajax/productPaginationForSubCate", method = RequestMethod.POST)
+    public String productPaginationForSubCate(
+            @RequestParam("subCateID") Integer subCateID,
+            @RequestParam("page") Integer page,
+            @RequestParam("itemPerPage") Integer itemPerPage,
+            @RequestParam("sortBy") Integer sortBy,
+            @RequestParam("fromPrice") Float fromPrice,
+            @RequestParam("toPrice") Float toPrice,
+            @RequestParam(value = "colorFilterArrSubCate[]", required = false) List<String> colorFilterArrSubCate,
+            @RequestParam(value = "sizeFilterArrSubCate[]", required = false) List<String> sizeFilterArrSubCate) {
+        if (fromPrice == null) {
+            fromPrice = productStateLessBean.getMinPriceOfProduct_BySubCate(subCateID);
+        }
+
+        if (toPrice == null) {
+            toPrice = productStateLessBean.getMaxPriceOfProduct_BySubCate(subCateID);
+        }
+        String filterColor = "";
+        String beginColorStr = "AND pc.color in (";
+        String endColorStr = ") ";
+        String contentColorStr = "";
+
+        String filterSize = "";
+        String beginSizeStr = "AND ps.productSize in (";
+        String endSizeStr = ") ";
+        String contentSizeStr = "";
+
+        if (colorFilterArrSubCate != null) {
+            for (String color : colorFilterArrSubCate) {
+                contentColorStr += "'" + color + "',";
+            }
+            contentColorStr = contentColorStr.substring(0, contentColorStr.length() - 1);
+            filterColor = beginColorStr + contentColorStr + endColorStr;
+        }
+
+        if (sizeFilterArrSubCate != null) {
+            for (String size : sizeFilterArrSubCate) {
+                contentSizeStr += "'" + size + "',";
+            }
+            contentSizeStr = contentSizeStr.substring(0, contentSizeStr.length() - 1);
+            filterSize = beginSizeStr + contentSizeStr + endSizeStr;
+        }
+
+        List<Object[]> productIDList = productStateLessBean.filterProductBySubCategory(subCateID, page, itemPerPage, fromPrice, toPrice, filterColor, filterSize, sortBy);
+        List<Products> finalProductList = new ArrayList<>();
+        for (Object[] prod : productIDList) {
+
+            Products product = productStateLessBean.findProductByID((Integer) prod[0]);
+            finalProductList.add(product);
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        String result = "";
+        try {
+            result = mapper.writeValueAsString(finalProductList);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(ProductController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/ajax/getNumberOfProductsByFilter_OfASubCategory", method = RequestMethod.POST)
+    public String getNumberOfProductsByFilter_OfASubCategory(
+            @RequestParam("subCateID") Integer subCateID,
+            @RequestParam("fromPrice") Float fromPrice,
+            @RequestParam("toPrice") Float toPrice,
+            @RequestParam(value = "colorFilterArrSubCate[]", required = false) List<String> colorFilterArrSubCate,
+            @RequestParam(value = "sizeFilterArrSubCate[]", required = false) List<String> sizeFilterArrSubCate
+    ) {
+        if (fromPrice == null) {
+            fromPrice = productStateLessBean.getMinPriceOfProduct_BySubCate(subCateID);
+        }
+
+        if (toPrice == null) {
+            toPrice = productStateLessBean.getMaxPriceOfProduct_BySubCate(subCateID);
+        }
+        String filterColor = "";
+        String beginColorStr = "AND pc.color in (";
+        String endColorStr = ") ";
+        String contentColorStr = "";
+
+        String filterSize = "";
+        String beginSizeStr = "AND ps.productSize in (";
+        String endSizeStr = ") ";
+        String contentSizeStr = "";
+
+        if (colorFilterArrSubCate != null) {
+            for (String color : colorFilterArrSubCate) {
+                contentColorStr += "'" + color + "',";
+            }
+            contentColorStr = contentColorStr.substring(0, contentColorStr.length() - 1);
+            filterColor = beginColorStr + contentColorStr + endColorStr;
+        }
+
+        if (sizeFilterArrSubCate != null) {
+            for (String size : sizeFilterArrSubCate) {
+                contentSizeStr += "'" + size + "',";
+            }
+            contentSizeStr = contentSizeStr.substring(0, contentSizeStr.length() - 1);
+            filterSize = beginSizeStr + contentSizeStr + endSizeStr;
+        }
+
+        List<Object[]> allProductFilteredByPrice = productStateLessBean.productsByFilter_OfASubCategory(subCateID, fromPrice, toPrice, filterColor, filterSize);
 
         int numberOfProducts = allProductFilteredByPrice.size();
         return "" + numberOfProducts;

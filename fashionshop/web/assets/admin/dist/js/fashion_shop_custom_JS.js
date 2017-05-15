@@ -173,9 +173,8 @@ $(document).ready(function () {
                             return false;
                         }
                         animating = true;
-
-                        current_fs = $(".next").parent().parent().parent().parent();
-                        next_fs = $(".next").parent().parent().parent().parent().next();
+                        current_fs = $(".next").parent().parent().parent().parent().parent();
+                        next_fs = $(".next").parent().parent().parent().parent().parent().next();
 
                         //activate next step on progressbar using the index of next_fs
                         $("#fs-product-add-progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
@@ -397,33 +396,43 @@ $(document).ready(function () {
         extensions: ['jpg', 'jpeg', 'png']
     });
 
-    var fs_count_div_color = 0;
+//    var fs_count_div_color = 0;
     /* XỬ LÝ BUTTON ADD-MORE-SIZE - PRODUCT CREATE */
     $("#fs-fieldset-detail").on("click", ".fs-add-more-size", function () {
         var colorNo = $(this).parent().parent().parent().parent().attr("fs-big-div-color");
         var addMoreSize;
         if (colorNo == 0) {
-            addMoreSize = " <div class=\"col-xs-8 fs-div-size\" style=\"padding: 0; border: 1px #CCC dashed; margin-bottom: 5px;\">\n\
-                                <div class=\"form-group col-xs-6\">\n\
-                                    <label>Size</label>\n\
+            addMoreSize = " <div class=\"col-xs-12 fs-div-size\" style=\"padding-left: 0; border: 1px #CCC dashed; margin-bottom: 5px;\">\n\
+                                <div class=\"form-group col-xs-5\">\n\
+                                    <label>Size <span class=\"fs-color-red\">*</span></label>\n\
                                     <input name=\"size\" class=\"form-control fs-product-size\" placeholder=\"Size\" style=\"text-transform:uppercase\">\n\
                                 </div>\n\
-                                <div class=\"form-group col-xs-6\">\n\
-                                    <label>Quantity</label>\n\
+                                <div class=\"form-group col-xs-5\">\n\
+                                    <label>Quantity <span class=\"fs-color-red\">*</span></label>\n\
                                     <input name=\"quantity\" class=\"form-control fs-product-quantity\" placeholder=\"Quantity\">\n\
+                                </div>\n\
+                                <div class=\"form-group col-xs-2\">\n\
+                                    <button style=\"margin-top: 25px\" type=\"button\" data-toggle=\"modal\" class=\"btn btn-danger fs-btn-delete-size\" title=\"Delete Size\">\n\
+                                        <i class=\"fa fa-close\" aria-hidden=\"true\"></i>\n\
+                                    </button>\n\
                                 </div>\n\
                                 <p class=\"fs-error-mess-size\" style=\"color: red; margin-left: 15px\"></p>\n\
                                 <p class=\"fs-error-mess-quantity\" style=\"color: red; margin-left: 15px\"></p>\n\
                             </div>";
         } else {
-            addMoreSize = " <div class=\"col-xs-8 fs-div-size\" style=\"padding: 0; border: 1px #CCC dashed; margin-bottom: 5px;\">\n\
-                                <div class=\"form-group col-xs-6\">\n\
-                                    <label>Size</label>\n\
+            addMoreSize = " <div class=\"col-xs-12 fs-div-size\" style=\"padding-left: 0; border: 1px #CCC dashed; margin-bottom: 5px;\">\n\
+                                <div class=\"form-group col-xs-5\">\n\
+                                    <label>Size <span class=\"fs-color-red\">*</span></label>\n\
                                     <input name=\"size_" + colorNo + "\" class=\"form-control fs-product-size\" placeholder=\"Size\" style=\"text-transform:uppercase\">\n\
                                 </div>\n\
-                                <div class=\"form-group col-xs-6\">\n\
-                                    <label>Quantity</label>\n\
+                                <div class=\"form-group col-xs-5\">\n\
+                                    <label>Quantity <span class=\"fs-color-red\">*</span></label>\n\
                                     <input name=\"quantity_" + colorNo + "\" class=\"form-control fs-product-quantity\" placeholder=\"Quantity\">\n\
+                                </div>\n\
+                                <div class=\"form-group col-xs-2\">\n\
+                                    <button style=\"margin-top: 25px\" type=\"button\" data-toggle=\"modal\" class=\"btn btn-danger fs-btn-delete-size\" title=\"Delete Size\">\n\
+                                        <i class=\"fa fa-close\" aria-hidden=\"true\"></i>\n\
+                                    </button>\n\
                                 </div>\n\
                                 <p class=\"fs-error-mess-size\" style=\"color: red; margin-left: 15px\"></p>\n\
                                 <p class=\"fs-error-mess-quantity\" style=\"color: red; margin-left: 15px\"></p>\n\
@@ -434,30 +443,33 @@ $(document).ready(function () {
     });
 
     /* XỬ LÝ BUTTON ADD-MORE-COLOR - PRODUCT CREATE */
-    $("#fs-add-more-color").click(function () {
-        fs_count_div_color = $(this).parent().siblings("#fs-more-color").find(".fs-div-color").length + 1;
+    $("#fs-fieldset-detail").on("click", "#fs-add-more-color", function () {
+        var fs_count_div_color = $(this).parent().siblings("#fs-more-color").find(".fs-div-color").length + 1;
+        $("#fs-delete-color").removeClass("disabled");
         var addMoreColor = "<div class=\"col-xs-12 fs-div-color\" style=\"padding: 5px 0; border: 1px #CCC dashed; margin-bottom: 10px\" fs-big-div-color=\"" + fs_count_div_color + "\">\n\
                                 <div class=\"col-md-6 fs-right-border\">\n\
                                     <div class=\"form-group\">\n\
-                                        <label>Color</label>\n\
+                                        <label>Color 0" + parseInt(fs_count_div_color + 1) + " <span class=\"fs-color-red\">*</span></label>\n\
                                         <p class=\"help-block\"></p>\n\
                                         <input name=\"color\" class=\"form-control fs-product-color-name\" placeholder=\"Color\">\n\
                                     </div>\n\
                                     <div class=\"form-group\">\n\
-                                        <label>Color Image</label>\n\
+                                        <label>Color Image <span class=\"fs-color-red\">*</span></label>\n\
                                         <p id=\"fs-error-mess-color-img-" + fs_count_div_color + "\" style=\"color: red;\"></p>\n\
                                         <input fs-color-img-index=\"" + fs_count_div_color + "\" type=\"file\" name=\"colorImg[]\" class=\"colorImg\">\n\
                                     </div>\n\
                                     <br>\n\
                                     <div class=\"col-xs-12\" style=\"padding: 0;\">\n\
-                                        <div class=\"col-xs-8\" style=\"padding: 0; border: 1px #CCC dashed; margin-bottom: 5px;\" >\n\
-                                            <div class=\"form-group col-xs-6\">\n\
-                                                <label>Size</label>\n\
+                                        <div class=\"col-xs-12\" style=\"padding-left: 0; border: 1px #CCC dashed; margin-bottom: 5px;\" >\n\
+                                            <div class=\"form-group col-xs-5\">\n\
+                                                <label>Size <span class=\"fs-color-red\">*</span></label>\n\
                                                 <input name=\"size_" + fs_count_div_color + "\"  style=\"text-transform:uppercase\" class=\"form-control fs-product-size\" placeholder=\"Size\">\n\
                                             </div>\n\
-                                            <div class=\"form-group col-xs-6\">\n\
-                                                <label>Quantity</label>\n\
+                                            <div class=\"form-group col-xs-5\">\n\
+                                                <label>Quantity <span class=\"fs-color-red\">*</span></label>\n\
                                                 <input name=\"quantity_" + fs_count_div_color + "\" class=\"form-control fs-product-quantity\" placeholder=\"Quantity\">\n\
+                                            </div>\n\
+                                            <div class=\"form-group col-xs-2\">\n\
                                             </div>\n\
                                             <p class=\"fs-error-mess-size\" style=\"color: red; margin-left: 15px\"></p>\n\
                                             <p class=\"fs-error-mess-quantity\" style=\"color: red; margin-left: 15px\"></p>\n\
@@ -473,7 +485,7 @@ $(document).ready(function () {
                                 </div>\n\
                                 <div class=\"col-md-6\">\n\
                                     <div class=\"form-group\">\n\
-                                        <label>Product Sub Image</label>\n\
+                                        <label>Product Sub Image <span class=\"fs-color-red\">*</span></label>\n\
                                         <p id=\"fs-error-mess-productSubImg-" + fs_count_div_color + "\" class=\"help-block fs-error-mes-productSubImg\"></p>\n\
                                         <input name=\"productSubImg_" + fs_count_div_color + "\" class=\"fs-productSubImg\" type=\"file\" multiple=\"multiple\">\n\
                                     </div>\n\
@@ -497,6 +509,7 @@ $(document).ready(function () {
                 }
             }
         });
+
         $("input[fs-color-img-index=\"" + fs_count_div_color + "\"]").fileuploader({
             limit: 1,
             extensions: ['jpg', 'jpeg', 'png'],
@@ -513,6 +526,35 @@ $(document).ready(function () {
                 }
             }
         });
+    });
+
+    /* XỬ LÝ BUTTON DELETE SIZE */
+    $("#fs-fieldset-detail").on("click", ".fs-btn-delete-size", function () {
+        var elem = $(this).parent().parent();
+        $("#fs-confirm-delete-size").modal("show");
+
+        $("#fs-confirm-delete-size").on("click", ".btn-ok", function () {
+            elem.remove();
+            $("#fs-confirm-delete-size").modal("hide");
+        });
+    });
+
+    /* XỬ LÝ BUTTON DELETE COLOR */
+    $("#fs-fieldset-detail").on("click", "#fs-delete-color", function () {
+        var fs_count_div_color = $(this).parent().siblings("#fs-more-color").find(".fs-div-color").length + 1;
+        if (!$(this).hasClass("disabled")) {
+            $("#fs-modal-change-color-number").text("\"COLOR " + fs_count_div_color + " \"");
+            $("#fs-confirm-delete-color").modal("show");
+        }
+    });
+
+    $("#fs-confirm-delete-color").on("click", ".btn-delete-color-ok", function () {
+        $("span#fs-more-color .fs-div-color").last().remove();
+        $("#fs-confirm-delete-color").modal("hide");
+
+        if ($("span#fs-more-color").children().length < 1) {
+            $("#fs-delete-color").addClass("disabled");
+        }
     });
 
     /* XỬ LÝ ON CHANGE PRODUCT-STATUS product-list.jsp */

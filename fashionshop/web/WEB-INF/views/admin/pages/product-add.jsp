@@ -101,7 +101,7 @@
                                     </button>
                                 </div>
                             </div>
-                         </div>
+                        </div>
                     </div>
                 </fieldset><!-- /fieldset -->
 
@@ -111,7 +111,7 @@
                     <div class="col-xs-12" style="padding: 5px 0; border: 1px #CCC dashed; margin-bottom: 10px" fs-big-div-color="0">
                         <div class="col-md-6 fs-right-border">
                             <div class="form-group">
-                                <label>Color <span class="fs-color-red">*</span></label>
+                                <label>Color 01 <span class="fs-color-red">*</span></label>
                                 <p class="help-block" id="fs-product-color-name-error"></p>
                                 <input name="color" class="form-control fs-product-color-name" id="fs-product-color-name" placeholder="Color">
                             </div>
@@ -123,27 +123,31 @@
                             </div>
 
                             <div class="col-xs-12" style="padding: 0;">
-                                <div class="col-xs-8" style="padding: 0; border: 1px #CCC dashed; margin-bottom: 5px;">
-                                    <div class="form-group col-xs-6">
+                                <div class="col-xs-12" style="padding-left: 0; border: 1px #CCC dashed; margin-bottom: 5px;">
+                                    <div class="form-group col-xs-5">
                                         <label>Size <span class="fs-color-red">*</span></label>
                                         <input id="fs-product-size" name="size" class="form-control fs-product-size" placeholder="Size" style="text-transform:uppercase">
                                     </div>
 
-                                    <div class="form-group col-xs-6">
+                                    <div class="form-group col-xs-5">
                                         <label>Quantity <span class="fs-color-red">*</span></label>
                                         <input id="fs-product-quantity" name="quantity" class="form-control fs-product-quantity" placeholder="Quantity">
                                     </div>
+
+                                    <div class="form-group col-xs-2">
+                                    </div>
+
                                     <p class="fs-error-mess-size" style="color: red; margin-left: 15px"></p>
                                     <p class="fs-error-mess-quantity" style="color: red; margin-left: 15px"></p>
                                 </div>
 
                                 <span class="fs-more-size"></span>
 
-                                <div class="form-group col-xs-4" style="margin-top: 20px">
+                                <div class="form-group col-xs-12" style="margin-top: 20px">
                                     <button type="button" class="btn btn-warning fs-add-more-size" title="Add More Size">
-                                        <i class="fa fa-plus" aria-hidden="true"></i> Add Size
+                                        <i class="fa fa-plus" aria-hidden="true"></i> Add More Size
                                     </button>
-                                </div>                               
+                                </div>            
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -160,8 +164,12 @@
                     <span id="fs-more-color"></span>
 
                     <div class="col-xs-12 text-center">
-                        <button type="button" class="btn btn-danger"  title="Add More Color" id="fs-add-more-color">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Add Color
+                        <button type="button" class="btn btn-success"  title="Add More Color" id="fs-add-more-color">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Add More Color
+                        </button>
+
+                        <button type="button" class="btn btn-danger disabled"  title="Delete Color" id="fs-delete-color">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i> Delete Color
                         </button>
                     </div>
 
@@ -189,3 +197,47 @@
     <!-- /.container-fluid -->
 </div>
 <!-- /#page-wrapper -->
+
+<div class="modal fade" id="fs-confirm-delete-size" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title" id="myModalLabel"><b>Confirm Delete SIZE</b></h3>
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to delete a <b>"Size"</b>, this procedure is irreversible.</p>
+                <p>Do you want to proceed?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger btn-ok">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="fs-confirm-delete-color" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title" id="myModalLabel"><b>Confirm Delete COLOR</b></h3>
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to delete <b id="fs-modal-change-color-number">"COLOR "</b>
+                <p>Do you want to proceed?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger btn-delete-color-ok">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
