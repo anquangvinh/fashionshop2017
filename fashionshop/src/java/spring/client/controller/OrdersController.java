@@ -1,5 +1,7 @@
 package spring.client.controller;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +26,6 @@ import spring.ejb.ProductStateLessBeanLocal;
 import spring.ejb.UserAddressesStateLessBeanLocal;
 import spring.ejb.UsersStateLessBeanLocal;
 import spring.entity.CartLineInfo;
-import spring.entity.CartLineInfoByID;
 import spring.entity.Categories;
 import spring.entity.DiscountVoucher;
 import spring.entity.Orders;
@@ -43,45 +44,47 @@ public class OrdersController {
     OrderStateFulBeanLocal orderStateFulBean = lookupOrderStateFulBeanLocal();
     OrderStateLessBeanLocal orderStateLessBean = lookupOrderStateLessBeanLocal();
 
-    @RequestMapping(value = "addtocart", method = RequestMethod.POST)
-    public String addtocart(ModelMap model, @ModelAttribute("cartLineInfoByID") CartLineInfoByID newCartLineInfoByID,
-            RedirectAttributes flashAttr) {
-        Products pro = orderStateLessBean.getProductByID(newCartLineInfoByID.getProductID());
-        SizesByColor sizesByColor = orderStateLessBean.getSizesByColorBySizeIDandColorID(newCartLineInfoByID.getSizeID(),
-                newCartLineInfoByID.getColorID());
-        if (pro != null) {
-            if (newCartLineInfoByID.getColorID() == 0 || newCartLineInfoByID.getSizeID() == 0) {
-                flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
-                        + "<strong>Danger!</strong> Please choose color and size!.\n"
-                        + "</div>");
-                return "redirect:/" + pro.getProductID() + "-" + pro.getProductColorList().get(0).getColorID() + "-" + pro.getProductNameNA() + ".html";
-            } else {
-                if (sizesByColor != null) {
-                    if (sizesByColor.getQuantity() < newCartLineInfoByID.getQuantity()) {
-                        flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
-                                  + "<strong>Danger!</strong> Not enough stock! Please enter different quantity.\n"
-                                  + "</div>");
-                        return "redirect:/" + pro.getProductID() + "-" + pro.getProductColorList().get(0).getColorID() + "-" + pro.getProductNameNA() + ".html";
-                    }
-                    CartLineInfo cartLineInfo = new CartLineInfo();
-                    cartLineInfo.setProduct(pro);
-                    cartLineInfo.setSizesByColor(sizesByColor);
-                    cartLineInfo.setQuantity(newCartLineInfoByID.getQuantity());
-                    orderStateFulBean.addProduct(cartLineInfo);
-                    flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
-                              + "<strong>Success!</strong> Add Product to Cart Successfully!\n"
-                              + "</div>");
-                    return "redirect:/" + pro.getProductID() + "-" + pro.getProductColorList().get(0).getColorID() + "-" + pro.getProductNameNA() + ".html";
-                }
-                flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
-                          + "<strong>Danger!</strong> Color and Size error!\n"
-                          + "</div>");
-                return "redirect:/" + pro.getProductID() + "-" + pro.getProductColorList().get(0).getColorID() + "-" + pro.getProductNameNA() + ".html";
-            }
-        }
-        return "redirect:/index.html";
-    }
-
+//    @RequestMapping(value = "addtocart/{colorID}/{sizeID}/{productID}/{quantity}", method = RequestMethod.POST)
+//    public String addtocart(ModelMap model,
+//              @PathVariable("colorID") Integer colorID,
+//              @PathVariable("sizeID") Integer sizeID,
+//              @PathVariable("productID") Integer productID,
+//              @PathVariable("quantity") Integer quantity,
+//              RedirectAttributes flashAttr) {
+//        Products pro = orderStateLessBean.getProductByID(productID);
+//        SizesByColor sizesByColor = orderStateLessBean.getSizesByColorBySizeIDandColorID(sizeID,colorID);
+//        if (pro != null) {
+//            if (colorID == 0 || sizeID == 0) {
+//                flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
+//                          + "<strong>Danger!</strong> Please choose color and size!.\n"
+//                          + "</div>");
+//                return "redirect:/" + pro.getProductID() + "-" + pro.getProductColorList().get(0).getColorID() + "-" + pro.getProductNameNA() + ".html";
+//            } else {
+//                if (sizesByColor != null) {
+//                    if (sizesByColor.getQuantity() < quantity) {
+//                        flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
+//                                  + "<strong>Danger!</strong> Not enough stock! Please enter different quantity.\n"
+//                                  + "</div>");
+//                        return "redirect:/" + pro.getProductID() + "-" + pro.getProductColorList().get(0).getColorID() + "-" + pro.getProductNameNA() + ".html";
+//                    }
+//                    CartLineInfo cartLineInfo = new CartLineInfo();
+//                    cartLineInfo.setProduct(pro);
+//                    cartLineInfo.setSizesByColor(sizesByColor);
+//                    cartLineInfo.setQuantity(quantity);
+//                    orderStateFulBean.addProduct(cartLineInfo);
+//                    flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
+//                              + "<strong>Success!</strong> Add Product to Cart Successfully!\n"
+//                              + "</div>");
+//                    return "redirect:/" + pro.getProductID() + "-" + pro.getProductColorList().get(0).getColorID() + "-" + pro.getProductNameNA() + ".html";
+//                }
+//                flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
+//                          + "<strong>Danger!</strong> Color and Size error!\n"
+//                          + "</div>");
+//                return "redirect:/" + pro.getProductID() + "-" + pro.getProductColorList().get(0).getColorID() + "-" + pro.getProductNameNA() + ".html";
+//            }
+//        }
+//        return "redirect:/index.html";
+//    }
     @ResponseBody
     @RequestMapping(value = "ajax/addtocart", method = RequestMethod.POST)
     public String ajaxAddtocart(@RequestParam("productID") Integer productID,
@@ -92,14 +95,14 @@ public class OrdersController {
         SizesByColor sizesByColor = orderStateLessBean.getSizesByColorBySizeIDandColorID(sizeID, colorID);
         if (pro != null) {
             if (sizesByColor != null) {
-                if (sizesByColor.getQuantity() < quantity) { 
+                if (sizesByColor.getQuantity() < quantity) {
                     return "1"; //Not enough stock! Please enter different quantity.
                 }
                 CartLineInfo cartLineInfo = new CartLineInfo();
                 cartLineInfo.setProduct(pro);
                 cartLineInfo.setSizesByColor(sizesByColor);
                 cartLineInfo.setQuantity(quantity);
-                orderStateFulBean.addProduct(cartLineInfo); 
+                orderStateFulBean.addProduct(cartLineInfo);
                 return "0"; //Add Product to Cart Successfully!
             }
             return "2"; //Color and Size error!
@@ -226,8 +229,8 @@ public class OrdersController {
     public String updatecart(ModelMap model, HttpServletRequest request, RedirectAttributes flashAttr) {
         for (CartLineInfo cartLineInfo : orderStateFulBean.showCart()) {
             String codeIdentify = cartLineInfo.getProduct().getProductID() + "-"
-                    + cartLineInfo.getSizesByColor().getSizeID() + "-"
-                    + cartLineInfo.getSizesByColor().getColor().getColorID();
+                      + cartLineInfo.getSizesByColor().getSizeID() + "-"
+                      + cartLineInfo.getSizesByColor().getColor().getColorID();
             if (request.getParameter(codeIdentify) != null) {
                 CartLineInfo oldCartLineInfo = cartLineInfo;
                 cartLineInfo.setQuantity(Integer.parseInt(request.getParameter(codeIdentify)));
@@ -235,31 +238,31 @@ public class OrdersController {
             }
         }
         flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
-                + "<strong>Success!</strong> Update Cart Successfully!.\n"
-                + "</div>");
+                  + "<strong>Success!</strong> Update Cart Successfully!.\n"
+                  + "</div>");
         return "redirect:/orders/shoppingcart.html";
     }
 
     @RequestMapping(value = "deleteitemCart/{productid}/{sizeID}/{colorID}", method = RequestMethod.GET)
     public String deleteitemCart(@PathVariable("productid") int productid,
-            @PathVariable("sizeID") int sizeid,
-            @PathVariable("colorID") int colorid,
-            RedirectAttributes flashAttr) {
+              @PathVariable("sizeID") int sizeid,
+              @PathVariable("colorID") int colorid,
+              RedirectAttributes flashAttr) {
         CartLineInfo cartLineInfo = orderStateFulBean.getProductInListByID(productid, sizeid, colorid);
         if (cartLineInfo != null) {
             orderStateFulBean.deleteProduct(cartLineInfo);
         }
         flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
-                + "<strong>Success!</strong> Delete Item in Cart Successfully!.\n"
-                + "</div>");
+                  + "<strong>Success!</strong> Delete Item in Cart Successfully!.\n"
+                  + "</div>");
         return "redirect:/orders/shoppingcart.html";
     }
 
     @ResponseBody
     @RequestMapping(value = "deleteitemCartInHeader", method = RequestMethod.POST)
     public String deleteitemCartInHeader(@RequestParam("productID") Integer productid,
-            @RequestParam("sizeID") Integer sizeid,
-            @RequestParam("colorID") Integer colorid) {
+              @RequestParam("sizeID") Integer sizeid,
+              @RequestParam("colorID") Integer colorid) {
         CartLineInfo cartLineInfo = orderStateFulBean.getProductInListByID(productid, sizeid, colorid);
         if (cartLineInfo != null) {
             orderStateFulBean.deleteProduct(cartLineInfo);
@@ -273,12 +276,10 @@ public class OrdersController {
         if (email == null) {
             return "redirect:/user/login.html";
         }
-
         model.addAttribute("orderList", orderStateLessBean.getAllOrderByUserID(usersStateLessBean.findUserByEmail(email).getUserID()));
         //2 dòng này thêm để render ra menu chính
         List<Categories> cateList = productStateLessBean.categoryList();
         model.addAttribute("cateList", cateList);
-
         return "client/pages/order-history";
     }
 
@@ -290,6 +291,9 @@ public class OrdersController {
         }
         model.addAttribute("orderdetailList", orderStateLessBean.getAllOrderDetailByOrderID(orderID));
         model.addAttribute("order", orderStateLessBean.getOrderByID(orderID));
+        //2 dòng này thêm để render ra menu chính
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
         return "client/pages/order-history-detail";
     }
 
@@ -316,50 +320,47 @@ public class OrdersController {
         if (orderStateFulBean.showCart().size() == 0) {
             subTotal = 0;
             cartSize = 0;
-//            str_cart_small = "<div class=\"ci-item\">\n"
-//                      + "<p>You have no product in cart</p>\n"
-//                      + "    </div>";
         } else {
             subTotal = orderStateFulBean.subTotal();
             cartSize = orderStateFulBean.showCart().size();
             str_cart_button = "<div class=\"cart-btn\">\n"
-                    + "                                <a href=\"orders/shoppingcart.html\">View Bag</a>\n"
-                    + "                                <a href=\"orders/checkout.html\">Checkout</a>\n"
-                    + "                            </div>";
+                      + "                                <a href=\"orders/shoppingcart.html\">View Bag</a>\n"
+                      + "                                <a href=\"orders/checkout.html\">Checkout</a>\n"
+                      + "                            </div>";
             str_subtotal = "<div class=\"ci-total\">Subtotal: $" + subTotal + "</div>";
             for (CartLineInfo cartLineInfo : orderStateFulBean.showCart()) {
                 str_cart_detail += "<div class=\"ci-item\">\n"
-                        + "        <img src=\"assets/images/products/" + cartLineInfo.getProduct().getUrlImg() + "\" width=\"90\" alt=\"\"/>\n"
-                        + "        <div class=\"ci-item-info\">\n"
-                        + "            <h5>\n"
-                        + "                <a href=\"" + cartLineInfo.getProduct().getProductID() + "-" + cartLineInfo.getProduct().getProductColorList().get(0).getColorID() + "-" + cartLineInfo.getProduct().getProductNameNA() + ".html\">\n"
-                        + "                    " + cartLineInfo.getProduct().getProductName() + "\n"
-                        + "                </a>\n"
-                        + "            </h5>\n"
-                        + "<p>&nbsp Size: " + cartLineInfo.getSizesByColor().getProductSize() + "\n"
-                        + "                                            <img fs-color=\"" + cartLineInfo.getSizesByColor().getColor().getColorID() + "\" \n"
-                        + "                                                 src=\"assets/images/products/colors/" + cartLineInfo.getSizesByColor().getColor().getUrlColorImg() + "\" \n"
-                        + "                                                 class=\"img-responsive\" \n"
-                        + "                                                 alt=\"" + cartLineInfo.getSizesByColor().getColor().getUrlColorImg() + "\" \n"
-                        + "                                                 title=\"" + cartLineInfo.getSizesByColor().getColor().getColor() + "\"\n"
-                        + "                                                 style=\"width: 18px; height: 18px;\"/>\n"
-                        + "                                        </p>"
-                        + "            <p>&nbsp " + cartLineInfo.getQuantity() + " &nbsp x $" + cartLineInfo.getProduct().getPrice() + "</p>\n"
-                        + "            <div class=\"ci-edit\">\n"
-                        + "                <!--<a href=\"#\" class=\"edit fa fa-edit\"></a>-->\n"
-                        + "                <button onclick=\"deleteItem(" + cartLineInfo.getProduct().getProductID() + "," + cartLineInfo.getSizesByColor().getSizeID() + "," + cartLineInfo.getSizesByColor().getColor().getColorID() + ");\" class=\"edit fa fa-trash\"></button>\n"
-                        + "            </div>\n"
-                        + "        </div>\n"
-                        + "    </div>";
+                          + "        <img src=\"assets/images/products/" + cartLineInfo.getProduct().getUrlImg() + "\" width=\"90\" alt=\"\"/>\n"
+                          + "        <div class=\"ci-item-info\">\n"
+                          + "            <h5>\n"
+                          + "                <a href=\"" + cartLineInfo.getProduct().getProductID() + "-" + cartLineInfo.getProduct().getProductColorList().get(0).getColorID() + "-" + cartLineInfo.getProduct().getProductNameNA() + ".html\">\n"
+                          + "                    " + cartLineInfo.getProduct().getProductName() + "\n"
+                          + "                </a>\n"
+                          + "            </h5>\n"
+                          + "<p>&nbsp Size: " + cartLineInfo.getSizesByColor().getProductSize() + "\n"
+                          + "                                            <img fs-color=\"" + cartLineInfo.getSizesByColor().getColor().getColorID() + "\" \n"
+                          + "                                                 src=\"assets/images/products/colors/" + cartLineInfo.getSizesByColor().getColor().getUrlColorImg() + "\" \n"
+                          + "                                                 class=\"img-responsive\" \n"
+                          + "                                                 alt=\"" + cartLineInfo.getSizesByColor().getColor().getUrlColorImg() + "\" \n"
+                          + "                                                 title=\"" + cartLineInfo.getSizesByColor().getColor().getColor() + "\"\n"
+                          + "                                                 style=\"width: 18px; height: 18px;\"/>\n"
+                          + "                                        </p>"
+                          + "            <p>&nbsp " + cartLineInfo.getQuantity() + " &nbsp x $" + cartLineInfo.getProduct().getPrice() + "</p>\n"
+                          + "            <div class=\"ci-edit\">\n"
+                          + "                <!--<a href=\"#\" class=\"edit fa fa-edit\"></a>-->\n"
+                          + "                <button onclick=\"deleteItem(" + cartLineInfo.getProduct().getProductID() + "," + cartLineInfo.getSizesByColor().getSizeID() + "," + cartLineInfo.getSizesByColor().getColor().getColorID() + ");\" class=\"edit fa fa-trash\"></button>\n"
+                          + "            </div>\n"
+                          + "        </div>\n"
+                          + "    </div>";
             }
         }
         str_cart_big = "<span><i class=\"fa fa-shopping-cart\"></i></span>\n"
-                + "<div class=\"cart-info\">\n"
-                + "<small>You have <em class=\"highlight\">" + cartSize + " item(s)</em> in your shopping bag</small>\n"
-                + str_cart_detail
-                + str_subtotal
-                + str_cart_button
-                + "                        </div>";
+                  + "<div class=\"cart-info\">\n"
+                  + "<small>You have <em class=\"highlight\">" + cartSize + " item(s)</em> in your shopping bag</small>\n"
+                  + str_cart_detail
+                  + str_subtotal
+                  + str_cart_button
+                  + "                        </div>";
 
         return str_cart_big;
     }
@@ -372,12 +373,14 @@ public class OrdersController {
             if (discountVoucher.getQuantity() == 0) {
                 return "empty";
             } else {
+                DecimalFormat df = new DecimalFormat("#.#");
+                df.setRoundingMode(RoundingMode.FLOOR);
                 float discountTotal = orderStateFulBean.subTotal() * discountVoucher.getFloatDiscount();
                 float orderTotal = orderStateFulBean.subTotal() - discountTotal;
                 String str_show_discount = "<tr>\n"
                           + "                                    <th>Discount</th>\n"
                           + "                                    <td>\n"
-                          + "                                        <div class=\"\">-$" + discountTotal + "</div>\n"
+                          + "                                        <div class=\"\">-$" + df.format(discountTotal) + "</div>\n"
                           + "                                    </td> \n"
                           + "                                </tr>\n"
                           + "                                <tr>\n"
@@ -396,17 +399,17 @@ public class OrdersController {
     @RequestMapping(value = "ajax/nodiscount", method = RequestMethod.GET)
     public String getNoDiscount() {
         String str_show = "<tr>\n"
-                + "                                    <th>Discount</th>\n"
-                + "                                    <td>\n"
-                + "                                        <div class=\"\">$0.0</div>\n"
-                + "                                    </td> \n"
-                + "                                </tr>\n"
-                + "                                <tr>\n"
-                + "                                    <th>Order Total</th>\n"
-                + "                                    <td>\n"
-                + "                                        <div class=\"grandTotal\">$" + orderStateFulBean.subTotal() + "</div>\n"
-                + "                                    </td> \n"
-                + "                                </tr>";
+                  + "                                    <th>Discount</th>\n"
+                  + "                                    <td>\n"
+                  + "                                        <div class=\"\">$0.0</div>\n"
+                  + "                                    </td> \n"
+                  + "                                </tr>\n"
+                  + "                                <tr>\n"
+                  + "                                    <th>Order Total</th>\n"
+                  + "                                    <td>\n"
+                  + "                                        <div class=\"grandTotal\">$" + orderStateFulBean.subTotal() + "</div>\n"
+                  + "                                    </td> \n"
+                  + "                                </tr>";
         return str_show;
     }
 

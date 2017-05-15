@@ -7,10 +7,14 @@ package spring.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class DiscountVoucher implements Serializable {
@@ -18,8 +22,14 @@ public class DiscountVoucher implements Serializable {
     private String voucherID;
     private Short discount;
     private Integer quantity;
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "dd-MM-YYYY")
+    private Date beginDate;
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "dd-MM-YYYY")
+    private Date endDate;
     private String description;
-    
+
     @OneToMany(mappedBy = "voucher")
     @JsonManagedReference
     private List<Orders> ordersList;
@@ -50,6 +60,22 @@ public class DiscountVoucher implements Serializable {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+    
+    public Date getBeginDate() {
+        return beginDate;
+    }
+
+    public void setBeginDate(Date beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public String getDescription() {

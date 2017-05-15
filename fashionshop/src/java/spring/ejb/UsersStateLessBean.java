@@ -72,9 +72,6 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
                     newUserAddress.setPhoneNumber(phone);
 
                     addUserAddress(newUserAddress);
-                } else if (phone.equals("") || address.equals("")) {
-                    String ee = "Input phone and Address";
-                    error = 3;
                 }
                 error = 1;  //add mới thành công
             } catch (Exception e) {
@@ -103,58 +100,6 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
         return true;
     }
 
-//    @Override
-//    public int updateUserPass(Users user, String pass, String repass) {
-//        int error = 0;
-//        Users findEmail = findUserByEmail(user.getEmail());
-//        if (findEmail != null) {
-//            error = 2; // email đã có
-//            if (!findEmail.getPassword().equals(pass)) {
-//                error = 4;
-//            } else {
-//                if (findEmail.getPassword().equals(repass)) {
-//                    error = 3;
-//                } else if (!repass.equals("")) {
-//                    findEmail.setPassword(repass);
-//                    getEm().merge(findEmail);
-//                    error = 1;
-//                } else if (repass.equals("")) {
-//                    error = 5;
-//                }
-//
-//            }
-////        }else{
-////            
-////            try {
-////                getEm().merge(user);
-////                error = 1; // cập nhật thành công
-//////                Users finduserID = getUserByID(user.getUserID());
-//////                if(finduserID == null){
-//////                //
-//////                }else{
-//////                if(!pass.equals("")){
-//////                    finduserID.setPassword(pass);
-//////                    getEm().merge(finduserID);
-//////                    error = 2; // cập nhật pass ok
-//////                }else if(finduserID.getPassword().equals(pass)){
-//////                    error = 3 ; // không đổi pass
-//////                }
-////////                else if(!finduserID.getPassword().equals(user.getPassword())){
-////////                    error = 4; //  sai pass cũ
-////////                }
-//////                else if(pass.equals("")){
-//////                    error = 5; // repass để trống
-//////                }
-//////                }
-////            } catch (Exception e) {
-////                error = 0;
-////            }
-////        }
-//        }
-//        return error;
-//
-//    }
-
     @Override
     public void changePass(int userID,String newpass){
         Users findID = getUserByID(userID);
@@ -171,7 +116,11 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
         } else {
             if (userfindemail.getPassword().equals(pass)) { //trường hợp này được login => kiểm tra role ở đây
                 if (userfindemail.getRole().getRoleID() == 1 || userfindemail.getRole().getRoleID() == 2) {
+                    if(userfindemail.getStatus() == 1){
                     error = 1; // => admin or moderator
+                    }else {
+                        error = 4; // moderator bị block
+                    }
                 } else {
                     error = 3; // => user
                 }
@@ -190,7 +139,11 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
             error = 2; // sai email
         } else {
             if (userfindEmail.getPassword().equals(pass)) {
+                if(userfindEmail.getStatus() == 1){
                 error = 1; // login thành công
+                }else {
+                    error = 3; // users bị block
+                }
             } else {
                 error = 0; // sai password
             }
@@ -198,16 +151,12 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
         return error;
     }
 
-//    @Override
-//    public int updateUser(Users user, String pass, String repass) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
     @Override
     public int updateUser(Users user) {
         int error;
-        Users findEmailOld = findUserByEmail(user.getEmail());
-        Users findEmailNew = findUserByEmail(user.getEmail());
-        if(findEmailOld.getEmail().equals(user.getEmail())){ // không thay đổi email
+        Users findID = getUserByID(user.getUserID());
+//        if(findEmail == null){
+        if(findID.getEmail().equals(user.getEmail())){ // không thay đổi email
             try {
                 getEm().merge(user);
                 error = 1;
@@ -216,7 +165,7 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
             }
         }
         else{
-        if (findEmailNew != null) {
+        if (findID.getEmail() != null) {
             error = 2;// email đã có
         } else {
             try {
@@ -236,5 +185,13 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
         q.setParameter("userID", userID);
         return q.getResultList();
     }
+
+    @Override
+    public List<Users> getAllEmail() {
+        Query q = getEm().createQuery("SELECT u.email FROM Users u", Users.class);
+        return q.getResultList();
+    }
+
+    
 
 }

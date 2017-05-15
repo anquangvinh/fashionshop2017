@@ -17,7 +17,7 @@
                 <!-- HTML -->
                 <div id="account-id">
                     <h4 class="account-title">
-                        <span class="fa fa-chevron-right"></span>Order Details NO.${order.ordersID}
+                        <span class="fa fa-chevron-right"></span>Order Details For Order NO.${order.ordersID}
                     </h4>                                                                    
                     <div class="order-history">
                         <table class="cart-table">
@@ -38,14 +38,14 @@
                                 <c:forEach items="${orderdetailList}" var="orderdetail">
                                     <tr>
                                         <!--<td align="center">${orderdetail.ordersDetailID}</td>-->
-                                        <td align="center">${orderdetail.getProduct().getProductName()}</td>
-                                        <td style="width: 50px;">${orderdetail.getSize().getColor().getColor()}</td>
-                                        <td align="center">${orderdetail.getSize().productSize}</td>
-                                        <td align="center">${orderdetail.quantity}</td>
-                                        <td align="center">$${orderdetail.price}</td>
-                                        <td align="center">-$${orderdetail.product.getProductDiscountPrice()}</td>
-                                        <td align="center">$${orderdetail.getSubTotal()}</td>
-                                        <td align="center">
+                                        <td class="text-center fs-valign-middle">${orderdetail.getProduct().getProductName()}</td>
+                                        <td class="text-center fs-valign-middle">${orderdetail.getSize().getColor().getColor()}</td>
+                                        <td class="text-center fs-valign-middle" style="width: 50px;">${orderdetail.getSize().productSize}</td>
+                                        <td class="text-center fs-valign-middle">${orderdetail.quantity}</td>
+                                        <td class="text-center fs-valign-middle">$${orderdetail.price}</td>
+                                        <td class="text-center fs-valign-middle">-$${orderdetail.product.getProductDiscountPrice()}</td>
+                                        <td class="text-center fs-valign-middle">$${orderdetail.getSubTotal()}</td>
+                                        <td class="text-center fs-valign-middle">
                                             <c:choose>
                                                 <c:when test="${orderdetail.status == 1}">Canceled</c:when>
                                                 <c:when test="${orderdetail.status == 2}">New</c:when>

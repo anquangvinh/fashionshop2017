@@ -19,7 +19,7 @@
                         <button type="submit"><i class="fa fa-search"></i></button>
                     </form>
                 </div>-->
-                <div class="side-widget space50">
+<!--                <div class="side-widget space50">
                     <h3><span>Categories</span></h3>
 
                     <c:forEach items="${getBlogCateListDetail}" var="blogcateclientdetail">
@@ -28,7 +28,7 @@
                         </ul>
                     </c:forEach>
 
-                </div>
+                </div>-->
                 <div class="side-widget space50">
                     <h3><span>Popular Post</span></h3>
                     <ul class="list-unstyled popular-post">
@@ -86,8 +86,8 @@
                     <article class="blogpost">
                         <h2 class="post-title">${getShowAllBlogsDetail.blogTitle}</h2>
                         <div class="post-meta">
-                            <span><a href="#"><i class="fa fa-calendar"></i>&nbsp; ${getShowAllBlogsDetail.postedDate}</a></span>
-                            <span><a href="#"><i class="fa fa-user"></i>&nbsp; ${getShowAllBlogsDetail.user.lastName} ${getShowAllBlogsDetail.user.firstName}</a></span>
+                            <span><i class="fa fa-calendar"></i>&nbsp; ${getShowAllBlogsDetail.postedDate}</span>
+                            <span><i class="fa fa-user"></i>&nbsp; ${getShowAllBlogsDetail.user.lastName} ${getShowAllBlogsDetail.user.firstName}</span>
                             <span><i class="fa fa-folder"></i><a href="blog-categories/${getShowAllBlogsDetail.blogCategory.blogCateID}.html">&nbsp; ${getShowAllBlogsDetail.blogCategory.blogCateName}</a></span>
                         </div>
                         <div class="space30"></div>

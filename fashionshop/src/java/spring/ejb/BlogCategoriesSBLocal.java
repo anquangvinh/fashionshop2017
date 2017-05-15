@@ -15,17 +15,17 @@ import spring.entity.BlogCategories;
  */
 @Local
 public interface BlogCategoriesSBLocal {
-     List<BlogCategories> getBlogCategoriesList();
-    
+
+    List<BlogCategories> getBlogCategoriesList();
+
     int addNewBlogCategories(BlogCategories newBlogCate);
-    
+
     boolean updateCategories(BlogCategories cate);
-    
+
     int findCategoriesByName(String blogCateName);
-    
+
     BlogCategories findCategoryByID(int blogCateID);
-    
-      boolean deleteCategory(int blogCateID);
-    
-    
+
+    int deleteCategory(BlogCategories blogCategories);
+
 }

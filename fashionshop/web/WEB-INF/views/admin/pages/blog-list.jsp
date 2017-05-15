@@ -22,48 +22,54 @@
                 <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
                     <thead>
                         <tr>
-                            <th class="text-center fs-valign-middle">No.</th>
-                            <th class="text-center fs-valign-middle">Category</th>
-                            <th class="text-center fs-valign-middle">Poster</th>
-                            <th class="text-center fs-valign-middle">Title</th>
-                            <th class="text-center fs-valign-middle">Summary</th>
-                            <th class="text-center fs-valign-middle">Image</th>
-                            <th class="text-center fs-valign-middle">Content</th>
-                            <th class="text-center fs-valign-middle">Posted Date</th>
-                            <th class="text-center fs-valign-middle">Views</th>
-                            <th class="text-center fs-valign-middle">Status</th>
-                            <th class="text-center fs-valign-middle">Actions</th>
+                            <th>No.</th>
+                            <th>Category</th>
+                            <th>Poster</th>
+                            <th>Title</th>
+                            <th>Summary</th>
+                            <th>Image</th>
+                            <th>Content</th>
+                            <th>Posted Date</th>
+                            <th>Views</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
 
                         <c:forEach items="${blogsList}" var="blogs">
                             <tr>
-                                <td class="text-center fs-valign-middle">${blogs.blogID}</td>
+                                <td>${blogs.blogID}</td>
 
-                                <td class="text-center fs-valign-middle">
+                                <td>
                                     ${blogs.blogCategory.blogCateName}
                                 </td>  
-                                <td class="text-center fs-valign-middle">${blogs.user.lastName} ${blogs.user.firstName}</td>
-                                <td class="text-center fs-valign-middle">${blogs.blogTitle}</td>
-                                <td class="text-center fs-valign-middle">${blogs.blogSummary}</td>
-                                <td class="text-center fs-valign-middle">
-                                     <img class="responsive" style="width: 100px" src="assets/images/blog/1/${blogs.blogImg}" alt=""/>
+                                <td>${blogs.user.lastName} ${blogs.user.firstName}</td>
+                                <td>${blogs.blogTitle}</td>
+                                <td>${blogs.blogSummary}</td>
+                                <td>
+                                    <img class="responsive" style="width: 100px" src="assets/images/blog/1/${blogs.blogImg}" alt=""/>
                                 </td>
                                 <td class="text-center fs-valign-middle">${blogs.content}</td>
-                                <td class="text-center fs-valign-middle">  
+                                <td>  
                                     <fmt:formatDate value="${blogs.postedDate}" pattern="dd-MM-YYYY" />
                                 </td>
-                                <td class="text-center fs-valign-middle">${blogs.blogViews}</td>
-                                <td class="text-center fs-valign-middle">
-                                    ${blogs.status}
+                                <td >${blogs.blogViews}</td>
+                                <td >
+
+                                    <c:if test="${blogs.status == 0}">
+                                        Enable
+                                    </c:if>
+                                    <c:if test="${blogs.status == 1}">
+                                        Disable
+                                    </c:if>
                                 </td>
                                 <td>
                                     <a href="admin/blog/edit/${blogs.blogID}.html" class="btn btn-warning">Update  <i class="fa fa-edit"></i></a>
                                 </td>
                             </tr>
                         </c:forEach>
-            
+
                     </tbody>
                 </table>
 

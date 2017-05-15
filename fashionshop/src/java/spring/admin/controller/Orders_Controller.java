@@ -5,6 +5,7 @@
  */
 package spring.admin.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,6 +40,25 @@ public class Orders_Controller {
     public String ordersList(ModelMap model) {
         model.addAttribute("orderList", orderStateLessBean.getAllOrder());
         return "admin/pages/orders-list";
+    }
+
+    @RequestMapping(value = "chart")
+    public String ordersChart(ModelMap model) {
+        return "admin/pages/orders-chart";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "ajax/getOrderListForChart", method = RequestMethod.GET)
+    public String getOrderListForChart() {
+        List<Orders> ordersList = orderStateLessBean.getAllOrder();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String result = mapper.writeValueAsString(ordersList);
+            return result;
+        } catch (Exception e) {
+            return "Error!" + e.getMessage();
+        }
+
     }
 
     @RequestMapping(value = "discountlist")
@@ -77,15 +97,24 @@ public class Orders_Controller {
         if (searchType == 1) {
             List<Products> proList = orderStateLessBean.getListProductsByName(searchText);
             if (proList != null) {
-                for (Products pro : proList) {
+                for (int i = 0; i < 4; i++) {
                     html += "<tr>\n"
-                              + "<td class=\"text-center fs-valign-middle proID\">" + pro.getProductID() + "</td>\n"
-                              + "<td class=\"text-center fs-valign-middle\">" + pro.getProductName() + "</td>\n"
-                              + "<td class=\"text-center fs-valign-middle\">" + pro.getCategory().getCateName() + "/" + pro.getSubCate().getSubCateName() + "</td>\n"
-                              + "<td class=\"text-center fs-valign-middle\"> $" + pro.getProductDiscount() + "</td>\n"
-                              + "<td class=\"text-center fs-valign-middle\"> $" + pro.getPrice() + "</td>\n"
+                              + "<td class=\"text-center fs-valign-middle proID\">" + proList.get(i).getProductID() + "</td>\n"
+                              + "<td class=\"text-center fs-valign-middle\">" + proList.get(i).getProductName() + "</td>\n"
+                              + "<td class=\"text-center fs-valign-middle\">" + proList.get(i).getCategory().getCateName() + "/" + proList.get(i).getSubCate().getSubCateName() + "</td>\n"
+                              + "<td class=\"text-center fs-valign-middle\"> $" + proList.get(i).getProductDiscount() + "</td>\n"
+                              + "<td class=\"text-center fs-valign-middle\"> $" + proList.get(i).getPrice() + "</td>\n"
                               + "</tr>";
                 }
+//                for (Products pro : proList) {
+//                    html += "<tr>\n"
+//                              + "<td class=\"text-center fs-valign-middle proID\">" + pro.getProductID() + "</td>\n"
+//                              + "<td class=\"text-center fs-valign-middle\">" + pro.getProductName() + "</td>\n"
+//                              + "<td class=\"text-center fs-valign-middle\">" + pro.getCategory().getCateName() + "/" + pro.getSubCate().getSubCateName() + "</td>\n"
+//                              + "<td class=\"text-center fs-valign-middle\"> $" + pro.getProductDiscount() + "</td>\n"
+//                              + "<td class=\"text-center fs-valign-middle\"> $" + pro.getPrice() + "</td>\n"
+//                              + "</tr>";
+//                }
             } else {
                 html = "0";
             }
@@ -169,14 +198,14 @@ public class Orders_Controller {
                 Orders orders = orderStateLessBean.getOrderByID(orderID);
                 if (pro == null || orders == null) {
                     return "";
-                }else{
+                } else {
                     CartLineInfo cartLineInfo = new CartLineInfo();
                     cartLineInfo.setProduct(pro);
                     cartLineInfo.setQuantity(quantity);
                     cartLineInfo.setSizesByColor(sizesByColor);
                     if (orderStateLessBean.createOrderDetail(cartLineInfo, orders) == 0) {
                         return "";
-                    }else{
+                    } else {
                         return "1";
                     }
                 }
@@ -198,18 +227,18 @@ public class Orders_Controller {
         int checkSta = orderStateLessBean.createDiscountVoucher(newDiscountVoucher);
         if (checkSta == 2) {
             model.addAttribute("error", "<div class=\"alert alert-danger\">\n"
-                      + "<strong>Danger!</strong> Discount Code has been existed!.\n"
+                      + "<strong>Discount Code has been existed</strong>\n"
                       + "</div>");
             model.addAttribute("discountVoucher", newDiscountVoucher);
             return "admin/pages/discount-add";
         } else if (checkSta == 0) {
             flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
-                      + "<strong>Danger!</strong> Error was happened!.\n"
+                      + "<strong>Error was happened</strong>\n"
                       + "</div>");
             return "redirect:/admin/orders/discountadd.html";
         } else {
             flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
-                      + "<strong>Success!</strong> Create New Discount Voucher Successfully!.\n"
+                      + "<strong>Create New Discount Voucher Successfully</strong>\n"
                       + "</div>");
             return "redirect:/admin/orders/discountadd.html";
         }
