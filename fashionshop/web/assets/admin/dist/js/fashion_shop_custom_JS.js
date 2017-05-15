@@ -173,9 +173,8 @@ $(document).ready(function () {
                             return false;
                         }
                         animating = true;
-
-                        current_fs = $(".next").parent().parent().parent().parent();
-                        next_fs = $(".next").parent().parent().parent().parent().next();
+                        current_fs = $(".next").parent().parent().parent().parent().parent();
+                        next_fs = $(".next").parent().parent().parent().parent().parent().next();
 
                         //activate next step on progressbar using the index of next_fs
                         $("#fs-product-add-progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
@@ -397,33 +396,43 @@ $(document).ready(function () {
         extensions: ['jpg', 'jpeg', 'png']
     });
 
-    var fs_count_div_color = 0;
+//    var fs_count_div_color = 0;
     /* XỬ LÝ BUTTON ADD-MORE-SIZE - PRODUCT CREATE */
     $("#fs-fieldset-detail").on("click", ".fs-add-more-size", function () {
         var colorNo = $(this).parent().parent().parent().parent().attr("fs-big-div-color");
         var addMoreSize;
         if (colorNo == 0) {
-            addMoreSize = " <div class=\"col-xs-8 fs-div-size\" style=\"padding: 0; border: 1px #CCC dashed; margin-bottom: 5px;\">\n\
-                                <div class=\"form-group col-xs-6\">\n\
-                                    <label>Size</label>\n\
+            addMoreSize = " <div class=\"col-xs-12 fs-div-size\" style=\"padding-left: 0; border: 1px #CCC dashed; margin-bottom: 5px;\">\n\
+                                <div class=\"form-group col-xs-5\">\n\
+                                    <label>Size <span class=\"fs-color-red\">*</span></label>\n\
                                     <input name=\"size\" class=\"form-control fs-product-size\" placeholder=\"Size\" style=\"text-transform:uppercase\">\n\
                                 </div>\n\
-                                <div class=\"form-group col-xs-6\">\n\
-                                    <label>Quantity</label>\n\
+                                <div class=\"form-group col-xs-5\">\n\
+                                    <label>Quantity <span class=\"fs-color-red\">*</span></label>\n\
                                     <input name=\"quantity\" class=\"form-control fs-product-quantity\" placeholder=\"Quantity\">\n\
+                                </div>\n\
+                                <div class=\"form-group col-xs-2\">\n\
+                                    <button style=\"margin-top: 25px\" type=\"button\" data-toggle=\"modal\" class=\"btn btn-danger fs-btn-delete-size\" title=\"Delete Size\">\n\
+                                        <i class=\"fa fa-close\" aria-hidden=\"true\"></i>\n\
+                                    </button>\n\
                                 </div>\n\
                                 <p class=\"fs-error-mess-size\" style=\"color: red; margin-left: 15px\"></p>\n\
                                 <p class=\"fs-error-mess-quantity\" style=\"color: red; margin-left: 15px\"></p>\n\
                             </div>";
         } else {
-            addMoreSize = " <div class=\"col-xs-8 fs-div-size\" style=\"padding: 0; border: 1px #CCC dashed; margin-bottom: 5px;\">\n\
-                                <div class=\"form-group col-xs-6\">\n\
-                                    <label>Size</label>\n\
+            addMoreSize = " <div class=\"col-xs-12 fs-div-size\" style=\"padding-left: 0; border: 1px #CCC dashed; margin-bottom: 5px;\">\n\
+                                <div class=\"form-group col-xs-5\">\n\
+                                    <label>Size <span class=\"fs-color-red\">*</span></label>\n\
                                     <input name=\"size_" + colorNo + "\" class=\"form-control fs-product-size\" placeholder=\"Size\" style=\"text-transform:uppercase\">\n\
                                 </div>\n\
-                                <div class=\"form-group col-xs-6\">\n\
-                                    <label>Quantity</label>\n\
+                                <div class=\"form-group col-xs-5\">\n\
+                                    <label>Quantity <span class=\"fs-color-red\">*</span></label>\n\
                                     <input name=\"quantity_" + colorNo + "\" class=\"form-control fs-product-quantity\" placeholder=\"Quantity\">\n\
+                                </div>\n\
+                                <div class=\"form-group col-xs-2\">\n\
+                                    <button style=\"margin-top: 25px\" type=\"button\" data-toggle=\"modal\" class=\"btn btn-danger fs-btn-delete-size\" title=\"Delete Size\">\n\
+                                        <i class=\"fa fa-close\" aria-hidden=\"true\"></i>\n\
+                                    </button>\n\
                                 </div>\n\
                                 <p class=\"fs-error-mess-size\" style=\"color: red; margin-left: 15px\"></p>\n\
                                 <p class=\"fs-error-mess-quantity\" style=\"color: red; margin-left: 15px\"></p>\n\
@@ -434,30 +443,33 @@ $(document).ready(function () {
     });
 
     /* XỬ LÝ BUTTON ADD-MORE-COLOR - PRODUCT CREATE */
-    $("#fs-add-more-color").click(function () {
-        fs_count_div_color = $(this).parent().siblings("#fs-more-color").find(".fs-div-color").length + 1;
+    $("#fs-fieldset-detail").on("click", "#fs-add-more-color", function () {
+        var fs_count_div_color = $(this).parent().siblings("#fs-more-color").find(".fs-div-color").length + 1;
+        $("#fs-delete-color").removeClass("disabled");
         var addMoreColor = "<div class=\"col-xs-12 fs-div-color\" style=\"padding: 5px 0; border: 1px #CCC dashed; margin-bottom: 10px\" fs-big-div-color=\"" + fs_count_div_color + "\">\n\
                                 <div class=\"col-md-6 fs-right-border\">\n\
                                     <div class=\"form-group\">\n\
-                                        <label>Color</label>\n\
+                                        <label>Color 0" + parseInt(fs_count_div_color + 1) + " <span class=\"fs-color-red\">*</span></label>\n\
                                         <p class=\"help-block\"></p>\n\
                                         <input name=\"color\" class=\"form-control fs-product-color-name\" placeholder=\"Color\">\n\
                                     </div>\n\
                                     <div class=\"form-group\">\n\
-                                        <label>Color Image</label>\n\
+                                        <label>Color Image <span class=\"fs-color-red\">*</span></label>\n\
                                         <p id=\"fs-error-mess-color-img-" + fs_count_div_color + "\" style=\"color: red;\"></p>\n\
                                         <input fs-color-img-index=\"" + fs_count_div_color + "\" type=\"file\" name=\"colorImg[]\" class=\"colorImg\">\n\
                                     </div>\n\
                                     <br>\n\
                                     <div class=\"col-xs-12\" style=\"padding: 0;\">\n\
-                                        <div class=\"col-xs-8\" style=\"padding: 0; border: 1px #CCC dashed; margin-bottom: 5px;\" >\n\
-                                            <div class=\"form-group col-xs-6\">\n\
-                                                <label>Size</label>\n\
+                                        <div class=\"col-xs-12\" style=\"padding-left: 0; border: 1px #CCC dashed; margin-bottom: 5px;\" >\n\
+                                            <div class=\"form-group col-xs-5\">\n\
+                                                <label>Size <span class=\"fs-color-red\">*</span></label>\n\
                                                 <input name=\"size_" + fs_count_div_color + "\"  style=\"text-transform:uppercase\" class=\"form-control fs-product-size\" placeholder=\"Size\">\n\
                                             </div>\n\
-                                            <div class=\"form-group col-xs-6\">\n\
-                                                <label>Quantity</label>\n\
+                                            <div class=\"form-group col-xs-5\">\n\
+                                                <label>Quantity <span class=\"fs-color-red\">*</span></label>\n\
                                                 <input name=\"quantity_" + fs_count_div_color + "\" class=\"form-control fs-product-quantity\" placeholder=\"Quantity\">\n\
+                                            </div>\n\
+                                            <div class=\"form-group col-xs-2\">\n\
                                             </div>\n\
                                             <p class=\"fs-error-mess-size\" style=\"color: red; margin-left: 15px\"></p>\n\
                                             <p class=\"fs-error-mess-quantity\" style=\"color: red; margin-left: 15px\"></p>\n\
@@ -473,7 +485,7 @@ $(document).ready(function () {
                                 </div>\n\
                                 <div class=\"col-md-6\">\n\
                                     <div class=\"form-group\">\n\
-                                        <label>Product Sub Image</label>\n\
+                                        <label>Product Sub Image <span class=\"fs-color-red\">*</span></label>\n\
                                         <p id=\"fs-error-mess-productSubImg-" + fs_count_div_color + "\" class=\"help-block fs-error-mes-productSubImg\"></p>\n\
                                         <input name=\"productSubImg_" + fs_count_div_color + "\" class=\"fs-productSubImg\" type=\"file\" multiple=\"multiple\">\n\
                                     </div>\n\
@@ -497,6 +509,7 @@ $(document).ready(function () {
                 }
             }
         });
+
         $("input[fs-color-img-index=\"" + fs_count_div_color + "\"]").fileuploader({
             limit: 1,
             extensions: ['jpg', 'jpeg', 'png'],
@@ -513,6 +526,35 @@ $(document).ready(function () {
                 }
             }
         });
+    });
+
+    /* XỬ LÝ BUTTON DELETE SIZE */
+    $("#fs-fieldset-detail").on("click", ".fs-btn-delete-size", function () {
+        var elem = $(this).parent().parent();
+        $("#fs-confirm-delete-size").modal("show");
+
+        $("#fs-confirm-delete-size").on("click", ".btn-ok", function () {
+            elem.remove();
+            $("#fs-confirm-delete-size").modal("hide");
+        });
+    });
+
+    /* XỬ LÝ BUTTON DELETE COLOR */
+    $("#fs-fieldset-detail").on("click", "#fs-delete-color", function () {
+        var fs_count_div_color = $(this).parent().siblings("#fs-more-color").find(".fs-div-color").length + 1;
+        if (!$(this).hasClass("disabled")) {
+            $("#fs-modal-change-color-number").text("\"COLOR " + fs_count_div_color + " \"");
+            $("#fs-confirm-delete-color").modal("show");
+        }
+    });
+
+    $("#fs-confirm-delete-color").on("click", ".btn-delete-color-ok", function () {
+        $("span#fs-more-color .fs-div-color").last().remove();
+        $("#fs-confirm-delete-color").modal("hide");
+
+        if ($("span#fs-more-color").children().length < 1) {
+            $("#fs-delete-color").addClass("disabled");
+        }
     });
 
     /* XỬ LÝ ON CHANGE PRODUCT-STATUS product-list.jsp */
@@ -664,22 +706,22 @@ $(document).ready(function () {
         } else {
             $("#fs-edit-product-color").addClass("fs-display-none");
         }
-        
-        if(select == 3 || select == 4){
+
+        if (select == 3 || select == 4) {
             $("#fs-select-product-update-choose-color").removeClass("fs-display-none");
         }
-        
-        if(select == 0){
+
+        if (select == 0) {
             $("#fs-select-product-update-choose-color").addClass("fs-display-none");
         }
-        
+
     });
 
     /*Xử lý choose Color*/
     $("#fs-product-update-page").on("change", "#fs-select-product-update-choose-color", function () {
         var task = $("#fs-select-product-update-choose-first-task").val();
         var colorID = $("#fs-select-product-update-choose-color").val();
-        
+
         if (task == 3) {
             $("#fs-edit-product-size").removeClass("fs-display-none");
             $(".fs-edit-product-table-size").addClass("fs-display-none");
@@ -687,18 +729,18 @@ $(document).ready(function () {
         } else {
             $("#fs-edit-product-size").addClass("fs-display-none");
         }
-        
-       if(task == 4){
-           $("#fs-edit-product-sub-img").removeClass("fs-display-none");
-           $(".fs-edit-product-table-sub-img").addClass("fs-display-none");
-           $("#fs-edit-product-table-sub-img-" + colorID).removeClass("fs-display-none");
-       } else {
-           $("#fs-edit-product-sub-img").addClass("fs-display-none");
-       }
-       
-       if(colorID == 0){
-           $(".fs-select-product-update-task").addClass("fs-display-none");
-       }
+
+        if (task == 4) {
+            $("#fs-edit-product-sub-img").removeClass("fs-display-none");
+            $(".fs-edit-product-table-sub-img").addClass("fs-display-none");
+            $("#fs-edit-product-table-sub-img-" + colorID).removeClass("fs-display-none");
+        } else {
+            $("#fs-edit-product-sub-img").addClass("fs-display-none");
+        }
+
+        if (colorID == 0) {
+            $(".fs-select-product-update-task").addClass("fs-display-none");
+        }
     });
 
     $("#fs-edit-product-table-color tbody").sortable();
@@ -767,7 +809,7 @@ $(document).ready(function () {
             $("#fs-blog-category-error").text("");
         }
     });
-    
+
     $('input[id="upImage"]').fileuploader({
         limit: 1,
         extensions: ['jpg', 'jpeg', 'png'],
@@ -913,25 +955,25 @@ $(document).ready(function () {
             $("p#fs-select-box-blog-category-error").text("");
         }
     });
-    
-       $("#fs-blog-line-title").keyup(function () {
+
+    $("#fs-blog-line-title").keyup(function () {
         var titleID = $("#fs-blog-line-title").val();
         if (titleID == "") {
             $("#fs-blog-title-error").text("Title cannot be empty!");
         }
-         else if (titleID.length < 5 || titleID.length > 50) {
+        else if (titleID.length < 5 || titleID.length > 50) {
             $("#fs-blog-title-error").text("Title must have 5 - 50 characters!");
         } else {
             $("#fs-blog-title-error").text("");
         }
     });
-    
-     $("#fs-blog-line-summary").keyup(function () {
+
+    $("#fs-blog-line-summary").keyup(function () {
         var summary = $("#fs-blog-line-summary").val();
         if (summary == "") {
             $("#fs-blog-summary-error").text("Summary cannot be empty!");
         }
-         else if (summary.length < 15 || summary.length > 1000) {
+        else if (summary.length < 15 || summary.length > 1000) {
             $("#fs-blog-summary-error").text("Summary has 15 - 1000 characters!");
         } else {
             $("#fs-blog-summary-error").text("");
@@ -940,7 +982,7 @@ $(document).ready(function () {
 
     // validate CKfinder
 
-        if ($("#editor1").length) {
+    if ($("#editor1").length) {
         var editor1 = CKEDITOR.replace('editor1', {
             toolbar: [
                 {name: 'document', items: ['Source']},
@@ -957,53 +999,53 @@ $(document).ready(function () {
         });
         CKFinder.setupCKEditor(editor1, {basePath: '/fashionshop/assets/ckfinder/'});
     }
-    
+
     // Button Create Blog
-     $("#fs-button-create-blog").click(function (e) {
+    $("#fs-button-create-blog").click(function (e) {
         e.preventDefault();
         var count = 0;
-        
+
         $(".fs-blog-line-title").each(function () {
             if ($(this).val() == "") {
                 $(this).focus();
                 $(this).siblings("p").text("Title is required!");
                 count++;
-            }else if ($(this).val().length < 5 ) {
+            } else if ($(this).val().length < 5) {
                 $(this).focus();
                 $(this).siblings("p").text("Title must have 5 - 50 characters! . ");
-                count++;   
-                } else {
+                count++;
+            } else {
                 $(this).siblings("p").text("");
             }
-         });
-         
-            $(".fs-blog-line-summary").each(function () {
+        });
+
+        $(".fs-blog-line-summary").each(function () {
             if ($(this).val() == "") {
                 $(this).focus();
                 $(this).siblings("p").text("Summary is required!");
                 count++;
-            }else if ($(this).val().length < 15) {
+            } else if ($(this).val().length < 15) {
                 $(this).focus();
                 $(this).siblings("p").text("Summary has 15 - 1000 characters!");
-                count++;   
-                } else {
+                count++;
+            } else {
                 $(this).siblings("p").text("");
             }
-         });
-         
-           $(".upImage").each(function () {
+        });
+
+        $(".upImage").each(function () {
             if ($(this).val() == "") {
                 $(this).focus();
                 $(this).parent().siblings("p").text("Choose an image for Blog!");
                 count++;
             }
-             });
-            
-              if (count == 0) {
+        });
+
+        if (count == 0) {
             $("#fs-form-create-blog").submit();
         }
-    
-        });
+
+    });
 
     /* BẮT validation UPDATE BLOG */
 
@@ -1270,12 +1312,12 @@ $(document).ready(function () {
             success: function (response) {
                 console.log(response);
                 //vòng lặp foreach của jquery
-                    var jsonStringBD = response[0].birthday;
-                    var jsonObjectBD = JSON.parse(jsonStringBD);
-                    var newFormattedDateBD = $.datepicker.formatDate('dd/mm/yy', new Date(jsonObjectBD));
-                    var jsonStringRG = response[0].registrationDate;
-                    var jsonObjectRG = JSON.parse(jsonStringRG);
-                    var newFormattedDateRG = $.datepicker.formatDate('dd/mm/yy', new Date(jsonObjectRG));
+                var jsonStringBD = response[0].birthday;
+                var jsonObjectBD = JSON.parse(jsonStringBD);
+                var newFormattedDateBD = $.datepicker.formatDate('dd/mm/yy', new Date(jsonObjectBD));
+                var jsonStringRG = response[0].registrationDate;
+                var jsonObjectRG = JSON.parse(jsonStringRG);
+                var newFormattedDateRG = $.datepicker.formatDate('dd/mm/yy', new Date(jsonObjectRG));
 //                    var dataStr = $('');
 //                    $(dataStr).append('<tr id="fs-tr" style="border-bottom: 1px solid #cccccc;">');
 //                    $(dataStr).append('<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + item.firstName + '</td>');
@@ -1285,15 +1327,15 @@ $(document).ready(function () {
 //                    $(dataStr).append('</tr>');
 
 //                    $(".heavyTable").append(dataStr);
-                    var dataStr = "";
-                    dataStr += '<tr id="fs-tr" style="border-bottom: 1px solid #cccccc;">' +
-                    '<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + response[0].firstName + '</td>' +
-                    '<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + response[0].lastName + '</td>' +
-                    '<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + newFormattedDateBD + '</td>' +
-                    '<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + newFormattedDateRG + '</td>' +
-                    '</tr>';
-                    $("#fs-tbody-table-in-user-detail-info").html(dataStr);
-                $('#fs-user-detail-info').modal('show'); 
+                var dataStr = "";
+                dataStr += '<tr id="fs-tr" style="border-bottom: 1px solid #cccccc;">' +
+                        '<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + response[0].firstName + '</td>' +
+                        '<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + response[0].lastName + '</td>' +
+                        '<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + newFormattedDateBD + '</td>' +
+                        '<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + newFormattedDateRG + '</td>' +
+                        '</tr>';
+                $("#fs-tbody-table-in-user-detail-info").html(dataStr);
+                $('#fs-user-detail-info').modal('show');
 
 //    var beginStr = '<table class="table">' ;
 //    var endStr = '</table>';
@@ -1335,7 +1377,7 @@ $(document).ready(function () {
         }
         else if (checkRole(roleName)) {
             return false;
-        } 
+        }
         else {
             $("#fs-form-create-role").submit();
             var div = $("#fs-roleName-create").closest("div.fs-aaa");
@@ -1372,7 +1414,7 @@ $(document).ready(function () {
         });
     }
 
-  
+
     $("#fs-roleName-create").keyup(function () {
         var roleName = $("#fs-roleName-create").val();
         if (roleName === "") {
@@ -1531,16 +1573,16 @@ $(document).ready(function () {
         },
         function (isConfirm) {
             if (isConfirm) {
-                
+
                 swal("Deleted!", "Your imaginary file has been deleted.", "success");
             } else {
                 swal("Cancelled", "Your imaginary file is safe :)", "error");
             }
         });
     });
-    
+
     // BẮT VALIDATION FORM LOGIN ADMIN
-    
+
 //    $("#fs-email-login-admin").keyup(function(){
 //         var email = $("#fs-email-login-admin").val();
 //         var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
@@ -1768,7 +1810,7 @@ $(document).ready(function () {
                         } else if (response == "0") {
                             $("#order-detail-add-error").text("OUT OF STOCK! CHOSE ANOTHER COLOR AND SIZE.");
                         } else {
-                            window.location = "admin/orders/orderlistdetail/"+orderID+".html";
+                            window.location = "admin/orders/orderlistdetail/" + orderID + ".html";
                         }
                     }
                 });

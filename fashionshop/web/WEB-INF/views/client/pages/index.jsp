@@ -220,8 +220,7 @@
             </ul>
             <div id="isotope" class="isotope">
                 <c:forEach items="${cateList}" var="cate">
-
-                    <c:forEach items="${cate.productList}" var="product" begin="0" end="7" varStatus="no">
+                    <c:forEach items="${cate.productListWorking}" var="product" begin="0" end="7" varStatus="no">
                         <div class="isotope-item ${cate.cateName} <c:if test="${no.index % 2 == 0}">isotope_to_all</c:if>">
                                 <div class="product-item">
                                     <div class="item-thumb">

@@ -132,6 +132,9 @@ a.fs-product-modal-link-to-detail{
     margin: auto;
 }
 
+.overlay-rmore {
+    line-height: 54px !important;
+}
 /* CSS FOR USER-LOGIN-MODAL: */
 
 .fs-login-page{
@@ -223,7 +226,7 @@ a.fs-product-modal-link-to-detail{
     margin-bottom: 0.9375rem;
 }
 
-// FORM CHANGE PASS
+/*FORM CHANGE PASS*/
 /*input.input--medium{
     height:calc(3em + 0.3em);
     line-height:3;
@@ -244,7 +247,7 @@ a.fs-product-modal-link-to-detail{
 .cta-primary:hover{background-color:#f5f3f3;border-color:#ebebeb;color:#001f3c;}
 .cta-primary:hover{opacity:1;}*/
 
-//FORM ADDRESS-LIST
+/*FORM ADDRESS-LIST*/
 
 /*header.fs-lv-bg{
     background: Lavender;

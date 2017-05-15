@@ -152,7 +152,7 @@
                                    aria-expanded="false">${category.cateName}</a>
                                 <ul class="dropdown-menu submenu" role="menu">
                                     <c:forEach items="${category.subCateList}" var="subCate">
-                                        <li><a href="#">${subCate.subCateName}</a></li>
+                                        <li><a href="subCategory/${category.cateNameNA}-${subCate.subCateID}-${subCate.subCateNameNA}.html">${subCate.subCateName}</a></li>
                                     </c:forEach>
                                 </ul>
                             </li>
