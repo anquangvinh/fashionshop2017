@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="loginModal.jsp"></jsp:include>
+<script>var ctx = "${pageContext.request.contextPath}";</script>
     <!-- TOPBAR -->
     <div class="top_bar">
         <div class="container">
@@ -21,48 +22,26 @@
                             <ul>
                                 <li>
                                     <div class="tbr-info">
-                                    <c:if test="${empty emailUser}">
-                                        <span class="fa fa-user"><a class="fs-login-page" href="#loginModal" data-toggle="modal" data-target="#loginModal" > Login </a></span>
-                                    </c:if>
-                                    <c:if test="${not empty emailUser}">
-                                        <span>${USfirstname} <i class="fa fa-caret-down"></i></span>
+                                        <c:if test="${empty emailUser}">
+                                            <span class="fa fa-user">
+                                                <a class="fs-login-page" href="#loginModal" data-toggle="modal" data-target="#loginModal">
+                                                    Login
+                                                </a>
+                                            </span>
                                         </c:if>
-
-                                    <div class="tbr-inner">
                                         <c:if test="${not empty emailUser}">
-                                            <a href="user/myaccount.html">My Account</a>
-                                            <a href="#">My Wishlist</a>
-                                            <a href="orders/order-history.html">Order History</a>
-                                            <a href="user/logout.html">LogOut</a>
+                                            <span>${USfirstname} <i class="fa fa-caret-down"></i></span>
+
+                                            <div class="tbr-inner">
+                                                <a href="user/myaccount.html">My Account</a>
+                                                <a href="#">My Wishlist</a>
+                                                <a href="orders/order-history.html">Order History</a>
+                                                <a href="user/logout.html">LogOut</a>
+                                            </div>
                                         </c:if>
-
                                     </div>
-                                </div>
-                            </li>
-
-
-
-                            <!--                            <li>
-                                                            <div class="tbr-info">
-                                                                <span><img src="assets/images/basic/flag1.png" alt=""/>&nbsp;English <i class="fa fa-caret-down"></i></span>
-                                                                <div class="tbr-inner">
-                                                                    <a href="#"><img src="assets/images/basic/flag1.png" alt=""/>English</a>
-                                                                    <a href="#"><img src="assets/images/basic/flag2.png" alt=""/>French</a>
-                                                                    <a href="#"><img src="assets/images/basic/flag3.png" alt=""/>German</a>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="tbr-info">
-                                                                <span>US Dollar <i class="fa fa-caret-down"></i></span>
-                                                                <div class="tbr-inner">
-                                                                    <a href="#">&euro; Euro</a>
-                                                                    <a href="#">&pound; Pound</a>
-                                                                    <a href="#">&yen; Yen</a>
-                                                                </div>
-                                                            </div>
-                                                        </li>-->
-                        </ul>
+                                </li>
+                            </ul>
                     </div>
                 </div>
             </div>

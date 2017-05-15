@@ -1213,7 +1213,7 @@ $(document).ready(function () {
     });
 
 
-    // BẮT VALIDATION FORM ADD ROLE
+    // BẮT VALIDATION FORM ADD ROLE BẰNG CLICK
 
     $("#fs-button-create-role").click(function (e) {
         e.preventDefault();
@@ -1274,7 +1274,7 @@ $(document).ready(function () {
         });
     }
 
-
+//    BẮT VALIDATION FORM ADD ROLE BẰNG KEYUP
     $("#fs-roleName-create").keyup(function () {
         var roleName = $("#fs-roleName-create").val();
         if (roleName === "") {
@@ -1441,88 +1441,6 @@ $(document).ready(function () {
         });
     });
 
-    // BẮT VALIDATION FORM LOGIN ADMIN
-
-//    $("#fs-email-login-admin").keyup(function(){
-//         var email = $("#fs-email-login-admin").val();
-//         var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
-//         
-//         if(email === ""){
-//            $("#fs-email-login-admin-error").text("Email cannot be empty!");
-//            var divemail = $("#fs-email-login-admin").closest("div.fa-vali-email-admin");
-//            divemail.removeClass("has-success");
-//            $("#glypcn-fs-login-admin").remove();
-//            divemail.addClass("has-error has-feedback");
-//            divemail.append('<span id="glypcn-fs-login-admin" class="glyphicon glyphicon-remove form-control-feedback"></span>');
-//            return false;
-//        }else if(!pattern.test(email)){
-//             $("#fs-email-login-admin-error").text("Please enter valid email!");
-//            var divemail = $("#fs-email-login-admin").closest("div.fa-vali-email-admin");
-//            divemail.removeClass("has-success");
-//            $("#glypcn-fs-login-admin").remove();
-//            divemail.addClass("has-error has-feedback");
-//            divemail.append('<span id="glypcn-fs-login-admin" class="glyphicon glyphicon-remove form-control-feedback"></span>');
-//            return false;
-//        }else{
-//            $("#fs-form-login-admin").submit();
-//            var divemail = $("#fs-email-login-admin").closest("div.fa-vali-email-admin");
-//            divemail.removeClass("has-error");
-//            divemail.addClass("has-success has-feedback");
-//            $("#glypcn-fs-login-admin").remove();
-//            divemail.append('<span id="glypcn-fs-login-admin" class="glyphicon glyphicon-ok form-control-feedback"></span>');
-//            return true;
-////        }
-//        }
-//    });
-//    $(".fs-button-login-admin").click(function(e){
-//        e.preventDefault();
-//        var email = $("#fs-email-login-admin").val();
-//        var pass = $("#fs-pass-login-admin").val();
-//        var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
-//        
-//        if(email === ""){
-//            $("#fs-email-login-admin-error").text("Email cannot be empty!");
-//            var divemail = $("#fs-email-login-admin").closest("div.fa-vali-email-admin");
-//            divemail.removeClass("has-success");
-//            $("#glypcn-fs-login-admin").remove();
-//            divemail.addClass("has-error has-feedback");
-//            divemail.append('<span id="glypcn-fs-login-admin" class="glyphicon glyphicon-remove form-control-feedback"></span>');
-//            return false;
-//        }else if(!pattern.test(email)){
-//             $("#fs-email-login-admin-error").text("Please enter valid email!");
-//            var divemail = $("#fs-email-login-admin").closest("div.fa-vali-email-admin");
-//            divemail.removeClass("has-success");
-//            $("#glypcn-fs-login-admin").remove();
-//            divemail.addClass("has-error has-feedback");
-//            divemail.append('<span id="glypcn-fs-login-admin" class="glyphicon glyphicon-remove form-control-feedback"></span>');
-//            return false;
-//        }
-////        else if(pass === ""){
-////             $("#fs-pass-login-admin-error").text("Password cannot be empty!");
-////            var divpass = $("#fs-pass-login-admin").closest("div.fa-vali-pass-admin");
-////            divpass.removeClass("has-success");
-////            $("#glypcn-fs-login-admin").remove();
-////            divpass.addClass("has-error has-feedback");
-////            divpass.append('<span id="glypcn-fs-login-admin" class="glyphicon glyphicon-remove form-control-feedback"></span>');
-////            return false;
-////        }
-//        else{
-//            $("#fs-form-login-admin").submit();
-//            var divemail = $("#fs-email-login-admin").closest("div.fa-vali-email-admin");
-////            var divpass = $("#fs-pass-login-admin").closest("div.fa-vali-pass-admin");
-//            divemail.removeClass("has-error");
-////            divpass.removeClass("has-error");
-//            divemail.addClass("has-success has-feedback");
-////            divemail.addClass("has-success has-feedback");
-//            $("#glypcn-fs-login-admin").remove();
-//            divemail.append('<span id="glypcn-fs-login-admin" class="glyphicon glyphicon-ok form-control-feedback"></span>');
-////            divpass.append('<span id="glypcn-fs-login-admin" class="glyphicon glyphicon-remove form-control-feedback"></span>');
-//            return true;
-//        }
-//       
-//    });
-
-//       
 //    $(".fs-button-detele-role").prop('disable', true);
 
 //    $

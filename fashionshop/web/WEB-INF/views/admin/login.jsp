@@ -52,7 +52,7 @@
                                     <p class="help-block" id="fs-pass-login-admin-error"></p>
                                     <div class="checkbox">
                                         <label>
-                                            <input name="remember" type="checkbox" value="Remember Me">Remember Me
+                                            <input name="remember" type="checkbox" value="1">Remember Me
                                         </label>
                                     </div>
                                     <button class="btn btn-lg btn-success btn-block fs-button-login-admin">Login</button>
@@ -104,6 +104,7 @@
                         $("#fs-email-login-admin-error").text("");
                         var divemail = $("#fs-email-login-admin").closest("div.fa-vali-email-admin");
                         divemail.removeClass("has-error");
+                        divemail.addClass("has-success");
                         $("#glypcn-fs-login-admin").remove();
                         divemail.append('<span id="glypcn-fs-login-admin" class="glyphicon glyphicon-ok form-control-feedback"></span>');
                         return true;
@@ -141,7 +142,7 @@
                         divpass.removeClass("has-error");
                         divpass.addClass("has-success has-feedback");
                         $("#glypcn-fs-login-admin").remove();
-                        divpass.append('<span id="glypcn-fs-login-admin" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+                        divpass.append('<span id="glypcn-fs-login-admin" class="glyphicon glyphicon-ok form-control-feedback"></span>');
                         return true;
                     }
                 });
@@ -180,7 +181,7 @@
                         divpass.removeClass("has-error");
                         divpass.addClass("has-success has-feedback");
                         $("#glypcn-fs-login-admin").remove();
-                        divpass.append('<span id="glypcn-fs-login-admin" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+                        divpass.append('<span id="glypcn-fs-login-admin" class="glyphicon glyphicon-ok form-control-feedback"></span>');
                         return true;
                     }
                 });

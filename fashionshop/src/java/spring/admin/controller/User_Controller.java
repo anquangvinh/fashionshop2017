@@ -51,7 +51,7 @@ public class User_Controller {
     }
 
     @ResponseBody
-    @RequestMapping(value = "checkRoleName", method = RequestMethod.POST)
+    @RequestMapping(value = "checkRoleName", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public String roleCheck(ModelMap model){
         List<Roles> roleNameList = rolesStateLessBean.findRName();
         ObjectMapper om  = new ObjectMapper();
@@ -96,10 +96,8 @@ public class User_Controller {
             @RequestParam("status") Short status) {
         if (usersStateLessBean.updateStatusUser(userID, status)) {
             return "OK";
-//            return "redirect:/admin/user/list.html";
         } else {
             return "FAIL";
-//             return "redirect:/admin/user/list.html";
         }
     }
 
@@ -138,14 +136,11 @@ public class User_Controller {
     @RequestMapping(value = "ajax/getUserAddress", method = RequestMethod.POST)
     public String getUserAddress(@RequestParam("userID") Integer userID){
         List<UserAddresses> userAddressList = usersStateLessBean.getUserByID(userID).getUserAddressList();
-        List<Users> userIDList = usersStateLessBean.getAllUserID(userID);
 
         ObjectMapper om = new ObjectMapper();
         String json = "";
-//        String json1 = "";
         try {
             json = om.writeValueAsString(userAddressList); //Chuyển list sang chuỗi JSON (com.fasterxml.jackson.databind.ObjectMapper;)
-//            json1 = om.writeValueAsString(userIDList);
         } catch (JsonProcessingException ex) {
             Logger.getLogger(User_Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -161,7 +156,7 @@ public class User_Controller {
         ObjectMapper om = new ObjectMapper();
         String json = ""; 
         try {
-            json = om.writeValueAsString(userIDList); //Chuyển list sang chuỗi JSON (com.fasterxml.jackson.databind.ObjectMapper;)
+            json = om.writeValueAsString(userIDList);
         } catch (JsonProcessingException ex) {
             Logger.getLogger(User_Controller.class.getName()).log(Level.SEVERE, null, ex);
         }

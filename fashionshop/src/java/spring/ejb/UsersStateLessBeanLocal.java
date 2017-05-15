@@ -19,24 +19,25 @@ public interface UsersStateLessBeanLocal {
 
     List<Users> getAllUsers();
 
-    Users findUserByEmail(String email); 
-    
-    int addUsers(Users users, String phone, String address) ; //kiểu trả vẻ: int hoặc string. nếu dùng int: int error_code; nếu error_code = 1 => insert thành công, error_code = 2 => username này bị trùng, error_code = 0=> có lỗi xãy ra
+    Users findUserByEmail(String email);
+
+    int addUsers(Users users, String phone, String address); //kiểu trả vẻ: int hoặc string. nếu dùng int: int error_code; nếu error_code = 1 => insert thành công, error_code = 2 => username này bị trùng, error_code = 0=> có lỗi xãy ra
 
     Users getUserByID(int userID);
-    
+
     void addUserAddress(UserAddresses newUserAddress);
-    
+
     boolean updateStatusUser(int userID, short status);
-    
-//    int updateUserPass(Users user,String pass, String repass);
-    
+
     int updateUser(Users user);
-    
+
     int login(String email, String pass);
-    
+
     int checkLoginUser(String email, String pass);
+
     void changePass(int userID, String newpass);
+
     List<Users> getAllUserID(int userID);
-//    boolean changePass(int userID, String pass, String repass);
+    
+    List<Users> getAllEmail();
 }

@@ -10,7 +10,9 @@ import java.util.logging.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import spring.ejb.RolesStateLessBeanLocal;
 import spring.ejb.UsersStateLessBeanLocal;
@@ -38,11 +41,14 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/admin/login", method = RequestMethod.POST)
+//    @ResponseBody
     public String login(ModelMap model,
             @RequestParam("email") String email,
             @RequestParam("password") String password,
+            @RequestParam(value = "remember", required = false) Short remember,
             HttpSession session,
             HttpServletRequest request,
+            HttpServletResponse response,
             RedirectAttributes redirectAttributes) {
         int error = usersStateLessBean.login(email, sharedFunc.encodePassword(password));
         if (error == 1) {
@@ -51,16 +57,20 @@ public class LoginController {
 //            if (session.getAttribute("request_url").equals(a)) {
 //                return "redirect:/admin/user/list.html";
 //            } else {
-                return "redirect:" + session.getAttribute("request_url");
+//            if(remember == 1){
+//                Cookie ckEmail = new Cookie("emailA", email);
+//                ckEmail.setMaxAge(3600);
+//                response.addCookie(ckEmail);
+//                Cookie ckPassword = new Cookie("passwordA", sharedFunc.encodePassword(password));
+//                ckPassword.setMaxAge(3600);
+//                response.addCookie(ckPassword);
 //            }
+                return "redirect:" + session.getAttribute("request_url");
         } else if (error == 2) {
             model.addAttribute("error", "<div class=\"alert alert-danger\">FAILED!. Error Email Wrong!</div>");
-//            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-danger\">FAILED!. Error Email Wrong!</div>");
         } else if (error == 3) {
             model.addAttribute("error", "<div class=\"alert alert-danger\">FAILED!. Error Wrong!</div>");
-//            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-danger\">FAILED!. Error Wrong!</div>");
         } else {
-//            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-danger\">FAILED!. Error Password Wrong!</div>");
             model.addAttribute("error", "<div class=\"alert alert-danger\">FAILED!. Error Password Wrong!</div>");
         }
         return "admin/login";
