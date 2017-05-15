@@ -27,6 +27,8 @@
                             <th class="text-center fs-valign-middle">Voucher Code</th>
                             <th class="text-center fs-valign-middle">Discount Percent</th>
                             <th class="text-center fs-valign-middle">Quantity</th>
+                            <th class="text-center fs-valign-middle">Begin Date</th>
+                            <th class="text-center fs-valign-middle">End Date</th>
                             <th class="text-center fs-valign-middle">Description</th>
                             <th class="text-center fs-valign-middle">Action</th>
                         </tr>
@@ -37,6 +39,26 @@
                                 <td class="text-center fs-valign-middle">${discount.voucherID}</td>
                                 <td class="text-center fs-valign-middle">${discount.discount}</td>
                                 <td class="text-center fs-valign-middle">${discount.quantity}</td>
+                                <td class="text-center fs-valign-middle">
+                                    <c:choose>
+                                        <c:when test="${discount.beginDate == null}">
+                                            --
+                                        </c:when>
+                                        <c:otherwise>
+                                            <fmt:formatDate value="${discount.beginDate}" pattern="dd-MM-yyyy"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td class="text-center fs-valign-middle">
+                                    <c:choose>
+                                        <c:when test="${discount.beginDate == null}">
+                                            --
+                                        </c:when>
+                                        <c:otherwise>
+                                            <fmt:formatDate value="${discount.endDate}" pattern="dd-MM-yyyy"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
                                 <td class="text-center fs-valign-middle">${discount.description}</td>
                                 <td class="text-center fs-valign-middle">
                                     <a href="admin/orders/discountupdate/${discount.voucherID}.html" type="button" class="btn btn-primary">Update</a>

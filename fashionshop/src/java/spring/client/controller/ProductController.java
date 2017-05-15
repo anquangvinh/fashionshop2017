@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import spring.ejb.ProductStateLessBeanLocal;
-import spring.entity.CartLineInfoByID;
 import spring.entity.Categories;
 import spring.entity.ProductColors;
 import spring.entity.Products;
@@ -147,8 +146,6 @@ public class ProductController {
                 model.addAttribute("targetProduct", targetProduct);
                 model.addAttribute("targetColor", targetColor);
                 model.addAttribute("cateList", cateList);
-                CartLineInfoByID cartLineInfoByID = new CartLineInfoByID();
-                model.addAttribute("cartLineInfoByID", cartLineInfoByID);
             } else {
                 String error = "Product ko có color này!";
             }

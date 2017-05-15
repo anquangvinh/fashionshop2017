@@ -18,30 +18,38 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <div>
+                <div id="error-discount-add">
                     ${error}
                 </div>
                 <div class="col-lg-6">
-                    <form:form name="discount-add-form" action="admin/orders/discountadd.html" method="POST" modelAttribute="discountVoucher">
+                    <form:form id="fs-form-create-discount" name="discount-add-form" action="admin/orders/discountadd.html" method="POST" modelAttribute="discountVoucher">
                         <div class="form-group">
-                            <label>Voucher Code</label>
+                            <label>Voucher Code <span style="color: red;">*</span></label>
                             <form:input placeholder="VOU00" onchange="this.value = this.value.toUpperCase();" cssClass="form-control" path="voucherID"/>
                         </div>
                         <div class="form-group">
-                            <label>Discount Percent</label>
-                            <%--<form:input cssClass="form-control" path="discount"/>--%>
-                            <input class="form-control" type="number" min="1" max="100" name="discount" id="discount"/>
+                            <label>Discount Percent (0-100) <span style="color: red;">*</span></label>
+                            <form:input cssClass="form-control" path="discount"/>
+                            <!--<input class="form-control" type="number" min="1" max="100" name="discount" id="discount"/>-->
                         </div>
                         <div class="form-group">
-                            <label>Discount Quantity</label>
-                            <%--<form:input cssClass="form-control" path="quantity"/>--%>
-                            <input class="form-control" type="number" min="1" name="quantity" id="quantity"/>
+                            <label>Discount Quantity <span style="color: red;">*</span></label>
+                            <form:input cssClass="form-control" path="quantity"/>
+                            <!--<input class="form-control" type="number" min="1" name="quantity" id="quantity"/>-->
+                        </div>
+                        <div class="form-group">
+                            <label>Begin Date</label>
+                            <form:input cssClass="form-control" path="beginDate" readonly="true"/>
+                        </div>
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <form:input cssClass="form-control" path="endDate" readonly="true"/>
                         </div>
                         <div class="form-group">
                             <label>Description</label>
                             <form:input cssClass="form-control" path="description"/>
                         </div>
-                        <button type="submit" class="btn btn-success">CREATE</button>
+                        <button type="submit" id="btn-create-discount" class="btn btn-success">CREATE</button>
                         <button type="reset" class="btn btn-default">RESET</button>
                     </form:form>
                 </div>
