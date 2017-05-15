@@ -13,11 +13,20 @@
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
     <mvc:interceptors>
-        <mvc:interceptor>
+        <!--Cái này chạy thứ 1-->
+        <mvc:interceptor> 
             <mvc:mapping path="/admin/**" />
             <mvc:exclude-mapping path="/admin/login**" />
             <bean class="spring.interceptor.LoginInterceptor" /> 
         </mvc:interceptor>
+        
+        <!--Cái này chạy thứ 2-->
+        <!--Cau hinh interceptor moi loc cookie nam o day-->
+        <mvc:interceptor>
+            <mvc:mapping path="/user/**" />
+            <bean class="spring.interceptor.CheckCookieUser" /> 
+        </mvc:interceptor>
+        <!--Cái này chạy thứ 3-->
         <mvc:interceptor>
             <mvc:mapping path="/user/**" />
             <mvc:exclude-mapping path="/user/login**" />

@@ -1,7 +1,5 @@
 package spring.client.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -14,18 +12,23 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import spring.admin.controller.User_Controller;
 import spring.ejb.ProductStateLessBeanLocal;
 import spring.ejb.RolesStateLessBeanLocal;
 import spring.ejb.UserAddressesStateLessBeanLocal;
@@ -43,110 +46,157 @@ public class UserController {
     RolesStateLessBeanLocal rolesStateLessBean = lookupRolesStateLessBeanLocal();
     UsersStateLessBeanLocal usersStateLessBean = lookupUsersStateLessBeanLocal();
     ProductStateLessBeanLocal productStateLessBean = lookupProductStateLessBeanLocal();
-    
+
     @Autowired
     SharedFunctions sharedFunc;
     @Autowired
     ServletContext app;
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
-    public String login(ModelMap model) {
+    public String login(ModelMap model
+    //            , HttpSession session, HttpServletRequest request
+    ) {
+//        Users user = checkCookie(request);
+//        if (user == null) {
+//            return "client/pages/index";
+//        } else {
+//            int error = usersStateLessBean.checkLoginUser(user.getEmail(), sharedFunc.encodePassword(user.getPassword()));
+//            if (error == 1) {
+//                session.setAttribute("emailUser", user.getEmail());
+//            } else if (error == 2) {
+//                return "client/pages/index";
+//
+//            } else {
+//                return "client/pages/index";
+//
+//            }
+//        }
         Users users = new Users();
         //2 dòng này thêm để render ra menu chính
         List<Categories> cateList = productStateLessBean.categoryList();
         model.addAttribute("cateList", cateList);
         model.addAttribute("users", users);
-        return "client/pages/login";
-////        return "client/blocks/loginModal";
+//        return "client/pages/login";
+//        return "client/blocks/loginModal";
+
+        return "client/pages/index";
     }
 
-//    @RequestMapping(value = "checkLog")
-//    public String checkLog(@RequestParam("email") String email) {
-//        Users usersEmail = usersStateLessBean.findUserByEmail(email);
-//
-//        ObjectMapper om = new ObjectMapper();
-//        String json = "";
-//        try {
-//            json = om.writeValueAsString(usersEmail); //Chuyển list sang chuỗi JSON (com.fasterxml.jackson.databind.ObjectMapper;)
-//        } catch (JsonProcessingException ex) {
-//            Logger.getLogger(User_Controller.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//
-//        return json;
-//    }
-
+    @ResponseBody
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public String login(ModelMap model,
-            @RequestParam("email") String email, @RequestParam("password") String password,
-            HttpSession session, RedirectAttributes redirectAttributes) {
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
+            @RequestParam(value = "checkremember", required = false) Short checkremember,
+            HttpSession session, RedirectAttributes redirectAttributes,
+            HttpServletResponse response
+    //            HttpServletRequest request, 
+    ) {
+        String err = "";
         int error = usersStateLessBean.checkLoginUser(email, sharedFunc.encodePassword(password));
         if (error == 1) {
-            redirectAttributes.addFlashAttribute("error", "ok"); // sửa lại thông báo
             session.setAttribute("emailUser", email);
+            err = (String) session.getAttribute("emailUser");
             Users userfindUserID = usersStateLessBean.findUserByEmail(email);
             session.setAttribute("findUsersID", userfindUserID.getUserID());
             session.setAttribute("USfirstname", userfindUserID.getFirstName() + " " + userfindUserID.getLastName());
-            return "redirect:http://localhost:8080/fashionshop/";
-//            
-        }
-        else if (error == 2) {
-            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-danger\">FAILED!. Error Email Wrong!</div>");
-////            model.addAttribute("error", "<div class=\"col-md-12  alert alert-danger\">FAILED!. Error Email Wrong!</div>");
+
+            if (checkremember != null && checkremember == 1) {
+                Cookie ckEmail = new Cookie("emailU", email);
+                ckEmail.setMaxAge(3600);
+                response.addCookie(ckEmail);
+                Cookie ckPassword = new Cookie("passwordU", sharedFunc.encodePassword(password));
+                ckPassword.setMaxAge(3600);
+                response.addCookie(ckPassword);
+            }
+            return err;
+        } else if (error == 2) {
+            return "2";
+        } else if (error == 3) {
+            return "4";
         } else {
-//            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-danger\">FAILED!. Error Password Wrong!</div>");
-////            model.addAttribute("error", "<div class=\"col-md-12  alert alert-danger\">FAILED!. Error Password Wrong!</div>");
+            return "3";
         }
-////        return "aa";
-        return "redirect:/user/login.html";
-////        return "client/blocks/loginModal";
     }
 
+//    public Users checkCookie(HttpServletRequest request) {
+//        Cookie[] cookies = request.getCookies();
+//        Users users = null;
+//        String email = "", password = "";
+//        for (Cookie ck : cookies) {
+//            if (ck.getName().equalsIgnoreCase("email")) {
+//                email = ck.getValue();
+//            }
+//            if (ck.getName().equalsIgnoreCase("password")) {
+//                password = ck.getValue();
+//            }
+//        }
+//        if (!email.isEmpty() && !password.isEmpty()) {
+//            users = new Users();
+//        }
+//
+//        return users;
+//    }
+    @ResponseBody
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public String createUser(@ModelAttribute("users") Users newUser,
-            @RequestParam("upImage") MultipartFile image,
-            @RequestParam("phoneNumber") String phoneNumber,
-            @RequestParam("address") String address,
+    public String createUser(
+            @RequestParam("email") String email, @RequestParam("password") String password,
+            @RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,
+            @RequestParam("gender") short gender, @RequestParam("birthday") Date birthday,
+            @RequestParam(value = "upImage", required = false) MultipartFile image,
+            @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
+            @RequestParam(value = "address", required = false) String address,
             RedirectAttributes redirectAttributes,
             ModelMap model, HttpSession session) {
-        newUser.setPassword(sharedFunc.encodePassword(newUser.getPassword()));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
+        Users newUser = new Users();
+        newUser.setEmail(email);
+        newUser.setPassword(sharedFunc.encodePassword(password));
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setGender(gender);
+        newUser.setBirthday(birthday);
+        newUser.setStatus(Short.parseShort("1"));
+        newUser.setRole(rolesStateLessBean.findRoles(3));
+        try {
+            newUser.setRegistrationDate(new Date());
+        } catch (Exception ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         if (image.isEmpty()) {
             newUser.setAvatar("default_user.jpg");
         } else {
             try {
-                newUser.setAvatar(image.getOriginalFilename());
-                String path = app.getRealPath("/assets/images/") + "/" + newUser.getAvatar();
+                newUser.setAvatar(simpleDateFormat.format(new Date()) + sharedFunc.changeText(image.getOriginalFilename()));
+//                newUser.setAvatar(image.getOriginalFilename());
+                String path = app.getRealPath("/assets/images/avatar/") + "/" + newUser.getAvatar();
                 image.transferTo(new File(path));
 
             } catch (IOException | IllegalStateException ex) {
                 Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        if (phoneNumber == null) {
+            phoneNumber = "";
+        }
 
-        try {
-            newUser.setRegistrationDate(new Date());
-            newUser.setStatus(Short.parseShort("1"));
-            newUser.setRole(rolesStateLessBean.findRoles(3));
-        } catch (Exception ex) {
-            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        if (address == null) {
+            address = "";
         }
 
         int error = usersStateLessBean.addUsers(newUser, phoneNumber, address);
-        if (error == 3) {
-            model.addAttribute("ee", "Input Phone and Address or blank ");
-            return "redirect:/user/register.html";
-        } else if (error == 1) {
-            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-5  alert alert-success\">Create New User Successfully!</div>");
+        if (error == 1) {
             session.setAttribute("emailUser", newUser.getEmail());
-//            Users userfindID = usersStateLessBean.getUserByID(newUser.getUserID());
             Users userfindUserID = usersStateLessBean.findUserByEmail(newUser.getEmail());
             session.setAttribute("findUsersID", userfindUserID.getUserID());
-        } else if (error == 0) {
-            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-5  alert alert-danger\">FAILED!. Error was happened!</div>");
+            session.setAttribute("USfirstname", userfindUserID.getFirstName() + " " + userfindUserID.getLastName());
+            return "1";
         } else if (error == 2) {
-            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-5  alert alert-danger\">FAILED!. Users Exitsted!</div>");
+            return "2";
+        } else {
+            return "0";
         }
-
-        return "redirect:/user/login.html";
     }
 
     @RequestMapping(value = "change-password/{userID}", method = RequestMethod.GET)
@@ -162,7 +212,6 @@ public class UserController {
             @RequestParam("repassword") String repassword, @RequestParam("oldpassword") String oldpassword,
             RedirectAttributes redirectAttributes) {
         Users findOldUserID = usersStateLessBean.getUserByID(userID);
-//        int error = usersStateLessBean.updateUserPass(findUserID, sharedFunc.encodePassword(oldpassword), sharedFunc.encodePassword(password));
 
         if (!findOldUserID.getPassword().equals(sharedFunc.encodePassword(oldpassword))) {
             redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-5  alert alert-danger\">FAILED!. Error Current Password wrong!</div>");
@@ -170,41 +219,28 @@ public class UserController {
             usersStateLessBean.changePass(userID, sharedFunc.encodePassword(password));
             redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-success\">Update Password Successfully!</div>");
         } else if (!password.equals(repassword)) {
-            //Users findUserID = usersStateLessBean.getUserByID(userID);
             redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-5  alert alert-danger\">FAILED!. Error was happened, Password and Repassword is wrong!</div>");
         }
 
-//        if (error == 1) {
-//            redirectAttributes.addFlashAttribute("error", "OK");
-//        } else if (error == 3) {
-//            redirectAttributes.addFlashAttribute("error", "giữ cũ");
-//        } else if (error == 4) {
-//            redirectAttributes.addFlashAttribute("error", "pass sai");
-//        } else if (error == 5) {
-//            redirectAttributes.addFlashAttribute("error", "hãy nhập pass thay đổi");
-//        } else if(!password.equals(repassword)){
-//            redirectAttributes.addFlashAttribute("error", "nhập lại sai");
-//        }
         return "redirect:/user/change-password/" + userID + ".html";
     }
 
-    @RequestMapping(value = "address-add/{userID}", method = RequestMethod.GET)
-    public String addressAdd(@PathVariable("userID") int userID, ModelMap model) {
-        List<UserAddresses> listAddress = usersStateLessBean.getUserByID(userID).getUserAddressList();
-        if (listAddress.size() < 20) {
-            //2 dòng này thêm để render ra menu chính
-            List<Categories> cateList = productStateLessBean.categoryList();
-            model.addAttribute("cateList", cateList);
-            UserAddresses userAddress = new UserAddresses();
-            model.addAttribute("userAddress", userAddress);
-            return "client/pages/address-user-add";
-        } else {
-            model.addAttribute("message", "Không thể thêm AddressUser");
-            return "redirect:/user/myaccount.html";
-        }
-
-    }
-
+//    @RequestMapping(value = "address-add/{userID}", method = RequestMethod.GET)
+//    public String addressAdd(@PathVariable("userID") int userID, ModelMap model) {
+//        List<UserAddresses> listAddress = usersStateLessBean.getUserByID(userID).getUserAddressList();
+//        if (listAddress.size() < 20) {
+//            //2 dòng này thêm để render ra menu chính
+//            List<Categories> cateList = productStateLessBean.categoryList();
+//            model.addAttribute("cateList", cateList);
+//
+////            return "client/pages/address-user-add";
+//            return "client/pages/address-list";
+//        } else {
+//            model.addAttribute("message", "Không thể thêm AddressUser");
+//            return "redirect:/user/myaccount.html";
+//        }
+//
+//    }
     @RequestMapping(value = "address-add/{userID}", method = RequestMethod.POST)
     public String addressAdd(@PathVariable("userID") int userID, @ModelAttribute("userAddress") UserAddresses userAddress,
             RedirectAttributes redirectAttributes) {
@@ -217,17 +253,9 @@ public class UserController {
             }
             break;
         }
-//        UserAddresses ua = userAddressesStateLessBean.findID(userID);
-//        int error = userAddressesStateLessBean.addAddressUser(userAddress, userID);
-//        if (ua.getAddress().equals(userAddress.getAddress()) && ua.getPhoneNumber().equals(userAddress.getPhoneNumber())) {
-//            redirectAttributes.addFlashAttribute("error", "Phone và Address trùng");
-//        } else {
-//            userAddressesStateLessBean.addAddressUser(userAddress, userID);
-//            redirectAttributes.addFlashAttribute("error", "OK");
-//        } 
         userAddressesStateLessBean.addAddressUser(userAddress, userID);
         redirectAttributes.addFlashAttribute("error", "OK");
-        return "redirect:/user/address-add/" + userID + ".html";
+        return "redirect:/user/address-list/" + userID + ".html";
     }
 
     @RequestMapping(value = "address-list/{userID}")
@@ -237,7 +265,7 @@ public class UserController {
         model.addAttribute("cateList", cateList);
         List<UserAddresses> ualist = userAddressesStateLessBean.AddressListUser(userID);
         model.addAttribute("ualist", ualist);
-
+        model.addAttribute("userAddress", new UserAddresses());
         return "client/pages/address-list";
     }
 
@@ -247,14 +275,13 @@ public class UserController {
         //2 dòng này thêm để render ra menu chính
         List<Categories> cateList = productStateLessBean.categoryList();
         model.addAttribute("cateList", cateList);
-        
+
         UserAddresses userAddresses = userAddressesStateLessBean.findID(userID);
         UserAddresses userAddresses1 = userAddressesStateLessBean.findAddressID(addressID);
-//        model.addAttribute("userAddresses", userAddresses);
+        
         model.addAttribute("userAddresses", userAddresses1);
         return "client/pages/address-book";
-//        return "client/pages/modaldetailAD";
-//        return "client/pages/address-list";
+
     }
 
     @RequestMapping(value = "address-book/{userID}-{addressID}", method = RequestMethod.POST)
@@ -262,11 +289,8 @@ public class UserController {
             RedirectAttributes redirectAttributes, @PathVariable("userID") int userID,
             @PathVariable("addressID") int addressID) {
         int error;
-//        addressID = userAddresses.getAddressID();
-//        userAddresses = userAddressesStateLessBean.findAddressID(addressID);
         model.addAttribute("addressID", userAddresses.getAddressID());
         error = userAddressesStateLessBean.editAddressUser(userAddresses, userID);
-//        error = userAddressesStateLessBean.editAddress(userID, addressID);
         if (error == 2) {
             redirectAttributes.addFlashAttribute("error", "Trùng");
         } else if (error == 1) {
@@ -274,18 +298,25 @@ public class UserController {
         } else if (error == 0) {
             redirectAttributes.addFlashAttribute("error", "lỗi");
         }
-//        model.addAttribute(userAddresses, "ua");
         return "redirect:/user/address-book/" + userID + "-" + addressID + ".html";
+    }
+
+    @RequestMapping(value = "deleteAddress")
+    public String deleteaddress(@RequestParam("addressID") int addressID, ModelMap model) {
+        UserAddresses usa = userAddressesStateLessBean.findAddressID(addressID);
+        userAddressesStateLessBean.deleteAddress(usa.getAddressID());
+        return "";
+
     }
 
     @RequestMapping(value = "account-information/{userID}", method = RequestMethod.GET)
     public String accountinfo(@PathVariable("userID") int userID, ModelMap model) {
         Users updateUser = usersStateLessBean.getUserByID(userID);
-        
+
         //2 dòng này thêm để render ra menu chính
         List<Categories> cateList = productStateLessBean.categoryList();
         model.addAttribute("cateList", cateList);
-        
+
         //Change normal date to string
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = updateUser.getBirthday();
@@ -350,10 +381,25 @@ public class UserController {
     }
 
     @RequestMapping(value = "logout")
-    public String logOut(HttpSession session) {
+    public String logOut(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+        //Remove Session
         session.removeAttribute("emailUser");
+        session.removeAttribute("findUsersID");
+        session.removeAttribute("USfirstname");
 
-        return "client/pages/index";
+        //Remove cookie
+        for (Cookie ck : request.getCookies()) {
+            if (ck.getName().equalsIgnoreCase("emailU")) {
+                ck.setMaxAge(0);
+                response.addCookie(ck);
+            }
+            if (ck.getName().equalsIgnoreCase("passwordU")) {
+                ck.setMaxAge(0);
+                response.addCookie(ck);
+            }
+        }
+
+        return "redirect:/index.html";
     }
 
     private UsersStateLessBeanLocal lookupUsersStateLessBeanLocal() {
@@ -385,7 +431,7 @@ public class UserController {
             throw new RuntimeException(ne);
         }
     }
-    
+
     private ProductStateLessBeanLocal lookupProductStateLessBeanLocal() {
         try {
             Context c = new InitialContext();

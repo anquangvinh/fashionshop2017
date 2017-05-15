@@ -16,23 +16,16 @@ $(document).ready(function () {
         dateFormat: "dd/mm/yy",
         showAnim: "drop",
         changeMonth: true,
-        changeYear: true
+        changeYear: true,
+        yearRange: "1960:1999"
+        
     });
-
-    $("#account-create-new").hide();
-    $("#btnCreate").click(function () {
-        $("#account-id").hide("drop", {direction: "down"}, 500, function () {
-            $("#account-id2").hide("fold");
-            $(this).parents("#fs-form-area").addClass('col-sm-9 col-md-9').removeClass('col-sm-8 col-md-8');
-            $("#account-create-new").show("drop", {direction: "up"}, 2000);
-        });
-    });
-
+    
     /* --------------- PRODUCT INDEX -------------------- */
     /* LOAD IMG TO RECENT VIEW FROM LOCALSTORAGE */
     // Check browser support
-    if (typeof (Storage) !== "undefined") {
-        // Retrieve
+    if (typeof (Storage) != "undefined") {
+// Retrieve
         if (localStorage.getItem("productsArrLocal") != null) {
             var productsArrLocal = JSON.parse(localStorage.getItem("productsArrLocal"));
             productsArrLocal.reverse();
@@ -60,7 +53,7 @@ $(document).ready(function () {
 //                                        </li>";
 //            }
             $("#fs-recent-view-product").html(liProdStr);
-           // $("#fs-recent-product-index-page").html(liProdStrIndexPage);
+            // $("#fs-recent-product-index-page").html(liProdStrIndexPage);
         }
     } else {
         $("#fs-localStorage-result").text("Sorry, your browser does not support Web Storage...");
@@ -69,24 +62,21 @@ $(document).ready(function () {
     $("#fs-recent-view-product").owlCarousel({
         items: 6,
         margin: 35,
-        loop:true,
+        loop: true,
         navigation: true,
         autoPlay: 2500,
         stopOnHover: true
 
     });
-    
     /* SLIDE PRODUCTS IN INDEX */
     $("#isotope").isotope({
         filter: '.isotope_to_all',
         sortBy: 'random'
     });
-
     /* INDEX - CHANGE IMG WHEN CHOOSE COLOR */
     $(".body").on("click", ".fs-index-color-img", function () {
         var colorID = $(this).attr("fs-index-color-img");
         var productID = $(this).attr("fs-product");
-
         //Change link of product Title to productDetail
         var elementProductLink = $(this).parent().siblings("h4").find("a");
         var productLink = elementProductLink.attr("href");
@@ -94,10 +84,8 @@ $(document).ready(function () {
         productLinkArray[1] = colorID;
         var newLink = productLinkArray.join("-");
         elementProductLink.attr("href", newLink);
-
         //Change color attr of product Modal
         $(this).parent().parent().siblings("div.item-thumb").find("div.fs-product-modal").attr("fs-product-modal-color", colorID);
-
         //Call Ajax
         $.ajax({
             url: "ajax/color.html",
@@ -113,12 +101,10 @@ $(document).ready(function () {
             }
         });
     });
-
     /* FUNCTION FOR OWL CAROUSEL */
     function fsCreateOwlCarousel() {
         var sync1 = $(".sync1");
         var sync2 = $(".sync2");
-
         sync1.owlCarousel({
             singleItem: true,
             slideSpeed: 1000,
@@ -131,7 +117,6 @@ $(document).ready(function () {
                 "<i class='fa fa-chevron-right'></i>"
             ]
         });
-
         sync2.owlCarousel({
             items: 4,
             itemsDesktop: [1199, 4],
@@ -144,7 +129,6 @@ $(document).ready(function () {
                 el.find(".owl-item").eq(0).addClass("synced");
             }
         });
-
         function syncPosition(el) {
             var current = this.currentItem;
             $(".sync2")
@@ -152,7 +136,7 @@ $(document).ready(function () {
                     .removeClass("synced")
                     .eq(current)
                     .addClass("synced");
-            if ($(".sync2").data("owlCarousel") !== undefined) {
+            if ($(".sync2").data("owlCarousel") != undefined) {
                 center(current);
             }
         }
@@ -162,29 +146,28 @@ $(document).ready(function () {
             var number = $(this).data("owlItem");
             sync1.trigger("owl.goTo", number);
         });
-
         function center(number) {
             var sync2visible = sync2.data("owlCarousel").owl.visibleItems;
             var num = number;
             var found = false;
             for (var i in sync2visible) {
-                if (num === sync2visible[i]) {
+                if (num == sync2visible[i]) {
                     found = true;
                 }
             }
 
-            if (found === false) {
+            if (found == false) {
                 if (num > sync2visible[sync2visible.length - 1]) {
                     sync2.trigger("owl.goTo", num - sync2visible.length + 2)
                 } else {
-                    if (num - 1 === -1) {
+                    if (num - 1 == -1) {
                         num = 0;
                     }
                     sync2.trigger("owl.goTo", num);
                 }
-            } else if (num === sync2visible[sync2visible.length - 1]) {
+            } else if (num == sync2visible[sync2visible.length - 1]) {
                 sync2.trigger("owl.goTo", sync2visible[1])
-            } else if (num === sync2visible[0]) {
+            } else if (num == sync2visible[0]) {
                 sync2.trigger("owl.goTo", num - 1)
             }
         }
@@ -217,7 +200,6 @@ $(document).ready(function () {
                 $("h3.fs-product-name").text(response.productName);
                 $("h3.fs-product-name").attr("fs-product-id", productID);
                 $("div.fs-product-price").text("$ " + response.price + ".00");
-
                 /* Init color img  */
                 var colorImgStr = "<p>Color<span>*</span></p>";
                 var sizeStr = "";
@@ -227,14 +209,11 @@ $(document).ready(function () {
                     colorImgStr += "<div class=\"fs-product-modal-color-border\">\n\
                                         <img fs-color=\"" + item.colorID + "\" src=\"assets/images/products/colors/" + item.urlColorImg + "\" class=\"img-responsive\" alt=\"" + item.urlColorImg + "\" title=\"" + item.color + "\"/>\n\
                                     </div>";
-
-
                     if (item.colorID == colorID) {
                         /* Init size By ColorID */
                         $.each(item.sizeList, function (j, size) {
                             sizeStr += "<div class=\"fs-particular-size\" fs-size=\"" + size.sizeID + "\">" + size.productSize + "</div>";
                         });
-
                         /* Init product Image By Color*/
                         $.each(item.productSubImgsList, function (k, subImg) {
                             str_change_big_img += "<div class=\"item\"><img src=\"assets/images/products/subImg/" + subImg.urlImg + "\" alt=\"" + subImg.urlImg + "\"></div>";
@@ -243,7 +222,6 @@ $(document).ready(function () {
                     }
                 });
                 var finalStrToChangeImg = "<div class=\"owl-carousel sync1 fs-main-product-img\">" + str_change_big_img + "</div><div class=\"owl-carousel sync2 fs-main-product-img\">" + str_change_small_img + "</div>";
-
                 $("div.fs-product-modal-color").html(colorImgStr);
                 $("#fs-product-modal-size").html(sizeStr);
                 $("#fs-product-modal-slide-img").html(finalStrToChangeImg);
@@ -254,7 +232,6 @@ $(document).ready(function () {
             }
         });
     });
-
     /* MODAL - EVENT CLICK ON COLOR IMG */
     $("div.fs-product-modal-color").on("click", ".fs-product-modal-color-border", function () {
         $(".fs-product-modal-color-border").removeClass("fs-product-selected");
@@ -265,7 +242,6 @@ $(document).ready(function () {
         linkArray[1] = colorID;
         var newLink = linkArray.join("-");
         $(".fs-product-modal-link-to-detail").attr("href", newLink);
-
         $.ajax({
             url: "ajax/color.html",
             method: "POST",
@@ -277,21 +253,18 @@ $(document).ready(function () {
                 var str_change_big_img = "";
                 var str_change_small_img = "";
                 $.each(response.productSubImgsList, function (i, item) {
-                    if (item.status !== 0) {
+                    if (item.status != 0) {
                         str_change_big_img += "<div class=\"item\"><img src=\"assets/images/products/subImg/" + item.urlImg + "\" alt=\"" + item.urlImg + "\"></div>";
                         str_change_small_img += "<div class=\"item\"><img src=\"assets/images/products/subImg/" + item.urlImg + "\" alt=\"" + item.urlImg + "\"></div>";
                     }
                 });
-
                 var finalStrToChangeImg = "<div class=\"owl-carousel sync1 fs-main-product-img\">" + str_change_big_img + "</div><div class=\"owl-carousel sync2 fs-main-product-img\">" + str_change_small_img + "</div>";
-
                 $("#fs-product-modal-slide-img").hide().html(finalStrToChangeImg).fadeIn(1000);
                 fsCreateOwlCarousel();
-
                 /* Change Size */
                 var str_change_size = "";
                 $.each(response.sizeList, function (i, item) {
-                    if (item.quantity === 0) {
+                    if (item.quantity == 0) {
                         str_change_size += "<div class=\"fs-particular-size fs-unselectable\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
                     } else {
                         str_change_size += "<div class=\"fs-particular-size\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
@@ -301,13 +274,12 @@ $(document).ready(function () {
             }
         });
     });
-
     /* EVENT INCREASE OR DECREASE QUANTITY */
     $(".fs-modal-btn-number").click(function () {
         var action = $(this).attr("data-type");
         var currentVal = parseInt($(".fs-modal-input-number").val());
         if (!isNaN(currentVal)) {
-            if (action === "minus") {
+            if (action == "minus") {
                 if (currentVal > $(".fs-modal-input-number").attr("min")) {
                     $(".fs-modal-input-number").val(currentVal - 1).change();
                 }
@@ -315,7 +287,7 @@ $(document).ready(function () {
                     $(".fs-modal-btn-quantity-minus").attr("disabled", "disabled");
                 }
 
-            } else if (action === "plus") {
+            } else if (action == "plus") {
                 if (currentVal < $(".fs-modal-input-number").attr("max")) {
                     $(".fs-modal-input-number").val(currentVal + 1).change();
                 }
@@ -327,16 +299,13 @@ $(document).ready(function () {
             $(".fs-modal-input-number").val(1);
         }
     });
-
     $(".fs-modal-input-number").focusin(function () {
         $(this).data("oldVal", $(this).val()); //Lấy value từ input, lưu vào key "oldValue"
     });
-
     $(".fs-modal-input-number").on("change", function () {
         var currentValue = parseInt($(".fs-modal-input-number").val());
         var minValue = parseInt($(".fs-modal-input-number").attr("min"));
         var maxValue = parseInt($(".fs-modal-input-number").attr("max"));
-
         if (currentValue >= minValue) {
             $(".fs-modal-btn-quantity-minus").removeAttr("disabled");
         } else {
@@ -351,11 +320,10 @@ $(document).ready(function () {
             $(this).val($(this).data('oldVal'));
         }
     });
-
     $(".fs-modal-input-number").keydown(function (e) {
         var press = e.keyCode || e.which;
         // Allow: backspace, delete, tab, escape, enter and .
-        if ($.inArray(press, [46, 8, 9, 27, 190, 17]) !== -1) {
+        if ($.inArray(press, [46, 8, 9, 27, 190, 17]) != -1) {
             // let it happen, don't do anything
             return;
         }
@@ -367,14 +335,12 @@ $(document).ready(function () {
             e.preventDefault();
         }
     });
-
     /* ------------------ PRODUCT_DETAIL ------------------- */
     /* CHANGE DATA WHEN CHOOSE A COLOR */
     $(".fs-product-color-border").on("click", function () {
         $(".fs-product-color-border").removeClass("fs-product-selected");
         $(this).addClass("fs-product-selected");
         var colorID = $(this).find("img").attr("fs-color");
-
         $.ajax({
             url: "ajax/color.html",
             method: "POST",
@@ -386,29 +352,25 @@ $(document).ready(function () {
                 var str_change_big_img = "";
                 var str_change_small_img = "";
                 $.each(response.productSubImgsList, function (i, item) {
-                    if (item.status !== 0) {
+                    if (item.status != 0) {
                         str_change_big_img += "<div class=\"item\">\n\
                                                     <img src=\"assets/images/products/subImg/" + item.urlImg + "\" alt=\"" + item.urlImg + "\"/>\n\
                                                     <a href=\"assets/images/products/subImg/" + item.urlImg + "\" rel=\"prettyPhoto[gallery2]\" title=\"Product\" class=\"caption-link\">\n\
                                                         <i class=\"fa fa-arrows-alt\"></i>\n\
                                                     </a>\n\
                                                 </div>";
-
                         str_change_small_img += "<div class=\"item\">\n\
                                                       <img src=\"assets/images/products/subImg/" + item.urlImg + "\" alt=\"" + item.urlImg + "\"/>\n\\n\
                                                    </div>";
                     }
                 });
-
                 var finalStr = "<div class=\"owl-carousel prod-slider sync1\">" + str_change_big_img + "</div><div class=\"owl-carousel sync2\">" + str_change_small_img + "</div>";
-
                 $("#fs-product-detail-slide-img").hide().html(finalStr).fadeIn(1000);
                 fsCreateOwlCarousel();
-
                 /* Change Size */
                 var str_change_size = "";
                 $.each(response.sizeList, function (i, item) {
-                    if (item.quantity === 0) {
+                    if (item.quantity == 0) {
                         str_change_size += "<div class=\"fs-particular-size fs-unselectable\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
                     } else {
                         str_change_size += "<div onclick=\"sizeImageClick(" + item.sizeID + ");\" class=\"fs-particular-size\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
@@ -418,23 +380,21 @@ $(document).ready(function () {
             }
         });
     });
-
     /* EVENT CLICK WHEN CHOOSE SIZE */
     $(document).on("click", ".fs-particular-size", function () {
         var classList = $(this).attr("class").split(" ");
         var rs = $.inArray("fs-unselectable", classList);
-        if (rs === -1) {
+        if (rs == -1) {
             $(".fs-particular-size").removeClass("fs-product-selected");
             $(this).addClass("fs-product-selected");
         }
     });
-
     /* EVENT INCREASE OR DECREASE QUANTITY */
     $(".fs-btn-number").click(function () {
         var action = $(this).attr("data-type");
         var currentVal = parseInt($(".fs-input-number").val());
         if (!isNaN(currentVal)) {
-            if (action === "minus") {
+            if (action == "minus") {
                 if (currentVal > $(".fs-input-number").attr("min")) {
                     $(".fs-input-number").val(currentVal - 1).change();
                 }
@@ -442,7 +402,7 @@ $(document).ready(function () {
                     $(".fs-btn-quantity-minus").attr("disabled", "disabled");
                 }
 
-            } else if (action === "plus") {
+            } else if (action == "plus") {
                 if (currentVal < $(".fs-input-number").attr("max")) {
                     $(".fs-input-number").val(currentVal + 1).change();
                 }
@@ -454,16 +414,13 @@ $(document).ready(function () {
             $(".fs-input-number").val(1);
         }
     });
-
     $(".fs-input-number").focusin(function () {
         $(this).data("oldValue", $(this).val()); //Lấy value từ input, lưu vào key "oldValue"
     });
-
     $(".fs-input-number").on("change", function () {
         var currentValue = parseInt($(".fs-input-number").val());
         var minValue = parseInt($(".fs-input-number").attr("min"));
         var maxValue = parseInt($(".fs-input-number").attr("max"));
-
         if (currentValue >= minValue) {
             $(".fs-btn-quantity-minus").removeAttr("disabled");
         } else {
@@ -478,11 +435,10 @@ $(document).ready(function () {
             $(this).val($(this).data('oldValue'));
         }
     });
-
     $(".fs-input-number").keydown(function (e) {
         var press = e.keyCode || e.which;
         // Allow: backspace, delete, tab, escape, enter and .
-        if ($.inArray(press, [46, 8, 9, 27, 13, 190, 17]) !== -1) {
+        if ($.inArray(press, [46, 8, 9, 27, 13, 190, 17]) != -1) {
             // let it happen, don't do anything
             $(this).blur().focus();
             return;
@@ -492,31 +448,29 @@ $(document).ready(function () {
             e.preventDefault();
         }
     });
-
     /* PRODUCT CATEGORY-GRID */
     /* AJAX PAGINATION */
     var colorFilterArr = [];
     var sizeFilterArr = [];
-
     /* AJAX ON CLICK PAGE */
     $(".shop-content").on("click", ".fs-page-number", function () {
         if (!$(this).hasClass("fs-page-number-active")) {
             $(".fs-page-number").removeClass("fs-page-number-active");
             $(this).addClass("fs-page-number-active");
-            var page = $(this).attr("fs-page-number");                              //Số trang hiện tại
-            var itemPerPage = $("#fs-number-of-item-on-page").val();                //Số item trên 1 trang
-            var cateID = $(this).attr("fs-category");                               //Category ID
-            var numberOfProducts = parseInt($("#fs-number-of-products").text());    //Tổng số lượng Product
-            var sortBy = $("#fs-sort-product-by").val();                            //1: Newest; 2: Low to High Price; 3: High to Low Price
+            var page = $(this).attr("fs-page-number"); //Số trang hiện tại
+            var itemPerPage = $("#fs-number-of-item-on-page").val(); //Số item trên 1 trang
+            var cateID = $(this).attr("fs-category"); //Category ID
+            var numberOfProducts = parseInt($("#fs-number-of-products").text()); //Tổng số lượng Product
+            var sortBy = $("#fs-sort-product-by").val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
             $(".fs-page-number[fs-page-number=" + page + "]").addClass("fs-page-number-active");
-            var from = (page - 1) * itemPerPage + 1;                                //STT của sp đầu tiên của trang
-            var to = (page - 1) * itemPerPage + parseInt(itemPerPage);              //STT của sp cuối cùng của trang
+            var from = (page - 1) * itemPerPage + 1; //STT của sp đầu tiên của trang
+            var to = (page - 1) * itemPerPage + parseInt(itemPerPage); //STT của sp cuối cùng của trang
             if (to > numberOfProducts) {
                 to = numberOfProducts;
             }
             var currentProductPageInfo = from + " - " + to;
-            var fromPrice = $("#fs-price-from-text").text();                        //Lọc giá Product "Từ"
-            var toPrice = $("#fs-price-to-text").text();                            //Lọc giá Product "Đến"
+            var fromPrice = $("#fs-price-from-text").text(); //Lọc giá Product "Từ"
+            var toPrice = $("#fs-price-to-text").text(); //Lọc giá Product "Đến"
 
             $.ajax({
                 url: "ajax/productPagination.html",
@@ -625,12 +579,10 @@ $(document).ready(function () {
                     }, 400);
                 }
             });
-
         }
 
 
     });
-
     /* AJAX ON CHANGE SORT PRODUCT BY  */
     $(".shop-content").on("change", "#fs-sort-product-by", function () {
         var sortBy = $(this).val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
@@ -646,9 +598,8 @@ $(document).ready(function () {
             to = numberOfProducts;
         }
         var currentProductPageInfo = from + " - " + to;
-
-        var fromPrice = $("#fs-price-from-text").text();                        //Lọc giá Product "Từ"
-        var toPrice = $("#fs-price-to-text").text();                            //Lọc giá Product "Đến
+        var fromPrice = $("#fs-price-from-text").text(); //Lọc giá Product "Từ"
+        var toPrice = $("#fs-price-to-text").text(); //Lọc giá Product "Đến
 
         $.ajax({
             url: "ajax/productPagination.html",
@@ -672,7 +623,6 @@ $(document).ready(function () {
                     $("#fs-ajax-loading").css("display", "none");
                     if (response != 0) {
                         $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
-
                         //Change product content
                         var result = "";
                         $.each(response, function (i, prod) {
@@ -759,7 +709,6 @@ $(document).ready(function () {
             }
         });
     });
-
     /* AJAX ON CHANGE NUMBER OF PRODUCT PER PAGE */
     $(".shop-content").on("change", "#fs-number-of-item-on-page", function () {
         var sortBy = $("#fs-sort-product-by").val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
@@ -768,9 +717,8 @@ $(document).ready(function () {
         var cateID = $(this).attr("fs-category");
         var numberOfProducts = parseInt($("#fs-number-of-products").text());
         var numberOfPages = Math.ceil(numberOfProducts / itemPerPage);
-
-        var fromPrice = $("#fs-price-from-text").text();                        //Lọc giá Product "Từ"
-        var toPrice = $("#fs-price-to-text").text();                            //Lọc giá Product "Đến"
+        var fromPrice = $("#fs-price-from-text").text(); //Lọc giá Product "Từ"
+        var toPrice = $("#fs-price-to-text").text(); //Lọc giá Product "Đến"
 
         //change productPageInfo
         var from = (page - 1) * itemPerPage + 1;
@@ -779,10 +727,8 @@ $(document).ready(function () {
             to = numberOfProducts;
         }
         var currentProductPageInfo = from + " - " + to;
-
         //Change pagination
         var pagination = "<li><span class=\"fs-page-number fs-page-number-active\" fs-page-number=\"1\" fs-category=\"" + cateID + "\">1</span></li>";
-
         if (numberOfPages > 1) {
             for (var i = 2; i <= numberOfPages; i++) {
                 pagination += "<li><span class=\"fs-page-number\" fs-page-number=\"" + i + "\" fs-category=\"" + cateID + "\">" + i + "</span></li>";
@@ -812,10 +758,8 @@ $(document).ready(function () {
                     $("#fs-ajax-loading").css("display", "none");
                     if (response != 0) {
                         $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
-
                         //Change pagination
                         $(".fs-ul-page-nav").html(pagination);
-
                         //Change product content
                         var result = "";
                         $.each(response, function (i, prod) {
@@ -902,7 +846,6 @@ $(document).ready(function () {
             }
         });
     });
-
     /* FILTER PRODUCT BY PRICE */
     $(".shop-content").on("click", "#fs-btn-filter-price", function () {
 
@@ -913,7 +856,6 @@ $(document).ready(function () {
         var cateID = $("#fs-price-from").attr("fs-category");
         var sortBy = $("#fs-sort-product-by").val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
         var itemPerPage = $("#fs-number-of-item-on-page").val();
-
         if (fromPrice == "") {
             fromPrice = $("#fs-price-from-text").attr("fs-min-price");
         }
@@ -972,7 +914,6 @@ $(document).ready(function () {
                                 } else {
                                     //Tổng số sản phẩm
                                     var numberOfPages = Math.ceil(parseInt(numberOfProducts) / itemPerPage);
-
                                     //Change pagination
                                     var pagination = "<li><span class=\"fs-page-number fs-page-number-active\" fs-page-number=\"1\" fs-category=\"" + cateID + "\">1</span></li>";
                                     if (numberOfPages > 1) {
@@ -982,7 +923,6 @@ $(document).ready(function () {
                                     }
 
                                     $(".fs-ul-page-nav").html(pagination);
-
                                     //change productPageInfo
                                     var from = (page - 1) * itemPerPage + 1;
                                     var to = (page - 1) * itemPerPage + parseInt(itemPerPage);
@@ -992,7 +932,6 @@ $(document).ready(function () {
                                     var currentProductPageInfo = from + " - " + to;
                                     $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
                                     $(".fs-number-of-products").text(numberOfProducts);
-
                                     //Change product content
                                     var result = "";
                                     $.each(response, function (i, prod) {
@@ -1074,7 +1013,6 @@ $(document).ready(function () {
                                         }
                                     });
                                     $("#fs-change-data-here").html(result);
-
                                     $("#fs-price-from").val("");
                                     $("#fs-price-to").val("");
                                 }
@@ -1084,10 +1022,8 @@ $(document).ready(function () {
                 }
 
             });
-
         }
     });
-
     /* FILTER PRODUCT BY COLOR */
     $('.fs-color-checkbox').change(function () {
         if (this.checked) { //Check
@@ -1100,12 +1036,11 @@ $(document).ready(function () {
         }
 
         var page = 1;
-        var fromPrice = $("#fs-price-from-text").text();                        //Lọc giá Product "Từ"
-        var toPrice = $("#fs-price-to-text").text();                            //Lọc giá Product "Đến"
+        var fromPrice = $("#fs-price-from-text").text(); //Lọc giá Product "Từ"
+        var toPrice = $("#fs-price-to-text").text(); //Lọc giá Product "Đến"
         var cateID = $("#fs-price-from").attr("fs-category");
         var sortBy = $("#fs-sort-product-by").val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
         var itemPerPage = $("#fs-number-of-item-on-page").val();
-
         $.ajax({
             url: "ajax/getNumberOfProductsByFilter_OfACategory.html",
             method: "POST",
@@ -1143,7 +1078,6 @@ $(document).ready(function () {
                             } else {
                                 //Tổng số sản phẩm
                                 var numberOfPages = Math.ceil(parseInt(numberOfProducts) / itemPerPage);
-
                                 //Change pagination
                                 var pagination = "<li><span class=\"fs-page-number fs-page-number-active\" fs-page-number=\"1\" fs-category=\"" + cateID + "\">1</span></li>";
                                 if (numberOfPages > 1) {
@@ -1153,7 +1087,6 @@ $(document).ready(function () {
                                 }
 
                                 $(".fs-ul-page-nav").html(pagination);
-
                                 //change productPageInfo
                                 var from = (page - 1) * itemPerPage + 1;
                                 var to = (page - 1) * itemPerPage + parseInt(itemPerPage);
@@ -1163,7 +1096,6 @@ $(document).ready(function () {
                                 var currentProductPageInfo = from + " - " + to;
                                 $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
                                 $(".fs-number-of-products").text(numberOfProducts);
-
                                 //Change product content
                                 var result = "";
                                 $.each(response, function (i, prod) {
@@ -1252,7 +1184,6 @@ $(document).ready(function () {
             }
         });
     });
-
     /* FILTER PRODUCT BY SIZE */
     $('.fs-size-checkbox').change(function () {
         if (this.checked) { //Check
@@ -1265,12 +1196,11 @@ $(document).ready(function () {
         }
 
         var page = 1;
-        var fromPrice = $("#fs-price-from-text").text();                        //Lọc giá Product "Từ"
-        var toPrice = $("#fs-price-to-text").text();                            //Lọc giá Product "Đến"
+        var fromPrice = $("#fs-price-from-text").text(); //Lọc giá Product "Từ"
+        var toPrice = $("#fs-price-to-text").text(); //Lọc giá Product "Đến"
         var cateID = $("#fs-price-from").attr("fs-category");
         var sortBy = $("#fs-sort-product-by").val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
         var itemPerPage = $("#fs-number-of-item-on-page").val();
-
         $.ajax({
             url: "ajax/getNumberOfProductsByFilter_OfACategory.html",
             method: "POST",
@@ -1308,17 +1238,14 @@ $(document).ready(function () {
                             } else {
                                 //Tổng số sản phẩm
                                 var numberOfPages = Math.ceil(parseInt(numberOfProducts) / itemPerPage);
-
                                 //Change pagination
                                 var pagination = "<li><span class=\"fs-page-number fs-page-number-active\" fs-page-number=\"1\" fs-category=\"" + cateID + "\">1</span></li>";
-
                                 if (numberOfPages > 1) {
                                     for (var i = 2; i <= numberOfPages; i++) {
                                         pagination += "<li><span class=\"fs-page-number\" fs-page-number=\"" + i + "\" fs-category=\"" + cateID + "\">" + i + "</span></li>";
                                     }
                                 }
                                 $(".fs-ul-page-nav").html(pagination);
-
                                 //change productPageInfo
                                 var from = (page - 1) * itemPerPage + 1;
                                 var to = (page - 1) * itemPerPage + parseInt(itemPerPage);
@@ -1328,7 +1255,6 @@ $(document).ready(function () {
                                 var currentProductPageInfo = from + " - " + to;
                                 $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
                                 $(".fs-number-of-products").text(numberOfProducts);
-
                                 //Change product content
                                 var result = "";
                                 $.each(response, function (i, prod) {
@@ -1417,10 +1343,9 @@ $(document).ready(function () {
             }
         });
     });
-    /*========================================NGAN - ORDER====================================================*/
+    /*===========================NGAN - ORDER===================================*/
     //Load cart in header
     $("#cart").load("orders/ajax/cart.html");
-
     //checkout.jsp
     //Discount in checkout.jsp
     //Load form discount in checkout
@@ -1432,7 +1357,7 @@ $(document).ready(function () {
     });
     $("input[name=address-chose]").on("click", function () {
         var checked = $('input[name=address-chose]:checked').val();
-        if (checked === "difference") {
+        if (checked == "difference") {
             $('.shipping-address').css("display", "list-item");
         } else {
             $('.shipping-address').prop("style", false);
@@ -1442,7 +1367,7 @@ $(document).ready(function () {
 //        $(".cart-table").remove(".foot");
 //        $(".cart-table").add("<tfoot class=\"foot\"></tfoot>");
 //        var discountCode = $("#coupon_code").val();
-//        if (discountCode === "") {
+//        if (discountCode == "") {
 //            $("#fs-checkout-discountvou-error").text("You must enter your discount code!");
 //        } else {
 //            $.ajax({
@@ -1451,7 +1376,7 @@ $(document).ready(function () {
 //                data: {discountCode: discountCode},
 //                dataType: 'html',
 //                success: function (response) {
-//                    if (response !== "error" && response !== "empty") {
+//                    if (response != "error" && response != "empty") {
 //                        $(".discount-ul").removeClass(".discount-inputs");
 //                        $(".discount-ul").removeClass(".discount-buttons");
 //                        $(".discount-ul").hide().html("<li class=\"col-md-6 col-sm-6 discount-inputs\"><div class=\"discountShow\" style=\"padding-bottom: 15px;\">\n"
@@ -1461,10 +1386,10 @@ $(document).ready(function () {
 //                        $(".foot").hide().html(response).fadeIn(1000);
 //                    } else {
 //                        $.get("orders/ajax/nodiscount.html", function (responsenodiscount) {
-//                            if (response === "error") {
+//                            if (response == "error") {
 //                                $("#fs-checkout-discountvou-error").text("Discount Code not existed!");
 //                                $(".foot").hide().html(responsenodiscount).fadeIn(1000);
-//                            } else if (response === "empty") {
+//                            } else if (response == "empty") {
 //                                $("#fs-checkout-discountvou-error").text("Your Discount Code is out of quantity");
 //                                $(".foot").hide().html(responsenodiscount).fadeIn(1000);
 //                            }
@@ -1500,7 +1425,6 @@ $(document).ready(function () {
             window.location = "orders/cancelorder/" + orderID + ".html";
         }
     });
-
     //Cart in modal.jsp
     $(".fs-modal-btn-addtobag").on("click", function () {
         var colorID = $(".fs-product-modal-color .fs-product-selected").find("img").attr("fs-color");
@@ -1546,9 +1470,9 @@ $(document).ready(function () {
     $(".fs-modal-close").on("click", function () {
         $(".fs-modal-error").text("");
     });
-    /*======================================END NGAN - ORDER==================================================*/
+    /*==========================END NGAN - ORDER==================================*/
 
-    /*========================================DUONG - USER====================================================*/
+    /*===========================DUONG - USER===================================*/
     //THÔNG BÁO KHI CLICK VÀO ADD ADDRESS KHI VƯỢT QUÁ MỨC CHO PHÉP
     $(".fs-add-address-user").on("click", function () {
         var userID = $(this).attr("fs-userID");
@@ -1562,7 +1486,6 @@ $(document).ready(function () {
             }
         });
     });
-
     //CUỘN LẠI, HIỆN RA TABLE ADDRESS-LIST
 
 //    $(".clickable").click(function(){
@@ -1578,7 +1501,6 @@ $(document).ready(function () {
             abc.find("i").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
         }
     });
-
     $(".fs-panel-add").on("click", ".panel-heading span.clickable", function () {
         var abc = $(this);
         if (!abc.hasClass("panel-collapsed")) {
@@ -1591,39 +1513,77 @@ $(document).ready(function () {
             abc.find("i").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
         }
     });
-
     $(".panel-heading span.clickable").click();
-
-
     // CẢNH CÁO KHI BẤM XÓA
-
-    $("#fs-delete-button-AD").click(function () {
-        swal({
-            title: "Are you sure?",
-            text: "You will sure delete record this",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, delete!",
-            cancelButtonText: "No, cancel!",
-            closeOnConfirm: false,
-            closeOnCancel: false
-        },
-        function (isConfirm) {
-            if (isConfirm) {
-                swal("Deleted!", "Your imaginary file has been deleted.", "success");
-            } else {
-                swal("Cancelled", "Your imaginary file is safe :)", "error");
-            }
-        });
+    
+    $("#fs-td-AD").click(function(){
+        var addressID = $(this).attr("fs-addressID");
+        alert(addressID);
     });
+    
+    $("#fs-delete-button-AD").click(function () {
+         var addressID = $("#fs-delete-button-AD").attr("fs-addressID");
+           
+            
 
+//        swal({
+//            title: "Are you sure?",
+//            text: "You will sure delete record this",
+//            type: "warning",
+//            showCancelButton: true,
+//            confirmButtonColor: "#DD6B55",
+//            confirmButtonText: "Yes, delete!",
+//            cancelButtonText: "No, cancel!",
+//            closeOnConfirm: false
+////            closeOnCancel: false
+//        },
+//        function (isConfirm) {
+//            if (isConfirm)
+////                swal("Done!", "It was succesfully deleted!", "success");
+//                $.ajax({
+//                url: "user/deleteAddress.html",
+//                method: "POST",
+//                data: {addressID: addressID},
+//                success: function (response) {
+////                    if (response == "1") {
+//                        swal("Deleted!", "Your imaginary file has been deleted.", "success");
+////                    }
+//                }
+////                return;
+//           
+//
+////            $.ajax({
+////                url: "user/deleteAddress" + addressID + ".html",
+////                method: "POST",
+////                data: {addressID: addressID},
+////                success: function (response) {
+////                    if (response == "1") {
+////                        swal("Deleted!", "Your imaginary file has been deleted.", "success");
+////                    }
+////                }
+////                                        , error: function (xhr, ajaxOptions, thrownError) {
+////                                swal("Error deleting!", "Please try again", "error");
+////                                }
+////                                });
+//
+////                        else {
+////                swal("Cancelled", "Your imaginary file is safe :)", "error");
+//
+//            });
+//
+//
+//    });
+        });
+        
+        
+
+            
     // BẮT LỖI FORM LOGIN USER MODAL
 
     function checkEmail(email) {
         email = $("#fs-email-login-user").val();
         var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
-        if (email === "") {
+        if (email == "") {
             $("#fs-email-login-user-error").text("Email cannot be empty!");
             $("#fs-email-login-user").focus();
             var div = $("#fs-email-login-user").closest("div.fs-email-user");
@@ -1658,12 +1618,9 @@ $(document).ready(function () {
         e.preventDefault();
         var email = $("#fs-email-login-user").val();
         var pass = $("#fs-pass-login-user").val();
-        
         if (!checkEmail(email)) {
             return false;
-        }
-
-        else if (pass === "") {
+        } else if (pass == "") { // => đúng là pass != ==
             $("#fs-pass-login-user-error").text("Password cannot be empty!");
             $("#fs-pass-login-user").focus();
             var div = $("#fs-pass-login-user").closest("div.fs-pass-user");
@@ -1672,8 +1629,7 @@ $(document).ready(function () {
             div.addClass("has-error has-feedback");
             div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
-
-        } else if (pass.length < 6 || pass.length > 100) {
+        } else if (pass.length < 6 || pass.length > 100) { //=> đúng là  <=6 pass.length < 100 
             $("#fs-pass-login-user-error").text("Password 6 to 100 characters!");
             $("#fs-pass-login-user").focus();
             var div = $("#fs-pass-login-user").closest("div.fs-pass-user");
@@ -1682,61 +1638,80 @@ $(document).ready(function () {
             div.addClass("has-error has-feedback");
             div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
-        }
-//        else if(!checkLOGIN(email,pass)){
-//            return false;
-//        }
-        else {
-            $("#fs-form-login-user").submit();
+        } else {
+//            $("#fs-form-login-user").submit();
             $("#fs-pass-login-user-error").text("");
             var div = $("#fs-pass-login-user").closest("div.fs-pass-user");
             div.removeClass("has-error");
             div.addClass("has-success has-feedback");
             $("#glypcn-fs-login-user").remove();
             div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+            $.ajax({
+                url: "user/login.html",
+                method: "POST",
+                data: {email: email, password: pass},
+                //dataType: 'html',
+                success: function (response) {
+                    if (response == "2") {
+                        EmailWrong(email);
+                    } else if (response == "3") {
+                        PassWrong(pass);
+                    } else if(response == "4"){
+                        $("#fs-error-show").text("Fail account wrong!");
+                    } 
+                    else {
+                        var currentUrl = window.location.href;
+                        window.location = currentUrl;
+                        $("#loginModal").modal('hide');
+                    }
+                }
+            });
             return true;
         }
     });
+    function EmailWrong(email) {
+        email = $("#fs-email-login-user").val();
+        if ($("#loginModal").modal('show')) {
+            $("#fs-error-show").text("Email is wrong!");
+//            $("#fs-email-login-user").focus();
+            var div = $("#fs-email-login-user").closest("div.fs-email-user");
+            div.removeClass("has-success");
+            $("#glypcn-fs-login-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        }
+    }
 
-    // Test thử
-    
-//        function checkLOGIN(email,pass){
-//        $.ajax({
-//            url: "user/checkLog.html",
-//            method: "POST",
-//            data: {email: email},
-//            dataType: "JSON",
-//            success: function (response) {
-//                if(email === response.email){
-//                    if(pass === response.password){
-//                        return true;
-//                    }else{
-//                        alert("sai");
-//                        return false;
-//                    }
-//            }else{
-//                    alert("sai email");
-//                    return false;
-//            }
-//            }
-//    });
-//    
-//    }
-    
+    function PassWrong(password) {
+        password = $("#fs-pass-login-user").val();
+        if ($("#loginModal").modal('show')) {
+            $("#fs-error-show").text("Password is wrong!");
+//            $("#fs-pass-login-user").focus();
+            var div = $("#fs-pass-login-user").closest("div.fs-pass-user");
+            div.removeClass("has-success");
+            $("#glypcn-fs-login-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        }
+    }
+
+
+
     // VALIDATION KEYUP 
 
     $("#fs-email-login-user").keyup(function () {
         var email = $("#fs-email-login-user").val();
-       
+//        $("#fs-error-show").text("");
         if (!checkEmail(email)) {
             return false;
         }
     });
-
     $("#fs-pass-login-user").keyup(function () {
         var pass = $("#fs-pass-login-user").val();
-
-        if (pass === "") {
+//        $("#fs-error-show").text("");
+        if (pass == "") {
             $("#fs-pass-login-user-error").text("Password cannot be empty!");
             $("#fs-pass-login-user").focus();
             var div = $("#fs-pass-login-user").closest("div.fs-pass-user");
@@ -1745,7 +1720,6 @@ $(document).ready(function () {
             div.addClass("has-error has-feedback");
             div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
-
         } else if (pass.length < 6 || pass.length > 100) {
             $("#fs-pass-login-user-error").text("Password 6 to 100 characters!");
             $("#fs-pass-login-user").focus();
@@ -1768,26 +1742,55 @@ $(document).ready(function () {
             return true;
         }
     });
-    
     // BẮT VALIDATION TRÊN FORM CREATE
-    
-    function checkPass(password){
-        password = $("#fs-create-password").val();
-        
-        if (password === "") {
-            $("#fs-pass-create-user-error").text("Password cannot be empty!");
-            $("#fs-create-password").focus();
-            var div = $("#fs-create-password").closest("div.fs-password-create");
+
+    function checkemail(email) {
+        email = $("#fs-create-email").val();
+        var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
+        if (email == "") {
+            $("#fs-email-create-user-error").text("Email cannot be empty!");
+            $("#fs-create-email").focus();
+            var div = $("#fs-create-email").closest("div.fs-email-create");
             div.removeClass("has-success");
             $("#glypcn-fs-create-user").remove();
             div.addClass("has-error has-feedback");
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
+        } else if (!pattern.test(email)) {
+            $("#fs-email-create-user-error").text("Please enter valid Email!");
+            $("#fs-create-email").focus();
+            var div = $("#fs-create-email").closest("div.fs-email-create");
+            div.removeClass("has-success");
+            $("#glypcn-fs-create-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        } else {
+            $("#fs-email-create-user-error").text("");
+            var div = $("#fs-create-email").closest("div.fs-email-create");
+            div.removeClass("has-error");
+            div.addClass("has-success has-feedback");
+            $("#glypcn-fs-create-user").remove();
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+            return true;
+        }
+    }
 
+    function checkPass(password) {
+        password = $("#password").val();
+        if (password == "") {
+            $("#fs-pass-create-user-error").text("Password cannot be empty!");
+            $("#password").focus();
+            var div = $("#password").closest("div.fs-password-create");
+            div.removeClass("has-success");
+            $("#glypcn-fs-create-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
         } else if (password.length < 6 || password.length > 100) {
             $("#fs-pass-create-user-error").text("Password 6 to 100 characters!");
-            $("#fs-create-password").focus();
-             var div = $("#fs-create-password").closest("div.fs-password-create");
+//            $("#password").focus();
+            var div = $("#password").closest("div.fs-password-create");
             div.removeClass("has-success");
             $("#glypcn-fs-create-user").remove();
             div.addClass("has-error has-feedback");
@@ -1796,7 +1799,7 @@ $(document).ready(function () {
         }
         else {
             $("#fs-pass-create-user-error").text("");
-            var div = $("#fs-create-password").closest("div.fs-password-create");
+            var div = $("#password").closest("div.fs-password-create");
             div.removeClass("has-error");
             div.addClass("has-success has-feedback");
             $("#glypcn-fs-create-user").remove();
@@ -1804,24 +1807,32 @@ $(document).ready(function () {
             return true;
         }
     }
-    
-    function checkRePass(repassword){
-        repassword = $("#fs-create-repassword").val();
-        
-        if (repassword === "") {
+
+    function checkRePass(repassword, password) {
+        repassword = $("#Repassword").val();
+        password = $("#password").val();
+        if (repassword == "") {
             $("#fs-repass-create-user-error").text("Repassword cannot be empty!");
-            $("#fs-create-repassword").focus();
-            var div = $("#fs-create-repassword").closest("div.fs-repassword-create");
+            $("#Repassword").focus();
+            var div = $("#Repassword").closest("div.fs-repassword-create");
             div.removeClass("has-success");
             $("#glypcn-fs-create-user").remove();
             div.addClass("has-error has-feedback");
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
-
         } else if (repassword.length < 6 || repassword.length > 100) {
             $("#fs-repass-create-user-error").text("Password 6 to 100 characters!");
-            $("#fs-create-repassword").focus();
-            var div = $("#fs-create-repassword").closest("div.fs-repassword-create");
+//            $("#Repassword").focus();
+            var div = $("#Repassword").closest("div.fs-repassword-create");
+            div.removeClass("has-success");
+            $("#glypcn-fs-create-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        } else if (repassword != password) {
+            $("#fs-repass-create-user-error").text("Repassword is not the same as password!");
+//            $("#Repassword").focus();
+            var div = $("#Repassword").closest("div.fs-repassword-create");
             div.removeClass("has-success");
             $("#glypcn-fs-create-user").remove();
             div.addClass("has-error has-feedback");
@@ -1830,7 +1841,7 @@ $(document).ready(function () {
         }
         else {
             $("#fs-repass-create-user-error").text("");
-            var div = $("#fs-create-repassword").closest("div.fs-repassword-create");
+            var div = $("#Repassword").closest("div.fs-repassword-create");
             div.removeClass("has-error");
             div.addClass("has-success has-feedback");
             $("#glypcn-fs-create-user").remove();
@@ -1838,11 +1849,10 @@ $(document).ready(function () {
             return true;
         }
     }
-    
-    function checkFirstName(firstname){
+
+    function checkFirstName(firstname) {
         firstname = $("#fs-create-firstname").val();
-        
-        if (firstname === "") {
+        if (firstname == "") {
             $("#fs-fname-create-user-error").text("First Name cannot be empty!");
             $("#fs-create-firstname").focus();
             var div = $("#fs-create-firstname").closest("div.fs-firstname-create");
@@ -1851,10 +1861,9 @@ $(document).ready(function () {
             div.addClass("has-error has-feedback");
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
-
         } else if (firstname.length < 2 || firstname.length > 50) {
             $("#fs-fname-create-user-error").text("First Name 2 to 50 characters!");
-            $("#fs-create-firstname").focus();
+//            $("#fs-create-firstname").focus();
             var div = $("#fs-create-firstname").closest("div.fs-firstname-create");
             div.removeClass("has-success");
             $("#glypcn-fs-create-user").remove();
@@ -1872,11 +1881,10 @@ $(document).ready(function () {
             return true;
         }
     }
-    
-    function checkLastName(lastname){
+
+    function checkLastName(lastname) {
         lastname = $("#fs-create-lastname").val();
-        
-        if (lastname === "") {
+        if (lastname == "") {
             $("#fs-lname-create-user-error").text("Last Name cannot be empty!");
             $("#fs-create-lastname").focus();
             var div = $("#fs-create-lastname").closest("div.fs-lastname-create");
@@ -1885,10 +1893,9 @@ $(document).ready(function () {
             div.addClass("has-error has-feedback");
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
-
         } else if (lastname.length < 2 || lastname.length > 50) {
             $("#fs-lname-create-user-error").text("Last Name 2 to 50 characters!");
-            $("#fs-create-lastname").focus();
+//            $("#fs-create-lastname").focus();
             var div = $("#fs-create-lastname").closest("div.fs-lastname-create");
             div.removeClass("has-success");
             $("#glypcn-fs-create-user").remove();
@@ -1906,24 +1913,23 @@ $(document).ready(function () {
             return true;
         }
     }
-    
-    function checkBirthDay(birthday){
-        birthday = $("#fs-create-birthday").val();
-        
-        if (birthday === "") {
+
+
+    function checkBirthDay(birthday) {
+        birthday = $("#txtBirthday").val();
+        if (birthday == "") {
             $("#fs-bday-create-user-error").text("BirthDay cannot be empty!");
-            $("#fs-create-birthday").focus();
-            var div = $("#fs-create-birthday").closest("div.fs-birthday-create");
+            $("#txtBirthday").focus();
+            var div = $("#txtBirthday").closest("div.fs-birthday-create");
             div.removeClass("has-success");
             $("#glypcn-fs-create-user").remove();
             div.addClass("has-error has-feedback");
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
-
-        } 
+        }
         else {
             $("#fs-bday-create-user-error").text("");
-            var div = $("#fs-create-birthday").closest("div.fs-birthday-create");
+            var div = $("#txtBirthday").closest("div.fs-birthday-create");
             div.removeClass("has-error");
             div.addClass("has-success has-feedback");
             $("#glypcn-fs-create-user").remove();
@@ -1931,13 +1937,12 @@ $(document).ready(function () {
             return true;
         }
     }
-    
-    function checkPhone(phone){
+
+    function checkPhone(phone) {
 //        var regex = new RegExp(/^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/);
-        var regex = new RegExp(/[^ \-\.]^(01[2689]|09)[0-9]{8}$/);
+        var regex = new RegExp(/^(01[2689]|09)[0-9]{8}$/);
         phone = $("#fs-create-phone").val();
-        
-        if (phone === "") {
+        if (phone == "") {
             $("#fs-phone-create-user-error").text("Phone cannot be empty!");
             $("#fs-create-phone").focus();
             var div = $("#fs-create-phone").closest("div.fs-phone-create");
@@ -1946,9 +1951,8 @@ $(document).ready(function () {
             div.addClass("has-error has-feedback");
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
-
-        } else if(!regex.test(phone)){
-             $("#fs-phone-create-user-error").text("Please enter valid phone!");
+        } else if (!regex.test(phone)) {
+            $("#fs-phone-create-user-error").text("Please enter valid phone!");
             $("#fs-create-phone").focus();
             var div = $("#fs-create-phone").closest("div.fs-phone-create");
             div.removeClass("has-success");
@@ -1958,7 +1962,7 @@ $(document).ready(function () {
             return false;
         }
         else {
-             $("#fs-phone-create-user-error").text("");
+            $("#fs-phone-create-user-error").text("");
             var div = $("#fs-create-phone").closest("div.fs-phone-create");
             div.removeClass("has-error");
             div.addClass("has-success has-feedback");
@@ -1966,13 +1970,12 @@ $(document).ready(function () {
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
             return true;
         }
-        
+
     }
-    
-    function checkAddress(address){
+
+    function checkAddress(address) {
         address = $("#fs-create-address").val();
-        
-        if (address === "") {
+        if (address == "") {
             $("#fs-address-create-user-error").text("Address cannot be empty!");
             $("#fs-create-address").focus();
             var div = $("#fs-create-address").closest("div.fs-address-create");
@@ -1981,8 +1984,7 @@ $(document).ready(function () {
             div.addClass("has-error has-feedback");
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
-
-        } else if(address.length < 10 || address.length > 255){
+        } else if (address.length < 10 || address.length > 255) {
             $("#fs-address-create-user-error").text("Address has 10 - 255 characters!");
             $("#fs-create-address").focus();
             var div = $("#fs-create-address").closest("div.fs-address-create");
@@ -2002,82 +2004,375 @@ $(document).ready(function () {
             return true;
         }
     }
-    
-    $("#fs-form-create-user").click(function(e){
+
+    $("body").on("click", "#fs-button-create-user", function (e) {
+        e.preventDefault();
+        console.log("123");
+        var email = $("#fs-create-email").val();
+        var password = $("#password").val();
+        var repassword = $("#Repassword").val();
+        var firstname = $("#fs-create-firstname").val();
+        var lastname = $("#fs-create-lastname").val();
+        var birthday = $("#txtBirthday").val();
+        var gender = $('input[name="gender"]:checked').val();
+        var phone = $("#fs-create-phone").val();
+        var address = $("#fs-create-address").val();
+        var formData = new FormData();
+        var mfile = $("#fs-upImage")[0].files[0];
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("firstName", firstname);
+        formData.append("lastName", lastname);
+        formData.append("gender", gender);
+        formData.append("birthday", birthday);
+        formData.append("upImage", mfile);
+        formData.append("phoneNumber", phone);
+        formData.append("address", address);
         
+        if (!checkemail(email)) {
+            return false;
+        } else if (!checkPass(password)) {
+            return false;
+        } else if (!checkRePass(repassword, password)) {
+            return false;
+        } else if (!checkFirstName(firstname)) {
+            return true;
+        } else if (!checkLastName(lastname)) {
+            return false;
+        } else if (!checkBirthDay(birthday)) {
+            return false;
+        } 
+        else {      
+        $.ajax({
+            url: "user/register.html",
+            method: "POST",
+            //data: $("#fs-form-create-user").serialize(),
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            //dataType: 'html',
+            success: function (response) {
+                console.log(response);
+                if (response == "1") {
+                    $("#loginModal").modal('hide');
+                    window.location = "index.html";
+                } else if (response == "2") {
+                    $("#loginModal").modal('hide');
+                    setTimeout(function ()
+                    {
+                        emailWrong(email);
+                        $("#loginModal").modal('show');
+                    }, 5000);
+                    swal({
+                        title: "Account is Exist!",
+                        text: "",
+                        timer: 2000,
+                        type: "error",
+                        showConfirmButton: false
+                    });
+                } else if (response == "0") {
+                    $("#loginModal").modal('hide');
+                    setTimeout(function ()
+                    {
+                        $("#loginModal").modal('show');
+                    }, 5000);
+                    swal({
+                        title: "FAIL!",
+                        text: "",
+                        timer: 2000,
+                        type: "error",
+                        showConfirmButton: false
+                    });
+                }
+
+            }
+        });
+        }
     });
-    
-    
-    
-//    $(".fs-button-login-user").click(function(){
-////        e.preventDefault();
-//       $.ajax({
-//            url: "user/login.html",
-//            method: "POST",
-////            data: {userID: userID},
-//            success: function (response) {
-//                alert("a");
-//            }
-//        });
-//            
-//    });
+//        VALIDATION REGISTER KEYUP
 
-    // HIỆN THỊ MODAL BOOTSTRAP UPDATE
+    $("#fs-create-email").keyup(function () {
+        var email = $("#fs-create-email").val();
+        if (!checkemail(email)) {
+            return false;
+        }
+    });
+    $("#password").keyup(function () {
+        var password = $("#password").val();
+        if (!checkPass(password)) {
+            return false;
+        }
+    });
+    $("#Repassword").keyup(function () {
+        var repassword = $("#Repassword").val();
+        var password = $("#password").val();
+        if (!checkRePass(repassword, password)) {
+            return false;
+        }
+    });
+    $("#fs-create-firstname").keyup(function () {
+        var firstname = $("#fs-create-firstname").val();
+        if (!checkFirstName(firstname)) {
+            return false;
+        }
+    });
+    $("#fs-create-lastname").keyup(function () {
+        var lastname = $("#fs-create-lastname").val();
+        if (!checkLastName(lastname)) {
+            return false;
+        }
+    });
+    $("#txtBirthday").keyup(function () {
+        var birthday = $("#txtBirthday").val();
+        if (!checkBirthDay(birthday)) {
+            return false;
+        }
+    });
+    $("#fs-create-phone").keyup(function () {
+        var phone = $("#fs-create-phone").val();
+        if (!checkPhone(phone)) {
+            return false;
+        }
+    });
+    $("#fs-create-address").keyup(function () {
+        var address = $("#fs-create-address").val();
+        if (!checkAddress(address)) {
+            return false;
+        }
+    });
 
-//    $(".fs-update-button").click(function (){
-//        $("#ADModal").modal("show");
-//    });
-    // Modal BootStrap Tab LOGIN, REGISTER
+//    BẮT VALIDATION CẬP NHẬT THÔNG TIN CÁ NHÂN     
 
-//    $(".nav-tabs").on("click","")
+    $("#txtbirthday").click(function () {
+        $("#txtbirthday").datepicker({
+            dateFormat: "dd/mm/yy",
+            showAnim: "drop",
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "1960:1999"
+        }
+        );
+    });
+    // BẮT VỚI UPDATE ACCOUNT CLICK
 
 
-//$("#txtaddress").keyup(function () {
-//        var address = $("txtaddress").val();
-//        var userID = $(this).attr("fs-userID");
-//
-//        $.ajax({
-//            url: "user/address-add/" + userID + ".html",
-//            method: "POST",
-//            data: {userID: userID, address: address},
-//            success: function (response) {
-//                alert('trùng địa chỉ');
-//            }
-//        });
-//
-//    });
-//    
-//    $("#txtphone").keyup(function () {
-//        var phone = $("txtphone").val();
-//        var userID = $(this).attr("fs-userID");
-//
-//        $.ajax({
-//            url: "user/address-add/" + userID + ".html",
-//            method: "POST",
-//            data: {userID: userID, phone: phone},
-//            success: function (response) {
-//                alert('trùng số điện thoại');
-//            }
-//        });
-//
-//    });
-//    
-//    $("form:form").submit(function( event ){
-//        if($("#txtaddress").keyup() && $("#txtphone").keyup()){
-//            $("span").text("trùng address").show();
-//            return; 
+
+    function emailcheck(email) {
+        email = $("#fs-update-email").val();
+        var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
+        if (email == "") {
+            $("#fs-email-update-user-error").text("Email cannot be empty!");
+            $("#fs-update-email").focus();
+            var div = $("#fs-update-email").closest("div.fs-email-update");
+            div.removeClass("has-success");
+            $("#glypcn-fs-update-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        } else if (!pattern.test(email)) {
+            $("#fs-email-update-user-error").text("Please enter valid Email!");
+//            $("#fs-create-email").focus();
+            var div = $("#fs-update-email").closest("div.fs-email-update");
+            div.removeClass("has-success");
+            $("#glypcn-fs-update-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        } else {
+            $("#fs-email-update-user-error").text("");
+            var div = $("#fs-update-email").closest("div.fs-email-update");
+            div.removeClass("has-error");
+            div.addClass("has-success has-feedback");
+            $("#glypcn-fs-update-user").remove();
+            div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+            return true;
+        }
+    }
+
+    function checkfirstName(firstname) {
+        firstname = $("#fs-update-firstname").val();
+        if (firstname == "") {
+            $("#fs-firstname-update-user-error").text("First Name cannot be empty!");
+            $("#fs-update-firstname").focus();
+            var div = $("#fs-update-firstname").closest("div.fs-firstname-update");
+            div.removeClass("has-success");
+            $("#glypcn-fs-update-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        } else if (firstname.length < 2 || firstname.length > 50) {
+            $("#fs-firstname-update-user-error").text("First Name 2 to 50 characters!");
+//            $("#fs-create-firstname").focus();
+            var div = $("#fs-update-firstname").closest("div.fs-firstname-update");
+            div.removeClass("has-success");
+            $("#glypcn-fs-update-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        }
+        else {
+            $("#fs-firstname-update-user-error").text("");
+            var div = $("#fs-update-firstname").closest("div.fs-firstname-update");
+            div.removeClass("has-error");
+            div.addClass("has-success has-feedback");
+            $("#glypcn-fs-update-user").remove();
+            div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+            return true;
+        }
+    }
+
+    function checklastName(lastname) {
+        lastname = $("#fs-update-lastname").val();
+        if (lastname == "") {
+            $("#fs-lastname-update-user-error").text("Last Name cannot be empty!");
+            $("#fs-update-lastname").focus();
+            var div = $("#fs-update-lastname").closest("div.fs-lastname-update");
+            div.removeClass("has-success");
+            $("#glypcn-fs-update-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        } else if (lastname.length < 2 || lastname.length > 50) {
+            $("#fs-lastname-update-user-error").text("Last Name 2 to 50 characters!");
+//            $("#fs-create-lastname").focus();
+            var div = $("#fs-update-lastname").closest("div.fs-lastname-update");
+            div.removeClass("has-success");
+            $("#glypcn-fs-update-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        }
+        else {
+            $("#fs-lastname-update-user-error").text("");
+            var div = $("#fs-update-lastname").closest("div.fs-lastname-update");
+            div.removeClass("has-error");
+            div.addClass("has-success has-feedback");
+            $("#glypcn-fs-update-user").remove();
+            div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+            return true;
+        }
+    }
+
+
+    function checkbirthDay(birthday) {
+        birthday = $("#txtbirthday").val();
+        if (birthday == "") {
+            $("#fs-birthday-update-user-error").text("BirthDay cannot be empty!");
+            $("#txtbirthday").focus();
+            var div = $("#txtbirthday").closest("div.fs-birthday-update");
+            div.removeClass("has-success");
+            $("#glypcn-fs-update-user").remove();
+            div.addClass("has-error has-feedback");
+            div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+            return false;
+        }
+        else {
+            $("#fs-birthday-update-user-error").text("");
+            var div = $("#txtbirthday").closest("div.fs-birthday-update");
+            div.removeClass("has-error");
+            div.addClass("has-success has-feedback");
+            $("#glypcn-fs-update-user").remove();
+            div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+            return true;
+        }
+    }
+
+    $(".fs-button-update-user").click(function (e) {
+        var email = $("#fs-update-email").val();
+        var firstname = $("#fs-update-firstname").val();
+        var lastname = $("#fs-update-lastname").val();
+        var birthday = $("#txtbirthday").val();
+        e.preventDefault();
+        if (!emailcheck(email)) {
+            return false;
+        } else if (!checkfirstName(firstname)) {
+            return false;
+        } else if (!checklastName(lastname)) {
+            return false;
+        } else if (!checkbirthDay(birthday)) {
+            return false;
+        } else {
+            $("#fs-form-update-account").submit();
+        }
+    });
+
+
+
+    // VALIDATION KEYUP UPDATE-ACCOUNT
+
+    $("#fs-update-email").keyup(function () {
+        var email = $("#fs-update-email").val();
+        if (!emailcheck(email)) {
+            return false;
+        }
+    });
+    // BẮT EMAIL TRÙNG:
+
+    $("#fs-update-email").keyup(function () {
+        var email = $("#fs-update-email").val();
+        $.ajax({
+            url: "ajax/emailExist.html",
+            method: "POST",
+//            data: {email: email},
+            dataType: "JSON",
+            success: function (response) {
+                for (var i = 0; i < response.length; i++) {
+                    var item = response[i];
+                    if (email == item) {
+                        $("#fs-email-update-user-error").text("Email is Exist!");
+                        $("#fs-update-email").focus();
+                        var div = $("#fs-update-email").closest("div.fs-email-update");
+                        div.removeClass("has-success");
+                        $("#glypcn-fs-update-user").remove();
+                        div.addClass("has-error has-feedback");
+                        div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+                        return false;
+                    } 
+//                    else {
+//                        $("#fs-email-update-user-error").text("");
+//                        var div = $("#fs-update-email").closest("div.fs-email-update");
+//                        div.removeClass("has-error");
+//                        div.addClass("has-success has-feedback");
+//                        $("#glypcn-fs-update-user").remove();
+//                        div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+//                        return true;
+//                    }
+
+                }
+            }
+        });
+    });
+    $("#fs-update-firstname").keyup(function () {
+        var firstname = $("#fs-update-firstname").val();
+        if (!checkfirstName(firstname)) {
+            return false;
+        }
+    });
+    $("#fs-update-lastname").keyup(function () {
+        var lastname = $("#fs-update-lastname").val();
+        if (!checklastName(lastname)) {
+            return false;
+        }
+    });
+    $("#fs-update-lastname").keyup(function () {
+        var lastname = $("#fs-update-lastname").val();
+        if (!checklastName(lastname)) {
+            return false;
+        }
+    });
+//    $("#txtbirthday").keyup(function () {
+//        var birthday = $("#txtbirthday").val();
+//        if (!checkbirthDay(birthday)) {
+//            return false;
 //        }
-//        
-//        event.preventDefault();
-//        
 //    });
-
-
-//    fs-add-address-user
-
-    /*========================================END DUONG - USER====================================================*/
     
-    /*========================================THANH - BLOG====================================================*/
-    /*========================================END DUONG - USER====================================================*/
+
+
+    /*===========================END DUONG - USER===================================*/
+
+    /*===========================THANH - BLOG===================================*/
+    /*===========================END THANH - BLOG===================================*/
 });
 
