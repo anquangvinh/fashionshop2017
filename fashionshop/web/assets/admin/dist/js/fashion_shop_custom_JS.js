@@ -664,22 +664,22 @@ $(document).ready(function () {
         } else {
             $("#fs-edit-product-color").addClass("fs-display-none");
         }
-        
-        if(select == 3 || select == 4){
+
+        if (select == 3 || select == 4) {
             $("#fs-select-product-update-choose-color").removeClass("fs-display-none");
         }
-        
-        if(select == 0){
+
+        if (select == 0) {
             $("#fs-select-product-update-choose-color").addClass("fs-display-none");
         }
-        
+
     });
 
     /*Xử lý choose Color*/
     $("#fs-product-update-page").on("change", "#fs-select-product-update-choose-color", function () {
         var task = $("#fs-select-product-update-choose-first-task").val();
         var colorID = $("#fs-select-product-update-choose-color").val();
-        
+
         if (task == 3) {
             $("#fs-edit-product-size").removeClass("fs-display-none");
             $(".fs-edit-product-table-size").addClass("fs-display-none");
@@ -687,18 +687,18 @@ $(document).ready(function () {
         } else {
             $("#fs-edit-product-size").addClass("fs-display-none");
         }
-        
-       if(task == 4){
-           $("#fs-edit-product-sub-img").removeClass("fs-display-none");
-           $(".fs-edit-product-table-sub-img").addClass("fs-display-none");
-           $("#fs-edit-product-table-sub-img-" + colorID).removeClass("fs-display-none");
-       } else {
-           $("#fs-edit-product-sub-img").addClass("fs-display-none");
-       }
-       
-       if(colorID == 0){
-           $(".fs-select-product-update-task").addClass("fs-display-none");
-       }
+
+        if (task == 4) {
+            $("#fs-edit-product-sub-img").removeClass("fs-display-none");
+            $(".fs-edit-product-table-sub-img").addClass("fs-display-none");
+            $("#fs-edit-product-table-sub-img-" + colorID).removeClass("fs-display-none");
+        } else {
+            $("#fs-edit-product-sub-img").addClass("fs-display-none");
+        }
+
+        if (colorID == 0) {
+            $(".fs-select-product-update-task").addClass("fs-display-none");
+        }
     });
 
     $("#fs-edit-product-table-color tbody").sortable();
@@ -767,7 +767,7 @@ $(document).ready(function () {
             $("#fs-blog-category-error").text("");
         }
     });
-    
+
     $('input[id="upImage"]').fileuploader({
         limit: 1,
         extensions: ['jpg', 'jpeg', 'png'],
@@ -913,25 +913,25 @@ $(document).ready(function () {
             $("p#fs-select-box-blog-category-error").text("");
         }
     });
-    
-       $("#fs-blog-line-title").keyup(function () {
+
+    $("#fs-blog-line-title").keyup(function () {
         var titleID = $("#fs-blog-line-title").val();
         if (titleID == "") {
             $("#fs-blog-title-error").text("Title cannot be empty!");
         }
-         else if (titleID.length < 5 || titleID.length > 50) {
+        else if (titleID.length < 5 || titleID.length > 50) {
             $("#fs-blog-title-error").text("Title must have 5 - 50 characters!");
         } else {
             $("#fs-blog-title-error").text("");
         }
     });
-    
-     $("#fs-blog-line-summary").keyup(function () {
+
+    $("#fs-blog-line-summary").keyup(function () {
         var summary = $("#fs-blog-line-summary").val();
         if (summary == "") {
             $("#fs-blog-summary-error").text("Summary cannot be empty!");
         }
-         else if (summary.length < 15 || summary.length > 1000) {
+        else if (summary.length < 15 || summary.length > 1000) {
             $("#fs-blog-summary-error").text("Summary has 15 - 1000 characters!");
         } else {
             $("#fs-blog-summary-error").text("");
@@ -940,7 +940,7 @@ $(document).ready(function () {
 
     // validate CKfinder
 
-        if ($("#editor1").length) {
+    if ($("#editor1").length) {
         var editor1 = CKEDITOR.replace('editor1', {
             toolbar: [
                 {name: 'document', items: ['Source']},
@@ -957,53 +957,53 @@ $(document).ready(function () {
         });
         CKFinder.setupCKEditor(editor1, {basePath: '/fashionshop/assets/ckfinder/'});
     }
-    
+
     // Button Create Blog
-     $("#fs-button-create-blog").click(function (e) {
+    $("#fs-button-create-blog").click(function (e) {
         e.preventDefault();
         var count = 0;
-        
+
         $(".fs-blog-line-title").each(function () {
             if ($(this).val() == "") {
                 $(this).focus();
                 $(this).siblings("p").text("Title is required!");
                 count++;
-            }else if ($(this).val().length < 5 ) {
+            } else if ($(this).val().length < 5) {
                 $(this).focus();
                 $(this).siblings("p").text("Title must have 5 - 50 characters! . ");
-                count++;   
-                } else {
+                count++;
+            } else {
                 $(this).siblings("p").text("");
             }
-         });
-         
-            $(".fs-blog-line-summary").each(function () {
+        });
+
+        $(".fs-blog-line-summary").each(function () {
             if ($(this).val() == "") {
                 $(this).focus();
                 $(this).siblings("p").text("Summary is required!");
                 count++;
-            }else if ($(this).val().length < 15) {
+            } else if ($(this).val().length < 15) {
                 $(this).focus();
                 $(this).siblings("p").text("Summary has 15 - 1000 characters!");
-                count++;   
-                } else {
+                count++;
+            } else {
                 $(this).siblings("p").text("");
             }
-         });
-         
-           $(".upImage").each(function () {
+        });
+
+        $(".upImage").each(function () {
             if ($(this).val() == "") {
                 $(this).focus();
                 $(this).parent().siblings("p").text("Choose an image for Blog!");
                 count++;
             }
-             });
-            
-              if (count == 0) {
+        });
+
+        if (count == 0) {
             $("#fs-form-create-blog").submit();
         }
-    
-        });
+
+    });
 
     /* BẮT validation UPDATE BLOG */
 
@@ -1270,12 +1270,12 @@ $(document).ready(function () {
             success: function (response) {
                 console.log(response);
                 //vòng lặp foreach của jquery
-                    var jsonStringBD = response[0].birthday;
-                    var jsonObjectBD = JSON.parse(jsonStringBD);
-                    var newFormattedDateBD = $.datepicker.formatDate('dd/mm/yy', new Date(jsonObjectBD));
-                    var jsonStringRG = response[0].registrationDate;
-                    var jsonObjectRG = JSON.parse(jsonStringRG);
-                    var newFormattedDateRG = $.datepicker.formatDate('dd/mm/yy', new Date(jsonObjectRG));
+                var jsonStringBD = response[0].birthday;
+                var jsonObjectBD = JSON.parse(jsonStringBD);
+                var newFormattedDateBD = $.datepicker.formatDate('dd/mm/yy', new Date(jsonObjectBD));
+                var jsonStringRG = response[0].registrationDate;
+                var jsonObjectRG = JSON.parse(jsonStringRG);
+                var newFormattedDateRG = $.datepicker.formatDate('dd/mm/yy', new Date(jsonObjectRG));
 //                    var dataStr = $('');
 //                    $(dataStr).append('<tr id="fs-tr" style="border-bottom: 1px solid #cccccc;">');
 //                    $(dataStr).append('<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + item.firstName + '</td>');
@@ -1285,15 +1285,15 @@ $(document).ready(function () {
 //                    $(dataStr).append('</tr>');
 
 //                    $(".heavyTable").append(dataStr);
-                    var dataStr = "";
-                    dataStr += '<tr id="fs-tr" style="border-bottom: 1px solid #cccccc;">' +
-                    '<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + response[0].firstName + '</td>' +
-                    '<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + response[0].lastName + '</td>' +
-                    '<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + newFormattedDateBD + '</td>' +
-                    '<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + newFormattedDateRG + '</td>' +
-                    '</tr>';
-                    $("#fs-tbody-table-in-user-detail-info").html(dataStr);
-                $('#fs-user-detail-info').modal('show'); 
+                var dataStr = "";
+                dataStr += '<tr id="fs-tr" style="border-bottom: 1px solid #cccccc;">' +
+                        '<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + response[0].firstName + '</td>' +
+                        '<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + response[0].lastName + '</td>' +
+                        '<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + newFormattedDateBD + '</td>' +
+                        '<td class="text-center" id="fs-td" style="border-right: 1px solid #cccccc;padding: 10px;transition: all 0.2s;">' + newFormattedDateRG + '</td>' +
+                        '</tr>';
+                $("#fs-tbody-table-in-user-detail-info").html(dataStr);
+                $('#fs-user-detail-info').modal('show');
 
 //    var beginStr = '<table class="table">' ;
 //    var endStr = '</table>';
@@ -1335,7 +1335,7 @@ $(document).ready(function () {
         }
         else if (checkRole(roleName)) {
             return false;
-        } 
+        }
         else {
             $("#fs-form-create-role").submit();
             var div = $("#fs-roleName-create").closest("div.fs-aaa");
@@ -1372,7 +1372,7 @@ $(document).ready(function () {
         });
     }
 
-  
+
     $("#fs-roleName-create").keyup(function () {
         var roleName = $("#fs-roleName-create").val();
         if (roleName === "") {
@@ -1531,16 +1531,16 @@ $(document).ready(function () {
         },
         function (isConfirm) {
             if (isConfirm) {
-                
+
                 swal("Deleted!", "Your imaginary file has been deleted.", "success");
             } else {
                 swal("Cancelled", "Your imaginary file is safe :)", "error");
             }
         });
     });
-    
+
     // BẮT VALIDATION FORM LOGIN ADMIN
-    
+
 //    $("#fs-email-login-admin").keyup(function(){
 //         var email = $("#fs-email-login-admin").val();
 //         var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
@@ -1631,7 +1631,7 @@ $(document).ready(function () {
     //Thiết lập cho bảng order list
     $('#tableOrder').DataTable({
         responsive: true,
-        order: [[0, "desc"]],
+        order: [[4, "desc"]],
         columnDefs: [{"orderable": false, "targets": [2, 3, 5]}] //,{"targets":4,render: $.fn.dataTable.render.moment(dd/mm/yyyy)}
     });
 
@@ -1644,9 +1644,73 @@ $(document).ready(function () {
     //Thiết lập cho bảng discount list
     $('#tableDiscountList').DataTable({
         responsive: true,
-        columnDefs: [{"orderable": false, "targets": [3, 4]}]
+        columnDefs: [{"orderable": false, "targets": [5, 6]}]
     });
 
+    //discount-list-add.jsp
+    $("#beginDate").datepicker({
+        showAnim: "drop",
+        dateFormat: "dd-mm-yy",
+        changeMonth: true,
+        changeYear: true,
+        yearRange: new Date().getFullYear().toString() + ":" + (new Date().getFullYear() + 2).toString(),
+        minDate: new Date(),
+        onSelect: function () {
+            $('#error-discount-add').html("");
+            $("#endDate").datepicker("option", "minDate", $('input[name=beginDate]').val());
+        }
+    });
+    $("#endDate").datepicker({
+        showAnim: "drop",
+        dateFormat: "dd-mm-yy",
+        changeMonth: true,
+        changeYear: true,
+        yearRange: new Date().getFullYear().toString() + ":" + (new Date().getFullYear() + 2).toString(),
+        minDate: new Date(),
+        onSelect: function () {
+            $('#error-discount-add').html("");
+        }
+    });
+    $('#btn-create-discount').on("click", function (e) {
+        e.preventDefault();
+        var errorHead = "<div class=\"alert alert-danger\"><strong>";
+        var errorFoot = "</strong></div>";
+        var voucherID = $('input[name=voucherID]').val();
+        var discount = $('input[name=discount]').val();
+        var quantity = $('input[name=quantity]').val();
+        var beginDate = $('input[name=beginDate]').val();
+        var endDate = $('input[name=endDate]').val();
+        var description = $('input[name=description]').val();
+        if (voucherID == "") {
+            $('#error-discount-add').html(errorHead + "VOUCHER CODE REQUIRED" + errorFoot);
+        } else if (discount == "") {
+            $('#error-discount-add').html(errorHead + "DISCOUNT REQUIRED" + errorFoot);
+        } else if (!discount.match('[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)') || discount.match(',')) { //^[0-9]*$
+            $('#error-discount-add').html(errorHead + "DISCOUNT MUST BE NUMBER (Eg: 30, 30.5,...)" + errorFoot);
+        } else if (discount <= 0 || discount > 100) {
+            $('#error-discount-add').html(errorHead + "DISCOUNT RANGE 0 TO 100" + errorFoot);
+        } else if (quantity == "") {
+            $('#error-discount-add').html(errorHead + "QUANTITY REQUIRED" + errorFoot);
+        } else if (!quantity.match('^[0-9]*$')) { //[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)
+            $('#error-discount-add').html(errorHead + "QUANTITY MUST BE NUMBER" + errorFoot);
+        } else if (description.length > 500) {
+            $('#error-discount-add').html(errorHead + "DESCRIPTION LENGTH MAXIMUM 500" + errorFoot);
+        } else {
+            $('#fs-form-create-discount').submit();
+        }
+    });
+    $('input[name=voucherID]').keyup(function () {
+        $('#error-discount-add').html("");
+    });
+    $('input[name=discount]').keyup(function () {
+        $('#error-discount-add').html("");
+    });
+    $('input[name=quantity]').keyup(function () {
+        $('#error-discount-add').html("");
+    });
+    $('input[name=description]').keyup(function () {
+        $('#error-discount-add').html("");
+    });
     //Order-list-detail-add.jsp
     $('#tableProductOrderDetailAdd').DataTable({
         responsive: true,
@@ -1768,7 +1832,7 @@ $(document).ready(function () {
                         } else if (response == "0") {
                             $("#order-detail-add-error").text("OUT OF STOCK! CHOSE ANOTHER COLOR AND SIZE.");
                         } else {
-                            window.location = "admin/orders/orderlistdetail/"+orderID+".html";
+                            window.location = "admin/orders/orderlistdetail/" + orderID + ".html";
                         }
                     }
                 });
@@ -1781,5 +1845,33 @@ $(document).ready(function () {
     $('input[name=productOrDetailAddQuantity]').keyup(function () {
         $("#order-detail-add-quantity-error").text("");
     });
+    var data = [
+        {y: "2014", a: 50, b: 90},
+        {y: "2015", a: 65, b: 75},
+        {y: "2016", a: 50, b: 50},
+        {y: "2017", a: 75, b: 60},
+        {y: "2018", a: 80, b: 65},
+        {y: "2019", a: 90, b: 70},
+        {y: "2020", a: 100, b: 75},
+        {y: "2021", a: 115, b: 75},
+        {y: "2022", a: 120, b: 85},
+        {y: "2023", a: 145, b: 85},
+        {y: "2024", a: 160, b: 95}
+    ],
+            config = {
+                data: data,
+                xkey: "y",
+                ykeys: ["a", "b"],
+                labels: ["Total Income", "Total Outcome"],
+                fillOpacity: 0.6,
+                hideHover: "auto",
+                behaveLikeLine: true,
+                resize: true,
+                pointFillColors: ["#ffffff"],
+                pointStrokeColors: ["black"],
+                lineColors: ["gray", "red"]
+            };
+    config.element = "area-chart";
+    Morris.Line(config);
     /*==============================END NGAN - ORDER============================*/
 });

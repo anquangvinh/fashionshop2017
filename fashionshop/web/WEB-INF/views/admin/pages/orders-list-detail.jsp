@@ -85,7 +85,7 @@
                                     DecimalFormat df = new DecimalFormat("#.#");
                                     df.setRoundingMode(RoundingMode.FLOOR);
                                 %>
-                                -$<%= df.format(orders.getOrderDiscountPrice()) %>
+                                -$<%= df.format(orders.getOrderDiscountPrice())%>
                             </td>
                             <td></td>
                         </tr>
@@ -101,13 +101,35 @@
             <div class="col-lg-12">
                 <table class="table table-striped table-bordered table-hover">
                     <tr>
+                        <th style="width: 200px;">Discount Code</th>
+                        <td>
+                            <c:choose>
+                                <c:when test="${order.voucher.voucherID == null}">
+                                    --
+                                </c:when>
+                                <c:otherwise>
+                                    ${order.voucher.voucherID}
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                    </tr>
+                    <tr>
                         <th style="width: 200px;">Order Note</th>
-                        <td>${order.note}</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${order.note == null}">
+                                    --
+                                </c:when>
+                                <c:otherwise>
+                                    ${order.note}
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
                     </tr>
                 </table>
             </div>
             <div class="col-lg-12" align="right">
-                <button onclick="window.location = 'admin/orders/invoice/${order.ordersID}.html'" class="btn btn-primary">INVOICE</button>
+                <button onclick="window.location = 'admin/orders/invoice/${order.ordersID}.html';" class="btn btn-primary">INVOICE</button>
             </div>
             <!-- /.col-lg-12 -->
         </div>

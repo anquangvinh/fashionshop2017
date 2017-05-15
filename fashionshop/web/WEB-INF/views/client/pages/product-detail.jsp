@@ -10,8 +10,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12 col-sm-12">
-                <div>
-                    ${error}
+                <div id="error-product-detail">
                 </div>
                 <div class="row">
                     <div class="col-md-5 col-sm-6" id="fs-product-detail-slide-img">                                    
@@ -34,79 +33,72 @@
                     </div>
                     <div class="col-md-7 col-sm-6">
                         <div class="product-single">
-                            <form:form name="add-product-form" 
-                                       action="orders/addtocart.html" 
-                                       method="POST" modelAttribute="cartLineInfoByID">
-                                <div class="ps-header">
-                                    <h3>${targetProduct.productName}</h3>
-                                    <div class="ps-price"><h1>$ ${targetProduct.price}0</h1></div>
-                                </div>
-                                <div class="ps-stock">
-                                    Availability: <a href="#">In Stock</a>
-                                </div>
-                                <div class="sep"></div>
-                                <div class="ps-color fs-product-color">
-                                    <p>Color<span>*</span></p>
-                                    <c:forEach items="${targetProduct.productColorList}" var="color">
-                                        <div class="fs-product-color-border">
-                                            <img onclick="colorImageClick(${color.colorID});" fs-color="${color.colorID}" src="assets/images/products/colors/${color.urlColorImg}" class="img-responsive" alt="${color.urlColorImg}" title="${color.color}"/>
-                                        </div>
-                                    </c:forEach>
-                                </div>
-                                <div class="fs-clear-fix"></div>
-                                <div class="space10"></div>
-                                <div class="row select-wraps">
-                                    <div class="col-md-7 col-xs-7">
-                                        <p style="margin-bottom: 8px">Size<span>*</span></p>
-
-                                        <div id="fs-product-size">
-                                            <c:forEach items="${targetColor.sizeList}" var="size">
-                                                <c:if test="${size.status != 0}">
-                                                    <div class="fs-particular-size" 
-                                                         fs-product="${targetProduct.productID}" 
-                                                         fs-size="${size.sizeID}">
-                                                        ${size.productSize}
-                                                    </div>
-                                                </c:if>
-                                            </c:forEach>
-                                        </div>
+                            <div class="ps-header fs-product-detail-name" fs-product-id="${targetProduct.productID}">
+                                <h3>${targetProduct.productName}</h3>
+                                <div class="ps-price"><h1>$ ${targetProduct.price}0</h1></div>
+                            </div>
+                            <div class="ps-stock">
+                                Availability: <a href="#">In Stock</a>
+                            </div>
+                            <div class="sep"></div>
+                            <div class="ps-color fs-product-color">
+                                <p>Color<span>*</span></p>
+                                <c:forEach items="${targetProduct.productColorList}" var="color">
+                                    <div class="fs-product-color-border">
+                                        <img fs-color="${color.colorID}" src="assets/images/products/colors/${color.urlColorImg}" class="img-responsive" alt="${color.urlColorImg}" title="${color.color}"/>
                                     </div>
-                                    <div class="col-md-4 col-xs-5 col-lg-3">
-                                        <p style="margin-bottom: 8px !important;">Quantity<span>*</span></p>
-                                        <div class="input-group">
-                                            <span class="input-group-btn">
-                                                <button type="button" class="btn btn-danger fs-btn-number fs-btn-quantity-minus" data-type="minus" disabled>
-                                                    <span class="glyphicon glyphicon-minus"></span>
-                                                </button>
-                                            </span>
+                                </c:forEach>
+                            </div>
+                            <div class="fs-clear-fix"></div>
+                            <div class="space10"></div>
+                            <div class="row select-wraps">
+                                <div class="col-md-7 col-xs-7">
+                                    <p style="margin-bottom: 8px">Size<span>*</span></p>
 
-                                            <input type="text" name="quantity" id="quantity" class="form-control fs-input-number text-center" value="1" min="1" max="10">
-
-                                            <span class="input-group-btn">
-                                                <button type="button" class="btn btn-success fs-btn-number fs-btn-quantity-plus" data-type="plus" >
-                                                    <span class="glyphicon glyphicon-plus"></span>
-                                                </button>
-                                            </span>
-                                        </div>
+                                    <div id="fs-product-size">
+                                        <c:forEach items="${targetColor.sizeList}" var="size">
+                                            <c:if test="${size.status != 0}">
+                                                <div class="fs-particular-size" 
+                                                     fs-product="${targetProduct.productID}" 
+                                                     fs-size="${size.sizeID}">
+                                                    ${size.productSize}
+                                                </div>
+                                            </c:if>
+                                        </c:forEach>
                                     </div>
                                 </div>
-                                <div class="space20"></div>
-                                <div class="share">
-                                    <span>
-                                        <a href="#" class="fa fa-heart-o"></a>
-<!--                                        <a href="#" class="fa fa-signal"></a>-->
-<!--                                        <a href="#" class="fa fa-envelope-o"></a>-->
-                                    </span>
-                                    <div class="addthis_native_toolbox"></div>
+                                <div class="col-md-4 col-xs-5 col-lg-3">
+                                    <p style="margin-bottom: 8px !important;">Quantity<span>*</span></p>
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-danger fs-btn-number fs-btn-quantity-minus" data-type="minus" disabled>
+                                                <span class="glyphicon glyphicon-minus"></span>
+                                            </button>
+                                        </span>
+
+                                        <input type="text" name="quantity" id="quantity" class="form-control fs-input-number text-center" value="1" min="1" max="10">
+
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-success fs-btn-number fs-btn-quantity-plus" data-type="plus" >
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </button>
+                                        </span>
+                                    </div>
                                 </div>
-                                <div class="space20"></div>
-                                <div class="sep"></div>
-                                <!--<a class="addtobag" id="fs-product-detail-add-to-cart" href="index.html">Add to Bag</a>-->
-                                <input type="hidden" id="colorID" name="colorID" value="0"/>
-                                <input type="hidden" id="sizeID" name="sizeID" value="0"/>
-                                <input type="hidden" id="productID" name="productID" value="${targetProduct.productID}"/>
-                                <button type="submit" class="btn addtobag" id="fs-product-detail-add-to-cart">Add to Bag</button>
-                            </form:form>
+                            </div>
+                            <div class="space20"></div>
+                            <div class="share">
+                                <span>
+                                    <a href="#" class="fa fa-heart-o"></a>
+                                    <!--                                        <a href="#" class="fa fa-signal"></a>-->
+                                    <!--                                        <a href="#" class="fa fa-envelope-o"></a>-->
+                                </span>
+                                <div class="addthis_native_toolbox"></div>
+                            </div>
+                            <div class="space20"></div>
+                            <div class="sep"></div>
+                            <!--<a class="addtobag" id="fs-product-detail-add-to-cart" href="#">Add to Bag</a>-->
+                            <button class="btn addtobag" id="fs-product-detail-add-to-cart">Add to Bag</button>
                         </div>
                     </div>
                 </div>
@@ -375,13 +367,6 @@
         }
     } else {
         document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Storage...";
-    }
-
-    function colorImageClick(colorID) {
-        document.getElementById("colorID").value = colorID;
-    }
-    function sizeImageClick(sizeID) {
-        document.getElementById("sizeID").value = sizeID;
     }
 </script>
 <jsp:include page="../blocks/modal.jsp" flush="true"/>
