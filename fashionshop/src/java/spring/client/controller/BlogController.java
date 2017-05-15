@@ -12,6 +12,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -45,52 +46,87 @@ public class BlogController {
     @RequestMapping(value = "/blog")
     public String blog(ModelMap model) {
         List<Blogs> getShowAllBlogs = blogsSB.getAllBlogs();
-        List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
+        model.addAttribute("blogListClient", getShowAllBlogs);
+        model.addAttribute("PopularPosts", blogsSB.getAllBlogs());
         //2 dòng này thêm để render ra menu chính
+        List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
+        model.addAttribute("blogCateListClient", getBlogCateList);
         List<Categories> cateList = productStateLessBean.categoryList();
         model.addAttribute("cateList", cateList);
-        model.addAttribute("blogListClient", getShowAllBlogs);
-        model.addAttribute("blogCateListClient", getBlogCateList);
-        model.addAttribute("PopularPosts", blogsSB.getAllBlogs());
         return "client/pages/blog";
     }
 
-    @RequestMapping(value = "blog-categories/{blogCateID}")
-    public String blog_categories(@PathVariable("blogCateID") Integer blogCateID, ModelMap model) {
-        List<Blogs> getBlogsListByCate = blogsSB.getListBlogsByCategory(blogCateID);
-        List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
-//        model.addAttribute("PopularPostsBlogCate", blogsSB.getAllBlogs());
-        model.addAttribute("getBlogCateList", getBlogCateList);
-        model.addAttribute("getBlogsListByCate", getBlogsListByCate);
+    //WHERE blogTitle LIKE '%g%' AND (MONTH(postedDate) = MONTH('2017-01-10') OR MONTH(postedDate) = MONTH('2017-02-10') OR MONTH(postedDate) = MONTH('2017-03-10'))
+    @RequestMapping(value = "/blog-categories", method = RequestMethod.POST)
+    public String blog_categories_search(HttpServletRequest request, ModelMap model) {
+        String searchBlog = request.getParameter("searchBlog");
+        if (searchBlog == null || searchBlog.equals("")) {
+            return "redirect:/blog.html";
+        } else {
+            List<Blogs> getBlogsListBySearch = blogsSB.findBlogsByTitle(searchBlog, null);
+            model.addAttribute("getBlogsListByCate", getBlogsListBySearch);
+        }
+        
         model.addAttribute("PopularPosts", blogsSB.getAllBlogs());
-      //2 dòng này thêm để render ra menu chính
+        model.addAttribute("searchBlog", request.getParameter("searchBlog"));
+        List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
+        model.addAttribute("getBlogCateList", getBlogCateList);
+        //2 dòng này thêm để render ra menu chính
         List<Categories> cateList = productStateLessBean.categoryList();
+        List<Blogs> getShowAllBlogs = blogsSB.getAllBlogs();
+        model.addAttribute("blogListClient", getShowAllBlogs);
         model.addAttribute("cateList", cateList);
         return "client/pages/blog-categories";
     }
 
-    @RequestMapping(value = "blog-detail/{blogID}")
+    @RequestMapping(value = "/blog-categories/{blogCateID}")
+    public String blog_categories(@PathVariable("blogCateID") Integer blogCateID, ModelMap model) {
+//          //2 dòng này thêm để render ra menu chính
+        List<Blogs> getShowAllBlogs = blogsSB.getAllBlogs();
+
+        List<Categories> cateList = productStateLessBean.categoryList();
+        List<Blogs> getBlogsListByCate = blogsSB.getListBlogsByCategory(blogCateID);
+        List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
+        model.addAttribute("blogListClient", getShowAllBlogs);
+        model.addAttribute("getBlogCateList", getBlogCateList);
+        model.addAttribute("getBlogsListByCate", getBlogsListByCate);
+        model.addAttribute("cateList", cateList);
+        model.addAttribute("PopularPosts", blogsSB.getAllBlogs());
+        return "client/pages/blog-categories";
+    }
+
+    @RequestMapping(value = "/blog-detail/{blogID}")
     public String blogdetail(@PathVariable("blogID") Integer blogID, ModelMap model) {
         Blogs getShowAllBlogsDetail = blogsSB.findBlogsByID(blogID);
         List<BlogCategories> getBlogCateListDetail = blogCategoriesSB.getBlogCategoriesList();
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
         model.addAttribute("getShowAllBlogsDetail", getShowAllBlogsDetail);
         model.addAttribute("getBlogCateListDetail", getBlogCateListDetail);
         model.addAttribute("PopularPosts", blogsSB.getAllBlogs());
+        //2 dòng này thêm để render ra menu chính
+        List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
+        model.addAttribute("blogCateListClient", getBlogCateList);
         if (getShowAllBlogsDetail != null) {
             Blogs blogUpdateView = getShowAllBlogsDetail;
+            if (blogUpdateView.getBlogViews() == null) {
+                blogUpdateView.setBlogViews(1);
+            }
             blogUpdateView.setBlogViews(getShowAllBlogsDetail.getBlogViews() + 1);
             blogsSB.editBlogs(blogUpdateView);
         }
         return "client/pages/blog-details";
     }
 
-    @RequestMapping(value = "blog-detail")
+    @RequestMapping(value = "/blog-detail")
     public String blogdetail(ModelMap model) {
+        List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
         model.addAttribute("getBlogCateListDetail", blogCategoriesSB.getBlogCategoriesList());
         model.addAttribute("getShowAllBlogsDetail", blogsSB.getAllBlogs());
         //2 dòng này thêm để render ra menu chính
         List<Categories> cateList = productStateLessBean.categoryList();
         model.addAttribute("cateList", cateList);
+        model.addAttribute("blogCateListClient", getBlogCateList);
         return "client/pages/blog-details";
     }
 
@@ -123,7 +159,7 @@ public class BlogController {
             throw new RuntimeException(ne);
         }
     }
-    
+
     private ProductStateLessBeanLocal lookupProductStateLessBeanLocal() {
         try {
             Context c = new InitialContext();

@@ -32,13 +32,13 @@ public class BlogsSB implements BlogsSBLocal {
         Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE b.status = 0 ORDER BY b.blogViews DESC", Blogs.class);
         return q.getResultList();
     }
-    
+
     @Override
     public List<Blogs> getAllBlogsIndex() {
         Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE b.status = 0 ORDER BY b.blogID DESC", Blogs.class);
         return q.getResultList();
     }
-    
+
     @Override
     public List<Blogs> getAllBlogsAdmin() {
         Query q = getEntityManager().createQuery("SELECT b FROM Blogs b", Blogs.class);
@@ -47,14 +47,16 @@ public class BlogsSB implements BlogsSBLocal {
 
     @Override
     public List<Blogs> getListBlogsByCategory(int blogCateID) {
-        BlogCategories blogcategories = getEntityManager().find(BlogCategories.class, blogCateID);
-        return blogcategories.getBlogList();
+        Query q = em.createQuery("SELECT b FROM Blogs b WHERE b.blogCategory.blogCateID = :blogCateID", Blogs.class);
+        q.setParameter("blogCateID", blogCateID);
+        return q.getResultList();
     }
 
     @Override
     public boolean blogAdd(Blogs newBlogs) {
         try {
             em.persist(newBlogs);
+            getEntityManager().flush();
             return true;
         } catch (Exception e) {
             return false;
@@ -80,11 +82,25 @@ public class BlogsSB implements BlogsSBLocal {
     }
 
     @Override
-    public List<Blogs> findBlogsByTitle(String blogTitle) {
-        Query q = getEntityManager().createQuery("SELECT c FROM Blogs c WHERE c.blogTitle LIKE :blogTitle", Blogs.class);
-        q.setParameter("blogTitle", blogTitle);
-        return q.getResultList();
+    public List<Blogs> findBlogsByTitle(String blogTitle, List<Integer> monthList) {
+        String adSearchHead = " AND ( ";
+        String adSearchFoot = " )";
+        String adSearchMonthHead = "MONTH(b.postedDate) = MONTH('2017-";
+        String adSearchMonthFoot = "-15')";
+        String orString = "OR";
+        if (monthList == null) {
+            Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE b.blogTitle LIKE :blogTitle ", Blogs.class);
+            q.setParameter("blogTitle", "%" + blogTitle + "%");
+            return q.getResultList();
+        }else if (monthList.size() == 1) {
+            Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE b.blogTitle LIKE :blogTitle"
+                    +adSearchHead+ adSearchMonthHead+monthList.get(0).toString()+adSearchMonthFoot+adSearchFoot, Blogs.class);
+            q.setParameter("blogTitle", "%" + blogTitle + "%");
+            return q.getResultList();
+        }else{
+            
+            return null;
+        }
     }
 
-    
 }

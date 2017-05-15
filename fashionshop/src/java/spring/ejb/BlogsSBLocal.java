@@ -28,6 +28,6 @@ public interface BlogsSBLocal {
 
     boolean editBlogs(Blogs targetBlogs);
 
-    List<Blogs> findBlogsByTitle(String blogTitle);
+    List<Blogs> findBlogsByTitle(String blogTitle, List<Integer> monthList);
 
 }

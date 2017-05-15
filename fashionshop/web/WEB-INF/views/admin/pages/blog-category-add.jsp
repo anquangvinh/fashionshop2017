@@ -18,13 +18,15 @@
         <div class="row">
             <div class="col-lg-12">
                 <div>
-                    ${error}
                 <div class="col-lg-6">
                     <form:form name="cateForm" action="admin/blog/category/create.html" method="POST" modelAttribute="categories" enctype="multipart/form-data">
+                        <p>${error}</p>
                         <div class="form-group">
                             <label for="blogCateName">Category Name <span class="fs-color-red">*</span></label>
-                            <p class="help-block" id="fs-blog-category-error"></p>
+                            <div class="fs-aaa">
                             <form:input name="catename" path="blogCateName" id="fs-blog-category" cssClass="form-control" placeholder="Enter Blog Category Name" />
+                            </div>
+                            <p class="help-block" id="fs-blog-category-error"></p>
                         </div>
                         <div class="form-group">
                         </div>

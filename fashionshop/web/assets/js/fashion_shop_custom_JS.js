@@ -60,7 +60,7 @@ $(document).ready(function () {
 //                                        </li>";
 //            }
             $("#fs-recent-view-product").html(liProdStr);
-           // $("#fs-recent-product-index-page").html(liProdStrIndexPage);
+            // $("#fs-recent-product-index-page").html(liProdStrIndexPage);
         }
     } else {
         $("#fs-localStorage-result").text("Sorry, your browser does not support Web Storage...");
@@ -69,13 +69,13 @@ $(document).ready(function () {
     $("#fs-recent-view-product").owlCarousel({
         items: 6,
         margin: 35,
-        loop:true,
+        loop: true,
         navigation: true,
         autoPlay: 2500,
         stopOnHover: true
 
     });
-    
+
     /* SLIDE PRODUCTS IN INDEX */
     $("#isotope").isotope({
         filter: '.isotope_to_all',
@@ -1658,7 +1658,7 @@ $(document).ready(function () {
         e.preventDefault();
         var email = $("#fs-email-login-user").val();
         var pass = $("#fs-pass-login-user").val();
-        
+
         if (!checkEmail(email)) {
             return false;
         }
@@ -1699,7 +1699,7 @@ $(document).ready(function () {
     });
 
     // Test thử
-    
+
 //        function checkLOGIN(email,pass){
 //        $.ajax({
 //            url: "user/checkLog.html",
@@ -1722,12 +1722,12 @@ $(document).ready(function () {
 //    });
 //    
 //    }
-    
+
     // VALIDATION KEYUP 
 
     $("#fs-email-login-user").keyup(function () {
         var email = $("#fs-email-login-user").val();
-       
+
         if (!checkEmail(email)) {
             return false;
         }
@@ -1768,12 +1768,12 @@ $(document).ready(function () {
             return true;
         }
     });
-    
+
     // BẮT VALIDATION TRÊN FORM CREATE
-    
-    function checkPass(password){
+
+    function checkPass(password) {
         password = $("#fs-create-password").val();
-        
+
         if (password === "") {
             $("#fs-pass-create-user-error").text("Password cannot be empty!");
             $("#fs-create-password").focus();
@@ -1787,7 +1787,7 @@ $(document).ready(function () {
         } else if (password.length < 6 || password.length > 100) {
             $("#fs-pass-create-user-error").text("Password 6 to 100 characters!");
             $("#fs-create-password").focus();
-             var div = $("#fs-create-password").closest("div.fs-password-create");
+            var div = $("#fs-create-password").closest("div.fs-password-create");
             div.removeClass("has-success");
             $("#glypcn-fs-create-user").remove();
             div.addClass("has-error has-feedback");
@@ -1804,10 +1804,10 @@ $(document).ready(function () {
             return true;
         }
     }
-    
-    function checkRePass(repassword){
+
+    function checkRePass(repassword) {
         repassword = $("#fs-create-repassword").val();
-        
+
         if (repassword === "") {
             $("#fs-repass-create-user-error").text("Repassword cannot be empty!");
             $("#fs-create-repassword").focus();
@@ -1838,10 +1838,10 @@ $(document).ready(function () {
             return true;
         }
     }
-    
-    function checkFirstName(firstname){
+
+    function checkFirstName(firstname) {
         firstname = $("#fs-create-firstname").val();
-        
+
         if (firstname === "") {
             $("#fs-fname-create-user-error").text("First Name cannot be empty!");
             $("#fs-create-firstname").focus();
@@ -1872,10 +1872,10 @@ $(document).ready(function () {
             return true;
         }
     }
-    
-    function checkLastName(lastname){
+
+    function checkLastName(lastname) {
         lastname = $("#fs-create-lastname").val();
-        
+
         if (lastname === "") {
             $("#fs-lname-create-user-error").text("Last Name cannot be empty!");
             $("#fs-create-lastname").focus();
@@ -1906,10 +1906,10 @@ $(document).ready(function () {
             return true;
         }
     }
-    
-    function checkBirthDay(birthday){
+
+    function checkBirthDay(birthday) {
         birthday = $("#fs-create-birthday").val();
-        
+
         if (birthday === "") {
             $("#fs-bday-create-user-error").text("BirthDay cannot be empty!");
             $("#fs-create-birthday").focus();
@@ -1920,7 +1920,7 @@ $(document).ready(function () {
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
 
-        } 
+        }
         else {
             $("#fs-bday-create-user-error").text("");
             var div = $("#fs-create-birthday").closest("div.fs-birthday-create");
@@ -1931,12 +1931,12 @@ $(document).ready(function () {
             return true;
         }
     }
-    
-    function checkPhone(phone){
+
+    function checkPhone(phone) {
 //        var regex = new RegExp(/^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/);
         var regex = new RegExp(/[^ \-\.]^(01[2689]|09)[0-9]{8}$/);
         phone = $("#fs-create-phone").val();
-        
+
         if (phone === "") {
             $("#fs-phone-create-user-error").text("Phone cannot be empty!");
             $("#fs-create-phone").focus();
@@ -1947,8 +1947,8 @@ $(document).ready(function () {
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
 
-        } else if(!regex.test(phone)){
-             $("#fs-phone-create-user-error").text("Please enter valid phone!");
+        } else if (!regex.test(phone)) {
+            $("#fs-phone-create-user-error").text("Please enter valid phone!");
             $("#fs-create-phone").focus();
             var div = $("#fs-create-phone").closest("div.fs-phone-create");
             div.removeClass("has-success");
@@ -1958,7 +1958,7 @@ $(document).ready(function () {
             return false;
         }
         else {
-             $("#fs-phone-create-user-error").text("");
+            $("#fs-phone-create-user-error").text("");
             var div = $("#fs-create-phone").closest("div.fs-phone-create");
             div.removeClass("has-error");
             div.addClass("has-success has-feedback");
@@ -1966,12 +1966,12 @@ $(document).ready(function () {
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
             return true;
         }
-        
+
     }
-    
-    function checkAddress(address){
+
+    function checkAddress(address) {
         address = $("#fs-create-address").val();
-        
+
         if (address === "") {
             $("#fs-address-create-user-error").text("Address cannot be empty!");
             $("#fs-create-address").focus();
@@ -1982,7 +1982,7 @@ $(document).ready(function () {
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
 
-        } else if(address.length < 10 || address.length > 255){
+        } else if (address.length < 10 || address.length > 255) {
             $("#fs-address-create-user-error").text("Address has 10 - 255 characters!");
             $("#fs-create-address").focus();
             var div = $("#fs-create-address").closest("div.fs-address-create");
@@ -2002,13 +2002,13 @@ $(document).ready(function () {
             return true;
         }
     }
-    
-    $("#fs-form-create-user").click(function(e){
-        
+
+    $("#fs-form-create-user").click(function (e) {
+
     });
-    
-    
-    
+
+
+
 //    $(".fs-button-login-user").click(function(){
 ////        e.preventDefault();
 //       $.ajax({
@@ -2076,8 +2076,13 @@ $(document).ready(function () {
 //    fs-add-address-user
 
     /*========================================END DUONG - USER====================================================*/
-    
+
     /*========================================THANH - BLOG====================================================*/
-    /*========================================END DUONG - USER====================================================*/
+//    $(".blog-content-list .img-lazy").lazyload({
+//        effect: "fadeIn",
+//        threshold: -100
+//    });
+//    $('.blog-content-list').jscroll();
+    /*========================================END THANH - BLOG====================================================*/
 });
 
