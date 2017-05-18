@@ -40,10 +40,18 @@ public class BlogsSB implements BlogsSBLocal {
     }
 
     @Override
+    public List<Blogs> getAllBlogsIndexMonth() {
+        Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE b.status = 0 ORDER BY b.postedDate DESC", Blogs.class);
+        return q.getResultList();
+    }
+
+    @Override
     public List<Blogs> getAllBlogsAdmin() {
         Query q = getEntityManager().createQuery("SELECT b FROM Blogs b", Blogs.class);
         return q.getResultList();
     }
+
+
 
     @Override
     public List<Blogs> getListBlogsByCategory(int blogCateID) {
@@ -92,14 +100,38 @@ public class BlogsSB implements BlogsSBLocal {
             Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE b.blogTitle LIKE :blogTitle ", Blogs.class);
             q.setParameter("blogTitle", "%" + blogTitle + "%");
             return q.getResultList();
-        }else if (monthList.size() == 1) {
+        } else if (monthList.size() == 1) {
             Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE b.blogTitle LIKE :blogTitle"
-                    +adSearchHead+ adSearchMonthHead+monthList.get(0).toString()+adSearchMonthFoot+adSearchFoot, Blogs.class);
+                    + adSearchHead + adSearchMonthHead + monthList.get(0).toString() + adSearchMonthFoot + adSearchFoot, Blogs.class);
             q.setParameter("blogTitle", "%" + blogTitle + "%");
             return q.getResultList();
-        }else{
-            
+        } else {
+
             return null;
+        }
+    }
+
+//        @Override
+//    public BlogCategories findBlogCategoryByBlogCateName(String blogCateName) {
+//        try {
+//            Query q = getEntityManager().createQuery("SELECT b FROM BlogCategories b WHERE b.blogCateName LIKE :blogCateName", BlogCategories.class);
+//            q.setParameter("blogCateName", blogCateName);
+//            return (BlogCategories) q.getSingleResult();
+//        } catch (Exception e) {
+//            return null;
+//        }
+//    }
+    @Override
+    public int deleteBlog(Blogs blog) {
+        try {
+            if (!getEntityManager().contains(blog)) {
+                blog = getEntityManager().merge(blog);
+            }
+            getEntityManager().remove(blog);
+            getEntityManager().flush();
+            return 1;
+        } catch (Exception e) {
+            return 0;
         }
     }
 

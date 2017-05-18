@@ -46,6 +46,8 @@ public class BlogController {
     @RequestMapping(value = "/blog")
     public String blog(ModelMap model) {
         List<Blogs> getShowAllBlogs = blogsSB.getAllBlogs();
+        List<Blogs> blogListIndex = blogsSB.getAllBlogsIndex();
+        model.addAttribute("blogListIndex", blogListIndex);
         model.addAttribute("blogListClient", getShowAllBlogs);
         model.addAttribute("PopularPosts", blogsSB.getAllBlogs());
         //2 dòng này thêm để render ra menu chính
@@ -87,6 +89,7 @@ public class BlogController {
         List<Categories> cateList = productStateLessBean.categoryList();
         List<Blogs> getBlogsListByCate = blogsSB.getListBlogsByCategory(blogCateID);
         List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
+        model.addAttribute("blogCateListClient", getBlogCateList);
         model.addAttribute("blogListClient", getShowAllBlogs);
         model.addAttribute("getBlogCateList", getBlogCateList);
         model.addAttribute("getBlogsListByCate", getBlogsListByCate);

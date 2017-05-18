@@ -81,7 +81,6 @@
         <script src="assets/js/vendors/rs-plugin/js/jquery.themepunch.tools.min.js"></script>
         <script src="assets/js/jquery.sticky.js"></script>
         <script src="assets/js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
-        <script src="assets/js/jquery-ui-1.12.1/jquery.jscroll.js"></script>
         <script src="assets/js/royalslider/jquery.royalslider.min.js"></script>
         <script src="assets/js/vendors/select/jquery.selectBoxIt.min.js"></script>
         <script src="assets/js/main.js"></script>

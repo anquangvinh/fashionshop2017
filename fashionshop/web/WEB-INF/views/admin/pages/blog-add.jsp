@@ -43,7 +43,7 @@
                     <div class="form-group">
                         <label>Image <span class="fs-color-red">*</span></label>
                         <p id="fs-error-mess-blog-img" class="help-block"></p>
-                        <input type="file" id="upImage" name="upImage" class="upImage">
+                        <input type="file" id="upImageBlog" name="upImageBlog" class="upImageBlog">
                     </div>
                 </div>
                 <!--                        <div class="form-group">
@@ -62,7 +62,10 @@
                             <!--                            <br/>-->
                             <!--CKEditor-->
                             <form action="getContent" method="get">
-                                <textarea class="ckeditor"  cols="80" id="editor1" name="editor1"></textarea>	
+                                <textarea class="required"  cols="80" id="editor1" name="editor1"></textarea>
+                                <script>
+                                    CKEDITOR.replace('editor1');
+                                </script>
                             </form>
                             <ckfinder:setupCKEditor basePath="assets/ckfinder/" editor="editor1" />
                             <ckeditor:replace replace="editor1" basePath="assets/ckeditor/" />
@@ -71,17 +74,46 @@
                                 <form:errors path="content"/>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Status</label>
-                            <div>
-                                <label class="radio-inline">
-                                    <form:radiobutton path="status" checked="checked" value="0" id="rdoEnable" label="Enable" />
-                                </label>
-                                <label class="radio-inline">
-                                    <form:radiobutton path="status" value="1" id="rdoDisable" label="Disable" />
-                                </label>
+                        <!--                                <div class="form-group">
+                                                            <label>Status</label>
+                                                            <div>
+                                                                <label class="radio-inline">
+                        <form:radiobutton path="status" checked="checked" value="0" id="rdoEnable" />
+                        <label for="rdoEnable">Enable</label>
+                    </label>
+                    <label class="radio-inline">
+                        <form:radiobutton path="status" value="1" id="rdoDisable" />
+                        <label for="rdoDisable">Disable</label>
+                    </label>
+                </div>
+            </div>-->
+                        <label>Status</label>
+                        <form action="" data-toggle="validator">
+                            <div class="form-inline required">
+                                <div class="form-group has-feedback" >
+                                    <label class="input-group">
+                                        <span class="input-group-addon">
+                                            <form:radiobutton id="rdoEnable" path="status" value="0" checked="checked"  />
+                                        </span>
+                                        <div class="form-control form-control-static">
+                                            Enable
+                                        </div>
+                                        <span class="glyphicon form-control-feedback "></span>
+                                    </label>
+                                </div>
+                                <div class="form-group has-feedback ">
+                                    <label class="input-group">
+                                        <span class="input-group-addon">
+                                            <form:radiobutton id="rdoDisable" path="status" value="1" />
+                                        </span>
+                                        <div class="form-control form-control-static">
+                                            Disable
+                                        </div>
+                                        <span class="glyphicon form-control-feedback "></span>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                         ${status}
                         <form:button type="submit" id="fs-button-create-blog" name="fs-button-create-blog" class="btn btn-success">Create <i class="fa fa-check-circle"></i></form:button>
                         <form:button type="reset" class="btn btn-default">&nbsp; &nbsp; Reset&nbsp; &nbsp;  <i class="fa fa-window-restore"></i></form:button>

@@ -169,5 +169,8 @@ tr.shown td.details-control{
     margin: 0 !important;
 }
 
-/* Load More Blog */
+/* Blog */
+#loading{position:fixed; top:20px; left:20px; background:grey; color:white; display:none;}
+
+#loading h1{text-align:center;}
 
