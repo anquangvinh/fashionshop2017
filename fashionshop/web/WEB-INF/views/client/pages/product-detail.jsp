@@ -16,7 +16,7 @@
                     <div class="col-md-5 col-sm-6" id="fs-product-detail-slide-img">                                    
                         <div class="owl-carousel prod-slider sync1" >
                             <c:forEach items="${targetColor.productSubImgsList}" var="subImg">
-                                <div class="item"> 
+                                <div class="item">
                                     <img src="assets/images/products/subImg/${subImg.urlImg}" alt="${subImg.urlImg}">
                                     <a href="assets/images/products/subImg/${subImg.urlImg}" rel="prettyPhoto[gallery2]" title="Product" class="caption-link"><i class="fa fa-arrows-alt"></i></a>
                                 </div>

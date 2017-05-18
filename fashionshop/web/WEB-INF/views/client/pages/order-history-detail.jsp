@@ -88,9 +88,34 @@
                     <div class="clearfix space10"></div>
                     <c:if test="${order.status == 2}">
                         <div class="order-history">
-                            <button class="btn btn-danger pull-right" id="btnClientCancelOrder" value="${order.ordersID}">CANCEL ORDER</button>
+                            <button class="btn btn-danger pull-right" 
+                                    id="btnClientCancelOrder" 
+                                    data-href="orders/cancelorder/${order.ordersID}.html"
+                                    data-toggle="modal" 
+                                    data-target="#confirm-cancel-order">CANCEL ORDER</button>
                         </div>
                     </c:if>
+                </div>
+                <div class="modal fade" id="confirm-cancel-order" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="myModalLabel">Confirm Cancel Order</h4>
+                            </div>
+
+                            <div class="modal-body">
+                                <p>Do you want to proceed?</p>
+                                <p class="debug-url"></p>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <a class="btn btn-danger btn-cancel-order-ok">OK</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>                        
         </div>

@@ -760,10 +760,10 @@ $(document).ready(function () {
 //        changeYear: true
 //    });
     /* BẮT validation CKSinder */
-    
 
-        
-     
+
+
+
 
     /* BẮT validation CREATE BLOG CATEGORY */
     // blog-category-add
@@ -862,7 +862,7 @@ $(document).ready(function () {
         else if (blogImg == "") {
             $("#fs-error-mess-blog-img").text("Image cannot be empty!");
         }
-        else if (blogContent == ""){
+        else if (blogContent == "") {
 //              $("#fs-form-create-blog").validate(
 //            {
 //                ignore: [],
@@ -1018,7 +1018,7 @@ $(document).ready(function () {
     });
 
 // Validate Ckeditor
-      
+
 
 
 
@@ -1491,6 +1491,7 @@ $(document).ready(function () {
 
     /*==============================NGAN - ORDER============================*/
     //Thiết lập cho bảng order list
+//    $("select#id-status-order").selectBoxIt();
     $('#tableOrder').DataTable({
         responsive: true,
         order: [[4, "desc"]],
@@ -1498,6 +1499,7 @@ $(document).ready(function () {
     });
 
     //Thiết lập cho bảng order details list
+//    $("select#id-status-orderdetail").selectBoxIt();
     $('#tableOrderDetails').DataTable({
         responsive: true,
         columnDefs: [{"orderable": false, "targets": [2, 3, 8]}]
@@ -1506,11 +1508,12 @@ $(document).ready(function () {
     //Thiết lập cho bảng discount list
     $('#tableDiscountList').DataTable({
         responsive: true,
-        columnDefs: [{"orderable": false, "targets": [5, 6]}]
+        columnDefs: [{"orderable": false, "targets": [5, 6]}],
+        order: [[0, "ASC"]]
     });
 
-    //discount-list-add.jsp
-    $("#beginDate").datepicker({
+    //discount-add.jsp
+    $("#fs-form-create-discount #beginDate").datepicker({
         showAnim: "drop",
         dateFormat: "dd-mm-yy",
         changeMonth: true,
@@ -1519,10 +1522,10 @@ $(document).ready(function () {
         minDate: new Date(),
         onSelect: function () {
             $('#error-discount-add').html("");
-            $("#endDate").datepicker("option", "minDate", $('input[name=beginDate]').val());
+            $("#fs-form-create-discount #endDate").datepicker("option", "minDate", $('input[name=beginDate]').val());
         }
     });
-    $("#endDate").datepicker({
+    $("#fs-form-create-discount #endDate").datepicker({
         showAnim: "drop",
         dateFormat: "dd-mm-yy",
         changeMonth: true,
@@ -1537,12 +1540,12 @@ $(document).ready(function () {
         e.preventDefault();
         var errorHead = "<div class=\"alert alert-danger\"><strong>";
         var errorFoot = "</strong></div>";
-        var voucherID = $('input[name=voucherID]').val();
-        var discount = $('input[name=discount]').val();
-        var quantity = $('input[name=quantity]').val();
-        var beginDate = $('input[name=beginDate]').val();
-        var endDate = $('input[name=endDate]').val();
-        var description = $('input[name=description]').val();
+        var voucherID = $('input[name=voucherID]').val().trim();
+        var discount = $('input[name=discount]').val().trim();
+        var quantity = $('input[name=quantity]').val().trim();
+//        var beginDate = $('input[name=beginDate]').val();
+//        var endDate = $('input[name=endDate]').val();
+        var description = $('input[name=description]').val().trim();
         if (voucherID == "") {
             $('#error-discount-add').html(errorHead + "VOUCHER CODE REQUIRED" + errorFoot);
         } else if (discount == "") {
@@ -1561,33 +1564,108 @@ $(document).ready(function () {
             $('#fs-form-create-discount').submit();
         }
     });
-    $('input[name=voucherID]').keyup(function () {
+    $('#fs-form-create-discount input[name=voucherID]').keyup(function () {
         $('#error-discount-add').html("");
     });
-    $('input[name=discount]').keyup(function () {
+    $('#fs-form-create-discount input[name=discount]').keyup(function () {
         $('#error-discount-add').html("");
     });
-    $('input[name=quantity]').keyup(function () {
+    $('#fs-form-create-discount input[name=quantity]').keyup(function () {
         $('#error-discount-add').html("");
     });
-    $('input[name=description]').keyup(function () {
+    $('#fs-form-create-discount input[name=description]').keyup(function () {
         $('#error-discount-add').html("");
     });
+    //discount-update.jsp
+    $("#fs-form-update-discount #beginDate").datepicker({
+        showAnim: "drop",
+        dateFormat: "dd-mm-yy",
+        changeMonth: true,
+        changeYear: true,
+        yearRange: new Date().getFullYear().toString() + ":" + (new Date().getFullYear() + 2).toString(),
+        minDate: new Date(),
+        onSelect: function () {
+            $('#error-discount-update').html("");
+            $("#fs-form-update-discount #endDate").datepicker("option", "minDate", $('input[name=beginDate]').val());
+        }
+    });
+    $("#fs-form-update-discount #endDate").datepicker({
+        showAnim: "drop",
+        dateFormat: "dd-mm-yy",
+        changeMonth: true,
+        changeYear: true,
+        yearRange: new Date().getFullYear().toString() + ":" + (new Date().getFullYear() + 2).toString(),
+        minDate: new Date(),
+        onSelect: function () {
+            $('#error-discount-update').html("");
+        }
+    });
+    $('#btn-update-discount').on("click", function (e) {
+        e.preventDefault();
+        var errorHead = "<div class=\"alert alert-danger\"><strong>";
+        var errorFoot = "</strong></div>";
+        var discount = $('input[name=discount]').val().trim();
+        var quantity = $('input[name=quantity]').val().trim();
+        var description = $('input[name=description]').val().trim();
+        if (discount == "") {
+            $('#error-discount-update').html(errorHead + "DISCOUNT REQUIRED" + errorFoot);
+        } else if (!discount.match('[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)') || discount.match(',')) { //^[0-9]*$
+            $('#error-discount-update').html(errorHead + "DISCOUNT MUST BE NUMBER (Eg: 30, 30.5,...)" + errorFoot);
+        } else if (discount <= 0 || discount > 100) {
+            $('#error-discount-update').html(errorHead + "DISCOUNT RANGE 0 TO 100" + errorFoot);
+        } else if (quantity == "") {
+            $('#error-discount-update').html(errorHead + "QUANTITY REQUIRED" + errorFoot);
+        } else if (!quantity.match('^[0-9]*$')) { //[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)
+            $('#error-discount-update').html(errorHead + "QUANTITY MUST BE NUMBER" + errorFoot);
+        } else if (description.length > 500) {
+            $('#error-discount-update').html(errorHead + "DESCRIPTION LENGTH MAXIMUM 500" + errorFoot);
+        } else {
+            $('#fs-form-update-discount').submit();
+        }
+    });
+    $('#fs-form-update-discount input[name=voucherID]').keyup(function () {
+        $('#error-discount-update').html("");
+    });
+    $('#fs-form-update-discount input[name=discount]').keyup(function () {
+        $('#error-discount-update').html("");
+    });
+    $('#fs-form-update-discount input[name=quantity]').keyup(function () {
+        $('#error-discount-update').html("");
+    });
+    $('#fs-form-update-discount input[name=description]').keyup(function () {
+        $('#error-discount-update').html("");
+    });
+
+    //discount-list.jsp
+    $('#confirm-discount-delete').on('show.bs.modal', function (e) {
+        $(this).find('.btn-discount-delete-ok').attr('href', $(e.relatedTarget).data('href'));
+    });
+
     //Order-list-detail-add.jsp
+//    $("select#productOrDetailAddColor").selectBoxIt();
+//    $("select#productOrDetailAddSize").selectBoxIt();
     $('#tableProductOrderDetailAdd').DataTable({
         responsive: true,
-        order: [[0, "asc"]]
+        order: [[0, "asc"]],
+        paginate: false,
+        filter: false,
+        info: false,
+        sort: false,
+        scrollY: 195,
+        deferRender: true,
+        scroller: true
     });
     $('#tableProductOrderDetailAdd tbody').on('click', 'tr', function () {
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
             $(this).prop("style", false);
-            $("#productOrDetailAddColor").html(" ");
-            $("#productOrDetailAddSize").html(" ");
-        }
-        else {
-            $("#productOrDetailAddColor").html(" ");
-            $("#productOrDetailAddSize").html(" ");
+            $("#productOrDetailAddColor").html("");
+            $("#productOrDetailAddSize").html("");
+            $("#error-orderDetail-add").html("");
+        } else {
+            $("#error-orderDetail-add").html("");
+            $("#productOrDetailAddColor").html("");
+            $("#productOrDetailAddSize").html("");
             $('tr.selected').prop("style", false);
             $('tr.selected').removeClass('selected');
             $(this).addClass('selected');
@@ -1605,7 +1683,7 @@ $(document).ready(function () {
         }
     });
     $('select[name=productOrDetailAddColor]').on("change", function () {
-        $("#order-detail-add-color-error").text("");
+        $("#error-orderDetail-add").html("");
         var colorID = $("select[name=productOrDetailAddColor]").val();
         $.ajax({
             url: "admin/orders/ajax/searchsize.html",
@@ -1618,66 +1696,121 @@ $(document).ready(function () {
         });
     });
     $('select[name=productOrDetailAddSize]').on("change", function () {
-        $("#order-detail-add-size-error").text("");
+        $("#error-orderDetail-add").html("");
+    });
+    $("#searchText").keypress(function (e) {
+        if (e.which == 13) {
+            var errorHead = "<div class=\"alert alert-danger\"><strong>";
+            var errorFoot = "</strong></div>";
+            var searchType = $('#searchType').val();
+            var searchText = $('#searchText').val().trim();
+            if (searchType == 1) { //ProductName
+                if (searchText == "") {
+                    $("#error-orderDetail-add").html(errorHead + "PLEASE ENTER PRODUCT NAME" + errorFoot);
+                } else {
+                    $.ajax({
+                        url: "admin/orders/ajax/searchproduct.html",
+                        method: "POST",
+                        data: {searchType: searchType, searchText: searchText},
+                        dataType: 'html',
+                        success: function (response) {
+                            if (response === "0") {
+                                $("#error-orderDetail-add").html(errorHead + "PRODUCT NAME ERROR" + errorFoot);
+                            } else {
+                                $(".bodyProductOrDetailAdd").html(response);
+                                $('.dataTables_scrollBody table').css("width", "922px")
+                            }
+                        }
+                    });
+                }
+            } else { //Product ID
+                if (searchText == "") {
+                    $("#error-orderDetail-add").html(errorHead + "PLEASE ENTER PRODUCT ID" + errorFoot);
+                } else if (!$.isNumeric(searchText)) {
+                    $("#error-orderDetail-add").html(errorHead + "PLEASE ENTER PRODUCT ID IN NUMBER" + errorFoot);
+                } else {
+                    $.ajax({
+                        url: "admin/orders/ajax/searchproduct.html",
+                        method: "POST",
+                        data: {searchType: searchType, searchText: searchText},
+                        dataType: 'html',
+                        success: function (response) {
+                            if (response == "0") {
+                                $("#error-orderDetail-add").html(errorHead + "PRODUCT NOT EXIST" + errorFoot);
+                            } else {
+                                $(".bodyProductOrDetailAdd").html(response);
+                            }
+                        }
+                    });
+                }
+            }
+        }
     });
     $("#btnSearchProduct").on("click", function () {
+        var errorHead = "<div class=\"alert alert-danger\"><strong>";
+        var errorFoot = "</strong></div>";
         var searchType = $('#searchType').val();
-        var searchText = $('#searchText').val();
+        var searchText = $('#searchText').val().trim();
         if (searchType == 1) { //ProductName
             if (searchText == "") {
-                $("#order-detail-add-error").text("PLEASE ENTER PRODUCT NAME");
-            }
-            $.ajax({
-                url: "admin/orders/ajax/searchproduct.html",
-                method: "POST",
-                data: {searchType: searchType, searchText: searchText},
-                dataType: 'html',
-                success: function (response) {
-                    if (response === "0") {
-                        $("#order-detail-add-error").text("PRODUCT NAME ERROR");
-                    } else {
-                        $(".bodyProductOrDetailAdd").html(response);
+                $("#error-orderDetail-add").html(errorHead + "PLEASE ENTER PRODUCT NAME" + errorFoot);
+            } else {
+                $.ajax({
+                    url: "admin/orders/ajax/searchproduct.html",
+                    method: "POST",
+                    data: {searchType: searchType, searchText: searchText},
+                    dataType: 'html',
+                    success: function (response) {
+                        if (response == "0") {
+                            $("#error-orderDetail-add").html(errorHead + "PRODUCT NAME ERROR" + errorFoot);
+                        } else {
+                            $(".bodyProductOrDetailAdd").html(response);
+                            $('.dataTables_scrollBody table').css("width", "922px")
+                        }
                     }
-                }
-            });
+                });
+            }
         } else { //Product ID
             if (searchText == "") {
-                $("#order-detail-add-error").text("PLEASE ENTER PRODUCT ID");
+                $("#error-orderDetail-add").html(errorHead + "PLEASE ENTER PRODUCT ID" + errorFoot);
             } else if (!$.isNumeric(searchText)) {
-                $("#order-detail-add-error").text("PLEASE ENTER PRODUCT ID IN NUMBER");
-            }
-            $.ajax({
-                url: "admin/orders/ajax/searchproduct.html",
-                method: "POST",
-                data: {searchType: searchType, searchText: searchText},
-                dataType: 'html',
-                success: function (response) {
-                    if (response == "0") {
-                        $("#order-detail-add-error").text("PRODUCT NOT EXIST");
-                    } else {
-                        $(".bodyProductOrDetailAdd").html(response);
+                $("#error-orderDetail-add").html(errorHead + "PLEASE ENTER PRODUCT ID IN NUMBER" + errorFoot);
+            } else {
+                $.ajax({
+                    url: "admin/orders/ajax/searchproduct.html",
+                    method: "POST",
+                    data: {searchType: searchType, searchText: searchText},
+                    dataType: 'html',
+                    success: function (response) {
+                        if (response == "0") {
+                            $("#error-orderDetail-add").html(errorHead + "PRODUCT NOT EXIST" + errorFoot);
+                        } else {
+                            $(".bodyProductOrDetailAdd").html(response);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     });
     $('#btnAddOrderDetail').on("click", function () {
+        var errorHead = "<div class=\"alert alert-danger\"><strong>";
+        var errorFoot = "</strong></div>";
         if ($("tr.selected .proID")[0] == null) {
-            $("#order-detail-add-error").text("PLEASE SEARCH AND CHOOSE PRODUCT");
+            $("#error-orderDetail-add").html(errorHead + "PLEASE SEARCH AND CHOOSE PRODUCT" + errorFoot);
         } else {
             var orderID = $("#productOrDetailAddHeader").attr("fs-order-id");
             var productID = $("tr.selected .proID")[0].innerHTML;
             var colorID = $("select[name=productOrDetailAddColor]").val();
             var sizeID = $("select[name=productOrDetailAddSize]").val();
-            var quantity = $("input[name=productOrDetailAddQuantity]").val();
+            var quantity = $("input[name=productOrDetailAddQuantity]").val().trim();
             if (colorID == null || colorID == 0) {
-                $("#order-detail-add-color-error").text("PLEASE CHOOSE COLOR");
+                $("#error-orderDetail-add").html(errorHead + "PLEASE CHOOSE COLOR" + errorFoot);
             } else if (sizeID == null || sizeID == 0) {
-                $("#order-detail-add-size-error").text("PLEASE CHOOSE SIZE");
+                $("#error-orderDetail-add").html(errorHead + "PLEASE CHOOSE SIZE" + errorFoot);
             } else if (quantity == "") {
-                $("#order-detail-add-quantity-error").text("PLEASE ENTER QUANTITY");
+                $("#error-orderDetail-add").html(errorHead + "PLEASE ENTER QUANTITY" + errorFoot);
             } else if (quantity < 1 || quantity > 10) {
-                $("#order-detail-add-quantity-error").text("QUANTITY MUST 1 TO 10");
+                $("#error-orderDetail-add").html(errorHead + "QUANTITY MUST 1 TO 10" + errorFoot);
             } else {
                 $.ajax({
                     url: "admin/orders/ajax/addOrderDetail.html",
@@ -1689,10 +1822,10 @@ $(document).ready(function () {
                         quantity: quantity},
                     dataType: 'html',
                     success: function (response) {
-                        if (response == "") {
-                            $("#order-detail-add-error").text("ERROR");
+                        if (response == "2") {
+                            $("#error-orderDetail-add").html(errorHead + "ERROR" + errorFoot);
                         } else if (response == "0") {
-                            $("#order-detail-add-error").text("OUT OF STOCK! CHOSE ANOTHER COLOR AND SIZE.");
+                            $("#error-orderDetail-add").html(errorHead + "OUT OF STOCK! CHOSE ANOTHER COLOR AND SIZE." + errorFoot);
                         } else {
                             window.location = "admin/orders/orderlistdetail/" + orderID + ".html";
                         }
@@ -1701,39 +1834,65 @@ $(document).ready(function () {
             }
         }
     });
-    $("#searchText").keyup(function () {
-        $("#order-detail-add-error").text("");
+    $("#searchText").keypress(function (e) {
+        if (e.which != 13) {
+            $("#error-orderDetail-add").html("");
+        }
     });
-    $('input[name=productOrDetailAddQuantity]').keyup(function () {
-        $("#order-detail-add-quantity-error").text("");
+    $('input[name=productOrDetailAddQuantity]').keypress(function () {
+        $("#error-orderDetail-add").html("");
     });
-    var data = [
-        {y: "2014", a: 50, b: 90},
-        {y: "2015", a: 65, b: 75},
-        {y: "2016", a: 50, b: 50},
-        {y: "2017", a: 75, b: 60},
-        {y: "2018", a: 80, b: 65},
-        {y: "2019", a: 90, b: 70},
-        {y: "2020", a: 100, b: 75},
-        {y: "2021", a: 115, b: 75},
-        {y: "2022", a: 120, b: 85},
-        {y: "2023", a: 145, b: 85},
-        {y: "2024", a: 160, b: 95}
-    ],
-            config = {
-                data: data,
-                xkey: "y",
-                ykeys: ["a", "b"],
-                labels: ["Total Income", "Total Outcome"],
-                fillOpacity: 0.6,
-                hideHover: "auto",
-                behaveLikeLine: true,
-                resize: true,
-                pointFillColors: ["#ffffff"],
-                pointStrokeColors: ["black"],
-                lineColors: ["gray", "red"]
-            };
-    config.element = "area-chart";
-    Morris.Line(config);
+    if (window.location.href.includes("orderchart")) {
+        var orderDonut = Morris.Donut({
+            element: 'area-chart',
+            data: [
+                {label: "Socks", value: 30},
+                {label: "Underwear", value: 15},
+                {label: "Shirt", value: 45},
+                {label: "Pant", value: 10}
+            ]
+        });
+        $.ajax({
+            url: "admin/orders/ajax/getOrderListForChart.html",
+            method: "GET",
+            dataType: 'JSON',
+            success: function (response) {
+//                config = {
+//                    data: response,
+//                    xkey: "category",
+//                    ykeys: "paymentTotal",
+//                    labels: ["Payment Total"],
+//                    fillOpacity: 1,
+//                    hideHover: "auto",
+//                    behaveLikeLine: true,
+//                    resize: true,
+//                    pointFillColors: ["#ffffff"],
+//                    pointStrokeColors: ["black"],
+//                    lineColors: ["red"]
+//                };
+//                config.element = "area-chart";
+//                Morris.Line(config);
+//                var ddata = response;
+//                ddata = ddata.replace(/Label/g, 'label');
+//                ddata = ddata.replace(/Value/g, 'value');
+//                console.log(ddata);
+//                orderDonut.setData(ddata);
+            }
+        });
+//        var data = [
+//            {y: '2014', a: 50, b: 90},
+//            {y: '2015', a: 65, b: 75},
+//            {y: '2016', a: 50, b: 50},
+//            {y: '2017', a: 75, b: 60},
+//            {y: '2018', a: 80, b: 65},
+//            {y: '2019', a: 90, b: 70},
+//            {y: '2020', a: 100, b: 75},
+//            {y: '2021', a: 115, b: 75},
+//            {y: '2022', a: 120, b: 85},
+//            {y: '2023', a: 145, b: 85},
+//            {y: '2024', a: 160, b: 95}
+//        ];
+
+    }
     /*==============================END NGAN - ORDER============================*/
 });

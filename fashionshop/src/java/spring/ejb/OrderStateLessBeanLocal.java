@@ -23,6 +23,7 @@ import spring.entity.SizesByColor;
 @Local
 public interface OrderStateLessBeanLocal {
     public List<Orders> getAllOrder();
+    public List<Orders> getAllOrderASC();
     public List<Categories> getAllCategory();
     public List<DiscountVoucher> getAllDiscountVoucher();
     public List<OrdersDetail> getAllOrderDetailByOrderID(int orderID);
@@ -40,6 +41,7 @@ public interface OrderStateLessBeanLocal {
     public int createDiscountVoucher(DiscountVoucher newDiscountVoucher);
     public int createOrderDetail(CartLineInfo cartLineInfo, Orders orders);
     public int updateDiscountVoucher(DiscountVoucher targetDiscountVoucher);
+    public int deleteDiscountVoucher(DiscountVoucher discountVoucher);
     
     public boolean confirmStatusOrder(Orders orders, short status);
     public boolean confirmStatusOrderDetail(OrdersDetail ordersDetail, short status);

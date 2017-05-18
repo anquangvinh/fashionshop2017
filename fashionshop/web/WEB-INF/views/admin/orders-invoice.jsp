@@ -107,7 +107,7 @@
                     onclick="$(this).css('visibility', 'hidden'); $('#btnDocument').css('visibility', 'hidden'); $('#btnBack').css('visibility', 'hidden');
                             window.print();
                             $(this).css('visibility', 'visible'); $('#btnDocument').css('visibility', 'visible'); $('#btnBack').css('visibility', 'visible');" type="button">PRINT</button>
-            <button class="btn btn-primary" id="btnDocument" onclick="getDocument();">SAVE PDF</button>
+            <!--<button class="btn btn-primary" id="btnDocument" onclick="getDocument();">SAVE PDF</button>-->
             <button onclick="window.location = 'admin/orders/orderlistdetail/${orders.ordersID}.html'" class="btn btn-primary" id="btnBack">BACK TO ORDER DETAILS</button>
         </div>
     </body>
