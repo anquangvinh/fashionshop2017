@@ -13,7 +13,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import spring.entity.Categories;
 import spring.entity.ProductColors;
+import spring.entity.ProductRating;
+import spring.entity.ProductSubImgs;
 import spring.entity.Products;
+import spring.entity.SizesByColor;
 import spring.entity.SubCategories;
 
 /**
@@ -298,42 +301,42 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
 
     @Override
     public List<Object[]> filterProductByCategory(int cateID, int page, int itemPerPage,
-                                                    float fromPrice, float toPrice,
-                                                    String filterColor, String filterSize, int sortBy) {
+            float fromPrice, float toPrice,
+            String filterColor, String filterSize, int sortBy) {
         String sql;
         if (sortBy == 1) {//1: Newest; 2: Low to High Price; 3: High to Low Price
             sql = "SELECT DISTINCT"
-                + "         p.productID, p.price\n"
-                + "FROM Products p\n"
-                + "JOIN p.productColorList pc\n"
-                + "JOIN pc.sizeList ps\n"
-                + "WHERE p.category.cateID = :cateID "
-                + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
-                + filterColor
-                + filterSize
-                + "AND p.status = 1 ORDER BY p.productID DESC";
+                    + "         p.productID, p.price\n"
+                    + "FROM Products p\n"
+                    + "JOIN p.productColorList pc\n"
+                    + "JOIN pc.sizeList ps\n"
+                    + "WHERE p.category.cateID = :cateID "
+                    + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
+                    + filterColor
+                    + filterSize
+                    + "AND p.status = 1 ORDER BY p.productID DESC";
         } else if (sortBy == 2) {
             sql = "SELECT DISTINCT"
-                + "         p.productID, p.price\n"
-                + "FROM Products p\n"
-                + "JOIN p.productColorList pc\n"
-                + "JOIN pc.sizeList ps\n"
-                + "WHERE p.category.cateID = :cateID "
-                + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
-                + filterColor
-                + filterSize
-                + "AND p.status = 1 ORDER BY p.price ASC";
+                    + "         p.productID, p.price\n"
+                    + "FROM Products p\n"
+                    + "JOIN p.productColorList pc\n"
+                    + "JOIN pc.sizeList ps\n"
+                    + "WHERE p.category.cateID = :cateID "
+                    + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
+                    + filterColor
+                    + filterSize
+                    + "AND p.status = 1 ORDER BY p.price ASC";
         } else {
             sql = "SELECT DISTINCT"
-                + "         p.productID, p.price\n"
-                + "FROM Products p\n"
-                + "JOIN p.productColorList pc\n"
-                + "JOIN pc.sizeList ps\n"
-                + "WHERE p.category.cateID = :cateID "
-                + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
-                + filterColor
-                + filterSize
-                + "AND p.status = 1 ORDER BY p.price DESC";
+                    + "         p.productID, p.price\n"
+                    + "FROM Products p\n"
+                    + "JOIN p.productColorList pc\n"
+                    + "JOIN pc.sizeList ps\n"
+                    + "WHERE p.category.cateID = :cateID "
+                    + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
+                    + filterColor
+                    + filterSize
+                    + "AND p.status = 1 ORDER BY p.price DESC";
         }
         int firstResult = (page - 1) * itemPerPage;
         Query q = getEntityManager().createQuery(sql);
@@ -345,7 +348,6 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
         return q.getResultList();
     }
 
-    
     @Override
     public Float getMaxPriceOfProduct_BySubCate(int subCateID) {
         String sql = "SELECT MAX(p.price) FROM Products p WHERE p.subCate.subCateID = :subCateID";
@@ -363,45 +365,45 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
         Float price = (Float) q.getResultList().get(0);
         return price;
     }
-    
+
     @Override
     public List<Object[]> filterProductBySubCategory(int subCateID, int page, int itemPerPage,
-                                                    float fromPrice, float toPrice,
-                                                    String filterColor, String filterSize, int sortBy) {
+            float fromPrice, float toPrice,
+            String filterColor, String filterSize, int sortBy) {
         String sql;
         if (sortBy == 1) {//1: Newest; 2: Low to High Price; 3: High to Low Price
             sql = "SELECT DISTINCT"
-                + "         p.productID, p.price\n"
-                + "FROM Products p\n"
-                + "JOIN p.productColorList pc\n"
-                + "JOIN pc.sizeList ps\n"
-                + "WHERE p.subCate.subCateID = :subCateID "
-                + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
-                + filterColor
-                + filterSize
-                + "AND p.status = 1 ORDER BY p.productID DESC";
+                    + "         p.productID, p.price\n"
+                    + "FROM Products p\n"
+                    + "JOIN p.productColorList pc\n"
+                    + "JOIN pc.sizeList ps\n"
+                    + "WHERE p.subCate.subCateID = :subCateID "
+                    + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
+                    + filterColor
+                    + filterSize
+                    + "AND p.status = 1 ORDER BY p.productID DESC";
         } else if (sortBy == 2) {
             sql = "SELECT DISTINCT"
-                + "         p.productID, p.price\n"
-                + "FROM Products p\n"
-                + "JOIN p.productColorList pc\n"
-                + "JOIN pc.sizeList ps\n"
-                + "WHERE p.subCate.subCateID = :subCateID "
-                + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
-                + filterColor
-                + filterSize
-                + "AND p.status = 1 ORDER BY p.price ASC";
+                    + "         p.productID, p.price\n"
+                    + "FROM Products p\n"
+                    + "JOIN p.productColorList pc\n"
+                    + "JOIN pc.sizeList ps\n"
+                    + "WHERE p.subCate.subCateID = :subCateID "
+                    + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
+                    + filterColor
+                    + filterSize
+                    + "AND p.status = 1 ORDER BY p.price ASC";
         } else {
             sql = "SELECT DISTINCT"
-                + "         p.productID, p.price\n"
-                + "FROM Products p\n"
-                + "JOIN p.productColorList pc\n"
-                + "JOIN pc.sizeList ps\n"
-                + "WHERE p.subCate.subCateID = :subCateID "
-                + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
-                + filterColor
-                + filterSize
-                + "AND p.status = 1 ORDER BY p.price DESC";
+                    + "         p.productID, p.price\n"
+                    + "FROM Products p\n"
+                    + "JOIN p.productColorList pc\n"
+                    + "JOIN pc.sizeList ps\n"
+                    + "WHERE p.subCate.subCateID = :subCateID "
+                    + "AND (p.price BETWEEN :fromPrice AND :toPrice) "
+                    + filterColor
+                    + filterSize
+                    + "AND p.status = 1 ORDER BY p.price DESC";
         }
         int firstResult = (page - 1) * itemPerPage;
         Query q = getEntityManager().createQuery(sql);
@@ -412,7 +414,7 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
         q.setMaxResults(itemPerPage);
         return q.getResultList();
     }
-    
+
     @Override
     public List<Object[]> productsByFilter_OfASubCategory(int subCateID, float fromPrice, float toPrice, String filterColor, String filterSize) {
         String sql = "SELECT DISTINCT"
@@ -432,5 +434,123 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
 
         return q.getResultList();
     }
+
+    @Override
+    public boolean updateProductGeneralInfo(Products targetProduct) {
+        try {
+            getEntityManager().merge(targetProduct);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateProductColorStatus(int colorID, short newStt) {
+        ProductColors targetColor = getEntityManager().find(ProductColors.class, colorID);
+
+        targetColor.setStatus(newStt);
+
+        try {
+            getEntityManager().merge(targetColor);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public ProductColors getProductColorByID(int colorID) {
+        return getEntityManager().find(ProductColors.class, colorID);
+    }
+
+    @Override
+    public boolean updateProductColor(ProductColors targetColor) {
+        try {
+            getEntityManager().merge(targetColor);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public ProductSubImgs getProductSubImgByID(int subImgID) {
+        return getEntityManager().find(ProductSubImgs.class, subImgID);
+    }
+
+    @Override
+    public boolean updateProductSubImg(ProductSubImgs targetSubImg) {
+        try {
+            getEntityManager().merge(targetSubImg);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public int deleteProductSubImg(int targetSubImgID) {
+        try {
+            ProductSubImgs targetSubImg = getEntityManager().find(ProductSubImgs.class, targetSubImgID);
+            if (targetSubImg != null) {
+                ProductColors parentColor = targetSubImg.getProductColor();
+                parentColor.getProductSubImgsList().remove(targetSubImg);
+                getEntityManager().remove(targetSubImg);
+                getEntityManager().flush();
+                return 0;
+            }
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 2;
+        }
+    }
     
+    @Override
+    public SizesByColor getSizeByID(int sizeID){
+        return getEntityManager().find(SizesByColor.class, sizeID);
+    }
+
+    @Override
+    public boolean updateSize(SizesByColor targetSize) {
+        try {
+            getEntityManager().merge(targetSize);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    @Override
+    public int deleteProductSize(int sizeID) {
+        try {
+            SizesByColor targetSize = getEntityManager().find(SizesByColor.class, sizeID);
+            if (targetSize != null) {
+                ProductColors parentColor = targetSize.getColor();
+                parentColor.getSizeList().remove(targetSize);
+                getEntityManager().remove(targetSize);
+                getEntityManager().flush();
+                return 0;
+            }
+            return 1; //Không tìm thấy size
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 2; //Loi trong khi xóa
+        }
+    }
+
+    @Override
+    public boolean createNewProductRating(int productID, ProductRating newProductRating) {
+        Products targetProduct = findProductByID(productID);
+        targetProduct.getProductRatingList().add(newProductRating);
+        try {
+            getEntityManager().persist(newProductRating);
+            getEntityManager().merge(newProductRating);
+            getEntityManager().flush();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

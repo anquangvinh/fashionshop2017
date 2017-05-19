@@ -7,9 +7,11 @@ package spring.client.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -19,6 +21,8 @@ import java.util.logging.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +31,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import spring.ejb.ProductStateLessBeanLocal;
+import spring.ejb.UsersStateLessBeanLocal;
 import spring.entity.Categories;
 import spring.entity.ProductColors;
+import spring.entity.ProductRating;
 import spring.entity.Products;
 import spring.entity.SizeLetterOrder;
 import spring.entity.SizesByColor;
@@ -37,6 +43,7 @@ import spring.entity.SizesByColor;
 public class ProductController {
 
     ProductStateLessBeanLocal productStateLessBean = lookupProductStateLessBeanLocal();
+    UsersStateLessBeanLocal usersStateLessBean = lookupUsersStateLessBeanLocal();
 
     @RequestMapping(value = "/category/{cateID}-{categoryNameNA}")
     public String categorylist(ModelMap model,
@@ -44,12 +51,19 @@ public class ProductController {
             @PathVariable("categoryNameNA") String categoryNameNA) {
         int page = 1;
         int itemPerPage = 6;
-        String currentProductPageInfo = ((page - 1) * itemPerPage + 1) + " - " + (((page - 1) * itemPerPage) + itemPerPage);
+        
 
         List<Categories> cateList = productStateLessBean.categoryList();
 
         List<Products> allProductByCate = productStateLessBean.findCategoryByID(cateID).getProductList();
         int allProducts = allProductByCate.size();
+
+        int fromProduct = ((page - 1) * itemPerPage) + 1;
+        int toProduct = ((page - 1) * itemPerPage) + itemPerPage;
+        if (toProduct > allProducts) {
+            toProduct = allProducts;
+        }
+        String currentProductPageInfo = fromProduct + " - " + toProduct;
 
         float fromPrice = productStateLessBean.getMinPriceOfProduct_ByCate(cateID);
         float toPrice = productStateLessBean.getMaxPriceOfProduct_ByCate(cateID);
@@ -138,10 +152,16 @@ public class ProductController {
 
             int page = 1;
             int itemPerPage = 6;
-            String currentProductPageInfo = ((page - 1) * itemPerPage + 1) + " - " + (((page - 1) * itemPerPage) + itemPerPage);
 
             List<Products> allProductBySubCate = productStateLessBean.findSubCategoryByID(subCateID).getProductList();
             int numberOfProducts = allProductBySubCate.size();
+
+            int fromProduct = ((page - 1) * itemPerPage) + 1;
+            int toProduct = ((page - 1) * itemPerPage) + itemPerPage;
+            if (toProduct > numberOfProducts) {
+                toProduct = numberOfProducts;
+            }
+            String currentProductPageInfo = fromProduct + " - " + toProduct;
 
             float fromPrice = productStateLessBean.getMinPriceOfProduct_BySubCate(subCateID);
             float toPrice = productStateLessBean.getMaxPriceOfProduct_BySubCate(subCateID);
@@ -221,11 +241,57 @@ public class ProductController {
     @RequestMapping(value = "/{productID:[0-9]+}-{colorID:[0-9]+}-{productNameNA:[A-Za-z0-9-]+}")
     public String productdetail(ModelMap model,
             @PathVariable("productID") Integer productID,
-            @PathVariable("colorID") Integer colorID
+            @PathVariable("colorID") Integer colorID,
+            HttpSession session
     ) {
+
         Products targetProduct = productStateLessBean.findProductByID(productID);
+
         List<Categories> cateList = productStateLessBean.categoryList();
         if ((targetProduct != null)) {
+            List<ProductRating> ratingList = targetProduct.getProductRatingList();
+            float ratingAVR = 0;
+            float ratingSum = 0;
+            int ratingfor1 = 0;
+            int ratingfor2 = 0;
+            int ratingfor3 = 0;
+            int ratingfor4 = 0;
+            int ratingfor5 = 0;
+            int checkUserRated = 0;
+            if (ratingList.size() > 0) {
+                for (ProductRating rating : ratingList) {
+                    ratingSum += rating.getRating();
+                    if (rating.getRating() == 1) {
+                        ratingfor1++;
+                    }
+
+                    if (rating.getRating() == 2) {
+                        ratingfor2++;
+                    }
+
+                    if (rating.getRating() == 3) {
+                        ratingfor3++;
+                    }
+
+                    if (rating.getRating() == 4) {
+                        ratingfor4++;
+                    }
+
+                    if (rating.getRating() == 5) {
+                        ratingfor5++;
+                    }
+
+                    if (session.getAttribute("findUsersID") != null) {
+                        if (Objects.equals(rating.getUser().getUserID(), session.getAttribute("findUsersID"))) {
+                            checkUserRated = 1;
+                        }
+                    }
+                }
+                ratingAVR = ratingSum / (float) ratingList.size();
+            }
+            DecimalFormat decimalformat = new DecimalFormat("#.#");
+            decimalformat.format(ratingAVR);
+
             List<ProductColors> productColorList = targetProduct.getProductColorList();
             int count = 0;
             for (ProductColors color : productColorList) {
@@ -240,6 +306,14 @@ public class ProductController {
                 model.addAttribute("targetProduct", targetProduct);
                 model.addAttribute("targetColor", targetColor);
                 model.addAttribute("cateList", cateList);
+                model.addAttribute("ratingAVR", ratingAVR);
+                model.addAttribute("numberOfRating", ratingList.size());
+                model.addAttribute("ratingfor1", ratingfor1);
+                model.addAttribute("ratingfor2", ratingfor2);
+                model.addAttribute("ratingfor3", ratingfor3);
+                model.addAttribute("ratingfor4", ratingfor4);
+                model.addAttribute("ratingfor5", ratingfor5);
+                model.addAttribute("checkUserRated", checkUserRated);
             } else {
                 String error = "Product ko có color này!";
             }
@@ -499,10 +573,45 @@ public class ProductController {
         return "" + numberOfProducts;
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/ajax/submitReviewRating", method = RequestMethod.POST)
+    public String submitReviewRating(
+            @RequestParam("productID") Integer productID,
+            @RequestParam("userID") Integer userID,
+            @RequestParam("ratingVal") Integer ratingVal,
+            @RequestParam("review") String review
+    ) {
+        Products thatProd = productStateLessBean.findProductByID(productID);
+
+        ProductRating newRating = new ProductRating();
+        newRating.setProduct(thatProd);
+        newRating.setUser(usersStateLessBean.getUserByID(userID));
+        newRating.setRating(ratingVal);
+        newRating.setRatingDate(new Date());
+        newRating.setReview(review);
+        newRating.setStatus((short) 0);
+
+        if (productStateLessBean.createNewProductRating(productID, newRating)) {
+            return "ok";
+        } else {
+            return "false";
+        }
+    }
+
     private ProductStateLessBeanLocal lookupProductStateLessBeanLocal() {
         try {
             Context c = new InitialContext();
             return (ProductStateLessBeanLocal) c.lookup("java:global/fashionshop/ProductStateLessBean!spring.ejb.ProductStateLessBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
+    private UsersStateLessBeanLocal lookupUsersStateLessBeanLocal() {
+        try {
+            Context c = new InitialContext();
+            return (UsersStateLessBeanLocal) c.lookup("java:global/fashionshop/UsersStateLessBean!spring.ejb.UsersStateLessBeanLocal");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);

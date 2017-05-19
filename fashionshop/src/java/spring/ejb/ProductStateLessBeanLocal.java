@@ -9,7 +9,10 @@ import java.util.List;
 import javax.ejb.Local;
 import spring.entity.Categories;
 import spring.entity.ProductColors;
+import spring.entity.ProductRating;
+import spring.entity.ProductSubImgs;
 import spring.entity.Products;
+import spring.entity.SizesByColor;
 import spring.entity.SubCategories;
 
 /**
@@ -85,5 +88,26 @@ public interface ProductStateLessBeanLocal {
     List<Object[]> filterProductBySubCategory(int subCateID, int page, int itemPerPage, float fromPrice, float toPrice, String filterColor, String filterSize, int sortBy);
 
     List<Object[]> productsByFilter_OfASubCategory(int subCateID, float fromPrice, float toPrice, String filterColor, String filterSize);
-
+    
+    boolean updateProductGeneralInfo (Products targetProduct);
+    
+    boolean updateProductColorStatus(int colorID, short newStt);
+    
+    ProductColors getProductColorByID(int colorID);
+    
+    boolean updateProductColor(ProductColors targetColor);
+    
+    ProductSubImgs getProductSubImgByID(int subImgID);
+    
+    boolean updateProductSubImg (ProductSubImgs targetSubImg);
+    
+    int deleteProductSubImg (int targetSubImgID);
+    
+    SizesByColor getSizeByID(int sizeID);
+    
+    boolean updateSize (SizesByColor targetSize);
+    
+    int deleteProductSize(int sizeID);
+    
+    boolean createNewProductRating(int productID, ProductRating newProductRating);
 }

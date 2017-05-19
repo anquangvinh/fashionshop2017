@@ -234,7 +234,7 @@ public class Product_Controller {
             @RequestParam MultiValueMap<String, String> allRequestParams,
             RedirectAttributes flashAttr) {
         String productName = allRequestParams.get("productName").get(0);
-        if(productStateLessBean.checkDuplicateProductName(productName)){
+        if (productStateLessBean.checkDuplicateProductName(productName)) {
             model.addAttribute("error", "<div class=\"col-xs-12 col-sm-6 col-sm-offset-3 alert alert-danger\">\n"
                     + "<strong>Error!</strong> Duplicate Product Name !.\n"
                     + "</div>");
@@ -243,7 +243,7 @@ public class Product_Controller {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
         int cateID = Integer.parseInt(allRequestParams.get("category").get(0));
         int subCateID = Integer.parseInt(allRequestParams.get("subCategory").get(0));
-        
+
         Float price = Float.parseFloat(allRequestParams.get("price").get(0));
         Short discount = Short.parseShort(allRequestParams.get("discount").get(0));
         String description = allRequestParams.get("description").get(0);
@@ -268,7 +268,7 @@ public class Product_Controller {
             productColor.setStatus((short) 1);
             productColor.setProduct(product);
             productColor.setColorOrder(i);
-            
+
             //setUrlColorImg
             MultipartFile colorImg = colorImgs.get(i);
             if (!colorImg.isEmpty()) {
@@ -321,7 +321,7 @@ public class Product_Controller {
             }
             int k = 0;
             for (MultipartFile file : subImgsList) {
-                k++;
+
                 ProductSubImgs psi = new ProductSubImgs();
                 //set urlimg
                 psi.setUrlImg(simpleDateFormat.format(new Date()) + shareFunc.changeText(file.getOriginalFilename()));
@@ -335,6 +335,7 @@ public class Product_Controller {
                 }
                 psi.setProductColor(productColor);
                 productSubImgsList.add(psi);
+                k++;
             }
             productColor.setProductSubImgsList(productSubImgsList);
 
@@ -370,7 +371,7 @@ public class Product_Controller {
         product.setStatus((short) 1);
         product.setProductColorList(productColorsList);
 
-        if(productStateLessBean.createNewProduct(product)){
+        if (productStateLessBean.createNewProduct(product)) {
             flashAttr.addFlashAttribute("error", "<div class=\"col-xs-12 col-sm-6 col-sm-offset-3 alert alert-success\">\n"
                     + "<strong>Success!</strong> Create New Product Successfully!.\n"
                     + "</div>");
@@ -381,26 +382,26 @@ public class Product_Controller {
         }
         return "redirect:/admin/product/create.html";
     }
-    
+
     @RequestMapping(value = "ajax/checkProductName", method = RequestMethod.POST)
     @ResponseBody
-    public String checkProductName (
-            @RequestParam("productName") String productName){
-        if(productStateLessBean.checkDuplicateProductName(productName)){
+    public String checkProductName(
+            @RequestParam("productName") String productName) {
+        if (productStateLessBean.checkDuplicateProductName(productName)) {
             return "1";
         } else {
             return "0";
         }
     }
-    
+
     @RequestMapping(value = "ajax/changeProductStatus", method = RequestMethod.POST)
     @ResponseBody
-    public void changeProductStatus (
+    public void changeProductStatus(
             @RequestParam("newProductStatus") short newProductStatus,
-            @RequestParam("productID") int productID){
+            @RequestParam("productID") int productID) {
         productStateLessBean.updateProductStatus(productID, newProductStatus);
     }
-    
+
     @RequestMapping(value = "ajax/getSubCategory", method = RequestMethod.POST)
     @ResponseBody
     public String getSubCategory(@RequestParam("cateID") Integer cateID) {
@@ -431,16 +432,535 @@ public class Product_Controller {
         model.addAttribute("targetProduct", targetProduct);
         Categories cate = productStateLessBean.findCategoryByID(targetProduct.getCategory().getCateID());
         List<SubCategories> subCateListByCate = cate.getSubCateList();
-        
+        model.addAttribute("productID", productID);
         model.addAttribute("subCateList", subCateListByCate);
         return "admin/pages/product-update";
     }
 
+    @RequestMapping(value = "product/edit-general-info-{productID}", method = RequestMethod.POST)
+    public String productEditGeneralInfo(
+            @PathVariable("productID") Integer productID,
+            @RequestParam("category") Integer categoryID,
+            @RequestParam("subCategory") Integer subCategoryID,
+            @RequestParam("productName") String productName,
+            @RequestParam("price") Float price,
+            @RequestParam("discount") Short discount,
+            @RequestParam("urlImg") MultipartFile urlImg,
+            @RequestParam("description") String description,
+            RedirectAttributes flashAttr
+    ) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
+        Products targetProduct = productStateLessBean.findProductByID(productID);
+        String oldImg = targetProduct.getUrlImg();
+        if (targetProduct != null) {
+            targetProduct.setCategory(productStateLessBean.findCategoryByID(categoryID));
+            targetProduct.setSubCate(productStateLessBean.findSubCategoryByID(subCategoryID));
+            targetProduct.setProductName(productName);
+            targetProduct.setProductNameNA(shareFunc.changeText(productName));
+            targetProduct.setPrice(price);
+            targetProduct.setProductDiscount(discount);
+            targetProduct.setProductDescription(description);
+
+            if (!urlImg.isEmpty()) {
+                //Xoa old img trong folder
+                String oldPath = app.getRealPath("/assets/images/products/") + "/" + oldImg;
+                File oldFile = new File(oldPath);
+                oldFile.delete();
+
+                //Them file moi
+                targetProduct.setUrlImg(simpleDateFormat.format(new Date()) + shareFunc.changeText(urlImg.getOriginalFilename()));
+
+                //luu file vào duong dan
+                String path = app.getRealPath("/assets/images/products/") + "/" + targetProduct.getUrlImg();
+                try {
+                    urlImg.transferTo(new File(path));
+                } catch (IOException | IllegalStateException ex) {
+                    Logger.getLogger(Product_Controller.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            if (productStateLessBean.updateProductGeneralInfo(targetProduct)) {
+                flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
+                        + "                                                                               <strong>Success!</strong> Update Products Info Completed!.\n"
+                        + "                                                                          </div>");
+            } else {
+                flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
+                        + "                                                                               <strong>Error!</strong> Update Products Info FAIL!, Please try again!.\n"
+                        + "                                                                          </div>");
+            }
+            return "redirect:/admin/product/edit-" + productID + ".html";
+        } else {
+            return "Ve Trang Loi";
+        }
+
+    }
+
+    @RequestMapping(value = "ajax/updateProductColorStatus", method = RequestMethod.POST)
+    @ResponseBody
+    public String updateProductColorStatus(
+            @RequestParam("colorID") Integer colorID,
+            @RequestParam("newStt") Short newStt
+    ) {
+        if (productStateLessBean.updateProductColorStatus(colorID, newStt)) {
+            return "1";
+        } else {
+            return "0";
+        }
+    }
+
+    @RequestMapping(value = "ajax/getProductColorByID", method = RequestMethod.POST)
+    @ResponseBody
+    public String getProductColorByID(
+            @RequestParam("colorID") Integer colorID
+    ) {
+        ProductColors color = productStateLessBean.getProductColorByID(colorID);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String result = "";
+        try {
+            result = mapper.writeValueAsString(color);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(Product_Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return result;
+    }
+
+    @RequestMapping(value = "ajax/updateProductColor", method = RequestMethod.POST)
+    @ResponseBody
+    public String updateProductColor(
+            @RequestParam("productID") Integer productID,
+            @RequestParam("colorID") Integer colorID,
+            @RequestParam("color") String color,
+            @RequestParam(value = "colorImg", required = false) MultipartFile colorImg
+    ) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
+        ProductColors targetColor = productStateLessBean.getProductColorByID(colorID);
+        targetColor.setColor(color);
+        targetColor.setColorNA(shareFunc.changeText(color));
+
+        if (colorImg != null) {
+            if (!colorImg.isEmpty()) {
+                //Xoa old img trong folder
+                String oldPath = app.getRealPath("/assets/images/products/colors") + "/" + colorImg;
+                File oldFile = new File(oldPath);
+                oldFile.delete();
+
+                //Them file moi
+                targetColor.setUrlColorImg(simpleDateFormat.format(new Date()) + shareFunc.changeText(colorImg.getOriginalFilename()));
+
+                //luu file vào duong dan
+                String path = app.getRealPath("/assets/images/products/colors") + "/" + targetColor.getUrlColorImg();
+                try {
+                    colorImg.transferTo(new File(path));
+                } catch (IOException | IllegalStateException ex) {
+                    Logger.getLogger(Product_Controller.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+        if (productStateLessBean.updateProductColor(targetColor)) {
+            List<ProductColors> productColorsList = productStateLessBean.findProductByID(productID).getProductColorList();
+            String result = "";
+
+            for (ProductColors c : productColorsList) {
+                String chooseOpt = "";
+
+                if (c.getStatus() == 0) {
+                    chooseOpt += "<div class=\"fs-stopworking-icon-product-color-update\">\n"
+                            + "       <i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i>\n"
+                            + "   </div>\n"
+                            + "   <select class=\"form-control fs-product-update-color-status\" fs-product-colorID=\"" + c.getColorID() + "\">\n"
+                            + "        <option value=\"1\">\n"
+                            + "            Working\n"
+                            + "        </option>\n"
+                            + "        <option value=\"0\" selected>\n"
+                            + "            Stopped\n"
+                            + "        </option>\n"
+                            + "   </select>";
+                } else {
+                    chooseOpt += "<div class=\"fs-stopworking-icon-product-color-update fs-display-none\">\n"
+                            + "       <i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i>\n"
+                            + "   </div>\n"
+                            + "   <select class=\"form-control fs-product-update-color-status\" fs-product-colorID=\"" + c.getColorID() + "\">\n"
+                            + "        <option value=\"1\" selected>\n"
+                            + "            Working\n"
+                            + "        </option>\n"
+                            + "        <option value=\"0\">\n"
+                            + "            Stopped\n"
+                            + "        </option>\n"
+                            + "   </select>";
+                }
+                result += "<tr class=\"text-center\" fs-product-colorID=\"" + c.getColorID() + "\">\n"
+                        + "   <td class=\"fs-valign-middle\">" + c.getColorOrder() + "</td>\n"
+                        + "   <td class=\"fs-valign-middle\">" + c.getColor() + "</td>\n"
+                        + "   <td class=\"fs-valign-middle\">\n"
+                        + "       <img style=\"width: 30px\" src=\"assets/images/products/colors/" + c.getUrlColorImg() + "\"/>\n"
+                        + "   </td>\n"
+                        + "   <td class=\"fs-valign-middle\" style=\"position: relative\">\n"
+                        + chooseOpt
+                        + "   </td>\n"
+                        + "   <td class=\"fs-valign-middle\">\n"
+                        + "       <button type=\"button\" class=\"btn btn-warning btn-edit-product-color\" fs-product-colorID=\"" + c.getColorID() + "\">\n"
+                        + "           <i class=\"fa fa-wrench\" aria-hidden=\"true\"></i> Edit\n"
+                        + "       </button>\n"
+                        + "   </td>\n"
+                        + "</tr>";
+            }
+            return result;
+        } else {
+            return "fail";
+        }
+    }
+
+    @RequestMapping(value = "ajax/updateColorOrder", method = RequestMethod.POST)
+    @ResponseBody
+    public void updateColorOrder(
+            @RequestParam("colorID") Integer colorID,
+            @RequestParam("position") Integer position
+    ) {
+        ProductColors targetColor = productStateLessBean.getProductColorByID(colorID);
+        targetColor.setColorOrder(position);
+
+        productStateLessBean.updateProductColor(targetColor);
+    }
+
+    @RequestMapping(value = "ajax/getColorList", method = RequestMethod.POST)
+    @ResponseBody
+    public String getColorList(
+            @RequestParam("productID") Integer productID
+    ) {
+        List<ProductColors> productColorsList = productStateLessBean.findProductByID(productID).getProductColorList();
+        String result = "";
+
+        for (ProductColors c : productColorsList) {
+            String chooseOpt = "";
+
+            if (c.getStatus() == 0) {
+                chooseOpt += "<div class=\"fs-stopworking-icon-product-color-update\">\n"
+                        + "       <i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i>\n"
+                        + "   </div>\n"
+                        + "   <select class=\"form-control fs-product-update-color-status\" fs-product-colorID=\"" + c.getColorID() + "\">\n"
+                        + "        <option value=\"1\">\n"
+                        + "            Working\n"
+                        + "        </option>\n"
+                        + "        <option value=\"0\" selected>\n"
+                        + "            Stopped\n"
+                        + "        </option>\n"
+                        + "   </select>";
+            } else {
+                chooseOpt += "<div class=\"fs-stopworking-icon-product-color-update fs-display-none\">\n"
+                        + "       <i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i>\n"
+                        + "   </div>\n"
+                        + "   <select class=\"form-control fs-product-update-color-status\" fs-product-colorID=\"" + c.getColorID() + "\">\n"
+                        + "        <option value=\"1\" selected>\n"
+                        + "            Working\n"
+                        + "        </option>\n"
+                        + "        <option value=\"0\">\n"
+                        + "            Stopped\n"
+                        + "        </option>\n"
+                        + "   </select>";
+            }
+            result += "<tr class=\"text-center\" fs-product-colorID=\"" + c.getColorID() + "\">\n"
+                    + "   <td class=\"fs-valign-middle\">" + c.getColorOrder() + "</td>\n"
+                    + "   <td class=\"fs-valign-middle\">" + c.getColor() + "</td>\n"
+                    + "   <td class=\"fs-valign-middle\">\n"
+                    + "       <img style=\"width: 30px\" src=\"assets/images/products/colors/" + c.getUrlColorImg() + "\"/>\n"
+                    + "   </td>\n"
+                    + "   <td class=\"fs-valign-middle\" style=\"position: relative\">\n"
+                    + chooseOpt
+                    + "   </td>\n"
+                    + "   <td class=\"fs-valign-middle\">\n"
+                    + "       <button type=\"button\" class=\"btn btn-warning btn-edit-product-color\" fs-product-colorID=\"" + c.getColorID() + "\">\n"
+                    + "           <i class=\"fa fa-wrench\" aria-hidden=\"true\"></i> Edit\n"
+                    + "       </button>\n"
+                    + "   </td>\n"
+                    + "</tr>";
+        }
+        return result;
+
+    }
+
+    @RequestMapping(value = "ajax/checkDuplicateColor.html", method = RequestMethod.POST)
+    @ResponseBody
+    public String checkDuplicateColor(
+            @RequestParam("productID") Integer productID,
+            @RequestParam("color") String color,
+            @RequestParam("colorID") Integer colorID
+    ) {
+        ProductColors currentColor = productStateLessBean.getProductColorByID(colorID);
+        String currentColorName = currentColor.getColor();
+        List<ProductColors> productColorsList = productStateLessBean.findProductByID(productID).getProductColorList();
+
+        for (ProductColors c : productColorsList) {
+            if (c.getColor().equalsIgnoreCase(color) && !color.equalsIgnoreCase(currentColorName)) {
+                return "1";
+            }
+        }
+
+        return "0";
+    }
+
+    @RequestMapping(value = "ajax/updateSubImgOrder", method = RequestMethod.POST)
+    @ResponseBody
+    public void updateSubImgOrder(
+            @RequestParam("productSubImgID") Integer productSubImgID,
+            @RequestParam("position") Integer position
+    ) {
+        ProductSubImgs targetSubImg = productStateLessBean.getProductSubImgByID(productSubImgID);
+        targetSubImg.setSubImgOrder(position);
+
+        productStateLessBean.updateProductSubImg(targetSubImg);
+    }
+
+    @RequestMapping(value = "ajax/getSubImgListByColor", method = RequestMethod.POST)
+    @ResponseBody
+    public String getSubImgListByColor(
+            @RequestParam("colorID") Integer colorID
+    ) {
+        List<ProductSubImgs> subImgsList = productStateLessBean.findProductColorByColorID(colorID).getProductSubImgsList();
+        String result = "";
+        for (ProductSubImgs si : subImgsList) {
+            result += "<tr class=\"text-center\" fs-productSubImgID=\"" + si.getSubImgID() + "\">\n"
+                    + "    <td class=\"fs-valign-middle\">" + si.getSubImgOrder() + "</td>\n"
+                    + "    <td class=\"fs-valign-middle fs-update-sub-img-change-image-here\">\n"
+                    + "        <img src=\"assets/images/products/subImg/" + si.getUrlImg() + "\" style=\"width: 80px\"/>\n"
+                    + "    </td>\n"
+                    + "    <td class=\"fs-valign-middle\">\n"
+                    + "        <input type=\"file\" name=\"fs-update-product-sub-img\" class=\"fs-update-product-sub-img\" disabled/>\n"
+                    + "        <p class=\"help-block fs-update-product-sub-img-error-mes\"></p>\n"
+                    + "    </td>\n"
+                    + "    <td class=\"fs-valign-middle\">\n"
+                    + "        <button type=\"button\" class=\"btn btn-warning fs-btn-edit-product-sub-img-form\">\n"
+                    + "            <i class=\"fa fa-wrench\" aria-hidden=\"true\"></i> Edit\n"
+                    + "        </button>\n"
+                    + "        <button type=\"button\" class=\"btn btn-danger fs-btn-delete-product-sub-img\">\n"
+                    + "            <i class=\"fa fa-close\" aria-hidden=\"true\"></i> Delete\n"
+                    + "        </button>\n"
+                    + "    </td>\n"
+                    + "</tr>";
+        }
+
+        return result;
+    }
+
+    @RequestMapping(value = "ajax/changeSubImg", method = RequestMethod.POST)
+    @ResponseBody
+    public String changeSubImg(
+            @RequestParam("subImgID") Integer subImgID,
+            @RequestParam("newImg") MultipartFile newImg
+    ) {
+        ProductSubImgs targetSubImg = productStateLessBean.getProductSubImgByID(subImgID);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
+        if (!newImg.isEmpty()) {
+            //Xoa old img trong folder
+            String oldPath = app.getRealPath("/assets/images/products/subImg") + "/" + targetSubImg.getUrlImg();
+            File oldFile = new File(oldPath);
+            oldFile.delete();
+
+            //Them file moi
+            targetSubImg.setUrlImg(simpleDateFormat.format(new Date()) + shareFunc.changeText(newImg.getOriginalFilename()));
+
+            //luu file vào duong dan
+            String path = app.getRealPath("/assets/images/products/subImg") + "/" + targetSubImg.getUrlImg();
+            try {
+                newImg.transferTo(new File(path));
+            } catch (IOException | IllegalStateException ex) {
+                Logger.getLogger(Product_Controller.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        if (productStateLessBean.updateProductSubImg(targetSubImg)) {
+            return targetSubImg.getUrlImg();
+        } else {
+            return "fail";
+        }
+    }
+
+    @RequestMapping(value = "ajax/deleteProductSubImg", method = RequestMethod.POST)
+    @ResponseBody
+    public String deleteProductSubImg(
+            @RequestParam("subImgID") Integer subImgID,
+            @RequestParam("colorID") Integer colorID
+    ) {
+        int err = productStateLessBean.deleteProductSubImg(subImgID);
+        if (err == 0) {
+            List<ProductSubImgs> subImgsList = productStateLessBean.findProductColorByColorID(colorID).getProductSubImgsList();
+            String result = "Nothing to Show!";
+            for (ProductSubImgs si : subImgsList) {
+                result += "<tr class=\"text-center\" fs-productSubImgID=\"" + si.getSubImgID() + "\">\n"
+                        + "    <td class=\"fs-valign-middle\">" + si.getSubImgOrder() + "</td>\n"
+                        + "    <td class=\"fs-valign-middle fs-update-sub-img-change-image-here\">\n"
+                        + "        <img src=\"assets/images/products/subImg/" + si.getUrlImg() + "\" style=\"width: 80px\"/>\n"
+                        + "    </td>\n"
+                        + "    <td class=\"fs-valign-middle\">\n"
+                        + "        <input type=\"file\" name=\"fs-update-product-sub-img\" class=\"fs-update-product-sub-img\" disabled/>\n"
+                        + "        <p class=\"help-block fs-update-product-sub-img-error-mes\"></p>\n"
+                        + "    </td>\n"
+                        + "    <td class=\"fs-valign-middle\">\n"
+                        + "        <button type=\"button\" class=\"btn btn-warning fs-btn-edit-product-sub-img-form\">\n"
+                        + "            <i class=\"fa fa-wrench\" aria-hidden=\"true\"></i> Edit\n"
+                        + "        </button>\n"
+                        + "        <button type=\"button\" class=\"btn btn-danger fs-btn-delete-product-sub-img\">\n"
+                        + "            <i class=\"fa fa-close\" aria-hidden=\"true\"></i> Delete\n"
+                        + "        </button>\n"
+                        + "    </td>\n"
+                        + "</tr>";
+            }
+
+            return result;
+        } else if (err == 1) {
+            return "1"; //Không tìm ra img
+        } else {
+            return "2"; //Lỗi trong quá trình xóa
+        }
+    }
+
+    @RequestMapping(value = "ajax/changeProductSize", method = RequestMethod.POST)
+    @ResponseBody
+    public String changeProductSize(
+            @RequestParam("name") String prodSize,
+            @RequestParam("pk") Integer sizeID,
+            @RequestParam("value") String newSize
+    ) {
+        SizesByColor targetSize = productStateLessBean.getSizeByID(sizeID);
+        ProductColors colorOfSize = targetSize.getColor();
+        List<SizesByColor> sizeList = colorOfSize.getSizeList();
+        for (SizesByColor s : sizeList) {
+            if (s.getProductSize().equalsIgnoreCase(newSize) && !newSize.equalsIgnoreCase(targetSize.getProductSize())) {
+                return "2";
+            }
+        }
+
+        targetSize.setProductSize(newSize);
+
+        if (productStateLessBean.updateSize(targetSize)) {
+            return "0";
+        } else {
+            return "1";
+        }
+    }
+
+    @RequestMapping(value = "ajax/changeProductQuantity", method = RequestMethod.POST)
+    @ResponseBody
+    public String changeProductQuantity(
+            @RequestParam("pk") Integer sizeID,
+            @RequestParam("value") Integer newQuantity
+    ) {
+        SizesByColor targetSize = productStateLessBean.getSizeByID(sizeID);
+
+        targetSize.setQuantity(newQuantity);
+
+        if (productStateLessBean.updateSize(targetSize)) {
+            return "0";
+        } else {
+            return "1";
+        }
+    }
+
+    @RequestMapping(value = "ajax/deleteProductSize", method = RequestMethod.POST)
+    @ResponseBody
+    public String deleteProductSize(
+            @RequestParam("sizeID") Integer sizeID,
+            @RequestParam("colorID") Integer colorID
+    ) {
+        int err = productStateLessBean.deleteProductSize(sizeID);
+        if (err == 0) {
+            List<SizesByColor> SizesList = productStateLessBean.findProductColorByColorID(colorID).getSizeList();
+            String result = "Nothing to Show!";
+            for (SizesByColor si : SizesList) {
+                String sltb = "";
+                if (si.getStatus() == 0) {
+                    sltb += "<select class=\"form-control\">\n"
+                        + "              <option value=\"0\" selected\n"
+                        + "                   Stopped\n"
+                        + "              </option>\n"
+                        + "              <option value=\"1\">\n"
+                        + "                    Working\n"
+                        + "              </option>\n"
+                        + "          </select>\n";
+                } else {
+                    sltb += "<select class=\"form-control\">\n"
+                        + "              <option value=\"0\"\n"
+                        + "                   Stopped\n"
+                        + "              </option>\n"
+                        + "              <option value=\"1\" selected>\n"
+                        + "                    Working\n"
+                        + "              </option>\n"
+                        + "          </select>\n";
+                }
+
+                String btn = "";
+                if (si.getOrdersDetailList().size() > 0) {
+                    btn += "<button type=\"button\" \n"
+                        + "                 fs-size-id=\"${size.sizeID}\"\n"
+                        + "                 fs-size=\"${size.productSize}\"\n"
+                        + "                 class=\"btn btn-danger fs-update-product-button-delete-size\"\n"
+                        + "                 disabled>\n"
+                        + "             <i class=\"fa fa-close\" aria-hidden=\"true\"></i> Delete\n"
+                        + "         </button>\n";
+                } else {
+                    btn += "<button type=\"button\" \n"
+                        + "                 fs-size-id=\"${size.sizeID}\"\n"
+                        + "                 fs-size=\"${size.productSize}\"\n"
+                        + "                 class=\"btn btn-danger fs-update-product-button-delete-size\"\n"
+                        + "                 >\n"
+                        + "             <i class=\"fa fa-close\" aria-hidden=\"true\"></i> Delete\n"
+                        + "         </button>\n";
+                }
+                result += "<tr class=\"text-center\">\n"
+                        + "    <td>\n"
+                        + "        <span class=\"fs-edit-product-size-val\" data-type=\"text\" \n"
+                        + "              data-pk=\"" + si.getSizeID() + "\" data-url=\"admin/ajax/changeProductSize.html\" \n"
+                        + "              data-title=\"Enter New Size\" data-name=\"productSize\">\n"
+                        + "              " + si.getProductSize() + "\n"
+                        + "        </span>\n"
+                        + "    </td>\n"
+                        + "    <td>\n"
+                        + "         <span class=\"fs-edit-product-quantity-val\" data-type=\"text\" \n"
+                        + "               data-pk=\"" + si.getSizeID() + "\" data-url=\"admin/ajax/changeProductQuantity.html\" \n"
+                        + "               data-title=\"Enter New Quantity\" data-name=\"quantity\">\n"
+                        + "               " + si.getQuantity() + "\n"
+                        + "         </span>\n"
+                        + "    </td>\n"
+                        + "    <td>\n"
+                        + sltb
+                        + "    </td>\n"
+                        + "    <td>\n"
+                        +           btn
+                        + "    </td>\n"
+                        + " </tr>";
+            }
+
+            return result;
+        } else if (err == 1) {
+            return "1";//Không tìm thấy SIZE
+        } else {
+            return "2"; //Quá trình xóa lỗi
+        }
+    }
+    
+    @RequestMapping(value = "ajax/changeSizeStatus", method = RequestMethod.POST)
+    @ResponseBody
+    public String changeSizeStatus(
+            @RequestParam("sizeID") Integer sizeID,
+            @RequestParam("newSTT") Short newSTT
+    ) {
+        SizesByColor targetSize = productStateLessBean.getSizeByID(sizeID);
+        targetSize.setStatus(newSTT);
+        
+        if (productStateLessBean.updateSize(targetSize)) {
+            return "1";
+        } else {
+            return "0";
+        }
+    }
     /*========================================================================
      *                                                                       *
      *                              MISCELLANEOUS                            *
      *                                                                       *
      ========================================================================*/
+
     //Chuẩn bị dữ liệu cho select box Category
     @ModelAttribute("categories")
     public List<Categories> getAllCategory() {
