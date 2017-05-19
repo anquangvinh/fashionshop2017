@@ -19,7 +19,7 @@
                 <div id="account-id">
                     <h4 class="account-title"><span class="fa fa-chevron-right"></span>Change Your Personal Details</h4>                                                                  
                     <div class="account-form">
-                        <form:form id="fs-form-update-account" class="form-update-user" method="POST" action="user/account-information/${findUsersID}.html" modelAttribute="updateUser" enctype="multipart/form-data">      
+                        <form:form id="fs-form-update-account" class="form-update-user" method="POST" action="user/account-information/${sessionScope.findUsersID}.html" modelAttribute="updateUser" enctype="multipart/form-data">      
                             ${error}
                             <ul class="form-list row">
                                 <li class="col-md-12 col-sm-12">

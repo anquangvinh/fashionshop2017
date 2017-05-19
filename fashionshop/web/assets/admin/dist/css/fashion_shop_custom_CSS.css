@@ -151,6 +151,14 @@ tr.shown td.details-control{
     right: -7px;
 }
 
+.fs-stopworking-icon-product-color-update {
+    color: red; 
+    font-size: 20px; 
+    position: absolute; 
+    top: -5px; 
+    right: 1px;
+}
+
 .fs-display-none {
     display: none;
 }
@@ -169,5 +177,29 @@ tr.shown td.details-control{
     margin: 0 !important;
 }
 
+
+/* Blog */
+#loading{position:fixed; top:20px; left:20px; background:grey; color:white; display:none;}
+
+#loading h1{text-align:center;}
+
+.fs-highlighter {
+    background-color: rgba(255, 255, 98, 0.3) !important;
+}
+
+/* WAITING AJAX */
+#fs-ajax-loading {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, 0.8 ) 
+        url('../../../images/ajax-loader.gif') 
+        50% 50% 
+        no-repeat;
+}
 /* Load More Blog */
 

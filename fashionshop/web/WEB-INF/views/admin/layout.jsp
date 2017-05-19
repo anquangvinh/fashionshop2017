@@ -39,10 +39,12 @@
 
         <!-- Custom Fonts -->
         <link href="assets/admin/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
+        
         <!-- fileUploader -->
         <link href="assets/admin/dist/css/jquery.fileuploader.css" rel="stylesheet" type="text/css"/>
-
+        
+        <!-- animate - use with bootstrap notify -->
+        <link href="assets/css/animate.css" rel="stylesheet" type="text/css"/>
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -52,10 +54,12 @@
 
         <!--Thông báo css cập nhật thành công-->
         <link href="assets/css/sweetalert.css" rel="stylesheet" type="text/css"/>
+        
+        <!--Bootstrap X-EditAble-->
+        <link href="assets/admin/dist/css/bootstrap-editable.css" rel="stylesheet" type="text/css"/>
     </head>
 
-    <body>
-
+    <body>        
         <div id="wrapper">
 
             <!-- HEADER - MENU -->
@@ -94,9 +98,14 @@
         <!-- Custom Theme JavaScript -->
         <script src="assets/admin/dist/js/sb-admin-2.js"></script>
         
-        
         <script src="assets/js/sweetalert.min.js"></script>
-
+        
+        <!--bootstrap notify-->
+        <script src="assets/js/bootstrap-notify.js" type="text/javascript"></script>
+        
+        <!--bootstrap x-editable-->
+        <script src="assets/admin/dist/js/bootstrap-editable.js" type="text/javascript"></script>
+        
         <!-- Page-Level Demo Scripts - Tables - Use for reference -->
         <script src="assets/admin/dist/js/fashion_shop_custom_JS.js" type="text/javascript"></script>
 

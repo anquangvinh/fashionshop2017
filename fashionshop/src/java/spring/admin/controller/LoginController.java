@@ -28,18 +28,18 @@ import spring.functions.SharedFunctions;
 
 @Controller
 public class LoginController {
-
+    
     RolesStateLessBeanLocal rolesStateLessBean = lookupRolesStateLessBeanLocal();
     UsersStateLessBeanLocal usersStateLessBean = lookupUsersStateLessBeanLocal();
-
+    
     @Autowired
     SharedFunctions sharedFunc;
-
+    
     @RequestMapping(value = "/admin/login", method = RequestMethod.GET)
     public String login() {
         return "admin/login";
     }
-
+    
     @RequestMapping(value = "/admin/login", method = RequestMethod.POST)
 //    @ResponseBody
     public String login(ModelMap model,
@@ -53,19 +53,23 @@ public class LoginController {
         int error = usersStateLessBean.login(email, sharedFunc.encodePassword(password));
         if (error == 1) {
             session.setAttribute("email", email);
-//            Object a = session.getAttribute("urlLogin");
-//            if (session.getAttribute("request_url").equals(a)) {
-//                return "redirect:/admin/user/list.html";
-//            } else {
-//            if(remember == 1){
-//                Cookie ckEmail = new Cookie("emailA", email);
-//                ckEmail.setMaxAge(3600);
-//                response.addCookie(ckEmail);
-//                Cookie ckPassword = new Cookie("passwordA", sharedFunc.encodePassword(password));
-//                ckPassword.setMaxAge(3600);
-//                response.addCookie(ckPassword);
-//            }
+            String a = "login.html";
+            String b = "user/list.html";
+            if(remember == 1){
+                Cookie ckEmail = new Cookie("emailA", email);
+                ckEmail.setMaxAge(24*60*60);
+                response.addCookie(ckEmail);
+                Cookie ckPassword = new Cookie("passwordA", sharedFunc.encodePassword(password));
+                ckPassword.setMaxAge(24*60*60);
+                response.addCookie(ckPassword);
+            }
+            
+            if (session.getAttribute("request_url") != a) {
+                session.removeAttribute("request_url");
+                return "redirect:" + b;     
+            } else {
                 return "redirect:" + session.getAttribute("request_url");
+            }
         } else if (error == 2) {
             model.addAttribute("error", "<div class=\"alert alert-danger\">FAILED!. Error Email Wrong!</div>");
         } else if (error == 3) {
@@ -75,13 +79,26 @@ public class LoginController {
         }
         return "admin/login";
     }
-
+    
     @RequestMapping(value = "/admin/logout")
-    public String logOut(HttpSession session){
+    public String logOut(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+        ///Remove Session
         session.removeAttribute("email");
         
+        // Remove Cookie
+        for (Cookie ck : request.getCookies()) {
+            if (ck.getName().equalsIgnoreCase("emailA")) {
+                ck.setMaxAge(0);
+                response.addCookie(ck);
+            }
+            if (ck.getName().equalsIgnoreCase("passwordA")) {
+                ck.setMaxAge(0);
+                response.addCookie(ck);
+            }
+        }
         return "redirect:/admin/login.html";
     }
+
     private UsersStateLessBeanLocal lookupUsersStateLessBeanLocal() {
         try {
             Context c = new InitialContext();
@@ -91,7 +108,7 @@ public class LoginController {
             throw new RuntimeException(ne);
         }
     }
-
+    
     private RolesStateLessBeanLocal lookupRolesStateLessBeanLocal() {
         try {
             Context c = new InitialContext();

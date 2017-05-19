@@ -155,7 +155,7 @@ public class UserAddressesStateLessBean implements UserAddressesStateLessBeanLoc
     public void deleteAddress(int addressID) {
         UserAddresses findUseraddress = findAddressID(addressID);
         findUseraddress.getAddressID();
-        getEm().remove(addressID);
+        getEm().remove(findUseraddress);
         
     }
 

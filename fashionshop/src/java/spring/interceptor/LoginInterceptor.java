@@ -31,46 +31,40 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         String base = uri.substring(ctx.length());
         session.setAttribute("request_url", base);
         UsersStateLessBeanLocal usersStateLessBean = lookupUsersStateLessBeanLocal();
-//        Cookie[] ck = request.getCookies();
-//        if (ck != null) {
-//            String email = "";
-//            String pass = "";
-//            for (Cookie c : ck) {
-//                if (c.getName().equals("emailA")) { //kiểm tra có cookie tên là email ko
-//                    email = c.getValue(); // nếu có thì lấy giá trị của ck email đó, gán cho thằng String email ở trên
-//                }
-//
-//                if (c.getName().equals("passwordA")) { // kiểm tra có cookie tên là password ko
-//                    pass = c.getValue(); // nếu có thì lấy giá trị ck password đó, gán cho thằng String pass ở trên
-//                }
-//            }
-//
-//            if (email != "" && pass != "") { //Sau khi lặp, nếu cả 2 cùng khác rỗng => nó có lưu cookie
-//                int error = usersStateLessBean.login(email, pass); // lúc này kiểm tra đăng nhập.
-//                if (error == 1) { //Nếu đăng nhập thành công
-//                    session.setAttribute("email", email); //tạo ra session email. tới đây tương tự như controller.
-//                    return true;
-//                } else {
-//                    return false;
-//                }
-//            } else {
-//                return false;
-//            }
-//        } else {
-            if (session.getAttribute("email") != null) {
-//            if(session.getAttribute("request_url").equals(request.getContextPath() + "/admin/login.html")){
-//                response.sendRedirect(request.getContextPath() + "/admin/user/list.html");
-//                return true;
-//            }
-                return true;
-            } else {
+
+
+        if (session.getAttribute("email") != null) {
+            return true; //Cho vào
+        } else { //không có session
+            Cookie[] ck = request.getCookies();
+            if (ck != null) { //Nếu có cookie
+                String email = "";
+                String pass = "";
+                for (Cookie c : ck) {
+                    if (c.getName().equals("emailA")) {
+                        email = c.getValue();
+                    }
+                    if (c.getName().equals("passwordA")) {
+                        pass = c.getValue();
+                    }
+                }
+
+                if (email != "" && pass != "") {
+                    int error = usersStateLessBean.login(email, pass);
+                    if (error == 1) {
+                        session.setAttribute("email", email);
+                        return true;
+                    } 
+                }
                 response.sendRedirect(request.getContextPath() + "/admin/login.html");
-//            session.setAttribute("urlLogin", request.getContextPath() + "/admin/login.html");
-//            session.setAttribute("a", request.getContextPath() + "/admin/login.html");
+//                session.setAttribute("request_url", base);
+                return false; //Có cookie
+            } else { //Không có cookie
+                response.sendRedirect(request.getContextPath() + "/admin/login.html");
                 //request.getContextPath(): get lấy đường link gốc (contextPath) của request. ở đây là http://localhost:8080/fashionshop
                 return false;
             }
-//        }
+        }
 
     }
 

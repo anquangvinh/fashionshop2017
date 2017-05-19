@@ -82,26 +82,27 @@ public class BlogCategoriesSB implements BlogCategoriesSBLocal {
     @Override
     public int deleteCategory(BlogCategories blogCategories) {
         List<Blogs> blogList = blogsSB.getListBlogsByCategory(blogCategories.getBlogCateID());
-        if (blogList != null) {
-            for (Blogs blog : blogList) {
-                if (blog.getStatus() == 0) {
-                    return 0;
-                }
-            }
-            try {
-                for (Blogs blog : blogList) {
-                    getEm().remove(blog);
-                    getEm().flush();
-                }
-                if (!getEm().contains(blogCategories)) {
-                    blogCategories = getEm().merge(blogCategories);
-                }
-                getEm().remove(blogCategories);
-                getEm().flush();
-                return 1;
-            } catch (Exception e) {
-                return 2;
-            }
+        if (!blogList.isEmpty()) {
+            return 0;
+//            for (Blogs blog : blogList) {
+//                if (blog.getStatus() == 0) {
+//                    return 0;
+//                }
+//            }
+//            try {
+//                for (Blogs blog : blogList) {
+//                    getEm().remove(blog);
+//                    getEm().flush();
+//                }
+//                if (!getEm().contains(blogCategories)) {
+//                    blogCategories = getEm().merge(blogCategories);
+//                }
+//                getEm().remove(blogCategories);
+//                getEm().flush();
+//                return 1;
+//            } catch (Exception e) {
+//                return 2;
+//            }
         } else {
             try {
                 if (!getEm().contains(blogCategories)) {

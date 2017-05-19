@@ -23,9 +23,11 @@
         <!--Cái này chạy thứ 2-->
         <!--Cau hinh interceptor moi loc cookie nam o day-->
         <mvc:interceptor>
-            <mvc:mapping path="/user/**" />
+            <mvc:mapping path="/**" />
+            <mvc:exclude-mapping path="/admin/**"/> <!-- Tí test thử admin coi có lỗi ko -->
             <bean class="spring.interceptor.CheckCookieUser" /> 
         </mvc:interceptor>
+        
         <!--Cái này chạy thứ 3-->
         <mvc:interceptor>
             <mvc:mapping path="/user/**" />

@@ -66,7 +66,9 @@
                         <div class="space20"></div>
                         <div class="share">
                             <span>
-                                <a href="#" class="fa fa-heart-o" onclick="return false;"></a>
+                                <a class="fa fa-heart-o fs-wl-add-detail"
+                                   fs-userID="${sessionScope.findUsersID}" ></a>
+                                   <input type="hidden" name="emailUser" value="${sessionScope.emailUser}" />
                                 <a href="#" class="fa fa-signal" onclick="return false;"></a>
                                 <a href="#" class="fa fa-envelope-o" onclick="return false;"></a>
                             </span>
