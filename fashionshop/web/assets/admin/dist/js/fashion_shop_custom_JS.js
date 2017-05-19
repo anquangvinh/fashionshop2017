@@ -2119,32 +2119,6 @@ $(document).ready(function () {
         }
     });
 
-// Validate Ckeditor
-    $("#fs-form-create-blog").validate({
-        ignore: [],
-        rules: {
-            editor1: {
-                required: function ()
-                {
-                    CKEDITOR.instances.editor1.updateElement();
-                }
-            }
-        },
-        messages: {
-            editor1: "Required"
-        },
-        /* use below section if required to place the error*/
-        errorPlacement: function (error, element)
-        {
-            if (element.attr("name") == "editor1")
-            {
-                error.insertBefore("textarea#editor1");
-            } else {
-                error.insertBefore(element);
-            }
-        }
-    });
-
     /*===============================END THANH - BLOG =================================*/
 
     /*==============================DUONG - USER============================*/

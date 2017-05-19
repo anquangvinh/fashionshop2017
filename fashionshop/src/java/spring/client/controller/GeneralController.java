@@ -58,7 +58,7 @@ public class GeneralController {
 
     @RequestMapping(value = "/admin")
     public String admin(ModelMap model) {
-        return "admin/login";
+        return "admin/pages/index";
     }
 
     @ResponseBody

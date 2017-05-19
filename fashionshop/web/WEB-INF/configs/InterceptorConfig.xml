@@ -16,6 +16,7 @@
         <!--Cái này chạy thứ 1-->
         <mvc:interceptor> 
             <mvc:mapping path="/admin/**" />
+            <mvc:mapping path="/admin**" />
             <mvc:exclude-mapping path="/admin/login**" />
             <bean class="spring.interceptor.LoginInterceptor" /> 
         </mvc:interceptor>
