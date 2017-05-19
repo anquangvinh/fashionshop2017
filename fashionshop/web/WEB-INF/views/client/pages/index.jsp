@@ -239,7 +239,10 @@
                                     <div class="product-overlay">
                                         <a href="#" class="addcart fa fa-shopping-cart"></a>
                                         <a href="#" class="compare fa fa-signal"></a>
-                                        <a href="#" class="likeitem fa fa-heart-o"></a>
+                                        <a class="likeitem fa fa-heart-o fs-wishlish-add" 
+                                           fs-userID="${sessionScope.findUsersID}" 
+                                           fs-productID="${product.productID}" ></a>
+                                        <input type="hidden" name="emailUser" value="${sessionScope.emailUser}" />
                                     </div>
                                 </div>
                                 <div class="product-info">
@@ -311,7 +314,7 @@
 <div class="home-blog">
     <div class="container">
         <h5 class="heading space40"><span>Latest from our blog</span></h5>
-<div class="row">
+        <div class="row">
             <c:forEach items="${blogListIndex}" var="blog" begin="0" end="2" varStatus="no">
                 <div class="col-md-4 col-sm-4">
                     <article class="home-post text-center">
@@ -332,126 +335,153 @@
                     </article>   
                 </div>
             </c:forEach>
+        </div>
     </div>
-</div>
 
-<!-- LATEST PRODUCTS -->
-<div class="container padding40">
-    <div class="row">
-        <div class="col-md-12 col-sm-12">
-            <h5 class="heading space40"><span>Latest Products</span></h5>
-            <div class="product-carousel3">
-                <c:forEach items="${latestProducts}" var="ltp" begin="0" end="7">
-                    <div class="pc-wrap">
-                        <div class="product-item">
-                            <div class="item-thumb">
-                                <img src="assets/images/products/${ltp.urlImg}" 
-                                     class="img-responsive" 
-                                     alt="${ltp.urlImg}" 
-                                     fs-product-for-img="${ltp.productID}"/>
-                                <div class="overlay-rmore fa fa-search quickview fs-product-modal" 
-                                     fs-product="${ltp.productID}" 
-                                     fs-product-modal-color="${ltp.productColorList[0].colorID}" 
-                                     data-toggle="modal" ></div>
-                                <!--                                     data-target="#productModal"-->
-                                <div class="product-overlay">
-                                    <a href="#" class="addcart fa fa-shopping-cart"></a>
-                                    <a href="#" class="compare fa fa-signal"></a>
-                                    <a href="#" class="likeitem fa fa-heart-o"></a>
+    <!-- LATEST PRODUCTS -->
+    <div class="container padding40">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <h5 class="heading space40"><span>Latest Products</span></h5>
+                <div class="product-carousel3">
+                    <c:forEach items="${latestProducts}" var="ltp" begin="0" end="7">
+                        <div class="pc-wrap">
+                            <div class="product-item">
+                                <div class="item-thumb">
+                                    <img src="assets/images/products/${ltp.urlImg}" 
+                                         class="img-responsive" 
+                                         alt="${ltp.urlImg}" 
+                                         fs-product-for-img="${ltp.productID}"/>
+                                    <div class="overlay-rmore fa fa-search quickview fs-product-modal" 
+                                         fs-product="${ltp.productID}" 
+                                         fs-product-modal-color="${ltp.productColorList[0].colorID}" 
+                                         data-toggle="modal" ></div>
+                                    <!--                                     data-target="#productModal"-->
+                                    <div class="product-overlay">
+                                        <a href="#" class="addcart fa fa-shopping-cart"></a>
+                                        <a href="#" class="compare fa fa-signal"></a>
+                                        <a class="likeitem fa fa-heart-o fs-wl-add-lsp"
+                                           fs-userID="${sessionScope.findUsersID}" fs-productID="${ltp.productID}" ></a>
+                                        <input type="hidden" name="emailUser" value="${sessionScope.emailUser}" />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="product-info">
-                                <h4 class="product-title">
-                                    <a href="${ltp.productID}-${ltp.productColorList[0].colorID}-${ltp.productNameNA}.html">
-                                        ${ltp.productName}
-                                    </a>
-                                </h4>
-                                <span class="product-price">$${ltp.price}0 </span>
-                                <div class="item-colors">
-                                    <c:if test="${ltp.productColorList.size() > 1}">
-                                        <c:forEach items="${ltp.productColorList}" var="color">
-                                            <img src="assets/images/products/colors/${color.urlColorImg}" 
-                                                 class="img-responsive fs-index-color-img" 
-                                                 fs-index-color-img="${color.colorID}" 
-                                                 fs-product="${ltp.productID}" 
-                                                 alt="${color.urlColorImg}" 
-                                                 title="${color.color}"/>
-                                        </c:forEach>
-                                    </c:if>
+                                <div class="product-info">
+                                    <h4 class="product-title">
+                                        <a href="${ltp.productID}-${ltp.productColorList[0].colorID}-${ltp.productNameNA}.html">
+                                            ${ltp.productName}
+                                        </a>
+                                    </h4>
+                                    <span class="product-price">$${ltp.price}0 </span>
+                                    <div class="item-colors">
+                                        <c:if test="${ltp.productColorList.size() > 1}">
+                                            <c:forEach items="${ltp.productColorList}" var="color">
+                                                <img src="assets/images/products/colors/${color.urlColorImg}" 
+                                                     class="img-responsive fs-index-color-img" 
+                                                     fs-index-color-img="${color.colorID}" 
+                                                     fs-product="${ltp.productID}" 
+                                                     alt="${color.urlColorImg}" 
+                                                     title="${color.color}"/>
+                                            </c:forEach>
+                                        </c:if>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </c:forEach>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space10 clearfix"></div>
+
+    <!-- CLIENTS -->
+    <div class="clients">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12"> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER WIDGETS -->
+    <div class="f-widgets">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-4">
+                    <h6>Best Seller</h6>
+                    <div class="f-widget-content">
+                        <ul>
+                            <c:forEach items="${bestSellerList}" var="prod">
+                                <li>
+                                    <div class="fw-thumb">
+                                        <img src="assets/images/products/${prod[4]}" alt="${prod[4]}"/>
+                                    </div>
+                                    <div class="fw-info">
+                                        <h4><a href="./single-product.html">${prod[1]}</a></h4>
+                                        <span class="fw-price">$ ${prod[3]}0</span>
+                                    </div>
+                                </li>
+                            </c:forEach>
+                        </ul>
                     </div>
-                </c:forEach>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="space10 clearfix"></div>
-
-<!-- CLIENTS -->
-<div class="clients">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 col-sm-12"> 
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- FOOTER WIDGETS -->
-<div class="f-widgets">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 col-sm-4">
-                <h6>Best Seller</h6>
-                <div class="f-widget-content">
-                    <ul>
-                        <c:forEach items="${bestSellerList}" var="prod">
-                            <li>
-                                <div class="fw-thumb">
-                                    <img src="assets/images/products/${prod[4]}" alt="${prod[4]}"/>
-                                </div>
-                                <div class="fw-info">
-                                    <h4><a href="./single-product.html">${prod[1]}</a></h4>
-                                    <span class="fw-price">$ ${prod[3]}0</span>
-                                </div>
-                            </li>
-                        </c:forEach>
-                    </ul>
                 </div>
-            </div>
-            <div class="col-md-4 col-sm-4">
-                <h6>Most Viewed</h6>
-                <div class="f-widget-content">
-                    <ul>
-                        <c:forEach items="${mostViewList}" var="prod">
-                            <li>
-                                <div class="fw-thumb">
-                                    <img src="assets/images/products/${prod.urlImg}" alt="${prod.urlImg}"/>
-                                </div>
-                                <div class="fw-info">
-                                    <h4><a href="wait.html">${prod.productName}</a></h4>
-                                    <span class="fw-price">$ ${prod.price}0</span>
-                                </div>
-                            </li>
-                        </c:forEach>
+                <div class="col-md-4 col-sm-4">
+                    <h6>Most Viewed</h6>
+                    <div class="f-widget-content">
+                        <ul>
+                            <c:forEach items="${mostViewList}" var="prod">
+                                <li>
+                                    <div class="fw-thumb">
+                                        <img src="assets/images/products/${prod.urlImg}" alt="${prod.urlImg}"/>
+                                    </div>
+                                    <div class="fw-info">
+                                        <h4><a href="wait.html">${prod.productName}</a></h4>
+                                        <span class="fw-price">$ ${prod.price}0</span>
+                                    </div>
+                                </li>
+                            </c:forEach>
 
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4 col-sm-4">
-                <h6>Recent Products</h6>
-                <div class="f-widget-content">
-                    <ul id="fs-recent-product-index-page">
-                        
-                    </ul>
+                <div class="col-md-4 col-sm-4">
+                    <h6>Recent Products</h6>
+                    <div class="f-widget-content">
+                        <ul id="fs-recent-product-index-page">
+
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal -->
-<jsp:include page="../blocks/modal.jsp" flush="true"/>
+    <!-- Modal -->
+    <jsp:include page="../blocks/modal.jsp" flush="true"/>
+    <!--Modal thong bao dang nhap-->
+    <div id="fs-modal-mess" class="modal fade fs-modal-wl-mess" tabindex="-1" role="dialog" aria-labelledby="messlodalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-content fs-modal-wl-content">
+            <p class="text-center fs-wl-text"><b>If you want add WishList - You should Login</b></p>
+            <div class="modal-header">
+                <a class="close fs-modal-wl-close" data-dismiss="modal" aria-label="Close">x</a>
+            </div>
+            <div class="modal-body fs-modal-wl-body">
+                <a class="btn fs-btn-wl fs-btn-login-wl text-center">Login</a>
+            </div>
+        </div>
+    </div>
+    
+    
+    <!--MODAL THONG BAO THANH CONG-->
+<!--    <div id="fs-wl-ajax-error" class="modal fade" >
+    <div class="modal-header">
+      <button class="close" data-dismiss="modal">&times;</button>
+      <h3>SUCCESS</h3>
+    </div>
+    <div class="modal-body">
+      <p>Add Wish List success.</p>
+    </div>
+  </div>
+  <div class="ajax-progress"></div>-->

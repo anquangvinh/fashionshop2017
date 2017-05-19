@@ -16,11 +16,11 @@
 </style>
 
 
-<div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+<div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content login-modal">
             <div class="modal-header login-modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" style="color: black" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title text-center" id="loginModalLabel"><i class="fa fa-user" style="font: 20px;"></i> USER AUTHENTICATION</h4>
             </div>
             <div class="modal-body">
@@ -77,6 +77,7 @@
                         <div role="tabpanel" class="tab-pane" id="profile">
                             &nbsp;&nbsp;
                             <span id="registration_fail" class="response_error" style="display: none;">Registration failed, please try again.</span>
+                            <span id="fs-error-show-register"></span>
                             <div class="clearfix" ></div>
                             <form name="fs-form-create-user" class="form-login" method="post" action="user/register.html" id="fs-form-create-user" enctype="multipart/form-data">    
                                 <ul class="form-list row">

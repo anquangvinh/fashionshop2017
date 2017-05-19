@@ -36,7 +36,8 @@
         <link rel="stylesheet" href="assets/css/style.css">
         <link rel="stylesheet" href="assets/js/jquery-ui-1.12.1/jquery-ui.min.css"/>
         <link rel="stylesheet" href="assets/css/fashion_shop_custom_CSS.css">
-
+        <link href="assets/css/fontawesome-stars.css" rel="stylesheet" type="text/css"/>
+        <link href="assets/css/fontawesome-stars-o.css" rel="stylesheet" type="text/css"/>
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -44,11 +45,8 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
                 <![endif]-->
 
-        <link href="assets/css/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
-        
         <!--Thông báo css cập nhật thành công-->
         <link href="assets/css/sweetalert.css" rel="stylesheet" type="text/css"/>
-        <script src="assets/js/sweetalert.min.js"></script>
     </head>
     <body>
 
@@ -68,9 +66,11 @@
         </div>
 
         <div id="backtotop"><i class="fa fa-chevron-up"></i></div>
-        
+
         <!-- Javascript -->
         <script src="assets/js/jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+        <script src="assets/js/jquery.barrating.min.js" type="text/javascript"></script>
+        <script src="assets/js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>        
         <script src="assets/plugin/owl-carousel/owl.carousel.min.js"></script>
         <script src="assets/plugin/prettyphoto/js/jquery.prettyPhoto.js"></script>
@@ -80,10 +80,12 @@
         <script src="assets/js/vendors/rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
         <script src="assets/js/vendors/rs-plugin/js/jquery.themepunch.tools.min.js"></script>
         <script src="assets/js/jquery.sticky.js"></script>
-        <script src="assets/js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
         <script src="assets/js/royalslider/jquery.royalslider.min.js"></script>
         <script src="assets/js/vendors/select/jquery.selectBoxIt.min.js"></script>
+        <script src="assets/js/sweetalert.min.js"></script>
         <script src="assets/js/main.js"></script>
+        <script src="assets/js/bootstrap-notify.js" type="text/javascript"></script>
+
         <script src="assets/js/fashion_shop_custom_JS.js" type="text/javascript"></script>
     </body>
 </html>

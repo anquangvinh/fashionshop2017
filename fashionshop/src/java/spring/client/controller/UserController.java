@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -34,8 +35,10 @@ import spring.ejb.RolesStateLessBeanLocal;
 import spring.ejb.UserAddressesStateLessBeanLocal;
 import spring.ejb.UsersStateLessBeanLocal;
 import spring.entity.Categories;
+import spring.entity.Products;
 import spring.entity.UserAddresses;
 import spring.entity.Users;
+import spring.entity.WishList;
 import spring.functions.SharedFunctions;
 
 @Controller
@@ -53,90 +56,15 @@ public class UserController {
     ServletContext app;
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
-    public String login(ModelMap model
-    //            , HttpSession session, HttpServletRequest request
-    ) {
-//        Users user = checkCookie(request);
-//        if (user == null) {
-//            return "client/pages/index";
-//        } else {
-//            int error = usersStateLessBean.checkLoginUser(user.getEmail(), sharedFunc.encodePassword(user.getPassword()));
-//            if (error == 1) {
-//                session.setAttribute("emailUser", user.getEmail());
-//            } else if (error == 2) {
-//                return "client/pages/index";
-//
-//            } else {
-//                return "client/pages/index";
-//
-//            }
-//        }
-        Users users = new Users();
+    public String login(ModelMap model) {
+//        Users users = new Users();
         //2 dòng này thêm để render ra menu chính
         List<Categories> cateList = productStateLessBean.categoryList();
         model.addAttribute("cateList", cateList);
-        model.addAttribute("users", users);
-//        return "client/pages/login";
-//        return "client/blocks/loginModal";
-
+//        model.addAttribute("users", users);
         return "client/pages/index";
     }
 
-    @ResponseBody
-    @RequestMapping(value = "login", method = RequestMethod.POST)
-    public String login(ModelMap model,
-            @RequestParam("email") String email,
-            @RequestParam("password") String password,
-            @RequestParam(value = "checkremember", required = false) Short checkremember,
-            HttpSession session, RedirectAttributes redirectAttributes,
-            HttpServletResponse response
-    //            HttpServletRequest request, 
-    ) {
-        String err = "";
-        int error = usersStateLessBean.checkLoginUser(email, sharedFunc.encodePassword(password));
-        if (error == 1) {
-            session.setAttribute("emailUser", email);
-            err = (String) session.getAttribute("emailUser");
-            Users userfindUserID = usersStateLessBean.findUserByEmail(email);
-            session.setAttribute("findUsersID", userfindUserID.getUserID());
-            session.setAttribute("USfirstname", userfindUserID.getFirstName() + " " + userfindUserID.getLastName());
-
-            if (checkremember != null && checkremember == 1) {
-                Cookie ckEmail = new Cookie("emailU", email);
-                ckEmail.setMaxAge(3600);
-                response.addCookie(ckEmail);
-                Cookie ckPassword = new Cookie("passwordU", sharedFunc.encodePassword(password));
-                ckPassword.setMaxAge(3600);
-                response.addCookie(ckPassword);
-            }
-            return err;
-        } else if (error == 2) {
-            return "2";
-        } else if (error == 3) {
-            return "4";
-        } else {
-            return "3";
-        }
-    }
-
-//    public Users checkCookie(HttpServletRequest request) {
-//        Cookie[] cookies = request.getCookies();
-//        Users users = null;
-//        String email = "", password = "";
-//        for (Cookie ck : cookies) {
-//            if (ck.getName().equalsIgnoreCase("email")) {
-//                email = ck.getValue();
-//            }
-//            if (ck.getName().equalsIgnoreCase("password")) {
-//                password = ck.getValue();
-//            }
-//        }
-//        if (!email.isEmpty() && !password.isEmpty()) {
-//            users = new Users();
-//        }
-//
-//        return users;
-//    }
     @ResponseBody
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public String createUser(
@@ -164,18 +92,21 @@ public class UserController {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        if (image.isEmpty()) {
-            newUser.setAvatar("default_user.jpg");
-        } else {
-            try {
-                newUser.setAvatar(simpleDateFormat.format(new Date()) + sharedFunc.changeText(image.getOriginalFilename()));
-//                newUser.setAvatar(image.getOriginalFilename());
-                String path = app.getRealPath("/assets/images/avatar/") + "/" + newUser.getAvatar();
-                image.transferTo(new File(path));
+        if (image != null) {
+            if (image.isEmpty()) {
+                newUser.setAvatar("default_user.jpg");
+            } else {
+                try {
+                    newUser.setAvatar(simpleDateFormat.format(new Date()) + sharedFunc.changeText(image.getOriginalFilename()));
+                    String path = app.getRealPath("/assets/images/avatar/") + "/" + newUser.getAvatar();
+                    image.transferTo(new File(path));
 
-            } catch (IOException | IllegalStateException ex) {
-                Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException | IllegalStateException ex) {
+                    Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
+        } else {
+            newUser.setAvatar("default_user.jpg");
         }
         if (phoneNumber == null) {
             phoneNumber = "";
@@ -186,12 +117,14 @@ public class UserController {
         }
 
         int error = usersStateLessBean.addUsers(newUser, phoneNumber, address);
+        String err = "";
         if (error == 1) {
             session.setAttribute("emailUser", newUser.getEmail());
+            err = (String) session.getAttribute("emailUser");
             Users userfindUserID = usersStateLessBean.findUserByEmail(newUser.getEmail());
             session.setAttribute("findUsersID", userfindUserID.getUserID());
             session.setAttribute("USfirstname", userfindUserID.getFirstName() + " " + userfindUserID.getLastName());
-            return "1";
+            return err;
         } else if (error == 2) {
             return "2";
         } else {
@@ -254,7 +187,7 @@ public class UserController {
             break;
         }
         userAddressesStateLessBean.addAddressUser(userAddress, userID);
-        redirectAttributes.addFlashAttribute("error", "OK");
+        redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-success\">Create Address Successfully!</div>");
         return "redirect:/user/address-list/" + userID + ".html";
     }
 
@@ -278,7 +211,7 @@ public class UserController {
 
         UserAddresses userAddresses = userAddressesStateLessBean.findID(userID);
         UserAddresses userAddresses1 = userAddressesStateLessBean.findAddressID(addressID);
-        
+
         model.addAttribute("userAddresses", userAddresses1);
         return "client/pages/address-book";
 
@@ -294,19 +227,22 @@ public class UserController {
         if (error == 2) {
             redirectAttributes.addFlashAttribute("error", "Trùng");
         } else if (error == 1) {
-            redirectAttributes.addFlashAttribute("error", "ok");
+            redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-success\">Update Address Successfully!</div>");
         } else if (error == 0) {
             redirectAttributes.addFlashAttribute("error", "lỗi");
         }
         return "redirect:/user/address-book/" + userID + "-" + addressID + ".html";
     }
 
-    @RequestMapping(value = "deleteAddress")
-    public String deleteaddress(@RequestParam("addressID") int addressID, ModelMap model) {
+    @ResponseBody
+    @RequestMapping(value = "deleteAddress/{addressID}", method = RequestMethod.POST)
+    public String deleteaddress(@PathVariable("addressID") int addressID, ModelMap model) {
         UserAddresses usa = userAddressesStateLessBean.findAddressID(addressID);
-        userAddressesStateLessBean.deleteAddress(usa.getAddressID());
-        return "";
-
+//        Integer userID = userAddressesStateLessBean.findAddressID(addressID).getUser().getUserID();
+        if (usa != null) {
+            userAddressesStateLessBean.deleteAddress(addressID);
+        }
+        return "1";
     }
 
     @RequestMapping(value = "account-information/{userID}", method = RequestMethod.GET)
@@ -380,28 +316,55 @@ public class UserController {
         return "client/pages/my-account";
     }
 
-    @RequestMapping(value = "logout")
-    public String logOut(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
-        //Remove Session
-        session.removeAttribute("emailUser");
-        session.removeAttribute("findUsersID");
-        session.removeAttribute("USfirstname");
-
-        //Remove cookie
-        for (Cookie ck : request.getCookies()) {
-            if (ck.getName().equalsIgnoreCase("emailU")) {
-                ck.setMaxAge(0);
-                response.addCookie(ck);
-            }
-            if (ck.getName().equalsIgnoreCase("passwordU")) {
-                ck.setMaxAge(0);
-                response.addCookie(ck);
-            }
-        }
-
-        return "redirect:/index.html";
+    @RequestMapping(value = "wishlist/{userID}")
+    public String getWishList(ModelMap model, @PathVariable("userID") int userID) {
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
+        List<WishList> getWishList = usersStateLessBean.getAllWishList(userID);
+        model.addAttribute("wishList", getWishList);
+        return "client/pages/wishlist";
     }
 
+    @ResponseBody
+    @RequestMapping(value = "ajax/addWishList", method = RequestMethod.POST)
+    public String addWL(@RequestParam("userID") int userID, @RequestParam("productID") int productID) {
+        WishList wishList = new WishList();
+        Users findUserID = usersStateLessBean.getUserByID(userID);
+        Products findProductID = productStateLessBean.findProductByID(productID);
+        wishList.setUser(findUserID);
+        wishList.setProduct(findProductID);
+        try {
+            wishList.setCreateDate(new Date());
+        } catch (Exception ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        int error = usersStateLessBean.addWishlist(wishList, userID, productID);
+        if (error == 1) {
+            return "1"; // thanh cong
+        } 
+        else {
+            return "0"; // loi
+        }
+    }
+    
+    @ResponseBody
+    @RequestMapping(value = "ajax/deleteWishList/{wishID}", method = RequestMethod.POST)
+    public String deleteWL(@PathVariable("wishID") int wishID, ModelMap model){
+        WishList findwishID = usersStateLessBean.findWishID(wishID);
+        if(findwishID != null){
+            usersStateLessBean.deleteWishLish(wishID);
+        }
+        return "1";
+    }
+    
+    @ResponseBody
+    @RequestMapping(value = "ajax/deleteWishListt", method = RequestMethod.POST)
+    public String deleteWLL(@RequestParam("productID") int productID,@RequestParam("userID") int userID, ModelMap model){
+
+            usersStateLessBean.deleteWL(productID, userID);
+        return "10";
+    }
+    
     private UsersStateLessBeanLocal lookupUsersStateLessBeanLocal() {
         try {
             Context c = new InitialContext();

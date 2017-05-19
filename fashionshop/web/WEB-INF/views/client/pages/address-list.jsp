@@ -39,7 +39,7 @@
                                         <c:forEach var="uad" items="${ualist}" varStatus="no">
                                             <tr >
                                                 <td align="center" style="border: 4px #B8E834 #fff;
-                                                    width: auto; padding: 10px;background: #f8f8f8">${no.index + 1}</td>
+                                                    width: auto; padding: 10px;background: #f8f8f8" >${no.index + 1}</td>
                                                 <td align="center" style="border: 4px #B8E834 #fff;
                                                     width: auto; padding: 10px;background: #f8f8f8" >${uad.address}</td>
                                                 <td align="center" style="border: 4px #B8E834 #fff;
@@ -47,7 +47,7 @@
                                                 <td align="center" style="border: 4px #B8E834 #fff;
                                                     width: auto; padding: 10px;background: #f8f8f8">
                                                     <a class="btn btn-warning btn-sm" href="user/address-book/${findUsersID}-${uad.addressID}.html"><i class="fa fa-edit"></i> Update</a>
-                                                    <a class="btn btn-danger btn-sm" fs-addressID="${uad.addressID}" id="fs-delete-button-AD"><i class="fa fa-remove"></i> Delete</a>
+                                                    <a class="btn btn-danger btn-sm fs-delete-button-AD" fs-addressID="${uad.addressID}"><i class="fa fa-remove"></i> Delete</a>
                                                 </td>
                                             </tr>
                                         </c:forEach>
@@ -56,27 +56,29 @@
                             </div>
                         </div>   
                         <div class="panel panel-warning fs-panel-add">
-                            <div class="panel-heading" style="padding: 10px;">
+                            <div class="panel-heading " id="fs-table-add-address" style="padding: 10px;">
                                 <h3 class="panel-title text-center">Add New Address</h3>
                                 <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
                             </div>
                             <div class="panel-body">
-                                <form:form id="shipping-zip-form" action="user/address-add/${findUsersID}.html" method="post" modelAttribute="userAddress">                                       
+                                <form:form id="shipping-zip-form" cssClass="fs-form-add-address" action="user/address-add/${sessionScope.findUsersID}.html" method="post" modelAttribute="userAddress">                                       
                                     ${error}
                                     <ul class="form-list row">
                                         <li class="col-md-6 col-sm-6">
                                             <label >Address <em>*</em></label>
-                                            <form:input path="address" id="txtaddress"  cssClass="input-text"/>
+                                            <form:input path="address" id="txtaddress"  cssClass="input-text fs-address-add"/>
+                                            <p class="help-block" style="color: red; text-align: center; margin-top: -10px;" id="fs-address-add-user-error"></p>
                                             <span></span>
                                         </li>
                                         <li class="col-md-6 col-sm-6">
                                             <label ><i class="fa fa-phone"></i> Phone Number <em>*</em></label>
-                                            <form:input path="phoneNumber" id="txtphone" cssClass="input-text"/>
+                                            <form:input path="phoneNumber" id="txtphone" cssClass="input-text fs-phone-add"/>
+                                            <p class="help-block" style="color: red; text-align: center; margin-top: -10px;" id="fs-phone-add-user-error"></p>
                                         </li>
                                     </ul>
                                     <div class="buttons-set">
-                                        <button class="btn-black" type="submit"><span><span>Create</span></span></button>
-                                        <button class="btn-black" type="reset"><span><span>Cancel</span></span></button>
+                                        <button class="btn-black fs-button-add-address" type="submit"><span><span>Create</span></span></button>
+                                        <button class="btn-black fs-button-reset-address" type="reset"><span><span>Cancel</span></span></button>
                                     </div>
                                 </form:form>
                             </div>

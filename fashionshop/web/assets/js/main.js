@@ -326,7 +326,7 @@ $(document).ready(function () {
     });
 
     // CUSTOMS SELECT
-    $("select").selectBoxIt();
+//    $("select").selectBoxIt();
 
     // STICKY HEADER
     $("header").sticky({topSpacing: 0});

@@ -51,7 +51,7 @@ public class User_Controller {
     }
 
     @ResponseBody
-    @RequestMapping(value = "checkRoleName", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "checkRoleName", method = RequestMethod.POST)
     public String roleCheck(ModelMap model){
         List<Roles> roleNameList = rolesStateLessBean.findRName();
         ObjectMapper om  = new ObjectMapper();

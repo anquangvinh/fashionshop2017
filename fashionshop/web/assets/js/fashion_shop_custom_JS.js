@@ -17,10 +17,11 @@ $(document).ready(function () {
         showAnim: "drop",
         changeMonth: true,
         changeYear: true,
+        defaultDate: '01/01/1960',
         yearRange: "1960:1999"
-        
+
     });
-    
+
     /* --------------- PRODUCT INDEX -------------------- */
     /* LOAD IMG TO RECENT VIEW FROM LOCALSTORAGE */
     // Check browser support
@@ -230,6 +231,72 @@ $(document).ready(function () {
                 $(".fs-product-modal-link-to-detail").attr("href", productID + "-" + colorID + "-" + response.productNameNA + ".html");
                 //Call Modal
                 productModal.modal("show");
+
+                // ADD WISHLIST MODAL
+
+                $(".fs-wl-add-detail").click(function () {
+                    var userID = $(this).attr("fs-userID");
+                    var input = $("input[name='emailUser']");
+                    if (input.val() != "") {
+                        //Có session
+//            $(this).addClass("fs-heart-color");
+                        if (!$(this).hasClass("fs-heart-color")) {
+                            $(this).addClass("fs-heart-color");
+                            $.ajax({
+                                url: "user/ajax/addWishList.html",
+                                method: "POST",
+                                data: {userID: userID, productID: productID},
+                                success: function (response) {
+                                    if (response == "1") {
+                                        swal({
+                                            title: "<h1 style='color: #31b131;'>Success</h1>",
+                                            text: "Add Wish List success.",
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                            html: true
+                                        });
+                                    } else if (response == "0") {
+                                        swal({
+                                            title: "<h1 style='color: #F65D20;' >Error!",
+                                            text: "Error, Fail add wishlist",
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                            html: true
+                                        });
+                                    }
+                                }
+                            });
+                        } else {
+                            $(this).removeClass("fs-heart-color");
+                            $.ajax({
+                                url: "user/ajax/deleteWishListt.html",
+                                method: "POST",
+                                data: {userID: userID, productID: productID},
+                                success: function (response) {
+                                    if (response == "10") {
+                                        swal({
+                                            title: "<h1 style='color: #ff0000;' >Delete</h1>",
+                                            text: "Delete Wish List success.",
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                            html: true
+                                        });
+                                    }
+                                }
+                            });
+                        }
+
+                    } else {
+                        //Khong có session
+                        $("#fs-modal-mess").modal("show");
+                        $(".fs-btn-login-wl").click(function () {
+                            $("#fs-modal-mess").modal("hide");
+                            productModal.modal("hide");
+                            $("#loginModal").modal("show");
+                        });
+                    }
+
+                });
             }
         });
     });
@@ -462,11 +529,130 @@ $(document).ready(function () {
         }
     });
 
+    $('#fs-rating-star').barrating({
+        theme: 'fontawesome-stars-o',
+        showSelectedRating: false,
+        //readonly: true,
+        onSelect: function (value, text, event) {
+            if (typeof (event) !== 'undefined') {
+                // rating was selected by a user
+                $("#fs-div-vote-value").html("<strong style=\"font-size: 20px; color: #d6644a\">" + value + " </strong>Star");
+                $("#fs-rating-star").val(value);
+            } else {
+                // rating was selected programmatically
+                // by calling `set` method
+            }
+        }
+    });
+
+    var currentRating = $('#fs-rating-star-result').data('current-rating');
+    $('#fs-rating-star-result').barrating({
+        theme: 'fontawesome-stars-o',
+        initialRating: currentRating,
+        showSelectedRating: false,
+        readonly: true,
+    });
+
+    for (var i = 0; i < parseInt($("#fs-number-of-rating").attr("fs-nort")); i++) {
+        var rating = $('#fs-rating-star-'+i).data('current-rating');
+        $('#fs-rating-star-'+i).barrating({
+            theme: 'fontawesome-stars-o',
+            initialRating: rating,
+            showSelectedRating: false,
+            readonly: true,
+        });
+    }
+
+    $("#fs-product-detail-page").on("click", "#fs-btn-rating-review", function () {
+        var ratingVal = $("#fs-rating-star").val();
+        var review = $("#fs-review-product").val();
+        var userID = $(this).attr("fs-user-id");
+        var productID = $(this).attr("fs-product-id");
+        $.ajax({
+            url: "ajax/submitReviewRating.html",
+            method: "POST",
+            data: {productID: productID, userID: userID, ratingVal: ratingVal, review: review},
+            beforeSend: function (xhr) {
+                $("#fs-ajax-loading-2").css("display", "block");
+            },
+            success: function (response) {
+                if (response == "ok") {
+                    setTimeout(function () {
+                        $("#fs-ajax-loading-2").css("display", "none");
+                        $("#fs-form-rating-review").empty();
+                        $("#fs-form-rating-review").html("<h3>Thank you for your review! </h3>");
+                        $.notify({
+                            icon: 'glyphicon glyphicon-ok-sign',
+                            title: '<strong>Thank you!</strong>',
+                            message: "You voted " + ratingVal + " Star for this Product!."
+                        }, {
+                            type: 'success',
+                            placement: {
+                                from: 'top',
+                                align: 'right'
+                            },
+                            delay: 2500,
+                            timer: 200,
+                            mouse_over: 'pause',
+                            animate: {
+                                enter: 'animated fadeInRight',
+                                exit: 'animated fadeOutRight'
+                            },
+                            template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                    '<span data-notify="icon"></span> ' +
+                                    '<span data-notify="title">{1}</span> ' +
+                                    '<span data-notify="message">{2}</span>' +
+                                    '<div class="progress" data-notify="progressbar">' +
+                                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                    '</div>' +
+                                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                    '</div>'
+                        });
+                    }, 600);
+                } else {
+                    $.notify({
+                        icon: 'glyphicon glyphicon-warning-sign',
+                        title: '<strong>Error!</strong>',
+                        message: 'Something was wrong! Please try again later!.'
+                    }, {
+                        type: 'danger',
+                        placement: {
+                            from: 'top',
+                            align: 'right'
+                        },
+                        delay: 3000,
+                        timer: 200,
+                        mouse_over: 'pause',
+                        animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                        },
+                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                '<span data-notify="icon"></span> ' +
+                                '<span data-notify="title">{1}</span> ' +
+                                '<span data-notify="message">{2}</span>' +
+                                '<div class="progress" data-notify="progressbar">' +
+                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                '</div>' +
+                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                '</div>'
+                    });
+                }
+            }
+        });
+    });
+
+    $("#fs-product-detail-page").on("click", "#fs-btn-login-to-review", function () {
+        $("#loginModal").modal("show");
+    });
     /* PRODUCT CATEGORY-GRID */
     /* AJAX PAGINATION */
     var colorFilterArr = [];
     var sizeFilterArr = [];
-
+    $("#fs-sort-product-by").selectBoxIt();
+    $("#fs-number-of-item-on-page").selectBoxIt();
     /* AJAX ON CLICK PAGE */
     $("#fs-shop-content").on("click", ".fs-page-number", function () {
         if (!$(this).hasClass("fs-page-number-active")) {
@@ -2542,7 +2728,6 @@ $(document).ready(function () {
     });
     //CUỘN LẠI, HIỆN RA TABLE ADDRESS-LIST
 
-//    $(".clickable").click(function(){
     $(".fs-panel").on("click", ".panel-heading span.clickable", function () {
         var abc = $(this);
         if (!abc.hasClass("panel-collapsed")) {
@@ -2567,75 +2752,55 @@ $(document).ready(function () {
             abc.find("i").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
         }
     });
-    $(".panel-heading span.clickable").click();
+    $("div#fs-table-add-address span.clickable").click();
+
     // CẢNH CÁO KHI BẤM XÓA
-    
-    $("#fs-td-AD").click(function(){
+
+    $(".fs-delete-button-AD").click(function () {
         var addressID = $(this).attr("fs-addressID");
-        alert(addressID);
-    });
-    
-    $("#fs-delete-button-AD").click(function () {
-         var addressID = $("#fs-delete-button-AD").attr("fs-addressID");
-           
-            
-
-//        swal({
-//            title: "Are you sure?",
-//            text: "You will sure delete record this",
-//            type: "warning",
-//            showCancelButton: true,
-//            confirmButtonColor: "#DD6B55",
-//            confirmButtonText: "Yes, delete!",
-//            cancelButtonText: "No, cancel!",
-//            closeOnConfirm: false
-////            closeOnCancel: false
-//        },
-//        function (isConfirm) {
-//            if (isConfirm)
-////                swal("Done!", "It was succesfully deleted!", "success");
-//                $.ajax({
-//                url: "user/deleteAddress.html",
-//                method: "POST",
-//                data: {addressID: addressID},
-//                success: function (response) {
-////                    if (response == "1") {
-//                        swal("Deleted!", "Your imaginary file has been deleted.", "success");
-////                    }
-//                }
-////                return;
-//           
-//
-////            $.ajax({
-////                url: "user/deleteAddress" + addressID + ".html",
-////                method: "POST",
-////                data: {addressID: addressID},
-////                success: function (response) {
-////                    if (response == "1") {
-////                        swal("Deleted!", "Your imaginary file has been deleted.", "success");
-////                    }
-////                }
-////                                        , error: function (xhr, ajaxOptions, thrownError) {
-////                                swal("Error deleting!", "Please try again", "error");
-////                                }
-////                                });
-//
-////                        else {
-////                swal("Cancelled", "Your imaginary file is safe :)", "error");
-//
-//            });
-//
-//
-//    });
+        swal({
+            title: "Are you sure?",
+            text: "You will sure delete record this",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, delete it!",
+            closeOnConfirm: false
+        }, function (isConfirm) {
+            if (!isConfirm)
+                return;
+            $.ajax({
+                url: "user/deleteAddress/" + addressID + ".html",
+                type: "POST",
+                data: {
+                    addressID: addressID
+                },
+                success: function (response) {
+                    if (response == "1")
+                        swal("Done!", "It was succesfully deleted!", "success");
+                    window.location = window.location.href;
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    swal("Error deleting!", "Please try again", "error");
+                }
+            });
         });
-        
-        
+    });
 
-            
+
+    // CHINH TRANG THAI CHO MODAL(BAM RA NGOAI KHONG TAT MODAL)
+
+    $("#loginModal").on("hidden.bs.modal", function (e) {
+        $(this).find("input").val("").end().find("input[type=checkbox], input[type=radio]").prop("checked", "").end();
+        $(this).find("p").html("");
+        $(this).find("span#glypcn-fs-login-user").remove("span");
+        $(this).find("span#glypcn-fs-create-user").remove("span");
+    });
+
     // BẮT LỖI FORM LOGIN USER MODAL
 
     function checkEmail(email) {
-        email = $("#fs-email-login-user").val();
+        email = $("#fs-email-login-user").val().trim();
         var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
         if (email == "") {
             $("#fs-email-login-user-error").text("Email cannot be empty!");
@@ -2670,8 +2835,9 @@ $(document).ready(function () {
 
     $(".fs-button-login-user").click(function (e) {
         e.preventDefault();
-        var email = $("#fs-email-login-user").val();
-        var pass = $("#fs-pass-login-user").val();
+        var email = $("#fs-email-login-user").val().trim();
+        var pass = $("#fs-pass-login-user").val().trim();
+        var checkremember = $("#fs-check-remember").val();
 
         if (!checkEmail(email)) {
             return false;
@@ -2702,18 +2868,18 @@ $(document).ready(function () {
             $("#glypcn-fs-login-user").remove();
             div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
             $.ajax({
-                url: "user/login.html",
+                url: "login.html",
                 method: "POST",
-                data: {email: email, password: pass},
+                data: {email: email, password: pass, checkremember: checkremember},
                 //dataType: 'html',
                 success: function (response) {
                     if (response == "2") {
                         EmailWrong(email);
                     } else if (response == "3") {
                         PassWrong(pass);
-                    } else if(response == "4"){
+                    } else if (response == "4") {
                         $("#fs-error-show").text("Fail account wrong!");
-                    } 
+                    }
                     else {
                         var currentUrl = window.location.href;
                         window.location = currentUrl;
@@ -2725,7 +2891,7 @@ $(document).ready(function () {
         }
     });
     function EmailWrong(email) {
-        email = $("#fs-email-login-user").val();
+        email = $("#fs-email-login-user").val().trim();
         if ($("#loginModal").modal('show')) {
             $("#fs-error-show").text("Email is wrong!");
 //            $("#fs-email-login-user").focus();
@@ -2739,7 +2905,7 @@ $(document).ready(function () {
     }
 
     function PassWrong(password) {
-        password = $("#fs-pass-login-user").val();
+        password = $("#fs-pass-login-user").val().trim();
         if ($("#loginModal").modal('show')) {
             $("#fs-error-show").text("Password is wrong!");
 //            $("#fs-pass-login-user").focus();
@@ -2755,14 +2921,14 @@ $(document).ready(function () {
     // VALIDATION KEYUP 
 
     $("#fs-email-login-user").keyup(function () {
-        var email = $("#fs-email-login-user").val();
+        var email = $("#fs-email-login-user").val().trim();
 //        $("#fs-error-show").text("");
         if (!checkEmail(email)) {
             return false;
         }
     });
     $("#fs-pass-login-user").keyup(function () {
-        var pass = $("#fs-pass-login-user").val();
+        var pass = $("#fs-pass-login-user").val().trim();
 //        $("#fs-error-show").text("");
         if (pass == "") {
             $("#fs-pass-login-user-error").text("Password cannot be empty!");
@@ -2783,8 +2949,6 @@ $(document).ready(function () {
             div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
         }
-
-
         else {
             $("#fs-pass-login-user-error").text("");
             var div = $("#fs-pass-login-user").closest("div.fs-pass-user");
@@ -2799,7 +2963,7 @@ $(document).ready(function () {
     // BẮT VALIDATION TRÊN FORM CREATE
 
     function checkemail(email) {
-        email = $("#fs-create-email").val();
+        email = $("#fs-create-email").val().trim();
         var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
         if (email == "") {
             $("#fs-email-create-user-error").text("Email cannot be empty!");
@@ -2831,7 +2995,7 @@ $(document).ready(function () {
     }
 
     function checkPass(password) {
-        password = $("#password").val();
+        password = $("#password").val().trim();
         if (password == "") {
             $("#fs-pass-create-user-error").text("Password cannot be empty!");
             $("#password").focus();
@@ -2863,8 +3027,8 @@ $(document).ready(function () {
     }
 
     function checkRePass(repassword, password) {
-        repassword = $("#Repassword").val();
-        password = $("#password").val();
+        repassword = $("#Repassword").val().trim();
+        password = $("#password").val().trim();
         if (repassword == "") {
             $("#fs-repass-create-user-error").text("Repassword cannot be empty!");
             $("#Repassword").focus();
@@ -2905,7 +3069,7 @@ $(document).ready(function () {
     }
 
     function checkFirstName(firstname) {
-        firstname = $("#fs-create-firstname").val();
+        firstname = $("#fs-create-firstname").val().trim();
         if (firstname == "") {
             $("#fs-fname-create-user-error").text("First Name cannot be empty!");
             $("#fs-create-firstname").focus();
@@ -2937,7 +3101,7 @@ $(document).ready(function () {
     }
 
     function checkLastName(lastname) {
-        lastname = $("#fs-create-lastname").val();
+        lastname = $("#fs-create-lastname").val().trim();
         if (lastname == "") {
             $("#fs-lname-create-user-error").text("Last Name cannot be empty!");
             $("#fs-create-lastname").focus();
@@ -2969,7 +3133,7 @@ $(document).ready(function () {
     }
 
     function checkBirthDay(birthday) {
-        birthday = $("#txtBirthday").val();
+        birthday = $("#txtBirthday").val().trim();
         if (birthday == "") {
             $("#fs-bday-create-user-error").text("BirthDay cannot be empty!");
             $("#txtBirthday").focus();
@@ -2994,7 +3158,7 @@ $(document).ready(function () {
     function checkPhone(phone) {
 //        var regex = new RegExp(/^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/);
         var regex = new RegExp(/^(01[2689]|09)[0-9]{8}$/);
-        phone = $("#fs-create-phone").val();
+        phone = $("#fs-create-phone").val().trim();
         if (phone == "") {
             $("#fs-phone-create-user-error").text("Phone cannot be empty!");
             $("#fs-create-phone").focus();
@@ -3005,7 +3169,7 @@ $(document).ready(function () {
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
         } else if (!regex.test(phone)) {
-            $("#fs-phone-create-user-error").text("Please enter valid phone!");
+            $("#fs-phone-create-user-error").text("Please enter valid phone - Phone begin 01 or 09 and 10 to 11 number!");
             $("#fs-create-phone").focus();
             var div = $("#fs-create-phone").closest("div.fs-phone-create");
             div.removeClass("has-success");
@@ -3027,7 +3191,7 @@ $(document).ready(function () {
     }
 
     function checkAddress(address) {
-        address = $("#fs-create-address").val();
+        address = $("#fs-create-address").val().trim();
         if (address == "") {
             $("#fs-address-create-user-error").text("Address cannot be empty!");
             $("#fs-create-address").focus();
@@ -3061,15 +3225,15 @@ $(document).ready(function () {
     $("body").on("click", "#fs-button-create-user", function (e) {
         e.preventDefault();
         console.log("123");
-        var email = $("#fs-create-email").val();
-        var password = $("#password").val();
-        var repassword = $("#Repassword").val();
-        var firstname = $("#fs-create-firstname").val();
-        var lastname = $("#fs-create-lastname").val();
-        var birthday = $("#txtBirthday").val();
+        var email = $("#fs-create-email").val().trim();
+        var password = $("#password").val().trim();
+        var repassword = $("#Repassword").val().trim();
+        var firstname = $("#fs-create-firstname").val().trim();
+        var lastname = $("#fs-create-lastname").val().trim();
+        var birthday = $("#txtBirthday").val().trim();
         var gender = $('input[name="gender"]:checked').val();
-        var phone = $("#fs-create-phone").val();
-        var address = $("#fs-create-address").val();
+        var phone = $("#fs-create-phone").val().trim();
+        var address = $("#fs-create-address").val().trim();
         var formData = new FormData();
         var mfile = $("#fs-upImage")[0].files[0];
         formData.append("email", email);
@@ -3081,7 +3245,7 @@ $(document).ready(function () {
         formData.append("upImage", mfile);
         formData.append("phoneNumber", phone);
         formData.append("address", address);
-        
+
         if (!checkemail(email)) {
             return false;
         } else if (!checkPass(password)) {
@@ -3094,102 +3258,80 @@ $(document).ready(function () {
             return false;
         } else if (!checkBirthDay(birthday)) {
             return false;
-        } 
-        else {      
-        $.ajax({
-            url: "user/register.html",
-            method: "POST",
-            //data: $("#fs-form-create-user").serialize(),
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            //dataType: 'html',
-            success: function (response) {
-                console.log(response);
-                if (response == "1") {
-                    $("#loginModal").modal('hide');
-                    window.location = "index.html";
-                } else if (response == "2") {
-                    $("#loginModal").modal('hide');
-                    setTimeout(function ()
-                    {
-                        emailWrong(email);
-                        $("#loginModal").modal('show');
-                    }, 5000);
-                    swal({
-                        title: "Account is Exist!",
-                        text: "",
-                        timer: 2000,
-                        type: "error",
-                        showConfirmButton: false
-                    });
-                } else if (response == "0") {
-                    $("#loginModal").modal('hide');
-                    setTimeout(function ()
-                    {
-                        $("#loginModal").modal('show');
-                    }, 5000);
-                    swal({
-                        title: "FAIL!",
-                        text: "",
-                        timer: 2000,
-                        type: "error",
-                        showConfirmButton: false
-                    });
-                }
+        }
+        else {
+            $.ajax({
+                url: "user/register.html",
+                method: "POST",
+                //data: $("#fs-form-create-user").serialize(),
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                //dataType: 'html',
+                success: function (response) {
+                    console.log(response);
+                    if (response == "2") {
+                        $("#fs-error-show-register").html("<div class=\"col-md-5  alert alert-danger\">FAILED!. Account is exists!</div>");
+                    } else if (response == "0") {
+                        $("#fs-error-show-register").html("<div class=\"col-md-5  alert alert-danger\">FAILED!. Error was happened!!</div>");
+                    } else {
+                        var currentUrl = window.location.href;
+                        window.location = currentUrl;
+                        $("#loginModal").modal('hide');
+                    }
 
-            }
-        });
+                }
+            });
         }
     });
 //        VALIDATION REGISTER KEYUP
 
     $("#fs-create-email").keyup(function () {
-        var email = $("#fs-create-email").val();
+        var email = $("#fs-create-email").val().trim();
         if (!checkemail(email)) {
             return false;
         }
     });
     $("#password").keyup(function () {
-        var password = $("#password").val();
+        var password = $("#password").val().trim();
         if (!checkPass(password)) {
             return false;
         }
     });
     $("#Repassword").keyup(function () {
-        var repassword = $("#Repassword").val();
-        var password = $("#password").val();
+        var repassword = $("#Repassword").val().trim();
+        var password = $("#password").val().trim();
         if (!checkRePass(repassword, password)) {
             return false;
         }
     });
     $("#fs-create-firstname").keyup(function () {
-        var firstname = $("#fs-create-firstname").val();
+        var firstname = $("#fs-create-firstname").val().trim();
         if (!checkFirstName(firstname)) {
             return false;
         }
     });
     $("#fs-create-lastname").keyup(function () {
-        var lastname = $("#fs-create-lastname").val();
+        var lastname = $("#fs-create-lastname").val().trim();
         if (!checkLastName(lastname)) {
             return false;
         }
     });
     $("#txtBirthday").keyup(function () {
-        var birthday = $("#txtBirthday").val();
+        var birthday = $("#txtBirthday").val().trim();
         if (!checkBirthDay(birthday)) {
             return false;
         }
     });
     $("#fs-create-phone").keyup(function () {
-        var phone = $("#fs-create-phone").val();
+        var phone = $("#fs-create-phone").val().trim();
         if (!checkPhone(phone)) {
             return false;
         }
     });
     $("#fs-create-address").keyup(function () {
-        var address = $("#fs-create-address").val();
+        var address = $("#fs-create-address").val().trim();
         if (!checkAddress(address)) {
             return false;
         }
@@ -3203,6 +3345,7 @@ $(document).ready(function () {
             showAnim: "drop",
             changeMonth: true,
             changeYear: true,
+            defaultDate: '01/01/1960',
             yearRange: "1960:1999"
         }
         );
@@ -3212,7 +3355,7 @@ $(document).ready(function () {
 
 
     function emailcheck(email) {
-        email = $("#fs-update-email").val();
+        email = $("#fs-update-email").val().trim();
         var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
         if (email == "") {
             $("#fs-email-update-user-error").text("Email cannot be empty!");
@@ -3244,7 +3387,7 @@ $(document).ready(function () {
     }
 
     function checkfirstName(firstname) {
-        firstname = $("#fs-update-firstname").val();
+        firstname = $("#fs-update-firstname").val().trim();
         if (firstname == "") {
             $("#fs-firstname-update-user-error").text("First Name cannot be empty!");
             $("#fs-update-firstname").focus();
@@ -3276,7 +3419,7 @@ $(document).ready(function () {
     }
 
     function checklastName(lastname) {
-        lastname = $("#fs-update-lastname").val();
+        lastname = $("#fs-update-lastname").val().trim();
         if (lastname == "") {
             $("#fs-lastname-update-user-error").text("Last Name cannot be empty!");
             $("#fs-update-lastname").focus();
@@ -3309,7 +3452,7 @@ $(document).ready(function () {
 
 
     function checkbirthDay(birthday) {
-        birthday = $("#txtbirthday").val();
+        birthday = $("#txtbirthday").val().trim();
         if (birthday == "") {
             $("#fs-birthday-update-user-error").text("BirthDay cannot be empty!");
             $("#txtbirthday").focus();
@@ -3332,10 +3475,10 @@ $(document).ready(function () {
     }
 
     $(".fs-button-update-user").click(function (e) {
-        var email = $("#fs-update-email").val();
-        var firstname = $("#fs-update-firstname").val();
-        var lastname = $("#fs-update-lastname").val();
-        var birthday = $("#txtbirthday").val();
+        var email = $("#fs-update-email").val().trim();
+        var firstname = $("#fs-update-firstname").val().trim();
+        var lastname = $("#fs-update-lastname").val().trim();
+        var birthday = $("#txtbirthday").val().trim();
         e.preventDefault();
         if (!emailcheck(email)) {
             return false;
@@ -3355,72 +3498,486 @@ $(document).ready(function () {
     // VALIDATION KEYUP UPDATE-ACCOUNT
 
     $("#fs-update-email").keyup(function () {
-        var email = $("#fs-update-email").val();
+        var email = $("#fs-update-email").val().trim();
         if (!emailcheck(email)) {
             return false;
         }
     });
     // BẮT EMAIL TRÙNG:
-
-    $("#fs-update-email").keyup(function () {
-        var email = $("#fs-update-email").val();
-        $.ajax({
-            url: "ajax/emailExist.html",
-            method: "POST",
-//            data: {email: email},
-            dataType: "JSON",
-            success: function (response) {
-                for (var i = 0; i < response.length; i++) {
-                    var item = response[i];
-                    if (email == item) {
-                        $("#fs-email-update-user-error").text("Email is Exist!");
-                        $("#fs-update-email").focus();
-                        var div = $("#fs-update-email").closest("div.fs-email-update");
-                        div.removeClass("has-success");
-                        $("#glypcn-fs-update-user").remove();
-                        div.addClass("has-error has-feedback");
-                        div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
-                        return false;
-                    } 
-//                    else {
-//                        $("#fs-email-update-user-error").text("");
+  
+//    $("#fs-update-email").keyup(function () {
+//        var email = $("#fs-update-email").val();
+//        $.ajax({
+//            url: "ajax/emailExist.html",
+//            method: "POST",
+////            data: {email: email},
+//            dataType: "JSON",
+//            success: function (response) {
+//                for (var i = 0; i < response.length; i++) {
+//                    var item = response[i];
+//                    if (email == item) {
+//                        $("#fs-email-update-user-error").text("Email is Exist!");
+//                        $("#fs-update-email").focus();
 //                        var div = $("#fs-update-email").closest("div.fs-email-update");
-//                        div.removeClass("has-error");
-//                        div.addClass("has-success has-feedback");
+//                        div.removeClass("has-success");
 //                        $("#glypcn-fs-update-user").remove();
-//                        div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
-//                        return true;
+//                        div.addClass("has-error has-feedback");
+//                        div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+//                        return false;
 //                    }
-
-                }
-            }
-        });
-    });
+////                    else {
+////                        $("#fs-email-update-user-error").text("");
+////                        var div = $("#fs-update-email").closest("div.fs-email-update");
+////                        div.removeClass("has-error");
+////                        div.addClass("has-success has-feedback");
+////                        $("#glypcn-fs-update-user").remove();
+////                        div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+////                        return true;
+////                    }
+//
+//                }
+//            }
+//        });
+//    });
     $("#fs-update-firstname").keyup(function () {
-        var firstname = $("#fs-update-firstname").val();
+        var firstname = $("#fs-update-firstname").val().trim();
         if (!checkfirstName(firstname)) {
             return false;
         }
     });
     $("#fs-update-lastname").keyup(function () {
-        var lastname = $("#fs-update-lastname").val();
+        var lastname = $("#fs-update-lastname").val().trim();
         if (!checklastName(lastname)) {
             return false;
         }
     });
-    $("#fs-update-lastname").keyup(function () {
-        var lastname = $("#fs-update-lastname").val();
-        if (!checklastName(lastname)) {
+
+    $("#txtbirthday").keyup(function () {
+        var birthday = $("#txtbirthday").val().trim();
+        if (!checkbirthDay(birthday)) {
             return false;
         }
     });
-//    $("#txtbirthday").keyup(function () {
-//        var birthday = $("#txtbirthday").val();
-//        if (!checkbirthDay(birthday)) {
-//            return false;
-//        }
-//    });
-    
+
+    // VALIDATION CHANGE PASS CLICK
+
+    $(".fs-button-change-pass").click(function (e) {
+        e.preventDefault();
+        var oldpass = $(".fs-old-pass").val().trim();
+        var pass = $(".fs-password").val().trim();
+        var repass = $(".fs-repass").val().trim();
+
+        if (oldpass == "") {
+            $("#fs-oldpass-user-error").text("Current Password cannot be empty!");
+        } else if (oldpass.length < 6 || oldpass.length > 100) {
+            $("#fs-oldpass-user-error").text("Current Password has 6 to 100 characters!");
+        } else {
+            $("#fs-oldpass-user-error").text("");
+        }
+
+        if (pass == "") {
+            $("#fs-pass-user-error").text("Password cannot be empty!");
+        } else if (pass.length < 6 || pass.length > 100) {
+            $("#fs-pass-user-error").text("Password has 6 to 100 characters!");
+        } else {
+            $("#fs-pass-user-error").text("");
+        }
+
+        if (repass == "") {
+            $("#fs-repass-user-error").text("Password Confirm cannot be empty!");
+        } else if (repass != pass) {
+            $("#fs-repass-user-error").text("Password Confirm is different with Password");
+        } else if (repass.length < 6 || repass.length > 100) {
+            $("#fs-repass-user-error").text("Password Confirm has 6 to 100 characters!");
+        } else {
+            $("#fs-repass-user-error").text("");
+            $(".fs-form-change-pass").submit();
+        }
+    });
+
+    // VALIDATION CHANGE PASS KEYUP
+
+    $(".fs-old-pass").keyup(function () {
+        var oldpass = $(".fs-old-pass").val().trim();
+
+        if (oldpass == "") {
+            $("#fs-oldpass-user-error").text("Current Password cannot be empty!");
+        } else if (oldpass.length < 6 || oldpass.length > 100) {
+            $("#fs-oldpass-user-error").text("Current Password has 6 to 100 characters!");
+        } else {
+            $("#fs-oldpass-user-error").text("");
+        }
+    });
+
+    $(".fs-password").keyup(function () {
+        var pass = $(".fs-password").val().trim();
+
+        if (pass == "") {
+            $("#fs-pass-user-error").text("Password cannot be empty!");
+        } else if (pass.length < 6 || pass.length > 100) {
+            $("#fs-pass-user-error").text("Password has 6 to 100 characters!");
+        } else {
+            $("#fs-pass-user-error").text("");
+        }
+    });
+
+    $(".fs-repass").keyup(function () {
+        var repass = $(".fs-repass").val().trim();
+        var pass = $(".fs-password").val().trim();
+
+        if (repass == "") {
+            $("#fs-repass-user-error").text("Password Confirm cannot be empty!");
+        } else if (repass != pass) {
+            $("#fs-repass-user-error").text("Password Confirm is different with Password");
+        } else if (repass.length < 6 || repass.length > 100) {
+            $("#fs-repass-user-error").text("Password Confirm has 6 to 100 characters!");
+        } else {
+            $("#fs-repass-user-error").text("");
+        }
+    });
+
+    // VALIDATION CREATE ADDRESS CLICK
+
+    $(".fs-button-add-address").click(function (e) {
+        e.preventDefault();
+        var address = $(".fs-address-add").val().trim();
+        var phone = $(".fs-phone-add").val().trim();
+        var regex = new RegExp(/^(01[2689]|09)[0-9]{8}$/);
+
+        if (address == "") {
+            $("#fs-address-add-user-error").text("Address cannot be empty!");
+        } else if (address.length < 10 || address.length > 255) {
+            $("#fs-address-add-user-error").text("Address has 10 to 255 characters!");
+        } else {
+            $("#fs-address-add-user-error").text("");
+        }
+
+        if (phone == "") {
+            $("#fs-phone-add-user-error").text("Phone Number cannot be empty!");
+        } else if (!regex.test(phone)) {
+            $("#fs-phone-add-user-error").text("Phone begin 01 or 09 and 10 to 11 number");
+        } else {
+            $("#fs-phone-add-user-error").text("");
+            $(".fs-form-add-address").submit();
+        }
+
+    });
+
+    $(".fs-button-reset-address").click(function () {
+        $("#fs-phone-add-user-error").text("");
+        $("#fs-address-add-user-error").text("");
+    });
+
+    // VALIDATION CREATE-ADDRESS KEYUP
+
+    $(".fs-address-add").keyup(function () {
+        var address = $(".fs-address-add").val().trim();
+
+        if (address == "") {
+            $("#fs-address-add-user-error").text("Address cannot be empty!");
+        } else if (address.length < 10 || address.length > 255) {
+            $("#fs-address-add-user-error").text("Address has 10 to 255 characters!");
+        } else {
+            $("#fs-address-add-user-error").text("");
+        }
+    });
+
+    $(".fs-phone-add").keyup(function () {
+        var phone = $(".fs-phone-add").val().trim();
+        var regex = new RegExp(/^(01[2689]|09)[0-9]{8}$/);
+
+        if (phone == "") {
+            $("#fs-phone-add-user-error").text("Phone Number cannot be empty!");
+        } else if (!regex.test(phone)) {
+            $("#fs-phone-add-user-error").text("Phone begin 01 or 09 and 10 to 11 number");
+        } else {
+            $("#fs-phone-add-user-error").text("");
+        }
+    });
+
+
+    // VALIDATION UPDATE-ADDRESS CLICK
+
+    $(".fs-button-update-address").click(function (e) {
+        e.preventDefault();
+        var address = $(".fs-update-address").val().trim();
+        var phone = $(".fs-update-phone").val().trim();
+        var regex = new RegExp(/^(01[2689]|09)[0-9]{8}$/);
+
+        if (address == "") {
+            $("#fs-address-update-user-error").text("Address cannot be empty!");
+        } else if (address.length < 10 || address.length > 255) {
+            $("#fs-address-update-user-error").text("Address has 10 to 255 characters!");
+        } else {
+            $("#fs-address-update-user-error").text("");
+        }
+
+        if (phone == "") {
+            $("#fs-phone-update-user-error").text("Phone Number cannot be empty!");
+        } else if (!regex.test(phone)) {
+            $("#fs-phone-update-user-error").text("Phone begin 01 or 09 and 10 to 11 number");
+        } else {
+            $("#fs-phone-update-user-error").text("");
+//            $(".fs-form-update-address").submit();
+        }
+
+        if ((address.length > 10 && address.length < 255) && regex.test(phone)) {
+            $(".fs-form-update-address").submit();
+        }
+    });
+
+    // VALIDATION UPDATE-ADDRESS KEYUP
+
+    $(".fs-update-address").keyup(function () {
+        var address = $(".fs-update-address").val().trim();
+
+        if (address == "") {
+            $("#fs-address-update-user-error").text("Address cannot be empty!");
+        } else if (address.length < 10 || address.length > 255) {
+            $("#fs-address-update-user-error").text("Address has 10 to 255 characters!");
+        } else {
+            $("#fs-address-update-user-error").text("");
+        }
+    });
+
+    $(".fs-update-phone").keyup(function () {
+        var phone = $(".fs-update-phone").val().trim();
+        var regex = new RegExp(/^(01[2689]|09)[0-9]{8}$/);
+
+        if (phone == "") {
+            $("#fs-phone-update-user-error").text("Phone Number cannot be empty!");
+        } else if (!regex.test(phone)) {
+            $("#fs-phone-update-user-error").text("Phone begin 01 or 09 and 10 to 11 number");
+        } else {
+            $("#fs-phone-update-user-error").text("");
+//            $(".fs-form-update-address").submit();
+        }
+    });
+
+
+    // ADD WISH-LIST: PAGE HOME FEATURED PRODUCTS
+
+    $(".fs-wishlish-add").click(function () {
+        var userID = $(this).attr("fs-userID");
+        var productID = $(this).attr("fs-productID");
+        var input = $("input[name='emailUser']");
+        if (input.val() != "") {
+            //Có session
+//            $(this).addClass("fs-heart-color");
+            if (!$(this).hasClass("fs-heart-color")) {
+                $(this).addClass("fs-heart-color");
+                $.ajax({
+                    url: "user/ajax/addWishList.html",
+                    method: "POST",
+                    data: {userID: userID, productID: productID},
+                    success: function (response) {
+                        if (response == "1") {
+                            swal({
+                                title: "<h1 style='color: #31b131;'>Success</h1>",
+                                text: "Add Wish List success.",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        } else if (response == "0") {
+                            swal({
+                                title: "<h1 style='color: #F65D20;' >Error!",
+                                text: "Error, Fail add wishlist",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        }
+                    }
+                });
+            } else {
+                $(this).removeClass("fs-heart-color");
+                $.ajax({
+                    url: "user/ajax/deleteWishListt.html",
+                    method: "POST",
+                    data: {userID: userID, productID: productID},
+                    success: function (response) {
+                        if (response == "10") {
+                            swal({
+                                title: "<h1 style='color: #ff0000;' >Delete</h1>",
+                                text: "Delete Wish List success.",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        }
+                    }
+                });
+            }
+
+        } else {
+            //Khong có session
+            $("#fs-modal-mess").modal("show");
+            $(".fs-btn-login-wl").click(function () {
+                $("#fs-modal-mess").modal("hide");
+                $("#loginModal").modal("show");
+            });
+        }
+    });
+
+
+    // ADD WISH-LIST: PAGE HOME LATEST PRODUCTS
+
+    $(".fs-wl-add-lsp").click(function () {
+        var userID = $(this).attr("fs-userID");
+        var productID = $(this).attr("fs-productID");
+        var input = $("input[name='emailUser']");
+        if (input.val() != "") {
+            //Có session
+//            $(this).addClass("fs-heart-color");
+            if (!$(this).hasClass("fs-heart-color")) {
+                $(this).addClass("fs-heart-color");
+                $.ajax({
+                    url: "user/ajax/addWishList.html",
+                    method: "POST",
+                    data: {userID: userID, productID: productID},
+                    success: function (response) {
+                        if (response == "1") {
+                            swal({
+                                title: "<h1 style='color: #31b131;'>Success</h1>",
+                                text: "Add Wish List success.",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        } else if (response == "0") {
+                            swal({
+                                title: "<h1 style='color: #F65D20;' >Error!",
+                                text: "Error, Fail add wishlist",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        }
+                    }
+                });
+            } else {
+                $(this).removeClass("fs-heart-color");
+                $.ajax({
+                    url: "user/ajax/deleteWishListt.html",
+                    method: "POST",
+                    data: {userID: userID, productID: productID},
+                    success: function (response) {
+                        if (response == "10") {
+                            swal({
+                                title: "<h1 style='color: #ff0000;' >Delete</h1>",
+                                text: "Delete Wish List success.",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        }
+                    }
+                });
+            }
+
+        } else {
+            //Khong có session
+            $("#fs-modal-mess").modal("show");
+            $(".fs-btn-login-wl").click(function () {
+                $("#fs-modal-mess").modal("hide");
+                $("#loginModal").modal("show");
+            });
+        }
+    });
+
+
+    // ADD WISH-LIST: SUB_CATEGORY
+
+    $(".fs-wl-add-sub").click(function () {
+        var userID = $(this).attr("fs-userID");
+        var productID = $(this).attr("fs-productID");
+        var input = $("input[name='emailUser']");
+        if (input.val() != "") {
+            //Có session
+//            $(this).addClass("fs-heart-color");
+            if (!$(this).hasClass("fs-heart-color")) {
+                $(this).addClass("fs-heart-color");
+                $.ajax({
+                    url: "user/ajax/addWishList.html",
+                    method: "POST",
+                    data: {userID: userID, productID: productID},
+                    success: function (response) {
+                        if (response == "1") {
+                            swal({
+                                title: "<h1 style='color: #31b131;'>Success</h1>",
+                                text: "Add Wish List success.",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        } else if (response == "0") {
+                            swal({
+                                title: "<h1 style='color: #F65D20;' >Error!",
+                                text: "Error, Fail add wishlist",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        }
+                    }
+                });
+            } else {
+                $(this).removeClass("fs-heart-color");
+                $.ajax({
+                    url: "user/ajax/deleteWishListt.html",
+                    method: "POST",
+                    data: {userID: userID, productID: productID},
+                    success: function (response) {
+                        if (response == "10") {
+                            swal({
+                                title: "<h1 style='color: #ff0000;' >Delete</h1>",
+                                text: "Delete Wish List success.",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        }
+                    }
+                });
+            }
+
+        } else {
+            //Khong có session
+//            $("#fs-modal-mess").modal("show");
+//            $(".fs-btn-login-wl").click(function () {
+//                $("#fs-modal-mess").modal("hide");
+                $("#loginModal").modal("show");
+//            });
+        }
+    });
+
+    // DELETE WISHLIST 
+
+    $(".fs-btn-delete-wl").click(function () {
+        var wishID = $(this).attr("fs-wl-wlID");
+//        alert(wishID);
+        $("#fs-list-id-" + wishID).remove();
+        $.ajax({
+            url: "user/ajax/deleteWishList/" + wishID + ".html",
+            method: "POST",
+            data: {wishID: wishID},
+            success: function (response) {
+                if (response == "1") {
+                    swal({
+                        title: "<h1 style='color: #ff0000;'>Delete</h1>",
+                        text: "Delete Wish List success.",
+                        timer: 2000,
+                        showConfirmButton: false,
+                        html: true
+                    });
+
+                }
+            }
+        });
+    });
+
+
 
 
     /*===========================END DUONG - USER===================================*/

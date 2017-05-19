@@ -16,13 +16,13 @@
                         <div class="details-box">
                             <ul>
                                 <li>                                                
-                                    <a href="user/account-information/${findUsersID}.html"> <i class="fa fa-edit"></i> Edit your account information</a>
+                                    <a href="user/account-information/${sessionScope.findUsersID}.html"> <i class="fa fa-edit"></i> Edit your account information</a>
                                 </li>
                                 <li>                                               
-                                    <a href="user/change-password/${findUsersID}.html"> <i class="fa fa-edit"></i> Change your password</a>
+                                    <a href="user/change-password/${sessionScope.findUsersID}.html"> <i class="fa fa-edit"></i> Change your password</a>
                                 </li>
                                 <li>                                              
-                                    <a href="user/address-list/${findUsersID}.html"> <i class="fa fa-edit"></i> Manage address book entries</a>
+                                    <a href="user/address-list/${sessionScope.findUsersID}.html"> <i class="fa fa-edit"></i> Manage address book entries</a>
                                 </li>
                             </ul>
                         </div>                                    
