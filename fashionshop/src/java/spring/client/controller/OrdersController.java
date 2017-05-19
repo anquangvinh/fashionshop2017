@@ -48,7 +48,7 @@ public class OrdersController {
     ProductStateLessBeanLocal productStateLessBean = lookupProductStateLessBeanLocal();
     OrderStateFulBeanLocal orderStateFulBean = lookupOrderStateFulBeanLocal();
     OrderStateLessBeanLocal orderStateLessBean = lookupOrderStateLessBeanLocal();
-    
+
     @ResponseBody
     @RequestMapping(value = "ajax/addtocart", method = RequestMethod.POST)
     public String ajaxAddtocart(@RequestParam("productID") Integer productID,
@@ -175,6 +175,9 @@ public class OrdersController {
 
     @RequestMapping(value = "shoppingcart")
     public String shoppingcart(ModelMap model, HttpServletRequest request) {
+        if (orderStateFulBean.showCart().size() == 0 || orderStateFulBean.showCart() == null) {
+            return "redirect:/index.html";
+        }
         //2 dòng này thêm để render ra menu chính
         List<Categories> cateList = productStateLessBean.categoryList();
         model.addAttribute("cateList", cateList);
@@ -196,7 +199,7 @@ public class OrdersController {
             }
         }
         flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
-                  + "<strong>Success!</strong> Update Cart Successfully!.\n"
+                  + "<strong>UPDATE CART SUCCESSFULLY</strong>\n"
                   + "</div>");
         return "redirect:/orders/shoppingcart.html";
     }
@@ -209,9 +212,12 @@ public class OrdersController {
         CartLineInfo cartLineInfo = orderStateFulBean.getProductInListByID(productid, sizeid, colorid);
         if (cartLineInfo != null) {
             orderStateFulBean.deleteProduct(cartLineInfo);
+            if (orderStateFulBean.showCart().size() == 0 || orderStateFulBean.showCart() == null) {
+                return "redirect:/index.html";
+            }
         }
         flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
-                  + "<strong>Success!</strong> Delete Item in Cart Successfully!.\n"
+                  + "<strong>DELETE ITEM IN CART SUCCESSFULLY</strong>\n"
                   + "</div>");
         return "redirect:/orders/shoppingcart.html";
     }
