@@ -38,7 +38,7 @@
                             <h3 class="panel-title">Please Sign In</h3>
                         </div>
                         ${error} <!-- Ti sua mot thong bao loi hien thi cho dep --> 
-
+                        ${request_url}
                         <div class="panel-body">
                             <form method="POST" id="fs-form-login-admin" action="admin/login.html">
                                 <fieldset>
@@ -80,9 +80,9 @@
         <script>
             $(document).ready(function () {
                 function checkEmailLogin(email) {
-                    email = $("#fs-email-login-admin").val();
+                    email = $("#fs-email-login-admin").val().trim();
                     var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
-                    if (email === "") {
+                    if (email == "") {
                         $("#fs-email-login-admin-error").text("Email cannot be empty!");
                         $("#fs-email-login-admin").focus();
                         var divemail = $("#fs-email-login-admin").closest("div.fa-vali-email-admin");
@@ -113,12 +113,12 @@
 
                 $(".fs-button-login-admin").click(function (e) {
                     e.preventDefault();
-                    var email = $("#fs-email-login-admin").val();
-                    var pass = $("#fs-pass-login-admin").val();
+                    var email = $("#fs-email-login-admin").val().trim();
+                    var pass = $("#fs-pass-login-admin").val().trim();
 
                     if (!checkEmailLogin(email)) {
                         return false;
-                    } else if (pass === "") {
+                    } else if (pass == "") {
                         $("#fs-pass-login-admin-error").text("Password cannot be empty!");
                         $("#fs-pass-login-admin").focus();
                         var divpass = $("#fs-pass-login-admin").closest("div.fa-vali-pass-admin");
@@ -148,16 +148,16 @@
                 });
 
                 $("#fs-email-login-admin").keyup(function () {
-                    var email = $("#fs-email-login-admin").val();
+                    var email = $("#fs-email-login-admin").val().trim();
                     if (!checkEmailLogin(email)) {
                         return false;
                     }
                 });
 
                 $("#fs-pass-login-admin").keyup(function () {
-                    var pass = $("#fs-pass-login-admin").val();
+                    var pass = $("#fs-pass-login-admin").val().trim();
 
-                    if (pass === "") {
+                    if (pass == "") {
                         $("#fs-pass-login-admin-error").text("Password cannot be empty!");
                         $("#fs-pass-login-admin").focus();
                         var divpass = $("#fs-pass-login-admin").closest("div.fa-vali-pass-admin");

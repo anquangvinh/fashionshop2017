@@ -16,48 +16,47 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import spring.ejb.UsersStateLessBeanLocal;
+import spring.entity.Users;
 
 /**
  *
  * @author hoang
  */
-public class CheckCookieUser extends HandlerInterceptorAdapter{
+public class CheckCookieUser extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
         UsersStateLessBeanLocal usersStateLessBean = lookupUsersStateLessBeanLocal();
-        Cookie[] cki = request.getCookies();
-        if(cki != null){
+
+        Cookie[] ck = request.getCookies();
+        if (ck != null) { //check cookie
             String email = "";
             String pass = "";
-            for(Cookie ck : cki){
-              if(ck.getName().equals("emailU"))  {
-                  email = ck.getValue();
-              }
-              
-              if(ck.getName().equals("passwordU")){
-                  pass = ck.getValue();
-              }
-            }
-            
-            if(email != "" && pass != ""){
-                int error = usersStateLessBean.checkLoginUser(email, pass);
-                if(error == 1){
-                    session.setAttribute("emailUser", email);
-                    return true;
-                }else{
-                    return false;
+
+            for (Cookie c : ck) {
+                if (c.getName().equals("emailU")) {
+                    email = c.getValue();
                 }
-            }else {
-                return true;
+
+                if (c.getName().equals("passwordU")) {
+                    pass = c.getValue();
+                }
             }
-        }else{
-//            response.sendRedirect(request.getContextPath() + "/user/login.html");
-            return true;
+
+            if (email != "" && pass != "") {
+                int error = usersStateLessBean.checkLoginUser(email, pass);
+                if (error == 1) {
+                    session.setAttribute("emailUser", email);
+                    Users userfindUserID = usersStateLessBean.findUserByEmail(email);
+                    session.setAttribute("findUsersID", userfindUserID.getUserID());
+                    session.setAttribute("USfirstname", userfindUserID.getFirstName() + " " + userfindUserID.getLastName());
+                }
+            }
         }
+        return true;
     }
- 
+
     private UsersStateLessBeanLocal lookupUsersStateLessBeanLocal() {
         try {
             Context c = new InitialContext();

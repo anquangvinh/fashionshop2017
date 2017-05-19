@@ -36,7 +36,7 @@
                                         <a class="btn fs-button-detele-role btn-danger" id="fs-delete-button-role" fs-roleID="${roles.roleID}"><i class="fa fa-remove"></i> Delete</a>
                                     </c:if>
                                     <c:if test="${not empty roles.userList}">
-                                        <a class="btn fs-button-detele-role btn-danger disabled" fs-roleID="${roles.roleID}"><i class="fa fa-remove"></i> Delete</a>
+                                        <a class="btn btn-danger disabled" fs-roleID="${roles.roleID}"><i class="fa fa-remove"></i> Delete</a>
                                     </c:if>
                                       </td>
                             </tr>
