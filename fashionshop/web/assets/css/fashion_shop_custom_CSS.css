@@ -4,7 +4,6 @@
     width: 100%;
     height: 42px;
     line-height: 40px;
-    padding: 0 20px;
     margin-bottom: 20px;
 }
 
@@ -104,7 +103,11 @@ a.fs-product-modal-link-to-detail{
     margin: 0 !important;
 }
 
-.fs-modal-btn-addtobag:hover, .fs-modal-btn-addtobag:visited, .addtobag:hover, .addtobag:visited {
+.fs-modal-btn-addtobag:link, .fs-modal-btn-addtobag:visited, .fs-modal-btn-addtobag:hover, .fs-modal-btn-addtobag:active{
+    color: #fff !important;
+}
+
+.addtobag:link, .addtobag:visited, .addtobag:hover, .addtobag:active  {
     color: #fff !important;
 }
 
@@ -137,7 +140,7 @@ a.fs-product-modal-link-to-detail{
 }
 
 /*CSS FOR USER-LOGIN-MODAL:*/ 
-.fs-login-page:hover, .fs-login-page:visited {
+.fs-login-page:link, .fs-login-page:visited, .fs-login-page:hover, .fs-login-page:active {
     color: #cccccc !important;
 }
 
@@ -402,3 +405,36 @@ input.fs-color-checkbox:checked + label:before, input.fs-size-checkbox:checked +
 .fs-heart-color {
     background: #d6644a !important;
 }
+=======
+/* PRODUCT DETAIL */
+.fs-display-none {
+    display: none;
+}
+
+#fs-btn-login-to-review {
+    background-color: #d6644a;
+    color: white;
+    height: 40px;
+    padding: 10px;
+    border: none;
+}
+
+#fs-btn-login-to-review:hover {
+    background-color: black;
+    
+}
+
+#fs-ajax-loading-2 {
+    display: none;
+    position:   absolute;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, 0.8 ) 
+        url('../images/ajax-loader.gif') 
+        50% 50% 
+        no-repeat;
+}
+/* CSS FOR USER-LOGIN-MODAL: */
