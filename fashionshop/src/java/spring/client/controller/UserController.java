@@ -3,6 +3,7 @@ package spring.client.controller;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -70,12 +71,21 @@ public class UserController {
     public String createUser(
             @RequestParam("email") String email, @RequestParam("password") String password,
             @RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,
-            @RequestParam("gender") short gender, @RequestParam("birthday") Date birthday,
+            @RequestParam("gender") short gender, @RequestParam("birthday") String birthday,
             @RequestParam(value = "upImage", required = false) MultipartFile image,
             @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
             @RequestParam(value = "address", required = false) String address,
             RedirectAttributes redirectAttributes,
             ModelMap model, HttpSession session) {
+          
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy"); 
+        Date newBirthday = new Date();
+        try {
+            newBirthday = df.parse(birthday);
+        } catch (ParseException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
         Users newUser = new Users();
         newUser.setEmail(email);
@@ -83,7 +93,7 @@ public class UserController {
         newUser.setFirstName(firstName);
         newUser.setLastName(lastName);
         newUser.setGender(gender);
-        newUser.setBirthday(birthday);
+        newUser.setBirthday(newBirthday);
         newUser.setStatus(Short.parseShort("1"));
         newUser.setRole(rolesStateLessBean.findRoles(3));
         try {

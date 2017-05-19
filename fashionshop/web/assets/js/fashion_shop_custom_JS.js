@@ -3334,7 +3334,7 @@ $(document).ready(function () {
         var repassword = $("#Repassword").val().trim();
         var firstname = $("#fs-create-firstname").val().trim();
         var lastname = $("#fs-create-lastname").val().trim();
-        var birthday = $("#txtBirthday").val().trim();
+        var birthday = $("#txtBirthday").val();
         var gender = $('input[name="gender"]:checked').val();
         var phone = $("#fs-create-phone").val().trim();
         var address = $("#fs-create-address").val().trim();

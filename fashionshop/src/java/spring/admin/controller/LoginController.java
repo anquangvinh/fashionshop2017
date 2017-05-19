@@ -53,9 +53,7 @@ public class LoginController {
         int error = usersStateLessBean.login(email, sharedFunc.encodePassword(password));
         if (error == 1) {
             session.setAttribute("email", email);
-            String a = "login.html";
-            String b = "user/list.html";
-            if(remember == 1){
+            if(remember != null && remember == 1){
                 Cookie ckEmail = new Cookie("emailA", email);
                 ckEmail.setMaxAge(24*60*60);
                 response.addCookie(ckEmail);
@@ -64,9 +62,9 @@ public class LoginController {
                 response.addCookie(ckPassword);
             }
             
-            if (session.getAttribute("request_url") != a) {
+            if (session.getAttribute("request_url") == null || ((String) session.getAttribute("request_url")).equals("/admin/logout.html")) {
                 session.removeAttribute("request_url");
-                return "redirect:" + b;     
+                return "redirect:/admin.html";     
             } else {
                 return "redirect:" + session.getAttribute("request_url");
             }

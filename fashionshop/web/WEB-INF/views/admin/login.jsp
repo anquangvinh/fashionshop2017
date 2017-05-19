@@ -38,7 +38,6 @@
                             <h3 class="panel-title">Please Sign In</h3>
                         </div>
                         ${error} <!-- Ti sua mot thong bao loi hien thi cho dep --> 
-                        ${request_url}
                         <div class="panel-body">
                             <form method="POST" id="fs-form-login-admin" action="admin/login.html">
                                 <fieldset>
