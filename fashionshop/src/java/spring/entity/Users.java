@@ -8,6 +8,7 @@ package spring.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
@@ -60,7 +61,11 @@ public class Users implements Serializable {
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<WishList> wishList;
-
+    
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<ProductRating> productRatingList;
+    
     public Integer getUserID() {
         return userID;
     }
@@ -179,6 +184,25 @@ public class Users implements Serializable {
 
     public void setWishList(List<WishList> wishList) {
         this.wishList = wishList;
+    }
+
+    public List<ProductRating> getProductRatingList() {
+        return productRatingList;
+    }
+    
+    public List<ProductRating> getProductRatingListVisible() {
+        List<ProductRating> productRatingVisible = new ArrayList<>();
+        for (ProductRating p : productRatingList) {
+            if(p.getStatus() == 1){
+                productRatingVisible.add(p);
+            }
+        }
+        
+        return productRatingVisible;
+    }
+    
+    public void setProductRatingList(List<ProductRating> productRatingList) {
+        this.productRatingList = productRatingList;
     }
     
     

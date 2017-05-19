@@ -18,9 +18,9 @@ $(document).ready(function () {
         changeMonth: true,
         changeYear: true,
         yearRange: "1960:1999"
-        
+
     });
-    
+
     /* --------------- PRODUCT INDEX -------------------- */
     /* LOAD IMG TO RECENT VIEW FROM LOCALSTORAGE */
     // Check browser support
@@ -462,11 +462,130 @@ $(document).ready(function () {
         }
     });
 
+    $('#fs-rating-star').barrating({
+        theme: 'fontawesome-stars-o',
+        showSelectedRating: false,
+        //readonly: true,
+        onSelect: function (value, text, event) {
+            if (typeof (event) !== 'undefined') {
+                // rating was selected by a user
+                $("#fs-div-vote-value").html("<strong style=\"font-size: 20px; color: #d6644a\">" + value + " </strong>Star");
+                $("#fs-rating-star").val(value);
+            } else {
+                // rating was selected programmatically
+                // by calling `set` method
+            }
+        }
+    });
+
+    var currentRating = $('#fs-rating-star-result').data('current-rating');
+    $('#fs-rating-star-result').barrating({
+        theme: 'fontawesome-stars-o',
+        initialRating: currentRating,
+        showSelectedRating: false,
+        readonly: true,
+    });
+
+    for (var i = 0; i < parseInt($("#fs-number-of-rating").attr("fs-nort")); i++) {
+        var rating = $('#fs-rating-star-'+i).data('current-rating');
+        $('#fs-rating-star-'+i).barrating({
+            theme: 'fontawesome-stars-o',
+            initialRating: rating,
+            showSelectedRating: false,
+            readonly: true,
+        });
+    }
+
+    $("#fs-product-detail-page").on("click", "#fs-btn-rating-review", function () {
+        var ratingVal = $("#fs-rating-star").val();
+        var review = $("#fs-review-product").val();
+        var userID = $(this).attr("fs-user-id");
+        var productID = $(this).attr("fs-product-id");
+        $.ajax({
+            url: "ajax/submitReviewRating.html",
+            method: "POST",
+            data: {productID: productID, userID: userID, ratingVal: ratingVal, review: review},
+            beforeSend: function (xhr) {
+                $("#fs-ajax-loading-2").css("display", "block");
+            },
+            success: function (response) {
+                if (response == "ok") {
+                    setTimeout(function () {
+                        $("#fs-ajax-loading-2").css("display", "none");
+                        $("#fs-form-rating-review").empty();
+                        $("#fs-form-rating-review").html("<h3>Thank you for your review! </h3>");
+                        $.notify({
+                            icon: 'glyphicon glyphicon-ok-sign',
+                            title: '<strong>Thank you!</strong>',
+                            message: "You voted " + ratingVal + " Star for this Product!."
+                        }, {
+                            type: 'success',
+                            placement: {
+                                from: 'top',
+                                align: 'right'
+                            },
+                            delay: 2500,
+                            timer: 200,
+                            mouse_over: 'pause',
+                            animate: {
+                                enter: 'animated fadeInRight',
+                                exit: 'animated fadeOutRight'
+                            },
+                            template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                    '<span data-notify="icon"></span> ' +
+                                    '<span data-notify="title">{1}</span> ' +
+                                    '<span data-notify="message">{2}</span>' +
+                                    '<div class="progress" data-notify="progressbar">' +
+                                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                    '</div>' +
+                                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                    '</div>'
+                        });
+                    }, 600);
+                } else {
+                    $.notify({
+                        icon: 'glyphicon glyphicon-warning-sign',
+                        title: '<strong>Error!</strong>',
+                        message: 'Something was wrong! Please try again later!.'
+                    }, {
+                        type: 'danger',
+                        placement: {
+                            from: 'top',
+                            align: 'right'
+                        },
+                        delay: 3000,
+                        timer: 200,
+                        mouse_over: 'pause',
+                        animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                        },
+                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                '<span data-notify="icon"></span> ' +
+                                '<span data-notify="title">{1}</span> ' +
+                                '<span data-notify="message">{2}</span>' +
+                                '<div class="progress" data-notify="progressbar">' +
+                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                '</div>' +
+                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                '</div>'
+                    });
+                }
+            }
+        });
+    });
+
+    $("#fs-product-detail-page").on("click", "#fs-btn-login-to-review", function () {
+        $("#loginModal").modal("show");
+    });
     /* PRODUCT CATEGORY-GRID */
     /* AJAX PAGINATION */
     var colorFilterArr = [];
     var sizeFilterArr = [];
-
+    $("#fs-sort-product-by").selectBoxIt();
+    $("#fs-number-of-item-on-page").selectBoxIt();
     /* AJAX ON CLICK PAGE */
     $("#fs-shop-content").on("click", ".fs-page-number", function () {
         if (!$(this).hasClass("fs-page-number-active")) {
@@ -2569,16 +2688,16 @@ $(document).ready(function () {
     });
     $(".panel-heading span.clickable").click();
     // CẢNH CÁO KHI BẤM XÓA
-    
-    $("#fs-td-AD").click(function(){
+
+    $("#fs-td-AD").click(function () {
         var addressID = $(this).attr("fs-addressID");
         alert(addressID);
     });
-    
+
     $("#fs-delete-button-AD").click(function () {
-         var addressID = $("#fs-delete-button-AD").attr("fs-addressID");
-           
-            
+        var addressID = $("#fs-delete-button-AD").attr("fs-addressID");
+
+
 
 //        swal({
 //            title: "Are you sure?",
@@ -2627,11 +2746,11 @@ $(document).ready(function () {
 //
 //
 //    });
-        });
-        
-        
+    });
 
-            
+
+
+
     // BẮT LỖI FORM LOGIN USER MODAL
 
     function checkEmail(email) {
@@ -2711,9 +2830,9 @@ $(document).ready(function () {
                         EmailWrong(email);
                     } else if (response == "3") {
                         PassWrong(pass);
-                    } else if(response == "4"){
+                    } else if (response == "4") {
                         $("#fs-error-show").text("Fail account wrong!");
-                    } 
+                    }
                     else {
                         var currentUrl = window.location.href;
                         window.location = currentUrl;
@@ -3081,7 +3200,7 @@ $(document).ready(function () {
         formData.append("upImage", mfile);
         formData.append("phoneNumber", phone);
         formData.append("address", address);
-        
+
         if (!checkemail(email)) {
             return false;
         } else if (!checkPass(password)) {
@@ -3094,53 +3213,53 @@ $(document).ready(function () {
             return false;
         } else if (!checkBirthDay(birthday)) {
             return false;
-        } 
-        else {      
-        $.ajax({
-            url: "user/register.html",
-            method: "POST",
-            //data: $("#fs-form-create-user").serialize(),
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            //dataType: 'html',
-            success: function (response) {
-                console.log(response);
-                if (response == "1") {
-                    $("#loginModal").modal('hide');
-                    window.location = "index.html";
-                } else if (response == "2") {
-                    $("#loginModal").modal('hide');
-                    setTimeout(function ()
-                    {
-                        emailWrong(email);
-                        $("#loginModal").modal('show');
-                    }, 5000);
-                    swal({
-                        title: "Account is Exist!",
-                        text: "",
-                        timer: 2000,
-                        type: "error",
-                        showConfirmButton: false
-                    });
-                } else if (response == "0") {
-                    $("#loginModal").modal('hide');
-                    setTimeout(function ()
-                    {
-                        $("#loginModal").modal('show');
-                    }, 5000);
-                    swal({
-                        title: "FAIL!",
-                        text: "",
-                        timer: 2000,
-                        type: "error",
-                        showConfirmButton: false
-                    });
-                }
+        }
+        else {
+            $.ajax({
+                url: "user/register.html",
+                method: "POST",
+                //data: $("#fs-form-create-user").serialize(),
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                //dataType: 'html',
+                success: function (response) {
+                    console.log(response);
+                    if (response == "1") {
+                        $("#loginModal").modal('hide');
+                        window.location = "index.html";
+                    } else if (response == "2") {
+                        $("#loginModal").modal('hide');
+                        setTimeout(function ()
+                        {
+                            emailWrong(email);
+                            $("#loginModal").modal('show');
+                        }, 5000);
+                        swal({
+                            title: "Account is Exist!",
+                            text: "",
+                            timer: 2000,
+                            type: "error",
+                            showConfirmButton: false
+                        });
+                    } else if (response == "0") {
+                        $("#loginModal").modal('hide');
+                        setTimeout(function ()
+                        {
+                            $("#loginModal").modal('show');
+                        }, 5000);
+                        swal({
+                            title: "FAIL!",
+                            text: "",
+                            timer: 2000,
+                            type: "error",
+                            showConfirmButton: false
+                        });
+                    }
 
-            }
-        });
+                }
+            });
         }
     });
 //        VALIDATION REGISTER KEYUP
@@ -3381,7 +3500,7 @@ $(document).ready(function () {
                         div.addClass("has-error has-feedback");
                         div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
                         return false;
-                    } 
+                    }
 //                    else {
 //                        $("#fs-email-update-user-error").text("");
 //                        var div = $("#fs-update-email").closest("div.fs-email-update");
@@ -3420,7 +3539,7 @@ $(document).ready(function () {
 //            return false;
 //        }
 //    });
-    
+
 
 
     /*===========================END DUONG - USER===================================*/

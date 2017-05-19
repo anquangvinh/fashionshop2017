@@ -8,6 +8,7 @@ package spring.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -61,7 +62,11 @@ public class Products implements Serializable {
     @OneToMany(mappedBy = "product")
     @JsonManagedReference
     private List<WishList> wishList;
-
+    
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
+    @JsonManagedReference
+    private List<ProductRating> productRatingList;
+    
     public float getProductDiscountPrice(){
         return (price * (Float.parseFloat(productDiscount.toString())/100));
     }
@@ -191,4 +196,25 @@ public class Products implements Serializable {
     public void setCategory(Categories category) {
         this.category = category;
     }
+
+    public List<ProductRating> getProductRatingList() {
+        return productRatingList;
+    }
+    
+    public List<ProductRating> getProductRatingListVisible() {
+        List<ProductRating> productRatingVisible = new ArrayList<>();
+        for (ProductRating p : productRatingList) {
+            if(p.getStatus() == 1){
+                productRatingVisible.add(p);
+            }
+        }
+        
+        return productRatingVisible;
+    }
+    
+    public void setProductRatingList(List<ProductRating> productRatingList) {
+        this.productRatingList = productRatingList;
+    }
+    
+    
 }

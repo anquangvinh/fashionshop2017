@@ -388,12 +388,37 @@ $(document).ready(function () {
 
     $('input[id="fs-edit-product-color-img"]').fileuploader({
         limit: 1,
-        extensions: ['jpg', 'jpeg', 'png']
+        extensions: ['jpg', 'jpeg', 'png'],
+        thumbnails: {
+            // Callback fired after the item image was loaded
+            onImageLoaded: function (itemEl, listEl, parentEl, newInputEl, inputEl) {
+                $("#fs-error-mess-productSubImg").empty();
+            }
+        }
+
     });
 
-    $('input[id="fs-sub-img"]').fileuploader({
+    $('input[id="fs-update-product-color-img"]').fileuploader({
         limit: 1,
-        extensions: ['jpg', 'jpeg', 'png']
+        extensions: ['jpg', 'jpeg', 'png'],
+        dialogs: {
+            // alert dialog
+            alert: function (text) {
+                $("#fs-update-product-color-img-err-mess").text(text);
+            }
+        },
+        thumbnails: {
+            // Callback fired after the item image was loaded
+            onImageLoaded: function (itemEl, listEl, parentEl, newInputEl, inputEl) {
+                $("#fs-update-product-color-img-err-mess").empty();
+            }
+        }
+    });
+
+    $('input[name="fs-update-product-sub-img"]').fileuploader({
+        limit: 1,
+        extensions: ['jpg', 'jpeg', 'png'],
+        enableApi: true
     });
 
 //    var fs_count_div_color = 0;
@@ -691,28 +716,38 @@ $(document).ready(function () {
     /* Xử lý choose "FIRST" TASK */
     $("#fs-product-update-page").on("change", "#fs-select-product-update-choose-first-task", function () {
         $(".fs-select-product-update-task").addClass("fs-display-none");
+        $(".fs-select-product-update-task").hide();
         $("#fs-select-product-update-choose-color").val(0);
         var select = $(this).val();
         if (select == 1) {
-            $("#fs-edit-product-general-info").removeClass("fs-display-none");
-            $("#fs-select-product-update-choose-color").addClass("fs-display-none");
-        } else {
-            $("#fs-edit-product-general-info").addClass("fs-display-none");
+            $("#fs-edit-product-general-info").show("drop", 500);
+            $("#fs-select-product-update-choose-color").hide();
+            $(".btn-edit-product-color").parent().parent().removeClass("fs-highlighter");
+            $("#fs-edit-product-color-form").hide();
+            $(".btn-edit-product-color").removeClass("disabled");
         }
 
         if (select == 2) {
-            $("#fs-edit-product-color").removeClass("fs-display-none");
-            $("#fs-select-product-update-choose-color").addClass("fs-display-none");
-        } else {
-            $("#fs-edit-product-color").addClass("fs-display-none");
+            $("#fs-edit-product-color").delay(200).show("drop", 300);
+            $("#fs-select-product-update-choose-color").hide();
+            $(".btn-edit-product-color").parent().parent().removeClass("fs-highlighter");
+            $("#fs-edit-product-color-form").hide();
+            $(".btn-edit-product-color").removeClass("disabled");
         }
 
         if (select == 3 || select == 4) {
-            $("#fs-select-product-update-choose-color").removeClass("fs-display-none");
+            $("#fs-select-product-update-choose-color").hide();
+            $("#fs-select-product-update-choose-color").show("bounce", 500);
+            $(".btn-edit-product-color").parent().parent().removeClass("fs-highlighter");
+            $("#fs-edit-product-color-form").hide();
+            $(".btn-edit-product-color").removeClass("disabled");
         }
 
         if (select == 0) {
-            $("#fs-select-product-update-choose-color").addClass("fs-display-none");
+            $("#fs-select-product-update-choose-color").hide();
+            $(".btn-edit-product-color").parent().parent().removeClass("fs-highlighter");
+            $("#fs-edit-product-color-form").hide();
+            $(".btn-edit-product-color").removeClass("disabled");
         }
 
     });
@@ -723,29 +758,1125 @@ $(document).ready(function () {
         var colorID = $("#fs-select-product-update-choose-color").val();
 
         if (task == 3) {
-            $("#fs-edit-product-size").removeClass("fs-display-none");
-            $(".fs-edit-product-table-size").addClass("fs-display-none");
-            $("#fs-edit-product-table-size-" + colorID).removeClass("fs-display-none");
+            $("#fs-edit-product-size").show("drop", 500);
+            $(".fs-edit-product-table-size").hide();
+            $("#fs-edit-product-table-size-" + colorID).show("drop", 500);
         } else {
-            $("#fs-edit-product-size").addClass("fs-display-none");
+            $("#fs-edit-product-size").hide();
         }
 
         if (task == 4) {
-            $("#fs-edit-product-sub-img").removeClass("fs-display-none");
-            $(".fs-edit-product-table-sub-img").addClass("fs-display-none");
-            $("#fs-edit-product-table-sub-img-" + colorID).removeClass("fs-display-none");
+            $("#fs-edit-product-sub-img").show("drop", 500);
+            $(".fs-edit-product-table-sub-img").hide();
+            $("#fs-edit-product-table-sub-img-" + colorID).show("drop", 500);
         } else {
-            $("#fs-edit-product-sub-img").addClass("fs-display-none");
+            $("#fs-edit-product-sub-img").hide();
         }
 
         if (colorID == 0) {
             $(".fs-select-product-update-task").addClass("fs-display-none");
+            $(".fs-select-product-update-task").hide();
         }
     });
 
     $("#fs-edit-product-table-color tbody").sortable();
 
     $(".fs-edit-product-table-sub-img tbody").sortable();
+
+    /* 1. Edit Product General Info */
+    $("#fs-product-update-page").on("change", "#fs-product-category", function () {
+        var cateID = $(this).val();
+        $.ajax({
+            url: "admin/ajax/getSubCategory.html",
+            method: "POST",
+            data: {cateID: cateID},
+            dataType: 'JSON',
+            success: function (response) {
+                var subCateOption = "<option value=\"0\">-- Please select sub-category --</option>";
+                $.each(response, function (i, item) {
+                    subCateOption += "<option value=\"" + item.subCateID + "\">" + item.subCateName + "</option>";
+
+                });
+                $("#fs-product-sub-category").html(subCateOption);
+                $("#fs-product-sub-category").focus();
+            }
+        });
+    });
+
+    if ($(".fs-alert-update-product-info").length > 0) {
+        setTimeout(function () {
+            $(".fs-alert-update-product-info").hide("fade", 500);
+        }, 2000);
+    }
+
+    /* 2. Edit Product Color */
+    /* Edit Product Color - Change Status */
+    $("#fs-product-update-page").on("change", ".fs-product-update-color-status", function () {
+        var colorID = $(this).attr("fs-product-colorID");
+        var newStt = $(this).val();
+
+        if (newStt == 1) {
+            $(this).siblings(".fs-stopworking-icon-product-color-update").addClass("fs-display-none");
+        } else {
+            $(this).siblings(".fs-stopworking-icon-product-color-update").removeClass("fs-display-none");
+        }
+
+        $.ajax({
+            url: "admin/ajax/updateProductColorStatus.html",
+            method: "POST",
+            data: {colorID: colorID, newStt: newStt},
+            success: function (response) {
+                if (response == "1") {
+                    $.notify({
+                        icon: 'glyphicon glyphicon-ok-sign',
+                        title: '<strong>Success!</strong>',
+                        message: 'Update Color Status Completed!.'
+                    }, {
+                        type: 'success',
+                        placement: {
+                            from: 'top',
+                            align: 'right'
+                        },
+                        delay: 2500,
+                        timer: 200,
+                        mouse_over: 'pause',
+                        animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                        },
+                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                '<span data-notify="icon"></span> ' +
+                                '<span data-notify="title">{1}</span> ' +
+                                '<span data-notify="message">{2}</span>' +
+                                '<div class="progress" data-notify="progressbar">' +
+                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                '</div>' +
+                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                '</div>'
+                    });
+                } else {
+                    $.notify({
+                        icon: 'glyphicon glyphicon-warning-sign',
+                        title: '<strong>Error!</strong>',
+                        message: 'Update Color Status Failed, Please Refresh (F5) and do it again!.'
+                    }, {
+                        type: 'danger',
+                        placement: {
+                            from: 'top',
+                            align: 'right'
+                        },
+                        delay: 3000,
+                        timer: 200,
+                        mouse_over: 'pause',
+                        animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                        },
+                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                '<span data-notify="icon"></span> ' +
+                                '<span data-notify="title">{1}</span> ' +
+                                '<span data-notify="message">{2}</span>' +
+                                '<div class="progress" data-notify="progressbar">' +
+                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                '</div>' +
+                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                '</div>'
+                    });
+                }
+            }
+        });
+
+    });
+
+    $("#fs-edit-product-color-form").hide();
+    /* Edit Product Color - show update color form */
+    $("#fs-product-update-page").on("click", ".btn-edit-product-color", function () {
+        if (!$(this).hasClass("disabled")) {
+            $(this).parent().parent().siblings("tr").removeClass("fs-highlighter");
+            $(this).parent().parent().addClass("fs-highlighter");
+
+            $(".btn-edit-product-color").removeClass("disabled");
+            $(this).addClass("disabled");
+
+            var colorID = $(this).attr("fs-product-colorID");
+            //get thong tin su dung ajax
+            $.ajax({
+                url: "admin/ajax/getProductColorByID.html",
+                method: "POST",
+                data: {colorID: colorID},
+                dataType: "JSON",
+                success: function (response) {
+                    //load vao form
+                    $("#fs-edit-product-color-form").hide("slide", {direction: "up"}, "fast", function () {
+                        $("#fs-form-edit-product-color")[0].reset();
+                        $("input#fs-edit-product-color-input").val(response.color);
+                        $("input#fs-edit-product-color-hidden-id").val(colorID);
+                        $("button#fs-btn-update-product-color-submit").attr("fs-product-colorID", response.colorID);
+                        $("#fs-edit-product-color-form").show("slide", {direction: "up"}, "slow");
+                    });
+                }
+            });
+        }
+
+    });
+
+    /* Edit Product Color - Button Cancel to close product Color FORM */
+    $("#fs-product-update-page").on("click", "#btn-cancel-edit-product-color-form", function () {
+        $("#fs-edit-product-color-form").hide("slide", {direction: "up"}, "fast");
+        $(".btn-edit-product-color").removeClass("disabled");
+        $(".btn-edit-product-color").parent().parent().removeClass("fs-highlighter");
+    });
+
+    /* Edit Product Color - Button SAVE - Submit product Color FORM */
+    $("#fs-product-update-page").on("click", "#fs-btn-update-product-color-submit", function (e) {
+        e.preventDefault();
+        var colorVal = $("#fs-edit-product-color-input").val();
+        var productID = parseInt($("#fs-product-id").text());
+        var colorID = $("#fs-edit-product-color-hidden-id").val();
+        //Kiểm tra rỗng
+        if (colorVal == "") {
+            $("#fs-update-product-color-name-err-mess").text("Color is required!");
+            $("#fs-edit-product-color-input").focus();
+        } else if (colorVal.length < 3) { //Kiểm tra nhỏ nhất 3 ký tự
+            $("#fs-update-product-color-name-err-mess").text("Color has more than 3 characters!");
+            $("#fs-edit-product-color-input").focus();
+        } else if ($("#fs-update-product-color-img-err-mess").text() == "Only jpg, jpeg, png files are allowed to be uploaded.") {
+            $("#fs-update-product-color-img").focus();
+        } else {
+            $.ajax({
+                url: "admin/ajax/checkDuplicateColor.html",
+                method: "POST",
+                data: {productID: productID, color: colorVal, colorID: colorID},
+                success: function (response) {
+                    if (response == "1") {
+                        $("#fs-update-product-color-name-err-mess").text("Duplicate Color!. Please choose another one!");
+                        $("#fs-edit-product-color-input").focus();
+                    } else {
+                        var formData = new FormData();
+                        formData.append("productID", parseInt($("#fs-product-id").text()));
+                        formData.append("colorID", parseInt($("#fs-btn-update-product-color-submit").attr("fs-product-colorID")));
+                        formData.append("color", $("input#fs-edit-product-color-input").val());
+                        if ($("#fs-update-product-color-img")[0].files[0] != null) {
+                            formData.append("colorImg", $("#fs-update-product-color-img")[0].files[0]);
+                        }
+
+                        $.ajax({
+                            url: "admin/ajax/updateProductColor.html",
+                            method: "POST",
+                            data: formData,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function () {
+                                $("#fs-ajax-loading").css("display", "block");
+                            },
+                            success: function (response) {
+                                if (response != "fail") {
+                                    setTimeout(function () {
+                                        $("#fs-edit-product-color-form").hide();
+                                        $("#fs-tbody-update-color-change").html(response);
+                                        $("#fs-ajax-loading").css("display", "none");
+                                        $.notify({
+                                            icon: 'glyphicon glyphicon-ok-sign',
+                                            title: '<strong>Success!</strong>',
+                                            message: 'Update Color Status Completed!.'
+                                        }, {
+                                            type: 'success',
+                                            placement: {
+                                                from: 'top',
+                                                align: 'right'
+                                            },
+                                            delay: 3000,
+                                            timer: 200,
+                                            mouse_over: 'pause',
+                                            animate: {
+                                                enter: 'animated fadeInRight',
+                                                exit: 'animated fadeOutRight'
+                                            },
+                                            template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                                    '<span data-notify="icon"></span> ' +
+                                                    '<span data-notify="title">{1}</span> ' +
+                                                    '<span data-notify="message">{2}</span>' +
+                                                    '<div class="progress" data-notify="progressbar">' +
+                                                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                                    '</div>' +
+                                                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                                    '</div>'
+                                        });
+                                    }, 400);
+                                } else {
+                                    $.notify({
+                                        icon: 'glyphicon glyphicon-warning-sign',
+                                        title: '<strong>Error!</strong>',
+                                        message: 'Update Color Failed, Please Refresh (F5) and do it again!.'
+                                    }, {
+                                        type: 'danger',
+                                        placement: {
+                                            from: 'top',
+                                            align: 'right'
+                                        },
+                                        delay: 3000,
+                                        timer: 200,
+                                        mouse_over: 'pause',
+                                        animate: {
+                                            enter: 'animated fadeInRight',
+                                            exit: 'animated fadeOutRight'
+                                        },
+                                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                                '<span data-notify="icon"></span> ' +
+                                                '<span data-notify="title">{1}</span> ' +
+                                                '<span data-notify="message">{2}</span>' +
+                                                '<div class="progress" data-notify="progressbar">' +
+                                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                                '</div>' +
+                                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                                '</div>'
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    });
+
+    /* Edit Product Color - EVENT keyup - Check Validation product Color Input */
+    $("#fs-product-update-page").on("keyup", "#fs-edit-product-color-input", function () {
+        var colorVal = $(this).val();
+        var productID = parseInt($("#fs-product-id").text());
+        var colorID = $("#fs-edit-product-color-hidden-id").val();
+        //Kiểm tra rỗng
+        if (colorVal == "") {
+            $("#fs-update-product-color-name-err-mess").text("Color is required!");
+        } else if (colorVal.length < 3) { //Kiểm tra nhỏ nhất 3 ký tự
+            $("#fs-update-product-color-name-err-mess").text("Color has more than 3 characters!");
+        } else {
+            $.ajax({
+                url: "admin/ajax/checkDuplicateColor.html",
+                method: "POST",
+                data: {productID: productID, color: colorVal, colorID: colorID},
+                success: function (response) {
+                    if (response == "1") { //Kiểm tra trùng
+                        $("#fs-update-product-color-name-err-mess").text("Duplicate Color!. Please choose another one!");
+                    } else {
+                        $("#fs-update-product-color-name-err-mess").text("");
+                    }
+                }
+            });
+        }
+    });
+
+    /* Edit Product Color - Sort Order Color - Update to Database */
+    $("#fs-product-update-page").on("sortupdate", "#fs-edit-product-table-color tbody", function (event, ui) {
+        var afterSort = $("#fs-edit-product-table-color tbody").children("tr");
+        var productID = parseInt($("#fs-product-id").text());
+        var numberOfElement = afterSort.length;
+        $("#fs-edit-product-color-form").hide();
+        $.each(afterSort, function (i, ite) {
+            var colorID = ite.attributes[1].value;
+            var position = i;
+            $.ajax({
+                url: "admin/ajax/updateColorOrder.html",
+                method: "POST",
+                data: {colorID: colorID, position: position},
+                success: function () {
+                    if (parseInt(numberOfElement) == parseInt(i + 1)) {
+                        $.ajax({
+                            url: "admin/ajax/getColorList.html",
+                            method: "POST",
+                            data: {productID: productID},
+                            beforeSend: function () {
+                                $("#fs-ajax-loading").css("display", "block");
+                            },
+                            success: function (response) {
+                                setTimeout(function () {
+                                    $("#fs-tbody-update-color-change").html(response);
+                                    $("#fs-ajax-loading").css("display", "none");
+                                    $.notify({
+                                        icon: 'glyphicon glyphicon-ok-sign',
+                                        title: '<strong>Success!</strong>',
+                                        message: 'Color Order was changed!.'
+                                    }, {
+                                        type: 'success',
+                                        placement: {
+                                            from: 'top',
+                                            align: 'right'
+                                        },
+                                        delay: 3000,
+                                        timer: 200,
+                                        mouse_over: 'pause',
+                                        animate: {
+                                            enter: 'animated fadeInRight',
+                                            exit: 'animated fadeOutRight'
+                                        },
+                                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                                '<span data-notify="icon"></span> ' +
+                                                '<span data-notify="title">{1}</span> ' +
+                                                '<span data-notify="message">{2}</span>' +
+                                                '<div class="progress" data-notify="progressbar">' +
+                                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                                '</div>' +
+                                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                                '</div>'
+                                    });
+                                }, 400);
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+
+    });
+
+    /*3. Edit Product Size */
+    /* For SIZE */
+    $('.fs-edit-product-size-val').editable({
+        mode: 'inline',
+        validate: function (value) {
+            if (value == "") {
+                return 'Size cannot be empty!';
+            }
+        },
+        success: function (response, newValue) {
+            if (response == 2) {
+                return 'Size has already existed in this Color!';
+            }
+        }
+    });
+
+    $('.fs-edit-product-size-val').on('save', function (e, params) {
+        $.notify({
+            icon: 'glyphicon glyphicon-ok-sign',
+            title: '<strong>Success!</strong>',
+            message: 'Product <strong>SIZE</strong> was changed!.'
+        }, {
+            type: 'success',
+            placement: {
+                from: 'top',
+                align: 'right'
+            },
+            delay: 3000,
+            timer: 200,
+            mouse_over: 'pause',
+            animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+            },
+            template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                    '<span data-notify="icon"></span> ' +
+                    '<span data-notify="title">{1}</span> ' +
+                    '<span data-notify="message">{2}</span>' +
+                    '<div class="progress" data-notify="progressbar">' +
+                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                    '</div>' +
+                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                    '</div>'
+        });
+    });
+
+    /* For QUANTITY */
+    $('.fs-edit-product-quantity-val').editable({
+        mode: 'inline',
+        validate: function (value) {
+            if (value == "") {
+                return 'Quantity cannot be empty!';
+            }
+
+            if (isNaN(value)) {
+                return 'Quantity must be a number!';
+            }
+
+            if (value < 0) {
+                return 'Quantity must be >= 0!';
+            }
+        }
+    });
+
+    $('.fs-edit-product-quantity-val').on('save', function (e, params) {
+        $.notify({
+            icon: 'glyphicon glyphicon-ok-sign',
+            title: '<strong>Success!</strong>',
+            message: 'Product <strong>QUANTITY</strong> was changed!.'
+        }, {
+            type: 'success',
+            placement: {
+                from: 'top',
+                align: 'right'
+            },
+            delay: 3000,
+            timer: 200,
+            mouse_over: 'pause',
+            animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+            },
+            template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                    '<span data-notify="icon"></span> ' +
+                    '<span data-notify="title">{1}</span> ' +
+                    '<span data-notify="message">{2}</span>' +
+                    '<div class="progress" data-notify="progressbar">' +
+                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                    '</div>' +
+                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                    '</div>'
+        });
+    });
+
+    /* BTN DELETE SIZE */
+    $("#fs-product-update-page").on("click", ".fs-update-product-button-delete-size", function () {
+        $("#fs-update-product-confirm-delete-size").modal("show");
+        var sizeID = $(this).attr("fs-size-id");
+        var prodSize = $(this).attr("fs-size");
+        $("#fs-update-product-confirm-delete-size").attr("data-1", sizeID);
+        $("#fs-change-size-in-modal").text(prodSize);
+    });
+
+    $("#fs-product-update-page").on("click", ".btn-update-product-confirm-delete-size", function () {
+        $("#fs-update-product-confirm-delete-size").modal("hide");
+        var sizeID = $("#fs-update-product-confirm-delete-size").attr("data-1");
+        var colorID = parseInt($("#fs-select-product-update-choose-color").val());
+        var prodSize = $("#fs-change-size-in-modal").text();
+        $.ajax({
+            url: "admin/ajax/deleteProductSize.html",
+            method: "POST",
+            data: {sizeID: sizeID, colorID: colorID},
+            beforeSend: function () {
+                $("#fs-ajax-loading").css("display", "block");
+            },
+            success: function (response) {
+                if (response == "1") {
+                    $.notify({
+                        icon: 'glyphicon glyphicon-warning-sign',
+                        title: '<strong>Error!</strong>',
+                        message: 'Delete FAILED!, That Size was no longer existed!.'
+                    }, {
+                        type: 'danger',
+                        placement: {
+                            from: 'top',
+                            align: 'right'
+                        },
+                        delay: 3000,
+                        timer: 200,
+                        mouse_over: 'pause',
+                        animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                        },
+                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                '<span data-notify="icon"></span> ' +
+                                '<span data-notify="title">{1}</span> ' +
+                                '<span data-notify="message">{2}</span>' +
+                                '<div class="progress" data-notify="progressbar">' +
+                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                '</div>' +
+                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                '</div>'
+                    });
+                } else if (response == "2") {
+                    $.notify({
+                        icon: 'glyphicon glyphicon-warning-sign',
+                        title: '<strong>Error!</strong>',
+                        message: 'Delete FAILED!, Please Refresh (F5) and do it again!.'
+                    }, {
+                        type: 'danger',
+                        placement: {
+                            from: 'top',
+                            align: 'right'
+                        },
+                        delay: 3000,
+                        timer: 200,
+                        mouse_over: 'pause',
+                        animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                        },
+                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                '<span data-notify="icon"></span> ' +
+                                '<span data-notify="title">{1}</span> ' +
+                                '<span data-notify="message">{2}</span>' +
+                                '<div class="progress" data-notify="progressbar">' +
+                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                '</div>' +
+                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                '</div>'
+                    });
+                } else {
+                    setTimeout(function () {
+                        $("#fs-edit-product-tbody-size-" + colorID).html(response);
+
+                        /* For SIZE */
+                        $('.fs-edit-product-size-val').editable({
+                            mode: 'inline',
+                            validate: function (value) {
+                                if (value == "") {
+                                    return 'Size cannot be empty!';
+                                }
+                            },
+                            success: function (response, newValue) {
+                                if (response == 2) {
+                                    return 'Size has already existed in this Color!';
+                                }
+                            }
+                        });
+                        $('.fs-edit-product-size-val').on('save', function (e, params) {
+                            $.notify({
+                                icon: 'glyphicon glyphicon-ok-sign',
+                                title: '<strong>Success!</strong>',
+                                message: 'Product <strong>SIZE</strong> was changed!.'
+                            }, {
+                                type: 'success',
+                                placement: {
+                                    from: 'top',
+                                    align: 'right'
+                                },
+                                delay: 3000,
+                                timer: 200,
+                                mouse_over: 'pause',
+                                animate: {
+                                    enter: 'animated fadeInRight',
+                                    exit: 'animated fadeOutRight'
+                                },
+                                template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                        '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                        '<span data-notify="icon"></span> ' +
+                                        '<span data-notify="title">{1}</span> ' +
+                                        '<span data-notify="message">{2}</span>' +
+                                        '<div class="progress" data-notify="progressbar">' +
+                                        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                        '</div>' +
+                                        '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                        '</div>'
+                            });
+                        });
+
+                        /* For QUANTITY */
+                        $('.fs-edit-product-quantity-val').editable({
+                            mode: 'inline',
+                            validate: function (value) {
+                                if (value == "") {
+                                    return 'Quantity cannot be empty!';
+                                }
+
+                                if (isNaN(value)) {
+                                    return 'Quantity must be a number!';
+                                }
+
+                                if (value < 0) {
+                                    return 'Quantity must be >= 0!';
+                                }
+                            }
+                        });
+                        $('.fs-edit-product-quantity-val').on('save', function (e, params) {
+                            $.notify({
+                                icon: 'glyphicon glyphicon-ok-sign',
+                                title: '<strong>Success!</strong>',
+                                message: 'Product <strong>QUANTITY</strong> was changed!.'
+                            }, {
+                                type: 'success',
+                                placement: {
+                                    from: 'top',
+                                    align: 'right'
+                                },
+                                delay: 3000,
+                                timer: 200,
+                                mouse_over: 'pause',
+                                animate: {
+                                    enter: 'animated fadeInRight',
+                                    exit: 'animated fadeOutRight'
+                                },
+                                template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                        '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                        '<span data-notify="icon"></span> ' +
+                                        '<span data-notify="title">{1}</span> ' +
+                                        '<span data-notify="message">{2}</span>' +
+                                        '<div class="progress" data-notify="progressbar">' +
+                                        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                        '</div>' +
+                                        '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                        '</div>'
+                            });
+                        });
+
+                        $("#fs-ajax-loading").css("display", "none");
+
+                        $.notify({
+                            icon: 'glyphicon glyphicon-ok-sign',
+                            title: '<strong>Success!</strong>',
+                            message: prodSize + ' Size was <b>Deleted!</b>!.'
+                        }, {
+                            type: 'success',
+                            placement: {
+                                from: 'top',
+                                align: 'right'
+                            },
+                            delay: 3000,
+                            timer: 200,
+                            mouse_over: 'pause',
+                            animate: {
+                                enter: 'animated fadeInRight',
+                                exit: 'animated fadeOutRight'
+                            },
+                            template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                    '<span data-notify="icon"></span> ' +
+                                    '<span data-notify="title">{1}</span> ' +
+                                    '<span data-notify="message">{2}</span>' +
+                                    '<div class="progress" data-notify="progressbar">' +
+                                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                    '</div>' +
+                                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                    '</div>'
+                        });
+                    }, 400);
+                }
+            }
+        });
+    });
+
+    /* Change SIZE Status */
+    $("#fs-product-update-page").on("change", ".fs-product-update-size-status", function () {
+        var sizeID = $(this).attr("fs-size-id");
+        var newSTT = $(this).val();
+
+        if (newSTT == 1) {
+            $(this).siblings(".fs-stopworking-icon-product-color-update").addClass("fs-display-none");
+        } else {
+            $(this).siblings(".fs-stopworking-icon-product-color-update").removeClass("fs-display-none");
+        }
+
+        $.ajax({
+            url: "admin/ajax/changeSizeStatus.html",
+            method: "POST",
+            data: {sizeID: sizeID, newSTT: newSTT},
+            success: function (response) {
+                if (response == "1") {
+                    $.notify({
+                        icon: 'glyphicon glyphicon-ok-sign',
+                        title: '<strong>Success!</strong>',
+                        message: 'Size Status was changed!.'
+                    }, {
+                        type: 'success',
+                        placement: {
+                            from: 'top',
+                            align: 'right'
+                        },
+                        delay: 2500,
+                        timer: 200,
+                        mouse_over: 'pause',
+                        animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                        },
+                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                '<span data-notify="icon"></span> ' +
+                                '<span data-notify="title">{1}</span> ' +
+                                '<span data-notify="message">{2}</span>' +
+                                '<div class="progress" data-notify="progressbar">' +
+                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                '</div>' +
+                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                '</div>'
+                    });
+                } else {
+                    $.notify({
+                        icon: 'glyphicon glyphicon-warning-sign',
+                        title: '<strong>Error!</strong>',
+                        message: 'Change Status Failed, Please Refresh (F5) and do it again!.'
+                    }, {
+                        type: 'danger',
+                        placement: {
+                            from: 'top',
+                            align: 'right'
+                        },
+                        delay: 3000,
+                        timer: 200,
+                        mouse_over: 'pause',
+                        animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                        },
+                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                '<span data-notify="icon"></span> ' +
+                                '<span data-notify="title">{1}</span> ' +
+                                '<span data-notify="message">{2}</span>' +
+                                '<div class="progress" data-notify="progressbar">' +
+                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                '</div>' +
+                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                '</div>'
+                    });
+                }
+            }
+        });
+    });
+
+    /* 4. Edit Product SubImg */
+    /* Change Order */
+    /* Edit Product SubImg - Sort Order SubImg - Update to Database */
+    $("#fs-product-update-page").on("sortupdate", ".fs-edit-product-table-sub-img tbody", function (event, ui) {
+        var afterSort = $(this).children("tr");
+        var colorID = parseInt($("#fs-select-product-update-choose-color").val());
+
+        var numberOfElement = afterSort.length;
+
+        $.each(afterSort, function (i, ite) {
+            var productSubImgID = ite.attributes[1].value;
+            var position = i;
+            $.ajax({
+                url: "admin/ajax/updateSubImgOrder.html",
+                method: "POST",
+                data: {productSubImgID: productSubImgID, position: position},
+                success: function () {
+                    if (parseInt(numberOfElement) == parseInt(i + 1)) {
+                        $.ajax({
+                            url: "admin/ajax/getSubImgListByColor.html",
+                            method: "POST",
+                            data: {colorID: colorID},
+                            beforeSend: function () {
+                                $("#fs-ajax-loading").css("display", "block");
+                            },
+                            success: function (response) {
+                                setTimeout(function () {
+                                    $("#fs-edit-product-tbody-sub-img-" + colorID).html(response);
+                                    $("#fs-edit-product-tbody-sub-img-" + colorID + " input[name=\"fs-update-product-sub-img\"]").fileuploader({
+                                        limit: 1,
+                                        extensions: ['jpg', 'jpeg', 'png'],
+                                        enableApi: true
+                                    });
+                                    $("#fs-ajax-loading").css("display", "none");
+
+                                    $.notify({
+                                        icon: 'glyphicon glyphicon-ok-sign',
+                                        title: '<strong>Success!</strong>',
+                                        message: 'Sub-Image Order was changed!.'
+                                    }, {
+                                        type: 'success',
+                                        placement: {
+                                            from: 'top',
+                                            align: 'right'
+                                        },
+                                        delay: 3000,
+                                        timer: 200,
+                                        mouse_over: 'pause',
+                                        animate: {
+                                            enter: 'animated fadeInRight',
+                                            exit: 'animated fadeOutRight'
+                                        },
+                                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                                '<span data-notify="icon"></span> ' +
+                                                '<span data-notify="title">{1}</span> ' +
+                                                '<span data-notify="message">{2}</span>' +
+                                                '<div class="progress" data-notify="progressbar">' +
+                                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                                '</div>' +
+                                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                                '</div>'
+                                    });
+                                }, 400);
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+    });
+
+    /* Update New SubImg */
+    $("#fs-product-update-page").on("click", ".fs-btn-edit-product-sub-img-form", function () {
+        var btnStt = $(this).attr("fs-btn-edit-subimg-stt");
+        var inputSubImg = $(this).parent().prev().find("input[name='fs-update-product-sub-img']");
+        var subImgID = parseInt($(this).parent().parent().attr("fs-productSubImgID"));
+        var api = $.fileuploader.getInstance(inputSubImg);
+        if (btnStt == "save") {
+            var newSubImg = inputSubImg.val();
+            var changeThis = $(this).parent().siblings(".fs-update-sub-img-change-image-here");
+            var currentForm = $(this).parents("form.fs-form-update-subimg")[0];
+            if (newSubImg == "") {
+                inputSubImg.parent().siblings(".fs-update-product-sub-img-error-mes").text("Please Choose an Image!");
+                inputSubImg.focus();
+            } else {
+                var formData = new FormData();
+                formData.append("subImgID", subImgID);
+                formData.append("newImg", inputSubImg[0].files[0]);
+
+                $.ajax({
+                    url: "admin/ajax/changeSubImg.html",
+                    method: "POST",
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+                        $("#fs-ajax-loading").css("display", "block");
+                    },
+                    success: function (response) {
+                        if (response != "fail") {
+                            setTimeout(function () {
+                                currentForm.reset();
+                                changeThis.html("<img src=\"assets/images/products/subImg/" + response + "\" style=\"width: 80px\">");
+                                $("#fs-ajax-loading").css("display", "none");
+
+                                //Reset to begin
+                                //btn edit
+                                $(".fs-btn-edit-product-sub-img-form").attr("disabled", false);
+                                $(".fs-btn-edit-product-sub-img-form").attr("fs-btn-edit-subimg-stt", "edit");
+                                $(".fs-btn-edit-product-sub-img-form").removeClass("btn-primary");
+                                $(".fs-btn-edit-product-sub-img-form").addClass("btn-warning");
+                                $(".fs-btn-edit-product-sub-img-form").html("<i class=\"fa fa-wrench\" aria-hidden=\"true\"></i> Edit");
+
+                                //btn delete
+                                $(".fs-btn-delete-product-sub-img").attr("disabled", false);
+                                $(".fs-btn-delete-product-sub-img").attr("fs-btn-delete-subimg-stt", "delete")
+                                $(".fs-btn-delete-product-sub-img").removeClass("btn-default");
+                                $(".fs-btn-delete-product-sub-img").addClass("btn-danger");
+                                $(".fs-btn-delete-product-sub-img").html("<i class=\"fa fa-close\" aria-hidden=\"true\"></i> Delete");
+
+                                api.disable();
+                                $(".fs-update-product-sub-img-error-mes").text("");
+                                $.notify({
+                                    icon: 'glyphicon glyphicon-ok-sign',
+                                    title: '<strong>Success!</strong>',
+                                    message: 'Image was changed!.'
+                                }, {
+                                    type: 'success',
+                                    placement: {
+                                        from: 'top',
+                                        align: 'right'
+                                    },
+                                    delay: 3400,
+                                    timer: 200,
+                                    mouse_over: 'pause',
+                                    animate: {
+                                        enter: 'animated fadeInRight',
+                                        exit: 'animated fadeOutRight'
+                                    },
+                                    template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                            '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                            '<span data-notify="icon"></span> ' +
+                                            '<span data-notify="title">{1}</span> ' +
+                                            '<span data-notify="message">{2}</span>' +
+                                            '<div class="progress" data-notify="progressbar">' +
+                                            '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                            '</div>' +
+                                            '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                            '</div>'
+                                });
+
+                            }, 300);
+                        } else {
+                            $.notify({
+                                icon: 'glyphicon glyphicon-warning-sign',
+                                title: '<strong>Error!</strong>',
+                                message: 'Change Image FAILED!, Please Refresh (F5) and do it again!.'
+                            }, {
+                                type: 'danger',
+                                placement: {
+                                    from: 'top',
+                                    align: 'right'
+                                },
+                                delay: 3000,
+                                timer: 200,
+                                mouse_over: 'pause',
+                                animate: {
+                                    enter: 'animated fadeInRight',
+                                    exit: 'animated fadeOutRight'
+                                },
+                                template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                        '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                        '<span data-notify="icon"></span> ' +
+                                        '<span data-notify="title">{1}</span> ' +
+                                        '<span data-notify="message">{2}</span>' +
+                                        '<div class="progress" data-notify="progressbar">' +
+                                        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                        '</div>' +
+                                        '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                        '</div>'
+                            });
+                        }
+                    }
+                });
+            }
+        } else {
+            $(".fs-btn-edit-product-sub-img-form").attr("disabled", true);
+            $(this).attr("fs-btn-edit-subimg-stt", "save");
+            $(this).removeClass("btn-warning");
+            $(this).addClass("btn-primary");
+            $(this).html("<i class=\"fa fa-floppy-o\" aria-hidden=\"true\"></i> Save");
+            $(this).attr("disabled", false);
+
+            $(".fs-btn-delete-product-sub-img").attr("disabled", true);
+            $(this).siblings("button").attr("fs-btn-delete-subimg-stt", "cancel");
+            $(this).siblings("button").removeClass("btn-danger");
+            $(this).siblings("button").addClass("btn-default");
+            $(this).siblings("button").html("<i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Cancel");
+            $(this).siblings("button").attr("disabled", false);
+
+            var api = $.fileuploader.getInstance(inputSubImg);
+            api.enable();
+        }
+    });
+
+    $("#fs-product-update-page").on("click", ".fs-btn-delete-product-sub-img", function () {
+        if ($(this).attr("fs-btn-delete-subimg-stt") == "cancel") {
+            $(this).attr("fs-btn-delete-subimg-stt", "delete");
+            $(this).removeClass("btn-default");
+            $(this).addClass("btn-danger");
+            $(this).html("<i class=\"fa fa-close\" aria-hidden=\"true\"></i> Delete");
+
+            $(".fs-btn-delete-product-sub-img").attr("disabled", false);
+            $(".fs-btn-edit-product-sub-img-form").attr("disabled", false);
+            $(this).siblings("button").attr("fs-btn-edit-subimg-stt", "edit");
+            $(this).siblings("button").removeClass("btn-primary");
+            $(this).siblings("button").addClass("btn-warning");
+            $(this).siblings("button").html("<i class=\"fa fa-wrench\" aria-hidden=\"true\"></i> Edit");
+
+            $(".fs-update-product-sub-img-error-mes").text("");
+            var inputSubImg = $(this).parent().prev().find("input[name='fs-update-product-sub-img']");
+            var api = $.fileuploader.getInstance(inputSubImg);
+            api.disable();
+        } else {
+            var subImgID = $(this).parent().parent().attr("fs-productSubImgID");
+            var colorID = parseInt($("#fs-select-product-update-choose-color").val());
+            $("#fs-update-product-confirm-delete-subImg").attr("data-1", subImgID);
+            $("#fs-update-product-confirm-delete-subImg").modal("show");
+        }
+    });
+
+    $("#fs-update-product-confirm-delete-subImg").on("click", ".btn-update-product-confirm-delete-subImg", function () {
+        $("#fs-update-product-confirm-delete-subImg").modal("hide");
+        var subImgID = $("#fs-update-product-confirm-delete-subImg").attr("data-1");
+        var colorID = parseInt($("#fs-select-product-update-choose-color").val());
+        $.ajax({
+            url: "admin/ajax/deleteProductSubImg.html",
+            method: "POST",
+            data: {subImgID: subImgID, colorID: colorID},
+            beforeSend: function () {
+                $("#fs-ajax-loading").css("display", "block");
+            },
+            success: function (response) {
+                if (response == "1") {
+                    $.notify({
+                        icon: 'glyphicon glyphicon-warning-sign',
+                        title: '<strong>Error!</strong>',
+                        message: 'Delete FAILED!, That Image is no longer existed!.'
+                    }, {
+                        type: 'danger',
+                        placement: {
+                            from: 'top',
+                            align: 'right'
+                        },
+                        delay: 3000,
+                        timer: 200,
+                        mouse_over: 'pause',
+                        animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                        },
+                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                '<span data-notify="icon"></span> ' +
+                                '<span data-notify="title">{1}</span> ' +
+                                '<span data-notify="message">{2}</span>' +
+                                '<div class="progress" data-notify="progressbar">' +
+                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                '</div>' +
+                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                '</div>'
+                    });
+                } else if (response == "2") {
+                    $.notify({
+                        icon: 'glyphicon glyphicon-warning-sign',
+                        title: '<strong>Error!</strong>',
+                        message: 'Delete FAILED!, Please Refresh (F5) and do it again!.'
+                    }, {
+                        type: 'danger',
+                        placement: {
+                            from: 'top',
+                            align: 'right'
+                        },
+                        delay: 3000,
+                        timer: 200,
+                        mouse_over: 'pause',
+                        animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                        },
+                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                '<span data-notify="icon"></span> ' +
+                                '<span data-notify="title">{1}</span> ' +
+                                '<span data-notify="message">{2}</span>' +
+                                '<div class="progress" data-notify="progressbar">' +
+                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                '</div>' +
+                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                '</div>'
+                    });
+                } else {
+                    setTimeout(function () {
+                        $("#fs-edit-product-tbody-sub-img-" + colorID).html(response);
+                        $("#fs-edit-product-tbody-sub-img-" + colorID + " input[name=\"fs-update-product-sub-img\"]").fileuploader({
+                            limit: 1,
+                            extensions: ['jpg', 'jpeg', 'png'],
+                            enableApi: true
+                        });
+                        $("#fs-ajax-loading").css("display", "none");
+
+                        $.notify({
+                            icon: 'glyphicon glyphicon-ok-sign',
+                            title: '<strong>Success!</strong>',
+                            message: 'A Product Image was <b>deleted</b>!.'
+                        }, {
+                            type: 'success',
+                            placement: {
+                                from: 'top',
+                                align: 'right'
+                            },
+                            delay: 3000,
+                            timer: 200,
+                            mouse_over: 'pause',
+                            animate: {
+                                enter: 'animated fadeInRight',
+                                exit: 'animated fadeOutRight'
+                            },
+                            template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                    '<span data-notify="icon"></span> ' +
+                                    '<span data-notify="title">{1}</span> ' +
+                                    '<span data-notify="message">{2}</span>' +
+                                    '<div class="progress" data-notify="progressbar">' +
+                                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                    '</div>' +
+                                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                    '</div>'
+                        });
+                    }, 400);
+                }
+            }
+        });
+    });
+
+    $("#fs-product-update-page").on("change", ".fs-update-product-sub-img", function () {
+        if ($(this).val() != "") {
+            $(".fs-update-product-sub-img-error-mes").text("");
+        }
+    });
 
     /*==========================END VINH - PRODUCT============================*/
 
@@ -760,10 +1891,10 @@ $(document).ready(function () {
 //        changeYear: true
 //    });
     /* BẮT validation CKSinder */
-    
 
-        
-     
+
+
+
 
     /* BẮT validation CREATE BLOG CATEGORY */
     // blog-category-add
@@ -862,7 +1993,7 @@ $(document).ready(function () {
         else if (blogImg == "") {
             $("#fs-error-mess-blog-img").text("Image cannot be empty!");
         }
-        else if (blogContent == ""){
+        else if (blogContent == "") {
 //              $("#fs-form-create-blog").validate(
 //            {
 //                ignore: [],
@@ -1018,7 +2149,7 @@ $(document).ready(function () {
     });
 
 // Validate Ckeditor
-      
+
 
 
 
