@@ -94,22 +94,6 @@
                     <button onclick="btnCheckoutClick();" class="btn btn-danger pull-right" style="color: #fff !important;">PROCEED TO CHECKOUT</button>
                 </div>
                 <div class="clearfix space10"></div>
-<!--                <div class="row shipping-info-wrap" align="center">
-                    <div>
-                        <div class="totals">
-                            <ul class="checkout-types">
-                                <li class="space10">
-                                    <strong>Grand Total: $${grandTotal}</strong>
-                                </li>
-                                <li class="space10">
-                                    <button onclick="btnCheckoutClick();" type="button" class="btn btn-danger" style="color: #fff !important;">
-                                        Proceed to checkout
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>-->
                 <div class="space40"></div>
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
@@ -229,7 +213,7 @@
 <script type="text/javascript">
     function btnCheckoutClick() {
         var cartSize = ${cartList.size()};
-        if (cartSize === 0) {
+        if (cartSize == 0) {
             $("#error").html("<div class=\"alert alert-danger\">\n"
                     + "<strong>You have no item in cart!</strong> \n"
                     + "</div>");

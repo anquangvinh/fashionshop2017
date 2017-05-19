@@ -1,7 +1,11 @@
 package spring.client.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +31,7 @@ import spring.ejb.UserAddressesStateLessBeanLocal;
 import spring.ejb.UsersStateLessBeanLocal;
 import spring.entity.CartLineInfo;
 import spring.entity.Categories;
+import spring.entity.CheckoutResponse;
 import spring.entity.DiscountVoucher;
 import spring.entity.Orders;
 import spring.entity.Products;
@@ -44,47 +49,6 @@ public class OrdersController {
     OrderStateFulBeanLocal orderStateFulBean = lookupOrderStateFulBeanLocal();
     OrderStateLessBeanLocal orderStateLessBean = lookupOrderStateLessBeanLocal();
 
-//    @RequestMapping(value = "addtocart/{colorID}/{sizeID}/{productID}/{quantity}", method = RequestMethod.POST)
-//    public String addtocart(ModelMap model,
-//              @PathVariable("colorID") Integer colorID,
-//              @PathVariable("sizeID") Integer sizeID,
-//              @PathVariable("productID") Integer productID,
-//              @PathVariable("quantity") Integer quantity,
-//              RedirectAttributes flashAttr) {
-//        Products pro = orderStateLessBean.getProductByID(productID);
-//        SizesByColor sizesByColor = orderStateLessBean.getSizesByColorBySizeIDandColorID(sizeID,colorID);
-//        if (pro != null) {
-//            if (colorID == 0 || sizeID == 0) {
-//                flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
-//                          + "<strong>Danger!</strong> Please choose color and size!.\n"
-//                          + "</div>");
-//                return "redirect:/" + pro.getProductID() + "-" + pro.getProductColorList().get(0).getColorID() + "-" + pro.getProductNameNA() + ".html";
-//            } else {
-//                if (sizesByColor != null) {
-//                    if (sizesByColor.getQuantity() < quantity) {
-//                        flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
-//                                  + "<strong>Danger!</strong> Not enough stock! Please enter different quantity.\n"
-//                                  + "</div>");
-//                        return "redirect:/" + pro.getProductID() + "-" + pro.getProductColorList().get(0).getColorID() + "-" + pro.getProductNameNA() + ".html";
-//                    }
-//                    CartLineInfo cartLineInfo = new CartLineInfo();
-//                    cartLineInfo.setProduct(pro);
-//                    cartLineInfo.setSizesByColor(sizesByColor);
-//                    cartLineInfo.setQuantity(quantity);
-//                    orderStateFulBean.addProduct(cartLineInfo);
-//                    flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
-//                              + "<strong>Success!</strong> Add Product to Cart Successfully!\n"
-//                              + "</div>");
-//                    return "redirect:/" + pro.getProductID() + "-" + pro.getProductColorList().get(0).getColorID() + "-" + pro.getProductNameNA() + ".html";
-//                }
-//                flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
-//                          + "<strong>Danger!</strong> Color and Size error!\n"
-//                          + "</div>");
-//                return "redirect:/" + pro.getProductID() + "-" + pro.getProductColorList().get(0).getColorID() + "-" + pro.getProductNameNA() + ".html";
-//            }
-//        }
-//        return "redirect:/index.html";
-//    }
     @ResponseBody
     @RequestMapping(value = "ajax/addtocart", method = RequestMethod.POST)
     public String ajaxAddtocart(@RequestParam("productID") Integer productID,
@@ -114,11 +78,11 @@ public class OrdersController {
     public String checkout(ModelMap model, HttpServletRequest request) {
         String email = (String) request.getSession().getAttribute("emailUser");
         if (email == null) {
-            return "redirect:/user/login.html";
+            return "redirect:/index.html";
         } else {
             Users users = usersStateLessBean.findUserByEmail(email);
-            if (users.getRole().getRoleID() == 1 || users.getRole().getRoleID() == 2) {
-                return "redirect:/user/login.html";
+            if (users == null) {
+                return "redirect:/index.html";
             } else {
                 //2 dòng này thêm để render ra menu chính
                 List<Categories> cateList = productStateLessBean.categoryList();
@@ -134,12 +98,6 @@ public class OrdersController {
     @RequestMapping(value = "checkout", method = RequestMethod.POST)
     public String checkoutPost(ModelMap model, HttpServletRequest request, RedirectAttributes flashAttr) {
         String addressChoice = request.getParameter("address-chose");
-        if (addressChoice == null) {
-            flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
-                      + "<strong>You must choose your ADDRESS METHOD!</strong>\n"
-                      + "</div>");
-            return "redirect:/orders/checkout.html";
-        }
         String success_orderID = "";
         String email = (String) request.getSession().getAttribute("emailUser");
         Users users = usersStateLessBean.findUserByEmail(email);
@@ -153,7 +111,7 @@ public class OrdersController {
             String firstname = request.getParameter("diffFirstname");
             String lastname = request.getParameter("diffLastname");
             String address = request.getParameter("diffAddress");
-            String province = request.getParameter("diffProvince");
+//            String province = request.getParameter("diffProvince");
             String phone = request.getParameter("diffPhone");
             Orders orders = new Orders();
             orders.setUser(users);
@@ -161,7 +119,7 @@ public class OrdersController {
             orders.setReceiverFirstName(firstname);
             orders.setReceiverLastName(lastname);
             orders.setPhoneNumber(phone);
-            orders.setDeliveryAddress(address + ", " + province);
+            orders.setDeliveryAddress(address);
             if (discountVoucher != null) {
                 orders.setVoucher(discountVoucher);
             } else {
@@ -217,6 +175,9 @@ public class OrdersController {
 
     @RequestMapping(value = "shoppingcart")
     public String shoppingcart(ModelMap model, HttpServletRequest request) {
+        if (orderStateFulBean.showCart().size() == 0 || orderStateFulBean.showCart() == null) {
+            return "redirect:/index.html";
+        }
         //2 dòng này thêm để render ra menu chính
         List<Categories> cateList = productStateLessBean.categoryList();
         model.addAttribute("cateList", cateList);
@@ -238,7 +199,7 @@ public class OrdersController {
             }
         }
         flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
-                  + "<strong>Success!</strong> Update Cart Successfully!.\n"
+                  + "<strong>UPDATE CART SUCCESSFULLY</strong>\n"
                   + "</div>");
         return "redirect:/orders/shoppingcart.html";
     }
@@ -251,9 +212,12 @@ public class OrdersController {
         CartLineInfo cartLineInfo = orderStateFulBean.getProductInListByID(productid, sizeid, colorid);
         if (cartLineInfo != null) {
             orderStateFulBean.deleteProduct(cartLineInfo);
+            if (orderStateFulBean.showCart().size() == 0 || orderStateFulBean.showCart() == null) {
+                return "redirect:/index.html";
+            }
         }
         flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
-                  + "<strong>Success!</strong> Delete Item in Cart Successfully!.\n"
+                  + "<strong>DELETE ITEM IN CART SUCCESSFULLY</strong>\n"
                   + "</div>");
         return "redirect:/orders/shoppingcart.html";
     }
@@ -274,7 +238,7 @@ public class OrdersController {
     public String orderhistory(ModelMap model, HttpServletRequest request) {
         String email = (String) request.getSession().getAttribute("emailUser");
         if (email == null) {
-            return "redirect:/user/login.html";
+            return "redirect:/index.html";
         }
         model.addAttribute("orderList", orderStateLessBean.getAllOrderByUserID(usersStateLessBean.findUserByEmail(email).getUserID()));
         //2 dòng này thêm để render ra menu chính
@@ -287,7 +251,7 @@ public class OrdersController {
     public String orderhistorydetail(ModelMap model, @PathVariable("orderID") Integer orderID, HttpServletRequest request) {
         String email = (String) request.getSession().getAttribute("emailUser");
         if (email == null) {
-            return "redirect:/user/login.html";
+            return "redirect:/index.html";
         }
         model.addAttribute("orderdetailList", orderStateLessBean.getAllOrderDetailByOrderID(orderID));
         model.addAttribute("order", orderStateLessBean.getOrderByID(orderID));
@@ -367,32 +331,133 @@ public class OrdersController {
 
     @ResponseBody
     @RequestMapping(value = "ajax/discount", method = RequestMethod.POST)
-    public String getDiscount(@RequestParam("discountCode") String discountCode) {
+    public String getDiscount(@RequestParam("discountCode") String discountCode, @RequestParam("emailUser") String emailUser) {
         DiscountVoucher discountVoucher = orderStateLessBean.getDiscountVoucherByID(discountCode);
+        Users users = usersStateLessBean.findUserByEmail(emailUser);
+        ObjectMapper mapper = new ObjectMapper();
         if (discountVoucher != null) {
-            if (discountVoucher.getQuantity() == 0) {
-                return "empty";
-            } else {
-                DecimalFormat df = new DecimalFormat("#.#");
-                df.setRoundingMode(RoundingMode.FLOOR);
-                float discountTotal = orderStateFulBean.subTotal() * discountVoucher.getFloatDiscount();
-                float orderTotal = orderStateFulBean.subTotal() - discountTotal;
-                String str_show_discount = "<tr>\n"
-                          + "                                    <th>Discount</th>\n"
-                          + "                                    <td>\n"
-                          + "                                        <div class=\"\">-$" + df.format(discountTotal) + "</div>\n"
-                          + "                                    </td> \n"
-                          + "                                </tr>\n"
-                          + "                                <tr>\n"
-                          + "                                    <th>Order Total</th>\n"
-                          + "                                    <td>\n"
-                          + "                                        <div class=\"grandTotal\">$" + orderTotal + "</div>\n"
-                          + "                                    </td> \n"
-                          + "                                </tr>";
-                return str_show_discount;
+            if (discountCode.equals(discountVoucher.getVoucherID())) {
+                if (users != null) {
+                    for (Orders orders : users.getOrdersList()) {
+                        if (orders.getVoucher() != null) {
+                            if (discountVoucher.getVoucherID().equals(orders.getVoucher().getVoucherID())) { // da su dung voucher nay
+                                CheckoutResponse checkoutResponse = new CheckoutResponse();
+                                checkoutResponse.setStatus("4");
+                                try {
+                                    String result = mapper.writeValueAsString(checkoutResponse);
+                                    return result;
+                                } catch (JsonProcessingException ex) {
+                                    Logger.getLogger(OrdersController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                        }
+                    }
+                    if (discountVoucher.getQuantity() == 0) { // out of quantity
+                        CheckoutResponse checkoutResponse = new CheckoutResponse();
+                        checkoutResponse.setStatus("0");
+                        try {
+                            String result = mapper.writeValueAsString(checkoutResponse);
+                            return result;
+                        } catch (JsonProcessingException ex) {
+                            Logger.getLogger(OrdersController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        Date todayDate = new Date();
+                        Date beginDate = discountVoucher.getBeginDate();
+                        Date endDate = discountVoucher.getEndDate();
+                        if ((beginDate == null && endDate == null)
+                                  || (todayDate.after(beginDate) && todayDate.before(endDate))
+                                  || (todayDate.after(beginDate) && endDate == null)
+                                  || (beginDate == null && todayDate.before(endDate))) {
+                            CheckoutResponse checkoutResponse = new CheckoutResponse();
+                            DecimalFormat df = new DecimalFormat("#.#");
+                            df.setRoundingMode(RoundingMode.FLOOR);
+                            float discountTotal = orderStateFulBean.subTotal() * discountVoucher.getFloatDiscount();
+                            float orderTotal = orderStateFulBean.subTotal() - discountTotal;
+                            String str_show_discount = "<tr>\n"
+                                      + "                                    <th>Discount</th>\n"
+                                      + "                                    <td>\n"
+                                      + "                                        <div class=\"\">-$" + df.format(discountTotal) + "</div>\n"
+                                      + "                                    </td> \n"
+                                      + "                                </tr>\n"
+                                      + "                                <tr>\n"
+                                      + "                                    <th>Order Total</th>\n"
+                                      + "                                    <td>\n"
+                                      + "                                        <div class=\"grandTotal\">$" + orderTotal + "</div>\n"
+                                      + "                                    </td> \n"
+                                      + "                                </tr>";
+                            String str_show_percent_discount = "<div id=\"discountShow\" style=\"padding-bottom: 15px;\">\n"
+                                      + "<input type=\"hidden\" id=\"discount-code-input\" name=\"discount-code-input\" value=\"" + discountCode + "\"/>\n"
+                                      + "<b>Your Discount Code: " + discountCode + "; Discount " + discountVoucher.getDiscount() + "%</b>&nbsp<button type=\"button\" class=\"fa fa-times\" id=\"cancel-discount\"  onclick=\"enterDiscountAgain();\"></button>\n"
+                                      + "</div>";
+                            checkoutResponse.setShowDiscount(str_show_discount);
+                            checkoutResponse.setShowDiscountPercent(str_show_percent_discount);
+                            try {
+                                String result = mapper.writeValueAsString(checkoutResponse);
+                                return result;
+                            } catch (JsonProcessingException ex) {
+                                Logger.getLogger(OrdersController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        } else if ((todayDate.before(beginDate) && endDate != null) || (todayDate.before(beginDate) && endDate == null)) { // chua toi han
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                            String date = sdf.format(beginDate);
+                            CheckoutResponse checkoutResponse = new CheckoutResponse();
+                            checkoutResponse.setStatus("2");
+                            checkoutResponse.setShowDiscount(date);
+                            try {
+                                String result = mapper.writeValueAsString(checkoutResponse);
+                                return result;
+                            } catch (JsonProcessingException ex) {
+                                Logger.getLogger(OrdersController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        } else if ((todayDate.after(endDate) && beginDate != null) || (todayDate.after(endDate) && beginDate == null)) { // qua han
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                            String date = sdf.format(endDate);
+                            CheckoutResponse checkoutResponse = new CheckoutResponse();
+                            checkoutResponse.setStatus("3");
+                            checkoutResponse.setShowDiscount(date);
+                            try {
+                                String result = mapper.writeValueAsString(checkoutResponse);
+                                return result;
+                            } catch (JsonProcessingException ex) {
+                                Logger.getLogger(OrdersController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }
+                } else { // error
+                    CheckoutResponse checkoutResponse = new CheckoutResponse();
+                    checkoutResponse.setStatus("5");
+                    try {
+                        String result = mapper.writeValueAsString(checkoutResponse);
+                        return result;
+                    } catch (JsonProcessingException ex) {
+                        Logger.getLogger(OrdersController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            } else { // wrong discount code
+                CheckoutResponse checkoutResponse = new CheckoutResponse();
+                checkoutResponse.setStatus("6");
+                try {
+                    String result = mapper.writeValueAsString(checkoutResponse);
+                    return result;
+                } catch (JsonProcessingException ex) {
+                    Logger.getLogger(OrdersController.class.getName()).log(Level.SEVERE, null, ex);
+                    return null;
+                }
+            }
+        } else {
+            CheckoutResponse checkoutResponse = new CheckoutResponse(); // khong tim thay discount vou
+            checkoutResponse.setStatus("1");
+            try {
+                String result = mapper.writeValueAsString(checkoutResponse);
+                return result;
+            } catch (JsonProcessingException ex) {
+                Logger.getLogger(OrdersController.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
             }
         }
-        return "error";
+
+        return null;
     }
 
     @ResponseBody

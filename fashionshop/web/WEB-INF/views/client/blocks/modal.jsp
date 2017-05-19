@@ -17,7 +17,8 @@
                 </div>
                 <div class="col-md-7 col-sm-6">
                     <div class="product-single fs-modal-product">
-                        <p class="help-block fs-modal-error" style="font-weight: 700;"></p>
+                        <div id="error-cart-product-modal">
+                        </div>
                         <div class="ps-header">
                             <h3 class="fs-product-name"></h3>
                             <div class="ps-price fs-product-price"></div>
