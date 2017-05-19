@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -30,7 +31,7 @@ public class DiscountVoucher implements Serializable {
     private Date endDate;
     private String description;
 
-    @OneToMany(mappedBy = "voucher")
+    @OneToMany(mappedBy = "voucher", cascade = CascadeType.REFRESH)
     @JsonManagedReference
     private List<Orders> ordersList;
     

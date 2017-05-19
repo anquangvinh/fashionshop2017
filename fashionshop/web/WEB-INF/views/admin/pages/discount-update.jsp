@@ -9,7 +9,7 @@
                 <h1 class="page-header"> 
                     <strong>Discount</strong> 
                     <i class="fa fa-caret-right fa-style" aria-hidden="true" style="color: #337ab7"></i> 
-                    <span style="font-size: 0.9em">List - Update</span>
+                    <span style="font-size: 0.9em">UPDATE VOUCHER CODE: <span style="color: red;">${targetDiscountVoucher.voucherID}</span></span>
                 </h1>
             </div>
             <!-- /.col-lg-12 -->
@@ -18,33 +18,39 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <div>
+                <div id="error-discount-update">
                     ${error}
                 </div>
                 <div class="col-lg-6">
-                    <form:form name="discount-update-form" action="admin/orders/discountupdate/${targetDiscountVoucher.voucherID}.html" 
+                    <form:form id="fs-form-update-discount" name="discount-update-form" action="admin/orders/discountupdate/${targetDiscountVoucher.voucherID}.html" 
                                method="POST" modelAttribute="targetDiscountVoucher">
-                        <div class="form-group">
-                            <label>Voucher Code</label>
-                            <%--<form:input cssClass="form-control" path="voucherID" disabled="disabled"/>--%>
-                            <input class="form-control" name="voucherID" id="voucherID" disabled="" value="${targetDiscountVoucher.voucherID}"/>
-                        </div>
+<!--                        <div class="form-group">
+                            <label>VOUCHER CODE: <span style="color: red;">${targetDiscountVoucher.voucherID}</span></label>
+                            <form:input cssClass="form-control" path="voucherID" readonly="true"/>
+                        </div>-->
                         <div class="form-group">
                             <label>Discount Percent</label>
-                            <%--<form:input cssClass="form-control" path="discount"/>--%>
-                            <input class="form-control" type="number" min="1" max="100" name="discount" id="discount" value="${targetDiscountVoucher.discount}"/>
+                            <form:input cssClass="form-control" path="discount"/>
                         </div>
                         <div class="form-group">
                             <label>Discount Quantity</label>
-                            <%--<form:input cssClass="form-control" path="quantity"/>--%>
-                            <input class="form-control" type="number" min="1" name="quantity" id="quantity" value="${targetDiscountVoucher.quantity}"/>
+                            <form:input cssClass="form-control" path="quantity"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Begin Date</label>
+                            <form:input cssClass="form-control" path="beginDate" readonly="true"/>
+                        </div>
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <form:input cssClass="form-control" path="endDate" readonly="true"/>
                         </div>
                         <div class="form-group">
                             <label>Description</label>
                             <form:input cssClass="form-control" path="description"/>
                         </div>
-                        <button type="submit" class="btn btn-success">UPDATE</button>
-                        <!--<button type="reset" class="btn btn-default">Reset</button>-->
+                        <button type="submit" id="btn-update-discount" class="btn btn-success">UPDATE</button>
+                        <button type="button" onclick="window.location = 'admin/orders/discountupdate/${targetDiscountVoucher.voucherID}.html';" class="btn btn-default">RESET</button>
+                        <button type="button" onclick="window.location = 'admin/orders/discountlist.html';" class="btn btn-default">CANCEL - BACK TO DISCOUNT LIST</button>
                     </form:form>
                 </div>
             </div>

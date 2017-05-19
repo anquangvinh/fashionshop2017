@@ -12,7 +12,7 @@
                 <h1 class="page-header"> 
                     <strong>Orders</strong> 
                     <i class="fa fa-caret-right fa-style" aria-hidden="true" style="color: #337ab7"></i> 
-                    <span style="font-size: 0.9em">List Detail Order NO.${order.ordersID}</span>
+                    <span style="font-size: 0.9em">Details Order NO.${order.ordersID}</span>
                 </h1>
             </div>
             <!-- /.col-lg-12 -->
@@ -47,7 +47,7 @@
                                 <td class="text-center fs-valign-middle">-$${orderdetail.product.getProductDiscountPrice()}</td>
                                 <td class="text-center fs-valign-middle">$${orderdetail.getTotalPrice()}</td>
                                 <td class="text-center fs-valign-middle">
-                                    <select name="status" class="form-control input-sm" onchange="window.location = 'admin/orders/confirmstatusOrderDetail/${orderdetail.ordersDetailID}/' + this.value + '.html';">
+                                    <select name="status-orderDetail" id="id-status-orderdetail" class="form-control input-sm" onchange="window.location = 'admin/orders/confirmstatusOrderDetail/${orderdetail.ordersDetailID}/' + this.value + '.html';">
                                         <c:choose>
                                             <c:when test="${orderdetail.status == 1}">
                                                 <option value="0">Not Change</option>

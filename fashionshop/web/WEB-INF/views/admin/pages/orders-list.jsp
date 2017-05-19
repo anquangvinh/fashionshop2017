@@ -44,7 +44,7 @@
                                     <fmt:formatDate value="${order.ordersDate}" pattern="dd-MM-yyyy hh:mm:ss"/>
                                 </td>
                                 <td class="text-center fs-valign-middle">
-                                    <select name="status" class="form-control input-sm" 
+                                    <select name="status-order" id="id-status-order" class="form-control input-sm" 
                                             onchange="window.location = 'admin/orders/confirmstatusOrder/${order.ordersID}/' + this.value + '.html';">
                                         <c:choose>
                                             <c:when test="${order.status == 1}">

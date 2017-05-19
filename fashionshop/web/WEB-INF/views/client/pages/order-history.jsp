@@ -1,4 +1,4 @@
-<%-- 
+s<%-- 
     Document   : order-history
     Created on : Feb 28, 2017, 5:05:55 PM
     Author     : vinh.an
@@ -20,7 +20,7 @@
                 <div id="account-id">
                     <h4 class="account-title"><span class="fa fa-chevron-right"></span>Your Order History</h4>                                                                    
                     <div class="order-history">
-                        <table class="cart-table">
+                        <table class="cart-table table-hover" id="table-order-history">
                             <thead>
                                 <tr>
                                     <th>Order ID</th>
@@ -69,7 +69,7 @@
                         </div>
                     </div>                          
                 </div>
-            </div>                        
+            </div>
         </div>
     </div>
 </div>

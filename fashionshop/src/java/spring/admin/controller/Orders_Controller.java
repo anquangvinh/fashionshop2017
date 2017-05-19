@@ -6,9 +6,13 @@
 package spring.admin.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.text.Normalizer;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -24,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import spring.ejb.OrderStateLessBeanLocal;
 import spring.entity.CartLineInfo;
 import spring.entity.DiscountVoucher;
+import spring.entity.OrderChart;
 import spring.entity.Orders;
 import spring.entity.OrdersDetail;
 import spring.entity.ProductColors;
@@ -42,7 +47,7 @@ public class Orders_Controller {
         return "admin/pages/orders-list";
     }
 
-    @RequestMapping(value = "chart")
+    @RequestMapping(value = "orderchart")
     public String ordersChart(ModelMap model) {
         return "admin/pages/orders-chart";
     }
@@ -50,10 +55,19 @@ public class Orders_Controller {
     @ResponseBody
     @RequestMapping(value = "ajax/getOrderListForChart", method = RequestMethod.GET)
     public String getOrderListForChart() {
-        List<Orders> ordersList = orderStateLessBean.getAllOrder();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        List<Orders> ordersList = orderStateLessBean.getAllOrderASC();
+        List<OrderChart> orderChartList = new ArrayList<>();
+        for (Orders orders : ordersList) {
+            OrderChart orderChart = new OrderChart();
+            String date = sdf.format(orders.getOrdersDate());
+            orderChart.setCategory(orders.getOrdersDate().toString());
+            orderChart.setPaymentTotal(orders.getPaymentTotal());
+            orderChartList.add(orderChart);
+        }
         try {
             ObjectMapper mapper = new ObjectMapper();
-            String result = mapper.writeValueAsString(ordersList);
+            String result = mapper.writeValueAsString(orderChartList);
             return result;
         } catch (Exception e) {
             return "Error!" + e.getMessage();
@@ -95,10 +109,12 @@ public class Orders_Controller {
               @RequestParam("searchText") String searchText) {
         String html = "";
         if (searchType == 1) {
-            List<Products> proList = orderStateLessBean.getListProductsByName(searchText);
+            String temp = Normalizer.normalize(searchText, Normalizer.Form.NFD);
+            Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+            List<Products> proList = orderStateLessBean.getListProductsByName(pattern.matcher(temp).replaceAll("").replaceAll(" ", "%"));
             if (proList != null) {
-                for (int i = 0; i < 4; i++) {
-                    html += "<tr>\n"
+                for (int i = 0; i < proList.size(); i++) {
+                    html += "<tr style=\"height: 30px;\">\n"
                               + "<td class=\"text-center fs-valign-middle proID\">" + proList.get(i).getProductID() + "</td>\n"
                               + "<td class=\"text-center fs-valign-middle\">" + proList.get(i).getProductName() + "</td>\n"
                               + "<td class=\"text-center fs-valign-middle\">" + proList.get(i).getCategory().getCateName() + "/" + proList.get(i).getSubCate().getSubCateName() + "</td>\n"
@@ -106,22 +122,13 @@ public class Orders_Controller {
                               + "<td class=\"text-center fs-valign-middle\"> $" + proList.get(i).getPrice() + "</td>\n"
                               + "</tr>";
                 }
-//                for (Products pro : proList) {
-//                    html += "<tr>\n"
-//                              + "<td class=\"text-center fs-valign-middle proID\">" + pro.getProductID() + "</td>\n"
-//                              + "<td class=\"text-center fs-valign-middle\">" + pro.getProductName() + "</td>\n"
-//                              + "<td class=\"text-center fs-valign-middle\">" + pro.getCategory().getCateName() + "/" + pro.getSubCate().getSubCateName() + "</td>\n"
-//                              + "<td class=\"text-center fs-valign-middle\"> $" + pro.getProductDiscount() + "</td>\n"
-//                              + "<td class=\"text-center fs-valign-middle\"> $" + pro.getPrice() + "</td>\n"
-//                              + "</tr>";
-//                }
             } else {
                 html = "0";
             }
         } else {
             Products pro = orderStateLessBean.getProductByID(Integer.parseInt(searchText));
             if (pro != null) {
-                html = "<tr>\n"
+                html = "<tr style=\"height: 30px;\">\n"
                           + "<td class=\"proID\">" + pro.getProductID() + "</td>\n"
                           + "<td class=\"text-center fs-valign-middle\">" + pro.getProductName() + "</td>\n"
                           + "<td class=\"text-center fs-valign-middle\">" + pro.getCategory().getCateName() + "/" + pro.getSubCate().getSubCateName() + "</td>\n"
@@ -197,21 +204,21 @@ public class Orders_Controller {
                 Products pro = orderStateLessBean.getProductByID(productID);
                 Orders orders = orderStateLessBean.getOrderByID(orderID);
                 if (pro == null || orders == null) {
-                    return "";
+                    return "2";
                 } else {
                     CartLineInfo cartLineInfo = new CartLineInfo();
                     cartLineInfo.setProduct(pro);
                     cartLineInfo.setQuantity(quantity);
                     cartLineInfo.setSizesByColor(sizesByColor);
                     if (orderStateLessBean.createOrderDetail(cartLineInfo, orders) == 0) {
-                        return "";
+                        return "2";
                     } else {
                         return "1";
                     }
                 }
             }
         }
-        return "";
+        return "2";
     }
 
     @RequestMapping(value = "discountadd", method = RequestMethod.GET)
@@ -227,18 +234,18 @@ public class Orders_Controller {
         int checkSta = orderStateLessBean.createDiscountVoucher(newDiscountVoucher);
         if (checkSta == 2) {
             model.addAttribute("error", "<div class=\"alert alert-danger\">\n"
-                      + "<strong>Discount Code has been existed</strong>\n"
+                      + "<strong>DISCOUNT CODE HAS BEEN EXISTED</strong>\n"
                       + "</div>");
             model.addAttribute("discountVoucher", newDiscountVoucher);
             return "admin/pages/discount-add";
         } else if (checkSta == 0) {
             flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
-                      + "<strong>Error was happened</strong>\n"
+                      + "<strong>ERROR HAPPENED</strong>\n"
                       + "</div>");
             return "redirect:/admin/orders/discountadd.html";
         } else {
             flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
-                      + "<strong>Create New Discount Voucher Successfully</strong>\n"
+                      + "<strong>CREATE DISCOUNT CODE SUCCESSFULLY</strong>\n"
                       + "</div>");
             return "redirect:/admin/orders/discountadd.html";
         }
@@ -252,7 +259,7 @@ public class Orders_Controller {
             return "admin/pages/discount-update";
         } else {
             flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
-                      + "<strong>Danger!</strong> Voucher not found.\n"
+                      + "<strong>VOUCHER NOT FOUND</strong>\n"
                       + "</div>");
             return "redirect:/admin/orders/discountlist.html";
         }
@@ -264,21 +271,49 @@ public class Orders_Controller {
         int checkSta = orderStateLessBean.updateDiscountVoucher(targetDiscountVoucher);
         if (checkSta == 2) {
             model.addAttribute("error", "<div class=\"alert alert-danger\">\n"
-                      + "<strong>Danger!</strong> Voucher not found.\n"
+                      + "<strong>VOUCHER NOT FOUND</strong>\n"
                       + "</div>");
             model.addAttribute("targetDiscountVoucher", targetDiscountVoucher);
             return "admin/pages/discount-update";
         } else if (checkSta == 0) {
             flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
-                      + "<strong>Danger!</strong> Error was happened!.\n"
+                      + "<strong>ERROR WAS HAPPENED</strong>\n"
                       + "</div>");
             return "redirect:/admin/orders/discountupdate/" + voucherID + ".html";
         } else {
             flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
-                      + "<strong>Success!</strong> Discount Voucher " + voucherID + " update Successfully!.\n"
+                      + "<strong>DISCOUNT VOUCHER " + voucherID + " UPDATE SUCCESSFULLY</strong>\n"
                       + "</div>");
             return "redirect:/admin/orders/discountupdate/" + voucherID + ".html";
         }
+    }
+
+    @RequestMapping(value = "discountdelete/{voucherID}", method = RequestMethod.GET)
+    public String discountupdate(@PathVariable("voucherID") String voucherID, RedirectAttributes flashAttr) {
+        DiscountVoucher discountVoucher = orderStateLessBean.getDiscountVoucherByID(voucherID);
+        if (discountVoucher != null) {
+            int checkSta = orderStateLessBean.deleteDiscountVoucher(discountVoucher);
+            if (checkSta == 2) {
+                flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
+                          + "<strong>VOUCHER CANNOT DELETE! VOUCHER CONNECT TO ORDERS.</strong>\n"
+                          + "</div>");
+                return "redirect:/admin/orders/discountlist.html";
+            } else if (checkSta == 0) {
+                flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
+                          + "<strong>DISCOUNT DELETE PROCESS ERROR!!!</strong>\n"
+                          + "</div>");
+                return "redirect:/admin/orders/discountlist.html";
+            } else {
+                flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
+                          + "<strong>DISCOUNT VOUCHER " + voucherID + " DELETE SUCCESSFULLY</strong>\n"
+                          + "</div>");
+                return "redirect:/admin/orders/discountlist.html";
+            }
+        }
+        flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
+                  + "<strong>VOUCHER NOT FOUND</strong>\n"
+                  + "</div>");
+        return "redirect:/admin/orders/discountlist.html";
     }
 
     @RequestMapping(value = "invoice/{orderID}")
@@ -288,30 +323,29 @@ public class Orders_Controller {
         return "admin/orders-invoice";
     }
 
-    @ResponseBody
-    @RequestMapping(value = "createPDF", method = RequestMethod.POST)
-    public String toDoc(@RequestParam("htmlContent") String htmlContent) {
-        htmlContent = "<table border=\"0\" style=\"border-collapse: collapse; width: 800px;\">\n"
-                  + "                <tr>\n"
-                  + "                    <td align=\"left\" style=\"padding-left: 10px\"><img src=\"assets/images/basic/logo.png\" class=\"img-responsive\" alt=\"\"></img></td>\n"
-                  + "                    <td align=\"left\"><b style=\"font-size: 50px;\">INVOICE</b></td>\n"
-                  + "                </tr>\n"
-                  + "                <tr>\n"
-                  + "                    <td><br></br><br></br></td>\n"
-                  + "                </tr>\n"
-                  + "                <tr>\n"
-                  + "                    <td align=\"right\"><b>Order No:</b></td>\n"
-                  + "                    <td># ${orders.ordersID}</td>\n"
-                  + "                </tr>\n"
-                  + "                <tr>\n"
-                  + "                    <td align=\"right\"><b>Order Date:</b></td>\n"
-                  + "                    <td><fmt:formatDate value=\"${orders.ordersDate}\" pattern=\"dd-MM-yyyy hh:mm:ss\"></fmt:formatDate></td>\n"
-                  + "                </tr>\n"
-                  + "            </table>";
-        String show = orderStateLessBean.createPDF(htmlContent);
-        return show;
-    }
-
+//    @ResponseBody
+//    @RequestMapping(value = "createPDF", method = RequestMethod.POST)
+//    public String toDoc(@RequestParam("htmlContent") String htmlContent) {
+//        htmlContent = "<table border=\"0\" style=\"border-collapse: collapse; width: 800px;\">\n"
+//                  + "                <tr>\n"
+//                  + "                    <td align=\"left\" style=\"padding-left: 10px\"><img src=\"assets/images/basic/logo.png\" class=\"img-responsive\" alt=\"\"></img></td>\n"
+//                  + "                    <td align=\"left\"><b style=\"font-size: 50px;\">INVOICE</b></td>\n"
+//                  + "                </tr>\n"
+//                  + "                <tr>\n"
+//                  + "                    <td><br></br><br></br></td>\n"
+//                  + "                </tr>\n"
+//                  + "                <tr>\n"
+//                  + "                    <td align=\"right\"><b>Order No:</b></td>\n"
+//                  + "                    <td># ${orders.ordersID}</td>\n"
+//                  + "                </tr>\n"
+//                  + "                <tr>\n"
+//                  + "                    <td align=\"right\"><b>Order Date:</b></td>\n"
+//                  + "                    <td><fmt:formatDate value=\"${orders.ordersDate}\" pattern=\"dd-MM-yyyy hh:mm:ss\"></fmt:formatDate></td>\n"
+//                  + "                </tr>\n"
+//                  + "            </table>";
+//        String show = orderStateLessBean.createPDF(htmlContent);
+//        return show;
+//    }
     private OrderStateLessBeanLocal lookupOrderStateLessBeanLocal() {
         try {
             Context c = new InitialContext();

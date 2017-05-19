@@ -9,7 +9,7 @@
                 <h1 class="page-header"> 
                     <strong>Discount</strong> 
                     <i class="fa fa-caret-right fa-style" aria-hidden="true" style="color: #337ab7"></i> 
-                    <span style="font-size: 0.9em">List - Create New</span>
+                    <span style="font-size: 0.9em">Create New</span>
                 </h1>
             </div>
             <!-- /.col-lg-12 -->
@@ -25,17 +25,16 @@
                     <form:form id="fs-form-create-discount" name="discount-add-form" action="admin/orders/discountadd.html" method="POST" modelAttribute="discountVoucher">
                         <div class="form-group">
                             <label>Voucher Code <span style="color: red;">*</span></label>
-                            <form:input placeholder="VOU00" onchange="this.value = this.value.toUpperCase();" cssClass="form-control" path="voucherID"/>
+                            <form:input placeholder="VOU00" cssClass="form-control" path="voucherID"/>
+                            <!--onchange="this.value = this.value.toUpperCase();"-->
                         </div>
                         <div class="form-group">
                             <label>Discount Percent (0-100) <span style="color: red;">*</span></label>
                             <form:input cssClass="form-control" path="discount"/>
-                            <!--<input class="form-control" type="number" min="1" max="100" name="discount" id="discount"/>-->
                         </div>
                         <div class="form-group">
                             <label>Discount Quantity <span style="color: red;">*</span></label>
                             <form:input cssClass="form-control" path="quantity"/>
-                            <!--<input class="form-control" type="number" min="1" name="quantity" id="quantity"/>-->
                         </div>
                         <div class="form-group">
                             <label>Begin Date</label>
@@ -51,6 +50,7 @@
                         </div>
                         <button type="submit" id="btn-create-discount" class="btn btn-success">CREATE</button>
                         <button type="reset" class="btn btn-default">RESET</button>
+                        <button type="button" onclick="window.location = 'admin/orders/discountlist.html';" class="btn btn-default">CANCEL - BACK TO DISCOUNT LIST</button>
                     </form:form>
                 </div>
             </div>

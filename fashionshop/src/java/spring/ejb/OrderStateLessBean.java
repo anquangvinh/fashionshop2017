@@ -41,62 +41,110 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
 
     @Override
     public List<Orders> getAllOrder() {
-        Query q = getEntityManager().createQuery("SELECT o FROM Orders o ORDER BY o.ordersDate DESC", Orders.class);
-        return q.getResultList();
+        try {
+            Query q = getEntityManager().createQuery("SELECT o FROM Orders o ORDER BY o.ordersDate DESC", Orders.class);
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    @Override
+    public List<Orders> getAllOrderASC() {
+        try {
+            Query q = getEntityManager().createQuery("SELECT o FROM Orders o ORDER BY o.ordersDate ASC", Orders.class);
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public List<Orders> getAllOrderByUserID(int userID) {
-        Query q = getEntityManager().createQuery("SELECT o FROM Orders o WHERE o.user.userID = :userID", Orders.class);
-        q.setParameter("userID", userID);
-        return q.getResultList();
+        try {
+            Query q = getEntityManager().createQuery("SELECT o FROM Orders o WHERE o.user.userID = :userID", Orders.class);
+            q.setParameter("userID", userID);
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public List<OrdersDetail> getAllOrderDetailByOrderID(int orderID) {
-        Query q = getEntityManager().createQuery("SELECT od FROM OrdersDetail od WHERE od.order.ordersID = :orderID", OrdersDetail.class);
-        q.setParameter("orderID", orderID);
-        return q.getResultList();
+        try {
+            Query q = getEntityManager().createQuery("SELECT od FROM OrdersDetail od WHERE od.order.ordersID = :orderID", OrdersDetail.class);
+            q.setParameter("orderID", orderID);
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Orders getOrderByID(int orderID) {
-        Query q = getEntityManager().createQuery("SELECT o FROM Orders o WHERE o.ordersID = :orderID", Orders.class);
-        q.setParameter("orderID", orderID);
-        return (Orders) q.getSingleResult();
+        try {
+            Query q = getEntityManager().createQuery("SELECT o FROM Orders o WHERE o.ordersID = :orderID", Orders.class);
+            q.setParameter("orderID", orderID);
+            return (Orders) q.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public OrdersDetail getOrderDetailByID(int orderDetailID) {
-        return getEntityManager().find(OrdersDetail.class, orderDetailID);
+        try {
+            Query q = getEntityManager().createQuery("SELECT o FROM OrdersDetail o WHERE o.ordersDetailID = :orderDetailID", OrdersDetail.class);
+            q.setParameter("orderDetailID", orderDetailID);
+            return (OrdersDetail)q.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Products getProductByID(int productID) {
-        Query q = getEntityManager().createQuery("SELECT p FROM Products p WHERE p.productID = :productID", Products.class);
-        q.setParameter("productID", productID);
-        return (Products) q.getSingleResult();
+        try {
+            Query q = getEntityManager().createQuery("SELECT p FROM Products p WHERE p.productID = :productID", Products.class);
+            q.setParameter("productID", productID);
+            return (Products) q.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public List<Products> getListProductsByName(String productName) {
-        Query q = getEntityManager().createQuery("SELECT p FROM Products p WHERE p.productName LIKE :productName", Products.class);
-        q.setParameter("productName", "%" + productName + "%"); //"%" + productName + "%"
-        return q.getResultList();
+        try {
+            Query q = getEntityManager().createQuery("SELECT p FROM Products p WHERE p.productName LIKE :productName", Products.class);
+            q.setParameter("productName", "%" + productName + "%"); //"%" + productName + "%"
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public List<ProductColors> getListProductColorsByProductID(int productID) {
-        Query q = getEntityManager().createQuery("SELECT pc FROM ProductColors pc WHERE pc.product.productID = :productID", ProductColors.class);
-        q.setParameter("productID", productID);
-        return q.getResultList();
+        try {
+            Query q = getEntityManager().createQuery("SELECT pc FROM ProductColors pc WHERE pc.product.productID = :productID", ProductColors.class);
+            q.setParameter("productID", productID);
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public List<SizesByColor> getListSizesByColorByColorID(int colorID) {
-        Query q = getEntityManager().createQuery("SELECT sbc FROM SizesByColor sbc WHERE sbc.color.colorID = :colorID", SizesByColor.class);
-        q.setParameter("colorID", colorID);
-        return q.getResultList();
+        try {
+            Query q = getEntityManager().createQuery("SELECT sbc FROM SizesByColor sbc WHERE sbc.color.colorID = :colorID", SizesByColor.class);
+            q.setParameter("colorID", colorID);
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -123,29 +171,45 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
 
     @Override
     public List<Categories> getAllCategory() {
-        Query q = getEntityManager().createQuery("SELECT c FROM Categories c", Categories.class);
-        return q.getResultList();
+        try {
+            Query q = getEntityManager().createQuery("SELECT c FROM Categories c", Categories.class);
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public List<DiscountVoucher> getAllDiscountVoucher() {
-        Query q = getEntityManager().createQuery("SELECT d FROM DiscountVoucher d", DiscountVoucher.class);
-        return q.getResultList();
+        try {
+            Query q = getEntityManager().createQuery("SELECT d FROM DiscountVoucher d", DiscountVoucher.class);
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public DiscountVoucher getDiscountVoucherByID(String discountVoucherID) {
-        return getEntityManager().find(DiscountVoucher.class, discountVoucherID);
+        try {
+            Query q = getEntityManager().createQuery("SELECT d FROM DiscountVoucher d WHERE d.voucherID = :discountVoucherID", DiscountVoucher.class);
+            q.setParameter("discountVoucherID", discountVoucherID);
+            return (DiscountVoucher) q.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public int createDiscountVoucher(DiscountVoucher newDiscountVoucher) {
         int checkError = 0;
-        if (getDiscountVoucherByID(newDiscountVoucher.getVoucherID()) != null) {
+        DiscountVoucher discountVoucher = getDiscountVoucherByID(newDiscountVoucher.getVoucherID());
+        if (discountVoucher != null) {
             checkError = 2;
         } else {
             try {
                 getEntityManager().persist(newDiscountVoucher);
+                getEntityManager().flush();
                 checkError = 1;
             } catch (Exception e) {
                 checkError = 0;
@@ -187,29 +251,29 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
     @Override
     public String createPDF(String html) {
         String error = "";
-        try {
-//            W3CDom w3CDom = new W3CDom();
-//            Document doc = w3CDom.fromJsoup(Jsoup.parse(html));
-            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            InputSource is = new InputSource();
-            is.setCharacterStream(new StringReader(html));
-            Document doc = db.parse(is);
-//            ITextRenderer renderer = new ITextRenderer();
-////            ResourceLoaderUserAgent callback = new ResourceLoaderUserAgent(renderer.getOutputDevice());
-////            callback.setSharedContext(renderer.getSharedContext());
-////            renderer.getSharedContext().setUserAgentCallback(callback);
-//            renderer.setDocument(doc,null);
-//            renderer.layout();
-            String fileNameWithPath = "D:\\Download\\fashionshop.pdf";
-            try (FileOutputStream fileOutputStream = new FileOutputStream(fileNameWithPath)) {
-//                renderer.createPDF(fileOutputStream);
-                error = doc.toString();
-            } catch (Exception ex) {
-                error = ex.getMessage();
-            }
-        } catch (Exception e) {
-            error = e.getMessage();
-        }
+//        try {
+////            W3CDom w3CDom = new W3CDom();
+////            Document doc = w3CDom.fromJsoup(Jsoup.parse(html));
+//            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+//            InputSource is = new InputSource();
+//            is.setCharacterStream(new StringReader(html));
+//            Document doc = db.parse(is);
+////            ITextRenderer renderer = new ITextRenderer();
+//////            ResourceLoaderUserAgent callback = new ResourceLoaderUserAgent(renderer.getOutputDevice());
+//////            callback.setSharedContext(renderer.getSharedContext());
+//////            renderer.getSharedContext().setUserAgentCallback(callback);
+////            renderer.setDocument(doc,null);
+////            renderer.layout();
+//            String fileNameWithPath = "D:\\Download\\fashionshop.pdf";
+//            try (FileOutputStream fileOutputStream = new FileOutputStream(fileNameWithPath)) {
+////                renderer.createPDF(fileOutputStream);
+//                error = doc.toString();
+//            } catch (Exception ex) {
+//                error = ex.getMessage();
+//            }
+//        } catch (Exception e) {
+//            error = e.getMessage();
+//        }
         return error;
     }
 
@@ -237,4 +301,23 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
         }
         return checkError;
     }
+
+    @Override
+    public int deleteDiscountVoucher(DiscountVoucher discountVoucher) {
+        if (discountVoucher.getOrdersList().size() != 0) {
+            return 2;
+        }
+        try {
+            if (!getEntityManager().contains(discountVoucher)) {
+                discountVoucher = getEntityManager().merge(discountVoucher);
+            }
+            getEntityManager().remove(discountVoucher);
+            getEntityManager().flush();
+            return 1;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    
 }

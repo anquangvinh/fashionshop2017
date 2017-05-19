@@ -122,7 +122,7 @@
                             <a href="admin/orders/list.html"><i class="fa fa-list" aria-hidden="true"></i> List</a>
                         </li>
                         <li>
-                            <a href="admin/orders/chart.html"><i class="fa fa-list" aria-hidden="true"></i> Statistics</a>
+                            <a href="admin/orders/orderchart.html"><i class="fa fa-list" aria-hidden="true"></i> Statistics</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
