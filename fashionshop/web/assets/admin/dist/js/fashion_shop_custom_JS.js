@@ -1891,16 +1891,13 @@ $(document).ready(function () {
 //        changeYear: true
 //    });
     /* BẮT validation CKSinder */
-
-
-
-
+//    $("select#monthblog").selectBoxIt();
 
     /* BẮT validation CREATE BLOG CATEGORY */
     // blog-category-add
     $("#fs-button-create-blog-category").click(function (e) {
         e.preventDefault();
-        var blogCateVal = $("#fs-blog-category").val();
+        var blogCateVal = $("#fs-blog-category").val().trim();
         if (blogCateVal == "") {
             $("#fs-blog-category-error").text("Category cannot be empty!");
         } else if (blogCateVal.length < 5 || blogCateVal.length > 20) {
@@ -1911,7 +1908,7 @@ $(document).ready(function () {
     });
 
     $("#fs-blog-category").keyup(function (e) {
-        var blogCateVal = $("#fs-blog-category").val();
+        var blogCateVal = $("#fs-blog-category").val().trim();
         if (blogCateVal == "") {
             $("#fs-blog-category-error").text("Category cannot be empty!");
         } else if (blogCateVal.length < 5 || blogCateVal.length > 20) {
@@ -1924,7 +1921,7 @@ $(document).ready(function () {
     // blog-category-update
     $("#fs-button-update-blog-category").click(function (e) {
         e.preventDefault();
-        var blogCateVal = $("#fs-blog-category-update").val();
+        var blogCateVal = $("#fs-blog-category-update").val().trim();
 
         if (blogCateVal == "") {
             $("#fs-blog-category-error").text("Category cannot be empty!");
@@ -1946,7 +1943,7 @@ $(document).ready(function () {
         }
     });
 
-    $('input[id="upImage"]').fileuploader({
+    $('input[id="upImageBlog"]').fileuploader({
         limit: 1,
         extensions: ['jpg', 'jpeg', 'png'],
         dialogs: {
@@ -1971,55 +1968,27 @@ $(document).ready(function () {
         var categoryID = $("#fs-select-box-blog-category").val();
         var blogTitle = $("#fs-blog-line-title").val();
         var blogCateValSummary = $("#fs-blog-line-summary").val();
-        var blogImg = $("#upImage").val();
+        var blogImg = $("#upImageBlog").val();
         var blogContent = $("editor1").val();
         if (categoryID == 0) {
             $("#fs-select-box-blog-category-error").text("Please select a Category!.");
-        } else if (blogTitle == "") {
+        } else if (blogTitle == "" || blogTitle == (" ") < 0) {
             $("#fs-blog-title-error").text("Title cannot be empty!");
         }
         else if (blogTitle.length < 5 || blogTitle.length > 100) {
             $("#fs-blog-title-error").text("Title has 5 - 100 characters!");
         }
-        else if (blogCateValSummary == "") {
-            $("#fs-blog-summary-error").text("Summary cannot be empty!");
-        }
         else if (blogCateValSummary.length < 15 || blogCateValSummary.length > 1000) {
             $("#fs-blog-summary-error").text("Summary has 15 - 1000 characters!");
         }
-        else if (blogCateValSummary == "") {
+        else if (blogCateValSummary == "" || blogCateValSummary == (" ") < 0) {
             $("#fs-blog-summary-error").text("Summary cannot be empty!");
         }
         else if (blogImg == "") {
             $("#fs-error-mess-blog-img").text("Image cannot be empty!");
         }
         else if (blogContent == "") {
-//              $("#fs-form-create-blog").validate(
-//            {
-//                ignore: [],
-//              debug: false,
-//                rules: { 
-//
-//                    editor1:{
-//                         required: function() 
-//                        {
-//                         CKEDITOR.instances.editor1.updateElement();
-//                        },
-//
-//                         minlength:10
-//                    }
-//                },
-//                messages:
-//                    {
-//
-//                    editor1:{
-//                        required:"Please enter Text",
-//                        minlength:"Please enter 10 characters"
-//
-//
-//                    }
-//                }
-//            });
+            $("#fs-blog-content-error").text("Content cannot be empty!");
         }
         else {
             $("#fs-form-create-blog").submit();
@@ -2063,26 +2032,19 @@ $(document).ready(function () {
         var categoryID = $("#fs-select-box-blog-category-update").val();
         var blogTitle = $("#fs-blog-update-line-title").val();
         var blogCateValSummary = $("#fs-blog-update-line-summary").val();
-        var blogImg = $("#upImage").val();
         if (categoryID == 0) {
             $("#fs-select-box-blog-category-error").text("Please select a Category!.");
-        } else if (blogTitle == "") {
+        } else if (blogTitle == "" || blogTitle == (" ") < 0) {
             $("#fs-blog-title-error").text("Title cannot be empty!");
         }
         else if (blogTitle.length < 5 || blogTitle.length > 100) {
             $("#fs-blog-title-error").text("Title has 5 - 100 characters!");
         }
-        else if (blogCateValSummary == "") {
+        else if (blogCateValSummary == "" || blogCateValSummary == (" ") < 0) {
             $("#fs-blog-summary-error").text("Summary cannot be empty!");
         }
         else if (blogCateValSummary.length < 15 || blogCateValSummary.length > 1000) {
             $("#fs-blog-summary-error").text("Summary has 15 - 1000 characters!");
-        }
-        else if (blogCateValSummary == "") {
-            $("#fs-blog-summary-error").text("Summary cannot be empty!");
-        }
-        else if (blogImg == "") {
-            $("#fs-error-mess-blog-img").text("Image cannot be empty!");
         }
         else {
             $("#fs-form-update-blog").submit();
@@ -2119,14 +2081,22 @@ $(document).ready(function () {
             $("#fs-blog-summary-error").text("");
         }
     });
-//    $("#tableBlogList").DataTable({
-//        responsive: true,
-//        columnDefs: [{orderable: false, targets: 5}]
-//    });
-//    $("#tableBlogCategory").DataTable({
-//        responsive: true,
-//        columnDefs: [{orderable: false, targets: 2}]
-//    });
+    $("#tableBlogList").DataTable({
+        responsive: true,
+        columnDefs: [{orderable: false, targets: 5}]
+    });
+    //blog-category-list.jsp
+    $("#tableBlogCategory").DataTable({
+        responsive: true,
+        columnDefs: [{orderable: false, targets: 2}]
+    });
+    $('#confirm-blog-category-delete').on('show.bs.modal', function (e) {
+        $(this).find('.btn-blog-cate-delete-ok').attr('href', $(e.relatedTarget).data('href'));
+    });
+
+    $('#confirm-blog-delete').on('show.bs.modal', function (e) {
+        $(this).find('.btn-blog-delete-ok').attr('href', $(e.relatedTarget).data('href'));
+    });
 
     $("#upImage").on('change', function () {
         if (typeof (FileReader) !== "undefined") {
@@ -2150,9 +2120,30 @@ $(document).ready(function () {
 
 // Validate Ckeditor
 
-
-
-
+    $("#fs-form-create-blog").validate({
+        ignore: [],
+        rules: {
+            editor1: {
+                required: function ()
+                {
+                    CKEDITOR.instances.editor1.updateElement();
+                }
+            }
+        },
+        messages: {
+            editor1: "Required"
+        },
+        /* use below section if required to place the error*/
+        errorPlacement: function (error, element)
+        {
+            if (element.attr("name") == "editor1")
+            {
+                error.insertBefore("textarea#editor1");
+            } else {
+                error.insertBefore(element);
+            }
+        }
+    });
 
     /*===============================END THANH - BLOG =================================*/
 

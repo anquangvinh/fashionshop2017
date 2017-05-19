@@ -125,7 +125,7 @@ public class Blog_Controller {
         return "admin/pages/blog-list";
     }
 
-    @RequestMapping(value = "listChart")
+    @RequestMapping(value = "listchartblog")
     public String blogListChart(ModelMap model) {
         return "admin/pages/blog-statistics";
     }
@@ -140,7 +140,7 @@ public class Blog_Controller {
 
     @RequestMapping(value = "create", method = RequestMethod.POST)
     public String blogAdd(@ModelAttribute("newBlogs") Blogs newBlogs,
-            @RequestParam("upImage") MultipartFile image,
+            @RequestParam("upImageBlog") MultipartFile image,
             RedirectAttributes redirectAttr, HttpServletRequest Request) {
 
         String email = String.valueOf(Request.getSession().getAttribute("email"));
@@ -209,7 +209,7 @@ public class Blog_Controller {
     @RequestMapping(value = "edit/{blogID}", method = RequestMethod.POST)
     public String blogUpdate(@ModelAttribute("targetBlogs") Blogs updatedTargetBlogs,
             @PathVariable("blogID") Integer blogID,
-            @RequestParam("upImage") MultipartFile image,
+            @RequestParam("upImageBlog") MultipartFile image,
             RedirectAttributes redirectAttr, HttpServletRequest Request) {
         Blogs normalTargetProduct = blogsSB.findBlogsByID(blogID); //Blogs Khi chưa chỉnh sửa
 
@@ -252,6 +252,21 @@ public class Blog_Controller {
 
         return "redirect:/admin/blog/edit/" + blogID + ".html";
     }
+    
+    @RequestMapping(value = "confirmStatusBlog/{blogID}/{status}", method = RequestMethod.GET)
+    public String confirmStatusBlog(@PathVariable("blogID") Integer blogID,
+            @PathVariable("status") String status){
+        Blogs targetBlogs = blogsSB.findBlogsByID(blogID);
+        if (targetBlogs != null) {
+            targetBlogs.setStatus(Short.parseShort(status));
+            if (blogsSB.editBlogs(targetBlogs)) {
+                return "redirect:/admin/blog/list.html";
+            }else{
+                return "redirect:/admin/blog/list.html";
+            }
+        }
+        return "redirect:/admin/blog/list.html";
+    }
 
     @RequestMapping(value = "/delete/{blogCateID}", method = RequestMethod.GET)
     public String deleteCategory(@PathVariable("blogCateID") Integer blogCateID,
@@ -265,7 +280,7 @@ public class Blog_Controller {
                 return "redirect:/admin/blog/category.html";
             } else if (errorCheck == 0) {
                 flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">"
-                        + "<strong>All blogs in blog category must DISABLE</strong></div>");
+                        + "<strong>Blog category must have no blogs</strong></div>");
                 return "redirect:/admin/blog/category.html";
             }else{
                 flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">"
@@ -276,6 +291,28 @@ public class Blog_Controller {
         flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">"
                 + "<strong>Can't find Blog Category ID</strong></div>");
         return "redirect:/admin/blog/category.html";
+    }
+    
+     @RequestMapping(value = "/deleteBlog/{blogID}", method = RequestMethod.GET)
+    public String deleteBlog(@PathVariable("blogID") Integer blogID,
+            RedirectAttributes flashAttr) {
+        Blogs blog = blogsSB.findBlogsByID(blogID);
+        if (blog != null) {
+            int errorCheck = blogsSB.deleteBlog(blog);
+            if (errorCheck == 1) {
+                flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">"
+                        + "<strong>Blog: " + blog.getBlogTitle()+ " Deleted</strong></div>");
+                return "redirect:/admin/blog/list.html";
+            }
+            else{
+                flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">"
+                        + "<strong>Delete process have error</strong></div>");
+                return "redirect:/admin/blog/list.html";
+            }
+        }
+        flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">"
+                + "<strong>Can't find Blog Category ID</strong></div>");
+        return "redirect:/admin/blog/list.html";
     }
 
     private BlogsSBLocal lookupBlogsSBLocal() {

@@ -12,13 +12,13 @@
         <div class="row">
             <!-- Sidebar -->
             <aside class="col-md-3 col-sm-4">
-<!--                <div class="side-widget space50">
+                <div class="side-widget space50">
                     <h3><span>Search</span></h3>
                     <form role="form" class="search-widget">
                         <input class="form-control" type="text">
                         <button type="submit"><i class="fa fa-search"></i></button>
                     </form>
-                </div>-->
+                </div>
 <!--                <div class="side-widget space50">
                     <h3><span>Categories</span></h3>
 
@@ -89,6 +89,7 @@
                             <span><i class="fa fa-calendar"></i>&nbsp; ${getShowAllBlogsDetail.postedDate}</span>
                             <span><i class="fa fa-user"></i>&nbsp; ${getShowAllBlogsDetail.user.lastName} ${getShowAllBlogsDetail.user.firstName}</span>
                             <span><i class="fa fa-folder"></i><a href="blog-categories/${getShowAllBlogsDetail.blogCategory.blogCateID}.html">&nbsp; ${getShowAllBlogsDetail.blogCategory.blogCateName}</a></span>
+                              <span><i class="fa fa-eye"></i>&nbsp; ${getShowAllBlogsDetail.blogViews}</span>
                         </div>
                         <div class="space30"></div>
                         <!-- Media Gallery -->

@@ -3985,11 +3985,16 @@ $(document).ready(function () {
     /*========================================END DUONG - USER====================================================*/
 
     /*========================================THANH - BLOG====================================================*/
-//    $(".blog-content-list .img-lazy").lazyload({
-//        effect: "fadeIn",
-//        threshold: -100
-//    });
-//    $('.blog-content-list').jscroll();
+    var mincount = 2;
+    var maxcount = 4;
+    $(".image-gallery-ul li").slice(2).hide();
+    $(window).scroll(function () {
+        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 350) {
+            $(".image-gallery-ul li").slice(mincount, maxcount).fadeIn(2000);
+            mincount = mincount + 2;
+            maxcount = maxcount + 2;
+        }
+    });
     /*========================================END THANH - BLOG====================================================*/
 
 });
