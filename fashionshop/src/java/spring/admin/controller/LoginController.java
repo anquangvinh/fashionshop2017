@@ -55,7 +55,7 @@ public class LoginController {
             session.setAttribute("email", email);
             String a = "login.html";
             String b = "user/list.html";
-            if(remember == 1){
+            if(remember != null && remember == 1){
                 Cookie ckEmail = new Cookie("emailA", email);
                 ckEmail.setMaxAge(24*60*60);
                 response.addCookie(ckEmail);
