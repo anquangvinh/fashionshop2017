@@ -2323,7 +2323,7 @@ $(document).ready(function () {
                 success: function (response) {
                     for (var i = 0; i < response.length; i++) {
                         var item = response[i];
-                        if (item !== null) {
+                        if (item != null) {
                             row.child(renderTableFromJson(response)).show();
                         }
                     }
@@ -2390,8 +2390,8 @@ $(document).ready(function () {
 
     $("#fs-button-create-role").click(function (e) {
         e.preventDefault();
-        var roleName = $("#fs-roleName-create").val();
-        if (roleName === "") {
+        var roleName = $("#fs-roleName-create").val().trim();
+        if (roleName == "") {
             $("#fs-create-roleName-error").text("Role Name cannot be empty!");
             var div = $("#fs-roleName-create").closest("div.fs-aaa");
             div.removeClass("has-success");
@@ -2408,9 +2408,6 @@ $(document).ready(function () {
             div.append('<span id="glypcn-fs-roleName-create" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
         }
-        else if (checkRole(roleName)) {
-            return false;
-        }
         else {
             $("#fs-form-create-role").submit();
             var div = $("#fs-roleName-create").closest("div.fs-aaa");
@@ -2423,34 +2420,36 @@ $(document).ready(function () {
     });
 
     // KIỂM TRA ROLENAME TỒN TẠI CLICK CREATE
-    function checkRole(roleName) {
-        roleName = $("#fs-roleName-create").val();
-        $.ajax({
-            url: "admin/user/checkRoleName.html",
-            method: "POST",
-//                data: {},
-            dataType: "JSON",
-            success: function (response) {
-                for (var i = 0; i < response.length; i++) {
-                    var item = response[i];
-                    if (roleName === item) {
-                        $("#fs-create-roleName-error").text("Role Name exist!");
-                        var div = $("#fs-roleName-create").closest("div.fs-aaa");
-                        div.removeClass("has-success");
-                        $("#glypcn-fs-roleName-create").remove();
-                        div.addClass("has-error has-feedback");
-                        div.append('<span id="glypcn-fs-roleName-create" class="glyphicon glyphicon-remove form-control-feedback"></span>');
-                        return false;
-                    }
-                }
-            }
-        });
-    }
+//    function checkRole(roleName) {
+////        $("#fs-roleName-create").click(function(){
+//        var roleName = $("#fs-roleName-create").val();
+//        $.ajax({
+//            url: "admin/user/checkRoleName.html",
+//            method: "POST",
+////                data: {},
+//            dataType: "JSON",
+//            success: function (response) {
+//                for (var i = 0; i < response.length; i++) {
+//                    var item = response[i];
+//                    alert(item);
+////                    if (roleName === item) {
+////                        $("#fs-create-roleName-error").text("Role Name exist!");
+////                        var div = $("#fs-roleName-create").closest("div.fs-aaa");
+////                        div.removeClass("has-success");
+////                        $("#glypcn-fs-roleName-create").remove();
+////                        div.addClass("has-error has-feedback");
+////                        div.append('<span id="glypcn-fs-roleName-create" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+////                        return false;
+////                    }
+//                }
+//            }
+//        });
+//    });
 
 //    BẮT VALIDATION FORM ADD ROLE BẰNG KEYUP
     $("#fs-roleName-create").keyup(function () {
-        var roleName = $("#fs-roleName-create").val();
-        if (roleName === "") {
+        var roleName = $("#fs-roleName-create").val().trim();
+        if (roleName == "") {
             $("#fs-create-roleName-error").text("Role Name cannot be empty!");
             var div = $("#fs-roleName-create").closest("div.fs-aaa");
             div.removeClass("has-success");
@@ -2479,7 +2478,7 @@ $(document).ready(function () {
 
     // XỬ LÝ TRÙNG ROLENAME VỚI KEYUP CREATE
     $("#fs-roleName-create").keyup(function () {
-        var roleName = $("#fs-roleName-create").val();
+        var roleName = $("#fs-roleName-create").val().trim();
         $.ajax({
             url: "admin/user/checkRoleName.html",
             method: "POST",
@@ -2488,7 +2487,7 @@ $(document).ready(function () {
             success: function (response) {
                 for (var i = 0; i < response.length; i++) {
                     var item = response[i];
-                    if (roleName === item) {
+                    if (roleName == item) {
                         $("#fs-create-roleName-error").text("Role Name exist!");
                         var div = $("#fs-roleName-create").closest("div.fs-aaa");
                         div.removeClass("has-success");
@@ -2506,8 +2505,8 @@ $(document).ready(function () {
 
     $("#fs-button-update-role").click(function (e) {
         e.preventDefault();
-        var roleName = $("#fs-roleName-update").val();
-        if (roleName === "") {
+        var roleName = $("#fs-roleName-update").val().trim();
+        if (roleName == "") {
             $("#fs-update-roleName-error").text("Role Name cannot be empty!");
             var div = $("#fs-roleName-update").closest("div.fa-ccc");
             div.removeClass("has-success");
@@ -2538,8 +2537,8 @@ $(document).ready(function () {
     });
 
     $("#fs-roleName-update").keyup(function () {
-        var roleName = $("#fs-roleName-update").val();
-        if (roleName === "") {
+        var roleName = $("#fs-roleName-update").val().trim();
+        if (roleName == "") {
             $("#fs-update-roleName-error").text("Role Name cannot be empty!");
             var div = $("#fs-roleName-update").closest("div.fa-ccc");
             div.removeClass("has-success");
@@ -2568,7 +2567,7 @@ $(document).ready(function () {
 
     // XỬ LÝ TRÙNG ROLENAME VỚI KEYUP UPDATE
     $("#fs-roleName-update").keyup(function () {
-        var roleName = $("#fs-roleName-update").val();
+        var roleName = $("#fs-roleName-update").val().trim();
         $.ajax({
             url: "admin/user/checkRoleName.html",
             method: "POST",
@@ -2577,7 +2576,7 @@ $(document).ready(function () {
             success: function (response) {
                 for (var i = 0; i < response.length; i++) {
                     var item = response[i];
-                    if (roleName === item) {
+                    if (roleName == item) {
                         $("#fs-update-roleName-error").text("Role Name exist!");
                         var div = $("#fs-roleName-update").closest("div.fa-ccc");
                         div.removeClass("has-success");
@@ -2592,7 +2591,10 @@ $(document).ready(function () {
     });
     // XỬ LÝ NÚT XÓA
 
-    $("#fs-delete-button-role").click(function () {
+    $(".fs-button-detele-role").click(function () {
+        var roleID = $(this).attr("fs-roleID");
+//        alert(roleID);
+        
         swal({
             title: "Are you sure?",
             text: "You will sure delete record this",
@@ -2601,17 +2603,26 @@ $(document).ready(function () {
             confirmButtonColor: "#DD6B55",
             confirmButtonText: "Yes, delete!",
             cancelButtonText: "No, cancel!",
-            closeOnConfirm: false,
-            closeOnCancel: false
+            closeOnConfirm: false
         },
         function (isConfirm) {
-            if (isConfirm) {
-
-                swal("Deleted!", "Your imaginary file has been deleted.", "success");
-            } else {
-                swal("Cancelled", "Your imaginary file is safe :)", "error");
+            if (!isConfirm) return;
+        $.ajax({
+            url: "admin/user/role/delete/" + roleID + ".html",
+            type: "POST",
+            data: {
+                roleID: roleID
+            },
+//            dataType: "html",
+            success: function (response){
+                swal("Done!", "It was succesfully deleted!", "success");
+                window.location = window.location.href;
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                swal("Error deleting!", "Please try again", "error");
             }
         });
+    });
     });
 
 //    $(".fs-button-detele-role").prop('disable', true);

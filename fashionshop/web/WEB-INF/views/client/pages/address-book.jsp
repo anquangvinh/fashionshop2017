@@ -13,21 +13,23 @@
                 <div id="account-id">
                     <h4 class="account-title"><span class="fa fa-chevron-right"></span>Change Your Address</h4>                                                                  
                     <div class="account-form">
-                        <form:form id="shipping-zip-form" action="user/address-book/${findUsersID}-${addressID}.html" method="post" modelAttribute="userAddresses">                                        
+                        <form:form id="shipping-zip-form" cssClass="fs-form-update-address" action="user/address-book/${sessionScope.findUsersID}-${addressID}.html" method="post" modelAttribute="userAddresses">                                        
                             ${error}
                             <ul class="form-list row">
                                 <li class="col-md-6 col-sm-6">
                                     <label >Address <em>*</em></label>
-                                    <form:input path="address" id="txt-address" cssClass="input-text" />
+                                    <form:input path="address" id="txt-address" cssClass="input-text fs-update-address" />
+                                    <p class="help-block" style="color: red; text-align: center; margin-top: -10px;" id="fs-address-update-user-error"></p>
                                 </li>
 
                                 <li class="col-md-6 col-sm-6">
                                     <label ><i class="fa fa-phone"></i> Phone Number <em>*</em></label>
-                                    <form:input path="phoneNumber" id="txt-phone" cssClass="input-text" />
+                                    <form:input path="phoneNumber" id="txt-phone" cssClass="input-text fs-update-phone" />
+                                    <p class="help-block" style="color: red; text-align: center; margin-top: -10px;" id="fs-phone-update-user-error"></p>
                                 </li>
                             </ul>
                             <div class="buttons-set">
-                                <button class="btn-black" type="submit"><span><span>Update</span></span></button>
+                                <button class="btn-black fs-button-update-address" type="submit"><span><span>Update</span></span></button>
                             </div>
                         </form:form>
                     </div>                                    

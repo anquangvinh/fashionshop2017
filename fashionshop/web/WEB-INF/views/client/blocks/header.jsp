@@ -22,21 +22,21 @@
                             <ul>
                                 <li>
                                     <div class="tbr-info">
-                                        <c:if test="${empty emailUser}">
+                                        <c:if test="${empty sessionScope.emailUser}">
                                             <span class="fa fa-user">
                                                 <a class="fs-login-page" href="#loginModal" data-toggle="modal" data-target="#loginModal">
                                                     Login
                                                 </a>
                                             </span>
                                         </c:if>
-                                        <c:if test="${not empty emailUser}">
-                                            <span>${USfirstname} <i class="fa fa-caret-down"></i></span>
+                                        <c:if test="${not empty sessionScope.emailUser}">
+                                            <span>${sessionScope.USfirstname} <i class="fa fa-caret-down"></i></span>
 
                                             <div class="tbr-inner">
                                                 <a href="user/myaccount.html">My Account</a>
-                                                <a href="#">My Wishlist</a>
+                                                <a href="user/wishlist/${sessionScope.findUsersID}.html">My Wishlist</a>
                                                 <a href="orders/order-history.html">Order History</a>
-                                                <a href="user/logout.html">LogOut</a>
+                                                <a href="logout.html">LogOut</a>
                                             </div>
                                         </c:if>
                                     </div>
