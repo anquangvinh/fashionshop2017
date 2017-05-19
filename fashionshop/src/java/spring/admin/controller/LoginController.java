@@ -53,8 +53,7 @@ public class LoginController {
         int error = usersStateLessBean.login(email, sharedFunc.encodePassword(password));
         if (error == 1) {
             session.setAttribute("email", email);
-
-            if(remember == 1){
+            if(remember != null && remember == 1){
                 Cookie ckEmail = new Cookie("emailA", email);
                 ckEmail.setMaxAge(24*60*60);
                 response.addCookie(ckEmail);
