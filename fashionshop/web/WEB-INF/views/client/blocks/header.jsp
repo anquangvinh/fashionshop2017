@@ -70,43 +70,6 @@
                         <div id="cart">
 
                         </div>
-                        <!--                        <span><i class="fa fa-shopping-cart"></i></span>
-                                                <div class="cart-info">
-                                                    <small>You have <em class="highlight">${cart.showCart().size()} item(s)</em> in your shopping bag</small>
-                                                    <div id="cart">
-                        
-                                                    </div>
-                                                    c:forEach items="${cartList}" var="item"
-                                                        <div class="ci-item">
-                                                            <img src="assets/images/products/${item.getProduct().getUrlImg()}" width="80" alt=""/>
-                                                            <div class="ci-item-info">
-                                                                <h5>
-                                                                    <a href="${item.getProduct().productID}-${item.getProduct().productColorList[0].colorID}-${item.getProduct().productNameNA}.html">
-                        ${item.getProduct().productName}
-                    </a>
-                </h5>
-                <p>&nbsp Size: ${item.getSizesByColor().getProductSize()} 
-                    <img fs-color="${item.getSizesByColor().getColor().colorID}" 
-                         src="assets/images/products/colors/${item.getSizesByColor().getColor().getUrlColorImg()}" 
-                         class="img-responsive" 
-                         alt="${item.getSizesByColor().getColor().urlColorImg}" 
-                         title="${item.getSizesByColor().getColor().getColor()}"
-                         style="width: 20px; height: 20px;"/>
-                </p>
-                <p>&nbsp ${item.quantity} &nbsp x $${item.getProduct().getPrice()}</p>
-                <div class="ci-edit">
-                    <a href="#" class="edit fa fa-edit"></a>
-                    <a href="orders/deleteitemCart/${item.getProduct().productID}.html" class="edit fa fa-trash"></a>
-                </div>
-            </div>
-        </div>
-    /c:forEach
-    <div class="ci-total">Subtotal: $750.00</div>
-    <div class="cart-btn">
-        <a href="orders/shoppingcart.html">View Bag</a>
-        <a href="#">Checkout</a>
-    </div>
-</div>-->
                     </div>
                     <div class="topsearch">
                         <span>

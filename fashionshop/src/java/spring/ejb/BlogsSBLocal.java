@@ -18,12 +18,16 @@ import spring.entity.Blogs;
 public interface BlogsSBLocal {
 
     public List<Blogs> getAllBlogs();
+
     public List<Blogs> getAllBlogsIndex();
-     public List<Blogs> getAllBlogsIndexMonth();
+
+    public List<Blogs> getAllBlogsIndexMonth();
+
     public List<Blogs> getAllBlogsAdmin();
 
     List<Blogs> getListBlogsByCategory(int blogCateID);
 
+    public List<Blogs> getAllBlogsByMonth(int month);
 
     boolean blogAdd(Blogs newBlogs);
 
@@ -32,9 +36,8 @@ public interface BlogsSBLocal {
     boolean editBlogs(Blogs targetBlogs);
 
     List<Blogs> findBlogsByTitle(String blogTitle, List<Integer> monthList);
-    
+
 //    BlogCategories findBlogCategoryByBlogCateName(String blogCateName);
-    
-       int deleteBlog(Blogs blog);
+    int deleteBlog(Blogs blog);
 
 }

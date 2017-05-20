@@ -5,6 +5,8 @@
  */
 package spring.ejb;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -50,8 +52,13 @@ public class BlogsSB implements BlogsSBLocal {
         Query q = getEntityManager().createQuery("SELECT b FROM Blogs b", Blogs.class);
         return q.getResultList();
     }
-
-
+    
+    @Override
+    public List<Blogs> getAllBlogsByMonth(int month) {
+        Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE FUNCTION('MONTH',b.postedDate) = FUNCTION('MONTH',:month)", Blogs.class);
+        q.setParameter("month", "1990-"+String.valueOf(month)+"-20");
+        return q.getResultList();
+    }
 
     @Override
     public List<Blogs> getListBlogsByCategory(int blogCateID) {

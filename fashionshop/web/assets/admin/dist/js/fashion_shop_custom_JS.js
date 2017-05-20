@@ -1881,7 +1881,7 @@ $(document).ready(function () {
     /*==========================END VINH - PRODUCT============================*/
 
     /*=============================== THANH - BLOG =================================*/
-    /*    
+  /*    
      * CẤU HÌNH DATEPICKER CHO BLOG
      */
 //    $("#postedDate").datepicker({
@@ -1891,7 +1891,6 @@ $(document).ready(function () {
 //        changeYear: true
 //    });
     /* BẮT validation CKSinder */
-
 //    $("select#monthblog").selectBoxIt();
 
     /* BẮT validation CREATE BLOG CATEGORY */
@@ -2118,6 +2117,8 @@ $(document).ready(function () {
             alert("Your Browser does not support FileReader!.");
         }
     });
+
+
 
     /*===============================END THANH - BLOG =================================*/
 
