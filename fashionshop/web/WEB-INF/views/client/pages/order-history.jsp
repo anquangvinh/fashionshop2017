@@ -23,44 +23,55 @@
                         <table class="cart-table table-hover" id="table-order-history">
                             <thead>
                                 <tr>
-                                    <th>Order ID</th>
-                                    <th>Product(s)</th>
-                                    <th>Total</th>
-                                    <th>Order Date</th>
-                                    <th>Status</th>
-                                    <!--<th></th>-->
+                                    <th style="font-weight: 700;">Order ID</th>
+                                    <th style="font-weight: 700;">Product(s)</th>
+                                    <th style="font-weight: 700;">Total</th>
+                                    <th style="font-weight: 700;">Order Date</th>
+                                    <th style="font-weight: 700;">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <c:forEach items="${orderList}" var="order">
-                                    <tr>
-                                        <td align="center"><a href="orders/order-history-detail/${order.ordersID}.html">Order No.${order.ordersID}</a></td>
-                                        <td align="center">
-                                            <c:choose>
-                                                <c:when test="${order.getOrderDetailForOrderHistoryPage() != null}">
-                                                    ${order.getOrderDetailForOrderHistoryPage().product.productName}
-                                                    &nbsp - &nbsp ${order.getOrderDetailForOrderHistoryPage().size.color.color}
-                                                    &nbsp - &nbsp Size: &nbsp ${order.getOrderDetailForOrderHistoryPage().size.productSize}
-                                                </c:when>
-                                                <c:otherwise><span style="font-weight: 700px;">Your order is empty</span></c:otherwise>
-                                            </c:choose>
-                                        </td>
-                                        <td style="width: 100px;">
-                                            <div class="item-price">$${order.getPaymentTotal()}</div>
-                                        </td>
-                                        <td align="center">
-                                            <fmt:formatDate value="${order.ordersDate}" pattern="dd-MM-yyyy hh:mm:ss"/>
-                                        </td>
-                                        <td>
-                                            <c:choose>
-                                                <c:when test="${order.status == 1}">Completed</c:when>
-                                                <c:when test="${order.status == 2}">Pending</c:when>
-                                                <c:when test="${order.status == 3}">Confirmed</c:when>
-                                                <c:otherwise>Canceled</c:otherwise>
-                                            </c:choose>
-                                        </td>
-                                    </tr> 
-                                </c:forEach>
+                                <c:choose>
+                                    <c:when test="${orderList.size() == 0}">
+                                        <tr>
+                                            <td colspan="5">
+                                                <span style="font-weight: 700;">YOU HAVE NO ORDER</span><br/>
+                                                <a href="index.html" class="btn btn-success">SHOPPING MORE</a>
+                                            </td>
+                                        </tr>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:forEach items="${orderList}" var="order">
+                                            <tr>
+                                                <td align="center"><a href="orders/order-history-detail/${order.ordersID}.html">Order No.${order.ordersID}</a></td>
+                                                <td align="center">
+                                                    <c:choose>
+                                                        <c:when test="${order.getOrderDetailForOrderHistoryPage() != null}">
+                                                            ${order.getOrderDetailForOrderHistoryPage().product.productName}
+                                                            &nbsp - &nbsp ${order.getOrderDetailForOrderHistoryPage().size.color.color}
+                                                            &nbsp - &nbsp Size: &nbsp ${order.getOrderDetailForOrderHistoryPage().size.productSize}
+                                                        </c:when>
+                                                        <c:otherwise><span style="font-weight: 700px;">Your order is empty</span></c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td style="width: 100px;">
+                                                    <div class="item-price">$${order.getPaymentTotal()}</div>
+                                                </td>
+                                                <td align="center">
+                                                    <fmt:formatDate value="${order.ordersDate}" pattern="dd-MM-yyyy hh:mm:ss"/>
+                                                </td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${order.status == 1}">Completed</c:when>
+                                                        <c:when test="${order.status == 2}">Pending</c:when>
+                                                        <c:when test="${order.status == 3}">Confirmed</c:when>
+                                                        <c:otherwise>Canceled</c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                            </tr> 
+                                        </c:forEach>
+                                    </c:otherwise>
+                                </c:choose>
                             </tbody>
                         </table>
 

@@ -23,6 +23,7 @@ import spring.entity.SizesByColor;
 @Local
 public interface OrderStateLessBeanLocal {
     public List<Orders> getAllOrder();
+    public List<OrdersDetail> getAllOrderDetail();
     public List<Orders> getAllOrderASC();
     public List<Categories> getAllCategory();
     public List<DiscountVoucher> getAllDiscountVoucher();
@@ -46,5 +47,14 @@ public interface OrderStateLessBeanLocal {
     public boolean confirmStatusOrder(Orders orders, short status);
     public boolean confirmStatusOrderDetail(OrdersDetail ordersDetail, short status);
     
-    public String createPDF(String html);
+    public List<Integer> getAllYearOrdered();
+    public List<Integer> getAllMonthOrderedByYear(int year);
+    public List<Integer> getAllDayOrderedByMonth(int month, int year);
+    public List<Orders> getAllOrderByMonth(int month, int year);
+    
+    public Integer countOrderByStatus(int status);
+    public Integer countOrders();
+    public Integer averageOrdersPerUserByMonth(String date);
+    public Integer countAllOrdersByMonthYear(String date);
+    public Integer countAllUsersByRole();
 }

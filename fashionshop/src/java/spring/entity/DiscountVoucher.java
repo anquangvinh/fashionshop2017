@@ -31,7 +31,7 @@ public class DiscountVoucher implements Serializable {
     private Date endDate;
     private String description;
 
-    @OneToMany(mappedBy = "voucher", cascade = CascadeType.REFRESH)
+    @OneToMany(mappedBy = "voucher", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Orders> ordersList;
     

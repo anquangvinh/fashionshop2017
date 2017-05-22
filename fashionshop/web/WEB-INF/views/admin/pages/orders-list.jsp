@@ -44,35 +44,44 @@
                                     <fmt:formatDate value="${order.ordersDate}" pattern="dd-MM-yyyy hh:mm:ss"/>
                                 </td>
                                 <td class="text-center fs-valign-middle">
-                                    <select name="status-order" id="id-status-order" class="form-control input-sm" 
-                                            onchange="window.location = 'admin/orders/confirmstatusOrder/${order.ordersID}/' + this.value + '.html';">
-                                        <c:choose>
-                                            <c:when test="${order.status == 1}">
+                                    <c:choose>
+                                        <c:when test="${order.status == 1}">
+                                            <select name="status-order" id="id-status-order" class="form-control input-sm" style="color: #00cc66;"
+                                                    onchange="window.location = 'admin/orders/confirmstatusOrder/${order.ordersID}/' + this.value + '.html';">
                                                 <option value="1" <c:out value="selected"/>>Completed</option>
                                                 <option value="2">Pending</option>
                                                 <option value="3">Confirmed</option>
                                                 <option value="0">Canceled</option>
-                                            </c:when>
-                                            <c:when test="${order.status == 2}">
+                                            </select>
+                                        </c:when>
+                                        <c:when test="${order.status == 2}">
+                                            <select name="status-order" id="id-status-order" class="form-control input-sm" 
+                                                    onchange="window.location = 'admin/orders/confirmstatusOrder/${order.ordersID}/' + this.value + '.html';">
                                                 <option value="1">Completed</option>
                                                 <option value="2" <c:out value="selected"/>>Pending</option>
                                                 <option value="3">Confirmed</option>
                                                 <option value="0">Canceled</option>
-                                            </c:when>
-                                            <c:when test="${order.status == 3}">
+                                            </select>
+                                        </c:when>
+                                        <c:when test="${order.status == 3}">
+                                            <select name="status-order" id="id-status-order" class="form-control input-sm" style="color: blue;"
+                                                    onchange="window.location = 'admin/orders/confirmstatusOrder/${order.ordersID}/' + this.value + '.html';">
                                                 <option value="1">Completed</option>
                                                 <option value="2">Pending</option>
                                                 <option value="3" <c:out value="selected"/>>Confirmed</option>
                                                 <option value="0">Canceled</option>
-                                            </c:when>
-                                            <c:otherwise>
+                                            </select>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <select name="status-order" id="id-status-order" class="form-control input-sm" style="color: red;" 
+                                                    onchange="window.location = 'admin/orders/confirmstatusOrder/${order.ordersID}/' + this.value + '.html';">
                                                 <option value="1">Completed</option>
                                                 <option value="2">Pending</option>
                                                 <option value="3">Confirmed</option>
                                                 <option value="0"  <c:out value="selected"/>>Canceled</option>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </select>
+                                            </select>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </td>
                             </tr>
                         </c:forEach>
