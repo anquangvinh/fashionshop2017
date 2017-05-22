@@ -285,7 +285,22 @@ public class OrdersController {
         if (email == null) {
             return "redirect:/index.html";
         }
+        model.addAttribute("orderStatus", 4);
         model.addAttribute("orderList", orderStateLessBean.getAllOrderByUserID(usersStateLessBean.findUserByEmail(email).getUserID()));
+        //2 dòng này thêm để render ra menu chính
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
+        return "client/pages/order-history";
+    }
+
+    @RequestMapping(value = "order-history/{status}")
+    public String orderhistoryByStatus(ModelMap model, HttpServletRequest request, @PathVariable("status") Integer status) {
+        String email = (String) request.getSession().getAttribute("emailUser");
+        if (email == null) {
+            return "redirect:/index.html";
+        }
+        model.addAttribute("orderStatus", status);
+        model.addAttribute("orderList", orderStateLessBean.getAllOrderByUserIDAndStatus(usersStateLessBean.findUserByEmail(email).getUserID(), status));
         //2 dòng này thêm để render ra menu chính
         List<Categories> cateList = productStateLessBean.categoryList();
         model.addAttribute("cateList", cateList);
@@ -389,16 +404,19 @@ public class OrdersController {
         if (discountVoucher != null) {
             if (discountCode.equals(discountVoucher.getVoucherID())) {
                 if (users != null) {
-                    for (Orders orders : users.getOrdersList()) {
-                        if (orders.getVoucher() != null) {
-                            if (discountVoucher.getVoucherID().equals(orders.getVoucher().getVoucherID())) { // da su dung voucher nay
-                                CheckoutResponse checkoutResponse = new CheckoutResponse();
-                                checkoutResponse.setStatus("4");
-                                try {
-                                    String result = mapper.writeValueAsString(checkoutResponse);
-                                    return result;
-                                } catch (JsonProcessingException ex) {
-                                    Logger.getLogger(OrdersController.class.getName()).log(Level.SEVERE, null, ex);
+                    List<Users> userList = orderStateLessBean.getAllUserUseDiscountVoucherByVouID(discountVoucher.getVoucherID());
+                    if (userList != null) {
+                        if (userList.size() != 0) {
+                            for (Users user : userList) {
+                                if (user.getUserID() == users.getUserID()) { // da su dung voucher nay
+                                    CheckoutResponse checkoutResponse = new CheckoutResponse();
+                                    checkoutResponse.setStatus("4");
+                                    try {
+                                        String result = mapper.writeValueAsString(checkoutResponse);
+                                        return result;
+                                    } catch (JsonProcessingException ex) {
+                                        Logger.getLogger(OrdersController.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                 }
                             }
                         }

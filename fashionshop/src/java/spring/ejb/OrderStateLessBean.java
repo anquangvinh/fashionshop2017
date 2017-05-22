@@ -72,6 +72,18 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
     }
 
     @Override
+    public List<Orders> getAllOrderByUserIDAndStatus(int userID, int status) {
+        try {
+            Query q = getEntityManager().createQuery("SELECT o FROM Orders o WHERE o.user.userID = :userID AND o.status = :status ORDER BY o.ordersDate DESC", Orders.class);
+            q.setParameter("userID", userID);
+            q.setParameter("status", status);
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
     public List<OrdersDetail> getAllOrderDetailByOrderID(int orderID) {
         try {
             Query q = getEntityManager().createQuery("SELECT od FROM OrdersDetail od WHERE od.order.ordersID = :orderID", OrdersDetail.class);
@@ -296,65 +308,120 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
 
     @Override
     public List<Integer> getAllYearOrdered() {
-        Query q = getEntityManager().createQuery("SELECT FUNCTION('YEAR',o.ordersDate) FROM Orders o GROUP BY FUNCTION('YEAR',o.ordersDate) ORDER BY FUNCTION('YEAR',o.ordersDate) DESC", Orders.class);
-        return q.getResultList();
+        try {
+            Query q = getEntityManager().createQuery("SELECT FUNCTION('YEAR',o.ordersDate) FROM Orders o GROUP BY FUNCTION('YEAR',o.ordersDate) ORDER BY FUNCTION('YEAR',o.ordersDate) DESC", Orders.class);
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public List<Orders> getAllOrderByMonth(int month, int year) {
-        Query q = getEntityManager().createQuery("SELECT o FROM Orders o WHERE FUNCTION('MONTH',o.ordersDate) = FUNCTION('MONTH',:month) AND FUNCTION('YEAR',o.ordersDate) = FUNCTION('YEAR',:year)", Orders.class);
-        q.setParameter("month", "2015-"+ String.valueOf(month) +"-15");
-        q.setParameter("year", String.valueOf(year)+"-"+ String.valueOf(month) +"-15");
-        return q.getResultList();
+        try {
+            Query q = getEntityManager().createQuery("SELECT o FROM Orders o WHERE FUNCTION('MONTH',o.ordersDate) = FUNCTION('MONTH',:month) AND FUNCTION('YEAR',o.ordersDate) = FUNCTION('YEAR',:year)", Orders.class);
+            q.setParameter("month", "2015-" + String.valueOf(month) + "-15");
+            q.setParameter("year", String.valueOf(year) + "-" + String.valueOf(month) + "-15");
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public List<Integer> getAllDayOrderedByMonth(int month, int year) {
-        Query q = getEntityManager().createQuery("SELECT FUNCTION('DAY',o.ordersDate) FROM Orders o WHERE FUNCTION('MONTH',o.ordersDate) = FUNCTION('MONTH',:month) AND FUNCTION('YEAR',o.ordersDate) = FUNCTION('YEAR',:year) GROUP BY FUNCTION('DAY',o.ordersDate)", Orders.class);
-        q.setParameter("month", "2015-"+ String.valueOf(month) +"-15");
-        q.setParameter("year", String.valueOf(year)+"-"+ String.valueOf(month) +"-15");
-        return q.getResultList();
+        try {
+            Query q = getEntityManager().createQuery("SELECT FUNCTION('DAY',o.ordersDate) FROM Orders o WHERE FUNCTION('MONTH',o.ordersDate) = FUNCTION('MONTH',:month) AND FUNCTION('YEAR',o.ordersDate) = FUNCTION('YEAR',:year) GROUP BY FUNCTION('DAY',o.ordersDate)", Orders.class);
+            q.setParameter("month", "2015-" + String.valueOf(month) + "-15");
+            q.setParameter("year", String.valueOf(year) + "-" + String.valueOf(month) + "-15");
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public List<Integer> getAllMonthOrderedByYear(int year) {
-        Query q = getEntityManager().createQuery("SELECT FUNCTION('MONTH',o.ordersDate) FROM Orders o WHERE FUNCTION('YEAR',o.ordersDate) = FUNCTION('YEAR',:year) GROUP BY FUNCTION('MONTH',o.ordersDate)", Orders.class);
-        q.setParameter("year", String.valueOf(year)+"-05-15");
-        return q.getResultList();
+        try {
+            Query q = getEntityManager().createQuery("SELECT FUNCTION('MONTH',o.ordersDate) FROM Orders o WHERE FUNCTION('YEAR',o.ordersDate) = FUNCTION('YEAR',:year) GROUP BY FUNCTION('MONTH',o.ordersDate)", Orders.class);
+            q.setParameter("year", String.valueOf(year) + "-05-15");
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Integer countOrderByStatus(int status) {
-        Query q = getEntityManager().createQuery("SELECT COUNT(o.status) FROM Orders o WHERE o.status = :status", Orders.class);
-        q.setParameter("status", status);
-        return Integer.parseInt(q.getSingleResult().toString());
+        try {
+            Query q = getEntityManager().createQuery("SELECT COUNT(o.status) FROM Orders o WHERE o.status = :status", Orders.class);
+            q.setParameter("status", status);
+            return Integer.parseInt(q.getSingleResult().toString());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Integer countOrders() {
-        Query q = getEntityManager().createQuery("SELECT COUNT(o.ordersID) FROM Orders o", Orders.class);
-        return Integer.parseInt(q.getSingleResult().toString());
+        try {
+            Query q = getEntityManager().createQuery("SELECT COUNT(o.ordersID) FROM Orders o", Orders.class);
+            return Integer.parseInt(q.getSingleResult().toString());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Integer averageOrdersPerUserByMonth(String date) {
         int orders = countAllOrdersByMonthYear(date);
         int users = countAllUsersByRole();
-        return Math.round(orders/users);
+        return Math.round(orders / users);
     }
 
     @Override
     public Integer countAllOrdersByMonthYear(String date) {
-        Query q = getEntityManager().createQuery("SELECT COUNT(o.ordersID) FROM Orders o WHERE FUNCTION('MONTH',o.ordersDate) = FUNCTION('MONTH',:date) AND FUNCTION('YEAR',o.ordersDate) = FUNCTION('YEAR',:date)", Orders.class);
-        q.setParameter("date", date);
-        return Integer.parseInt(q.getSingleResult().toString());
+        try {
+            Query q = getEntityManager().createQuery("SELECT COUNT(o.ordersID) FROM Orders o WHERE FUNCTION('MONTH',o.ordersDate) = FUNCTION('MONTH',:date) AND FUNCTION('YEAR',o.ordersDate) = FUNCTION('YEAR',:date)", Orders.class);
+            q.setParameter("date", date);
+            return Integer.parseInt(q.getSingleResult().toString());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Integer countAllUsersByRole() {
-        Query u = getEntityManager().createQuery("SELECT COUNT(u.userID) FROM Users u WHERE u.role.roleID = :roleID AND u.status = :status",Users.class);
-        u.setParameter("roleID", 3);
-        u.setParameter("status", 1);
-        return Integer.parseInt(u.getSingleResult().toString());
+        try {
+            Query u = getEntityManager().createQuery("SELECT COUNT(u.userID) FROM Users u WHERE u.role.roleID = :roleID AND u.status = :status", Users.class);
+            u.setParameter("roleID", 3);
+            u.setParameter("status", 1);
+            return Integer.parseInt(u.getSingleResult().toString());
+        } catch (Exception e) {
+            return null;
+        }
     }
+
+    @Override
+    public List<Orders> getAllOrderByStatus(int status) {
+        try {
+            Query q = getEntityManager().createQuery("SELECT o FROM Orders o WHERE o.status = :status ORDER BY o.ordersDate DESC", Orders.class);
+            q.setParameter("status", status);
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Users> getAllUserUseDiscountVoucherByVouID(String vouID) {
+        try {
+            Query q = getEntityManager().createQuery("SELECT u FROM Users u, Orders o, DiscountVoucher dv WHERE u.userID = o.user.userID AND o.voucher.voucherID = dv.voucherID AND dv.voucherID = :vouID", Orders.class);
+            q.setParameter("vouID", vouID);
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

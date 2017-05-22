@@ -2869,6 +2869,9 @@ $(document).ready(function () {
                                     + "<strong>NOT ENOUGH STOCK! PLEASE ENTER DIFFERENT QUANTITY</strong>\n"
                                     + "</div>");
                         } else {
+                            $('body,html').animate({
+                                scrollTop: 0
+                            }, 500);
                             $("#error-product-detail").html("<div class=\"alert alert-success\">\n"
                                     + "<strong>ADD PRODUCT TO CART SUCCESSFULLY</strong>\n"
                                     + "</div>");

@@ -50,7 +50,15 @@ public class Orders_Controller {
 
     @RequestMapping(value = "list")
     public String ordersList(ModelMap model) {
+        model.addAttribute("orderStatus", 4);
         model.addAttribute("orderList", orderStateLessBean.getAllOrder());
+        return "admin/pages/orders-list";
+    }
+    
+    @RequestMapping(value = "list/{status}")
+    public String ordersListByStatus(ModelMap model, @PathVariable("status") Integer status) {
+        model.addAttribute("orderStatus", status);
+        model.addAttribute("orderList", orderStateLessBean.getAllOrderByStatus(status));
         return "admin/pages/orders-list";
     }
 
