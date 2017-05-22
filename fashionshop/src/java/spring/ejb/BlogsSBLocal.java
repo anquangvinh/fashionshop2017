@@ -7,7 +7,6 @@ package spring.ejb;
 
 import java.util.List;
 import javax.ejb.Local;
-import spring.entity.BlogCategories;
 import spring.entity.Blogs;
 
 /**
@@ -39,5 +38,8 @@ public interface BlogsSBLocal {
 
 //    BlogCategories findBlogCategoryByBlogCateName(String blogCateName);
     int deleteBlog(Blogs blog);
+    
+      public Integer getAllNumberBlogsInCate(int blogCateID);
+    
 
 }
