@@ -67,6 +67,7 @@
                                 <option value="1">Newest (Default)</option>
                                 <option value="2">Price (Low to High)</option>
                                 <option value="3">Price (High to Low)</option>
+                                <input type="hidden" name="findUsersID" value="${sessionScope.findUsersID}"/>
                             </select>
                         </div>
                         <div class="col-md-4 col-sm-4">
@@ -75,6 +76,7 @@
                                 <select id="fs-number-of-item-on-page" fs-subCategory="${subCateID}">
                                     <option value="6">6 items</option>
                                     <option value="9">9 items</option>
+                                    <input type="hidden" name="findUsersID" value="${sessionScope.findUsersID}"/>
                                 </select>
                             </span>
                         </div>
@@ -162,6 +164,7 @@
                                     <li><span class="fs-page-number fs-page-number-active" fs-page-number="1" fs-subCategory="${subCateID}">1</span></li>
                                         <c:forEach begin="2" end="${Math.ceil(allProducts/6)}" var="p">
                                         <li><span class="fs-page-number" fs-page-number="${p}" fs-subCategory="${subCateID}">${p}</span></li>
+                                        <input type="hidden" name="findUsersID" value="${sessionScope.findUsersID}"/>
                                         </c:forEach>
                                 </ul>
                             </div>
@@ -194,3 +197,4 @@
 
 <!-- MODAL -->
 <jsp:include page="../blocks/modal.jsp" flush="true" />
+<jsp:include page="../blocks/messmodal.jsp" flush="true"/>

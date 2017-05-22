@@ -2157,9 +2157,7 @@ $(document).ready(function () {
     $(".fs-select-user-role").on("change", function () {
         var roleID = $(this).val();
         var userID = $(this).attr("fs-user");
-
-
-
+        
         $.ajax({
             url: "admin/user/usersrole/edit.html",
             method: "POST",
@@ -2572,6 +2570,7 @@ $(document).ready(function () {
         },
         function (isConfirm) {
             if (!isConfirm) return;
+            $("#fs-role-list-id-" + roleID).remove();
         $.ajax({
             url: "admin/user/role/delete/" + roleID + ".html",
             type: "POST",
@@ -2581,7 +2580,7 @@ $(document).ready(function () {
 //            dataType: "html",
             success: function (response){
                 swal("Done!", "It was succesfully deleted!", "success");
-                window.location = window.location.href;
+//                window.location = window.location.href
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 swal("Error deleting!", "Please try again", "error");

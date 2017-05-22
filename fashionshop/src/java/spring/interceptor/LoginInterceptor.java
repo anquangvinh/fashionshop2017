@@ -25,13 +25,15 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+        response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+        response.setDateHeader("Expires", 0); // Proxies.
         HttpSession session = request.getSession();
         String ctx = request.getContextPath();
         String uri = request.getRequestURI();
         String base = uri.substring(ctx.length());
         session.setAttribute("request_url", base);
         UsersStateLessBeanLocal usersStateLessBean = lookupUsersStateLessBeanLocal();
-
 
         if (session.getAttribute("email") != null) {
             return true; //Cho vào
@@ -54,7 +56,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     if (error == 1) {
                         session.setAttribute("email", email);
                         return true;
-                    } 
+                    }
                 }
                 response.sendRedirect(request.getContextPath() + "/admin/login.html");
 //                session.setAttribute("request_url", base);

@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!-- BREADCRUMBS -->
 <jsp:include page="../blocks/breadcrumbs.jsp" flush="true" />
@@ -26,9 +27,10 @@
                                 <tr id="fs-list-id-${wl.wishID}">
                                     <td class="text-center"><img src="assets/images/products/${wl.product.urlImg}" class="img-responsive" alt=""/></td>
                                     <td class="text-center">
-                                        <a href="#"><p><b>Product Name: ${wl.product.productName}</b></p></a>
-                                        <p>Cate Name: ${wl.product.category.cateName}</p>
-                                        <p>SubCate Name: ${wl.product.subCate.subCateName}</p>
+                                        <a href="${wl.product.productID}-${wl.product.productColorList[0].colorID}-${wl.product.productNameNA}.html"><p><b> ${wl.product.productName}</b></p></a>
+                                        <p>CATE NAME: ${wl.product.category.cateName}</p>
+                                        <p>SUBCATE NAME: ${wl.product.subCate.subCateName}</p>
+                                        <p>DATE ADD WISHLIST: <fmt:formatDate pattern="dd/MM/yyyy" value="${wl.createDate}"/></p>
                                     </td>
                                     <td class="text-center" style="text-align: center;">${wl.product.price}</td>
                                     <td class="text-center">

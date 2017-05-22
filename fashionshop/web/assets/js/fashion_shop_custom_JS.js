@@ -18,9 +18,42 @@ $(document).ready(function () {
         changeMonth: true,
         changeYear: true,
         defaultDate: '01/01/1960',
-        yearRange: "1960:1999"
-
+        yearRange: "1960:1999",
+//        beforeShow: function (textbox, instance) {
+//            $('#ui-datepicker-div').css({
+//                position: 'absolute',
+//                top: 0,
+//                left: 0
+//            });
+//            $('#fs-birthday-create').append($('#ui-datepicker-div'));
+//            $('#ui-datepicker-div').hide();
+//        }
     });
+
+    $("#loginModal").on("change", "#fs-upImage", function () {
+        var type = $(this)[0].files[0].type;
+        var arrayMimeType = ['image/jpeg', 'image/png'];
+
+        if (arrayMimeType.indexOf(type) == -1) { //Khong co trong danh sach mime hinh
+            $(this).val("");
+            $("#fs-upfile-create-user-error").text("Select 'jpeg' , 'png'");
+        } else {
+            $("#fs-upfile-create-user-error").text("");
+        }
+    });
+    
+    $("#fs-form-update-account").on("change", "#fs-upImage-acc", function () {
+        var type = $(this)[0].files[0].type;
+        var arrayMimeType = ['image/jpeg', 'image/png'];
+
+        if (arrayMimeType.indexOf(type) == -1) { //Khong co trong danh sach mime hinh
+            $(this).val("");
+            $("#fs-upfile-update-user-error").text("Select 'jpeg' , 'png'");
+        } else {
+            $("#fs-upfile-update-user-error").text("");
+        }
+    });
+    
 
     /* --------------- PRODUCT INDEX -------------------- */
     /* LOAD IMG TO RECENT VIEW FROM LOCALSTORAGE */
@@ -240,7 +273,6 @@ $(document).ready(function () {
                     var input = $("input[name='emailUser']");
                     if (input.val() != "") {
                         //Có session
-//            $(this).addClass("fs-heart-color");
                         if (!$(this).hasClass("fs-heart-color")) {
                             $(this).addClass("fs-heart-color");
                             $.ajax({
@@ -249,21 +281,15 @@ $(document).ready(function () {
                                 data: {userID: userID, productID: productID},
                                 success: function (response) {
                                     if (response == "1") {
-                                        swal({
-                                            title: "<h1 style='color: #31b131;'>Success</h1>",
-                                            text: "Add Wish List success.",
-                                            timer: 2000,
-                                            showConfirmButton: false,
-                                            html: true
-                                        });
+                                        $("#fs-mess-wl-error").text("");
+                                        $("#fs-mess-wl-success").text("SUCCESS");
+                                        $("#fs-mess-body-wl").text("Add Wish List success.");
+                                        $("#fs-wl-ajax-error").modal("show");
                                     } else if (response == "0") {
-                                        swal({
-                                            title: "<h1 style='color: #F65D20;' >Error!",
-                                            text: "Error, Fail add wishlist",
-                                            timer: 2000,
-                                            showConfirmButton: false,
-                                            html: true
-                                        });
+                                            $("#fs-mess-wl-success").text("");
+                                            $("#fs-mess-wl-error").text("ERROR");
+                                            $("#fs-mess-body-wl").text("Error, Fail add wishlist.");
+                                            $("#fs-wl-ajax-error").modal("show");
                                     }
                                 }
                             });
@@ -274,29 +300,29 @@ $(document).ready(function () {
                                 method: "POST",
                                 data: {userID: userID, productID: productID},
                                 success: function (response) {
-                                    if (response == "10") {
-                                        swal({
-                                            title: "<h1 style='color: #ff0000;' >Delete</h1>",
-                                            text: "Delete Wish List success.",
-                                            timer: 2000,
-                                            showConfirmButton: false,
-                                            html: true
-                                        });
+                                    if (response == "1") {
+                                        $("#fs-mess-wl-success").text("");
+                                        $("#fs-mess-wl-error").text("DELETE");
+                                        $("#fs-mess-body-wl").text("Delete Wish List success.");
+                                        $("#fs-wl-ajax-error").modal("show");
                                     }
                                 }
                             });
                         }
-
                     } else {
                         //Khong có session
+                        productModal.modal("hide");
                         $("#fs-modal-mess").modal("show");
+                        $(".fs-modal-wl-close").click(function(){
+                            productModal.modal("show");
+                        });
                         $(".fs-btn-login-wl").click(function () {
                             $("#fs-modal-mess").modal("hide");
                             productModal.modal("hide");
-                            $("#loginModal").modal("show");
+                            window.location = window.location.href;
+//                            $("#loginModal").modal("show");
                         });
                     }
-
                 });
             }
         });
@@ -558,8 +584,8 @@ $(document).ready(function () {
     });
 
     for (var i = 0; i < parseInt($("#fs-number-of-rating").attr("fs-nort")); i++) {
-        var rating = $('#fs-rating-star-'+i).data('current-rating');
-        $('#fs-rating-star-'+i).barrating({
+        var rating = $('#fs-rating-star-' + i).data('current-rating');
+        $('#fs-rating-star-' + i).barrating({
             theme: 'fontawesome-stars-o',
             initialRating: rating,
             showSelectedRating: false,
@@ -1603,6 +1629,8 @@ $(document).ready(function () {
 
     /* AJAX ON CLICK PAGE */
     $("#fs-shop-content-sub-category").on("click", ".fs-page-number", function () {
+        var input = $("input[name='emailUser']").val();
+        var userID = $("input[name='findUsersID']").val();
         if (!$(this).hasClass("fs-page-number-active")) {
             $(".fs-page-number").removeClass("fs-page-number-active");
             $(this).addClass("fs-page-number-active");
@@ -1673,7 +1701,9 @@ $(document).ready(function () {
                                             + "                </div>\n"
                                             + "                <div class=\"product-overlay\">\n"
                                             + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
-                                            + "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n"
+                                            + "                     <a class=\"likeitem fa fa-heart-o fs-wl-add-sub-a\" \n"
+                                            + "                     fs-userID=\"" + userID + "\" \n"
+                                            + "                     fs-productID=\"" + prod.productID + "\"></a>\n"
                                             + "                </div>\n"
                                             + "          </div>\n"
                                             + "      <div class=\"product-info\">\n"
@@ -1705,7 +1735,9 @@ $(document).ready(function () {
                                             + "                </div>\n"
                                             + "                <div class=\"product-overlay\">\n"
                                             + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
-                                            + "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n"
+                                            + "                     <a class=\"likeitem fa fa-heart-o fs-wl-add-sub-a\" \n"
+                                            + "                     fs-userID=\"" + userID + "\" \n"
+                                            + "                     fs-productID=\"" + prod.productID + "\"></a>\n"
                                             + "                </div>\n"
                                             + "          </div>\n"
                                             + "      <div class=\"product-info\">\n"
@@ -1729,9 +1761,76 @@ $(document).ready(function () {
                 }
             });
         }
-
-
     });
+
+//    MODAL WISH-LIST
+
+    $("#fs-shop-content-sub-category").on("click",".fs-wl-add-sub-a", function(){
+        var input = $("input[name='emailUser']");
+        var userID = $(this).attr("fs-userID");
+        var productID = $(this).attr("fs-productID");
+        
+         if (input.val() != "") {
+            //Có session
+            if (!$(this).hasClass("fs-heart-color")) {
+                $(this).addClass("fs-heart-color");
+                $.ajax({
+                    url: "user/ajax/addWishList.html",
+                    method: "POST",
+                    data: {userID: userID, productID: productID},
+                    success: function (response) {
+                        if (response == "1") {
+                            swal({
+                                title: "<h1 style='color: #31b131;'>Success</h1>",
+                                text: "Add Wish List success.",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        } else if (response == "0") {
+                            swal({
+                                title: "<h1 style='color: #F65D20;' >Error!",
+                                text: "Error, Fail add wishlist",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        }
+                    }
+                });
+            } else {
+                $(this).removeClass("fs-heart-color");
+                $.ajax({
+                    url: "user/ajax/deleteWishListt.html",
+                    method: "POST",
+                    data: {userID: userID, productID: productID},
+                    success: function (response) {
+                        if (response == "1") {
+                            swal({
+                                title: "<h1 style='color: #ff0000;' >Delete</h1>",
+                                text: "Delete Wish List success.",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        }
+                    }
+                });
+            }
+
+        } else {
+            //Khong có session
+            $("#fs-modal-mess").modal("show");
+            $(".fs-btn-login-wl").click(function () {
+                $("#fs-modal-mess").modal("hide");
+                window.location = window.location.href;
+//                $("#loginModal").modal("show");
+            });
+        }
+        
+        
+    });
+    
     /* AJAX ON CHANGE SORT PRODUCT BY  */
     $("#fs-shop-content-sub-category").on("change", "#fs-sort-product-by", function () {
         var sortBy = $(this).val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
@@ -2523,7 +2622,7 @@ $(document).ready(function () {
             $("#cart").html(response).fadeIn(1000);
         }
     });
-    
+
     //order-history.jsp
     //$("#loginModal").modal('hide'); show
     if (window.location.href.includes("order-history")) {
@@ -2538,9 +2637,10 @@ $(document).ready(function () {
                 maxcount = maxcount + 5;
             }
         });
-        
+
         //check session
-    };
+    }
+    ;
 
     //checkout.jsp
     //Discount in checkout.jsp
@@ -2819,18 +2919,19 @@ $(document).ready(function () {
 
     /*===========================DUONG - USER===================================*/
     //THÔNG BÁO KHI CLICK VÀO ADD ADDRESS KHI VƯỢT QUÁ MỨC CHO PHÉP
-    $(".fs-add-address-user").on("click", function () {
-        var userID = $(this).attr("fs-userID");
-        var modal = $(this).attr("fs-message");
-        $.ajax({
-            url: "user/address-add/" + userID + ".html",
-            method: "GET",
-            data: {userID: userID},
-            success: function (response) {
-                alert('không thể thêm address');
-            }
-        });
-    });
+//    $(".fs-add-address-user").on("click", function () {
+//        var userID = $(this).attr("fs-userID");
+//        var modal = $(this).attr("fs-message");
+//        $.ajax({
+//            url: "user/address-add/" + userID + ".html",
+//            method: "GET",
+//            data: {userID: userID},
+//            success: function (response) {
+//                alert('không thể thêm address');
+//            }
+//        });
+//    });
+
     //CUỘN LẠI, HIỆN RA TABLE ADDRESS-LIST
 
     $(".fs-panel").on("click", ".panel-heading span.clickable", function () {
@@ -2859,6 +2960,7 @@ $(document).ready(function () {
     });
     $("div#fs-table-add-address span.clickable").click();
 
+
     // CẢNH CÁO KHI BẤM XÓA
     $(".fs-delete-button-AD").click(function () {
         var addressID = $(this).attr("fs-addressID");
@@ -2873,6 +2975,7 @@ $(document).ready(function () {
         }, function (isConfirm) {
             if (!isConfirm)
                 return;
+            $("#fs-list-id-" + addressID).remove();
             $.ajax({
                 url: "user/deleteAddress/" + addressID + ".html",
                 type: "POST",
@@ -2882,7 +2985,7 @@ $(document).ready(function () {
                 success: function (response) {
                     if (response == "1")
                         swal("Done!", "It was succesfully deleted!", "success");
-                    window.location = window.location.href;
+//                    window.location = window.location.href;
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     swal("Error deleting!", "Please try again", "error");
@@ -2899,6 +3002,8 @@ $(document).ready(function () {
         $(this).find("p").html("");
         $(this).find("span#glypcn-fs-login-user").remove("span");
         $(this).find("span#glypcn-fs-create-user").remove("span");
+        $(this).find("#fs-error-show").text("");
+        $(this).find("#fs-error-show-register").text("");
     });
 
     // BẮT LỖI FORM LOGIN USER MODAL
@@ -2941,8 +3046,9 @@ $(document).ready(function () {
         e.preventDefault();
         var email = $("#fs-email-login-user").val().trim();
         var pass = $("#fs-pass-login-user").val().trim();
-        var checkremember = $("#fs-check-remember").val();
-
+//        var checkremember = $("#fs-check-remember").val();
+        var checkremember = $('input[name="checkremember"]:checked').val();
+//        alert(checkremember);
         if (!checkEmail(email)) {
             return false;
         } else if (pass == "") { // => đúng là pass != ==
@@ -2964,7 +3070,6 @@ $(document).ready(function () {
             div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
         } else {
-//            $("#fs-form-login-user").submit();
             $("#fs-pass-login-user-error").text("");
             var div = $("#fs-pass-login-user").closest("div.fs-pass-user");
             div.removeClass("has-error");
@@ -2998,7 +3103,7 @@ $(document).ready(function () {
         email = $("#fs-email-login-user").val().trim();
         if ($("#loginModal").modal('show')) {
             $("#fs-error-show").text("Email is wrong!");
-//            $("#fs-email-login-user").focus();
+            $("#fs-email-login-user").focus();
             var div = $("#fs-email-login-user").closest("div.fs-email-user");
             div.removeClass("has-success");
             $("#glypcn-fs-login-user").remove();
@@ -3012,7 +3117,7 @@ $(document).ready(function () {
         password = $("#fs-pass-login-user").val().trim();
         if ($("#loginModal").modal('show')) {
             $("#fs-error-show").text("Password is wrong!");
-//            $("#fs-pass-login-user").focus();
+            $("#fs-pass-login-user").focus();
             var div = $("#fs-pass-login-user").closest("div.fs-pass-user");
             div.removeClass("has-success");
             $("#glypcn-fs-login-user").remove();
@@ -3352,42 +3457,61 @@ $(document).ready(function () {
 
         if (!checkemail(email)) {
             return false;
-        } else if (!checkPass(password)) {
-            return false;
-        } else if (!checkRePass(repassword, password)) {
-            return false;
-        } else if (!checkFirstName(firstname)) {
-            return true;
-        } else if (!checkLastName(lastname)) {
-            return false;
-        } else if (!checkBirthDay(birthday)) {
-            return false;
         }
-        else {
-            $.ajax({
-                url: "user/register.html",
-                method: "POST",
-                //data: $("#fs-form-create-user").serialize(),
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                //dataType: 'html',
-                success: function (response) {
-                    console.log(response);
-                    if (response == "2") {
-                        $("#fs-error-show-register").html("<div class=\"col-md-5  alert alert-danger\">FAILED!. Account is exists!</div>");
-                    } else if (response == "0") {
-                        $("#fs-error-show-register").html("<div class=\"col-md-5  alert alert-danger\">FAILED!. Error was happened!!</div>");
-                    } else {
-                        var currentUrl = window.location.href;
-                        window.location = currentUrl;
-                        $("#loginModal").modal('hide');
-                    }
 
-                }
-            });
+        if (!checkPass(password)) {
+            return false;
         }
+        if (!checkRePass(repassword, password)) {
+            return false;
+        }
+        if (!checkFirstName(firstname)) {
+            return true;
+        }
+        if (!checkLastName(lastname)) {
+            return false;
+        }
+        if (!checkBirthDay(birthday)) {
+            return false;
+        }
+
+        if (phone != "") {
+            if (!checkPhone(phone)) {
+                return false;
+            }
+            if (!checkAddress(address)) {
+                return false;
+            }
+        } else {
+            $("#fs-phone-create-user-error").text("");
+            $("#fs-address-create-user-error").text("");
+        }
+
+//        else {
+        $.ajax({
+            url: "user/register.html",
+            method: "POST",
+            //data: $("#fs-form-create-user").serialize(),
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            //dataType: 'html',
+            success: function (response) {
+                console.log(response);
+                if (response == "2") {
+                    $("#fs-error-show-register").html("<div class=\"alert alert-danger\">FAILED!. Account is exists!</div>");
+                } else if (response == "0") {
+                    $("#fs-error-show-register").html("<div class=\"alert alert-danger\">FAILED!. Error was happened!!</div>");
+                } else {
+                    var currentUrl = window.location.href;
+                    window.location = currentUrl;
+                    $("#loginModal").modal('hide');
+                }
+
+            }
+        });
+//        }
     });
 //        VALIDATION REGISTER KEYUP
 
@@ -3661,7 +3785,7 @@ $(document).ready(function () {
             return false;
         }
     });
-  
+
     // VALIDATION CHANGE PASS CLICK
 
     $(".fs-button-change-pass").click(function (e) {
@@ -3696,6 +3820,9 @@ $(document).ready(function () {
             $("#fs-repass-user-error").text("");
             $(".fs-form-change-pass").submit();
         }
+
+
+
     });
 
     // VALIDATION CHANGE PASS KEYUP
@@ -3745,6 +3872,9 @@ $(document).ready(function () {
         e.preventDefault();
         var address = $(".fs-address-add").val().trim();
         var phone = $(".fs-phone-add").val().trim();
+//        phone = phone.replace('(+84)', '0');
+//        phone = phone.replace('+84', '0');
+//        phone = phone.replace('0084', '0');
         var regex = new RegExp(/^(01[2689]|09)[0-9]{8}$/);
 
         if (address == "") {
@@ -3763,6 +3893,24 @@ $(document).ready(function () {
             $("#fs-phone-add-user-error").text("");
             $(".fs-form-add-address").submit();
         }
+
+//        if((address.length > 10 && address.length < 255) && regex.test(phone)){
+//            var userID = $(this).attr("fs-userID");
+//            $.ajax({
+//                url: "user/address-add/"+ userID +".html",
+//                method: "POST",
+//                data:{userID: userID},
+//                success: function (response) {
+//                    if(response == "1"){
+//                        alert("trùng");
+//                    }else if(response == "2") {
+//                        alert("ok");
+//                    }else{
+//                        alert("hihi");
+//                    }
+//                }
+//            });
+//        }
 
     });
 
@@ -3853,7 +4001,6 @@ $(document).ready(function () {
             $("#fs-phone-update-user-error").text("Phone begin 01 or 09 and 10 to 11 number");
         } else {
             $("#fs-phone-update-user-error").text("");
-//            $(".fs-form-update-address").submit();
         }
     });
 
@@ -3866,7 +4013,6 @@ $(document).ready(function () {
         var input = $("input[name='emailUser']");
         if (input.val() != "") {
             //Có session
-//            $(this).addClass("fs-heart-color");
             if (!$(this).hasClass("fs-heart-color")) {
                 $(this).addClass("fs-heart-color");
                 $.ajax({
@@ -3900,7 +4046,7 @@ $(document).ready(function () {
                     method: "POST",
                     data: {userID: userID, productID: productID},
                     success: function (response) {
-                        if (response == "10") {
+                        if (response == "1") {
                             swal({
                                 title: "<h1 style='color: #ff0000;' >Delete</h1>",
                                 text: "Delete Wish List success.",
@@ -3918,7 +4064,8 @@ $(document).ready(function () {
             $("#fs-modal-mess").modal("show");
             $(".fs-btn-login-wl").click(function () {
                 $("#fs-modal-mess").modal("hide");
-                $("#loginModal").modal("show");
+                window.location = window.location.href;
+//                $("#loginModal").modal("show");
             });
         }
     });
@@ -3966,7 +4113,7 @@ $(document).ready(function () {
                     method: "POST",
                     data: {userID: userID, productID: productID},
                     success: function (response) {
-                        if (response == "10") {
+                        if (response == "1") {
                             swal({
                                 title: "<h1 style='color: #ff0000;' >Delete</h1>",
                                 text: "Delete Wish List success.",
@@ -3984,7 +4131,8 @@ $(document).ready(function () {
             $("#fs-modal-mess").modal("show");
             $(".fs-btn-login-wl").click(function () {
                 $("#fs-modal-mess").modal("hide");
-                $("#loginModal").modal("show");
+                window.location = window.location.href;
+//                $("#loginModal").modal("show");
             });
         }
     });
@@ -3998,7 +4146,6 @@ $(document).ready(function () {
         var input = $("input[name='emailUser']");
         if (input.val() != "") {
             //Có session
-//            $(this).addClass("fs-heart-color");
             if (!$(this).hasClass("fs-heart-color")) {
                 $(this).addClass("fs-heart-color");
                 $.ajax({
@@ -4030,9 +4177,9 @@ $(document).ready(function () {
                 $.ajax({
                     url: "user/ajax/deleteWishListt.html",
                     method: "POST",
-                    data: {userID: userID, productID: productID},
+                    data: {productID: productID,userID: userID },
                     success: function (response) {
-                        if (response == "10") {
+                        if (response == "1") {
                             swal({
                                 title: "<h1 style='color: #ff0000;' >Delete</h1>",
                                 text: "Delete Wish List success.",
@@ -4047,11 +4194,12 @@ $(document).ready(function () {
 
         } else {
             //Khong có session
-//            $("#fs-modal-mess").modal("show");
-//            $(".fs-btn-login-wl").click(function () {
-//                $("#fs-modal-mess").modal("hide");
-                $("#loginModal").modal("show");
-//            });
+            $("#fs-modal-mess").modal("show");
+            $(".fs-btn-login-wl").click(function () {
+                $("#fs-modal-mess").modal("hide");
+                window.location = window.location.href;
+//                $("#loginModal").modal("show");
+            });
         }
     });
 
@@ -4079,6 +4227,9 @@ $(document).ready(function () {
             }
         });
     });
+
+
+
 
     /*===========================END DUONG - USER===================================*/
 

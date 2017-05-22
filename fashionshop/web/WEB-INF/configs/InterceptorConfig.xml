@@ -36,5 +36,7 @@
             <mvc:exclude-mapping path="/user/register**" />
             <bean class="spring.interceptor.LoginUserInterceptor" />
         </mvc:interceptor>
+          
     </mvc:interceptors>
+   
 </beans>

@@ -56,7 +56,7 @@ public class GeneralController {
         return "client/pages/index";
     }
 
-    @RequestMapping(value = "/admin")
+    @RequestMapping(value = "/admin/index")
     public String admin(ModelMap model) {
         return "admin/pages/index";
     }
@@ -79,7 +79,7 @@ public class GeneralController {
             session.setAttribute("findUsersID", userfindUserID.getUserID());
             session.setAttribute("USfirstname", userfindUserID.getFirstName() + " " + userfindUserID.getLastName());
 
-            if (checkremember == 1) {
+            if (checkremember != null && checkremember == 1) {
                 Cookie ckEmail = new Cookie("emailU", email);
                 ckEmail.setMaxAge(24 * 60 * 60);
                 response.addCookie(ckEmail);
