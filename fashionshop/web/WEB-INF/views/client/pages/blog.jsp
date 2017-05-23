@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!-- BREADCRUMBS -->
 <jsp:include page="../blocks/breadcrumbs.jsp" flush="true" />
@@ -16,33 +17,25 @@
                         <button type="submit"><i class="fa fa-search"></i></button>
                     </form>
                 </div>
-                <!--                <div class="side-widget space50">
-                                    <h3><span>Category</span></h3>
-                                    <table>
-                <c:forEach items="${blogCateListClient}" var="blogcateclient">
-                    <tr>
-                        <td blog-cate-id="${blogcateclient.blogCateID}" onclick="">${blogcateclient.blogCateName}</td>
-                    </tr>
-                </c:forEach>
-            </table>
-
-        </div>-->
                 <div class="side-widget space50">
                     <h3><span>Month</span></h3>
-                    <select id="monthblog" class="form-control">
-                        <option value="1">January</option>
-                        <option value="2">February</option>
-                        <option value="3">March</option>
-                        <option value="4">April</option>
-                        <option value="5">May</option>
-                        <option value="6">June</option>
-                        <option value="7">July</option>
-                        <option value="8">August</option>
-                        <option value="9">September</option>
-                        <option value="10">October</option>
-                        <option value="11">November</option>
-                        <option value="12">December</option>
+                    <select id="monthblog" class="form-control" onchange="window.location = 'blog/'+this.value+'.html';">
+                        <option value="">Select blog by month</option>
+                        <option value="1" id="1">January</option>
+                        <option value="2" id="2">February</option>
+                        <option value="3" id="3">March</option>
+                        <option value="4" id="4">April</option>
+                        <option value="5" id="5">May</option>
+                        <option value="6" id="6">June</option>
+                        <option value="7" id="7">July</option>
+                        <option value="8" id="8">August</option>
+                        <option value="9" id="9">September</option>
+                        <option value="10"id="10">October</option>
+                        <option value="11" id="11">November</option>
+                        <option value="12" id="12">December</option>
                     </select>
+                    
+
 
                 </div>
                 <div class="side-widget space50">
@@ -63,61 +56,40 @@
                 </div>
             </aside>
             <div class="col-md-9 col-sm-8 blog-content">
-                <!--                <article class="blogpost">
-                                    <div class="space30"></div>
-                                     Media Gallery 
-                                    <div class="post-media">
-                                        <div class="blog-slider">
-                                            <div class="item">						
-                                                <img src="" class="img-responsive" alt="">
-                                                <img src="assets/images/blog/1/1097x600.jpeg" class="img-responsive" alt=""/>
-                                            </div>
-                                            <div class="item">						
-                                                <img src="assets/images/blog/1/1097x600a.jpeg" class="img-responsive" alt=""/>
-                                            </div>
-                                            <div class="item">						
-                                                <img src="assets/images/blog/1/1097x600c.jpeg" class="img-responsive" alt=""/>
-                                            </div>
-                                        </div>
+<!--                <div class="blog-content-list" style="display: flex;">
+                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                            <li data-target="#myCarousel" data-slide-to="1"></li>
+                            <li data-target="#myCarousel" data-slide-to="2"></li>
+                        </ol>
+                        <div class="space30">
+                            <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                                <div class="carousel-inner">
+                                    <div class="item active">
+                                        <img src="assets/images/blog/1/1097x600.jpeg" class="img-responsive" alt=""/>
                                     </div>
-                                </article>-->
-                <!--<div class="blog-content-list" style="display: flex;">-->
-                <!--                <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                                     Indicators 
-                                    <ol class="carousel-indicators">
-                                        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                                        <li data-target="#myCarousel" data-slide-to="1"></li>
-                                        <li data-target="#myCarousel" data-slide-to="2"></li>
-                                    </ol>
-                                    <div class="space30">
-                                         Wrapper for slides 
-                                        <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                                            <div class="carousel-inner">
-                                                <div class="item active">
-                                                    <img src="assets/images/blog/1/1097x600.jpeg" class="img-responsive" alt=""/>
-                                                </div>
-                                                <div class="item">
-                                                    <img src="assets/images/blog/1/1097x600a.jpeg" class="img-responsive" alt=""/>
-                                                </div>
-                
-                                                <div class="item">
-                                                    <img src="assets/images/blog/1/1097x600c.jpeg" class="img-responsive" alt=""/>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="item">
+                                        <img src="assets/images/blog/1/1097x600a.jpeg" class="img-responsive" alt=""/>
                                     </div>
-                
-                                     Left and right controls 
-                                    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-                                        <span class="glyphicon glyphicon-chevron-left"></span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                    <a class="right carousel-control" href="#myCarousel" data-slide="next">
-                                        <span class="glyphicon glyphicon-chevron-right"></span>
-                                        <span class="sr-only">Next</span>
-                                    </a>
+
+                                    <div class="item">
+                                        <img src="assets/images/blog/1/1097x600c.jpeg" class="img-responsive" alt=""/>
+                                    </div>
                                 </div>
-                                <br>-->
+                            </div>
+                        </div>
+                        <a class="left carousel-control" style="width: 5%" href="#myCarousel" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="right carousel-control" style="width: 5%" href="#myCarousel" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>-->
+                <br>
                 <div class="image-gallery-list">
                     <ul class="image-gallery-ul">
                         <c:forEach items="${blogListIndex}" var="blogclient" begin="0" end="1000" varStatus="no">
@@ -155,6 +127,7 @@
                 </div>
                 <!--</div>-->
                 <!--                Button Load More-->
+
 
                 <!-- End Content -->
             </div>

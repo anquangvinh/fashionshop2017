@@ -58,6 +58,21 @@ public class BlogController {
         return "client/pages/blog";
     }
 
+    @RequestMapping(value = "/blog/{month}")
+    public String blog(ModelMap model, @PathVariable("month") Integer month) {
+        List<Blogs> blogListIndex = blogsSB.getAllBlogsByMonth(month);
+        List<Blogs> getBlogsListByCate = blogsSB.getAllBlogsByMonth(month);
+          model.addAttribute("getBlogsListByCate", getBlogsListByCate);
+        model.addAttribute("blogListIndex", blogListIndex);
+        model.addAttribute("PopularPosts", blogsSB.getAllBlogs());
+        //2 dòng này thêm để render ra menu chính
+        List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
+        model.addAttribute("blogCateListClient", getBlogCateList);
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
+        return "client/pages/blog";
+    }
+
     //WHERE blogTitle LIKE '%g%' AND (MONTH(postedDate) = MONTH('2017-01-10') OR MONTH(postedDate) = MONTH('2017-02-10') OR MONTH(postedDate) = MONTH('2017-03-10'))
     @RequestMapping(value = "/blog-categories", method = RequestMethod.POST)
     public String blog_categories_search(HttpServletRequest request, ModelMap model) {
@@ -68,7 +83,6 @@ public class BlogController {
             List<Blogs> getBlogsListBySearch = blogsSB.findBlogsByTitle(searchBlog, null);
             model.addAttribute("getBlogsListByCate", getBlogsListBySearch);
         }
-        
         model.addAttribute("PopularPosts", blogsSB.getAllBlogs());
         model.addAttribute("searchBlog", request.getParameter("searchBlog"));
         List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
@@ -85,10 +99,11 @@ public class BlogController {
     public String blog_categories(@PathVariable("blogCateID") Integer blogCateID, ModelMap model) {
 //          //2 dòng này thêm để render ra menu chính
         List<Blogs> getShowAllBlogs = blogsSB.getAllBlogs();
-
         List<Categories> cateList = productStateLessBean.categoryList();
         List<Blogs> getBlogsListByCate = blogsSB.getListBlogsByCategory(blogCateID);
         List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
+//        List<Blogs> getAllBlogsByMonth = blogsSB.getAllBlogsByMonth(); // List theo month
+//        model.addAttribute("blogListByMonth", getAllBlogsByMonth);
         model.addAttribute("blogCateListClient", getBlogCateList);
         model.addAttribute("blogListClient", getShowAllBlogs);
         model.addAttribute("getBlogCateList", getBlogCateList);
