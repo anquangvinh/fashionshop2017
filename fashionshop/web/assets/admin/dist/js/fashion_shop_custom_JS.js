@@ -4610,8 +4610,10 @@ $(document).ready(function () {
                 $("#error-orderDetail-add").html(errorHead + "PLEASE CHOOSE SIZE" + errorFoot);
             } else if (quantity == "") {
                 $("#error-orderDetail-add").html(errorHead + "PLEASE ENTER QUANTITY" + errorFoot);
-            } else if (quantity < 1 || quantity > 10) {
-                $("#error-orderDetail-add").html(errorHead + "QUANTITY MUST 1 TO 10" + errorFoot);
+            } else if (quantity < 1) {
+                $("#error-orderDetail-add").html(errorHead + "QUANTITY MUST EQUAL OR GREATER THAN 1" + errorFoot);
+            } else if (Math.floor(quantity) != quantity) {
+                $("#error-orderDetail-add").html(errorHead + "QUANTITY MUST NOT BE DECIMAL" + errorFoot);
             } else {
                 $.ajax({
                     url: "admin/orders/ajax/addOrderDetail.html",
