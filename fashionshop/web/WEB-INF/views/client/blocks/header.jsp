@@ -3,45 +3,45 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="loginModal.jsp"></jsp:include>
 <script>var ctx = "${pageContext.request.contextPath}";</script>
-    <!-- TOPBAR -->
-    <div class="top_bar">
-        <div class="container">
+<!-- TOPBAR -->
+<div class="top_bar">
+    <div class="container">
+        <div class="row">
             <div class="row">
-                <div class="row">
-                    <div class="col-md-12 col-sm-12">
-                        <div class="tb_left pull-left">
-                            <p>Welcome to Fashion Store !</p>
-                        </div>
-                        <div class="tb_center pull-left">
-                            <ul>
-                                <li><i class="fa fa-phone"></i> Hotline: <a href="#">0168 8866 424</a></li>
-                                <li><i class="fa fa-envelope-o"></i> <a href="#">support@smile.com</a></li>
-                            </ul>
-                        </div>
-                        <div class="tb_right pull-right">
-                            <ul>
-                                <li>
-                                    <div class="tbr-info">
-                                        <c:if test="${empty sessionScope.emailUser}">
-                                            <span class="fa fa-user">
-                                                <a class="fs-login-page" href="#loginModal" data-toggle="modal" data-target="#loginModal">
-                                                    Login
-                                                </a>
-                                            </span>
-                                        </c:if>
-                                        <c:if test="${not empty sessionScope.emailUser}">
-                                            <span>${sessionScope.USfirstname} <i class="fa fa-caret-down"></i></span>
+                <div class="col-md-12 col-sm-12">
+                    <div class="tb_left pull-left">
+                        <p>Welcome to Fashion Store !</p>
+                    </div>
+                    <div class="tb_center pull-left">
+                        <ul>
+                            <li><i class="fa fa-phone"></i> Hotline: <a href="#">0168 8866 424</a></li>
+                            <li><i class="fa fa-envelope-o"></i> <a href="#">support@smile.com</a></li>
+                        </ul>
+                    </div>
+                    <div class="tb_right pull-right">
+                        <ul>
+                            <li>
+                                <div class="tbr-info">
+                                    <c:if test="${empty sessionScope.emailUser}">
+                                        <span class="fa fa-user">
+                                            <a class="fs-login-page" href="#loginModal" data-toggle="modal" data-target="#loginModal">
+                                                Login
+                                            </a>
+                                        </span>
+                                    </c:if>
+                                    <c:if test="${not empty sessionScope.emailUser}">
+                                        <span>${sessionScope.USfirstname} <i class="fa fa-caret-down"></i></span>
 
-                                            <div class="tbr-inner">
-                                                <a href="user/myaccount.html">My Account</a>
-                                                <a href="user/wishlist/${sessionScope.findUsersID}.html">My Wishlist</a>
-                                                <a href="orders/order-history.html">Order History</a>
-                                                <a href="logout.html">LogOut</a>
-                                            </div>
-                                        </c:if>
-                                    </div>
-                                </li>
-                            </ul>
+                                        <div class="tbr-inner">
+                                            <a href="user/myaccount.html">My Account</a>
+                                            <a href="user/wishlist/${sessionScope.findUsersID}.html">My Wishlist</a>
+                                            <a href="orders/order-history.html">Order History</a>
+                                            <a href="logout.html">LogOut</a>
+                                        </div>
+                                    </c:if>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -70,6 +70,7 @@
                         <div id="cart">
 
                         </div>
+                        <input id="order-emailUser" name="order-emailUser" type="hidden" value="${sessionScope.emailUser}"/>
                     </div>
                     <div class="topsearch">
                         <span>
@@ -95,15 +96,15 @@
                                 <ul class="dropdown-menu submenu" role="menu">
                                     <c:forEach items="${category.subCateList}" var="subCate">
                                         <li><a href="subCategory/${category.cateNameNA}-${subCate.subCateID}-${subCate.subCateNameNA}.html">${subCate.subCateName}</a></li>
-                                    </c:forEach>
+                                        </c:forEach>
                                 </ul>
                             </li>
                         </c:forEach>
                         <li class="dropdown">
                             <a href="blog.html" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Blog</a>
                             <ul class="dropdown-menu submenu" role="menu">                     
-                                    <c:forEach items="${blogCateListClient}" var="blogcateclient">
-                                            <li><a href="blog-categories/${blogcateclient.blogCateID}.html">${blogcateclient.blogCateName}</a></li>    
+                                <c:forEach items="${blogCateListClient}" var="blogcateclient">
+                                    <li><a href="blog-categories/${blogcateclient.blogCateID}.html">${blogcateclient.blogCateName}</a></li>    
                                     </c:forEach>
                             </ul>
                         </li>
@@ -130,4 +131,14 @@
             }
         });
     }
+    ;
+    function checkoutClick() {
+        var email = $('input[name=order-emailUser]').val();
+        if (email == "" || email == null) {
+            $("#loginModal").modal("show");
+        } else {
+            window.location = "orders/checkout.html";
+        }
+    }
+    ;
 </script>
