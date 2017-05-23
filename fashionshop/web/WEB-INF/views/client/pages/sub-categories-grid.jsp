@@ -63,6 +63,7 @@
                 <div class="clearfix space30"></div>
             </aside>
             <div class="col-md-9 col-sm-8">
+
                 <c:if test="${productsList != null}">
                     <div class="filter-wrap">
                         <div class="row">
@@ -189,6 +190,7 @@
             </div>
         </div>
         <div class="space50"></div>
+        
         <div class="row">
             <div class="col-md-12 col-sm-12">
                 <div style="border-top: 1px solid #CCC; padding-top: 17px; padding-bottom: 22px; min-height: 200px">
@@ -207,7 +209,7 @@
     </div>
 
 </div>
-
+<input type="hidden" name="findUsersID" value="${sessionScope.findUsersID}"/>
 <div class="clearfix space20"></div>
 
 <!-- MODAL -->

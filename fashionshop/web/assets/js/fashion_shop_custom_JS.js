@@ -1648,6 +1648,7 @@ $(document).ready(function () {
 
     /* AJAX ON CLICK PAGE */
     $("#fs-shop-content-sub-category").on("click", ".fs-page-number", function () {
+        var userID = $("input[name='findUsersID']").val();
         if (!$(this).hasClass("fs-page-number-active")) {
             $(".fs-page-number").removeClass("fs-page-number-active");
             $(this).addClass("fs-page-number-active");
