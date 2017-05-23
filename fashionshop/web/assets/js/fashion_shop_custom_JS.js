@@ -1629,7 +1629,6 @@ $(document).ready(function () {
 
     /* AJAX ON CLICK PAGE */
     $("#fs-shop-content-sub-category").on("click", ".fs-page-number", function () {
-        var input = $("input[name='emailUser']").val();
         var userID = $("input[name='findUsersID']").val();
         if (!$(this).hasClass("fs-page-number-active")) {
             $(".fs-page-number").removeClass("fs-page-number-active");
