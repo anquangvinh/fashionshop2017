@@ -7,9 +7,6 @@
  */
 
 $(document).ready(function () {
-    /* --------------- BLOG ADMIN -------------------- */
-
-
     /* USER JS AREA */
     /* REGISTER FORM */
     $("#txtBirthday").datepicker({
@@ -18,53 +15,32 @@ $(document).ready(function () {
         changeMonth: true,
         changeYear: true,
         defaultDate: '01/01/1960',
-        yearRange: "1960:1999",
-//        beforeShow: function (textbox, instance) {
-//            $('#ui-datepicker-div').css({
-//                position: 'absolute',
-//                top: 0,
-//                left: 0
-//            });
-//            $('#fs-birthday-create').append($('#ui-datepicker-div'));
-//            $('#ui-datepicker-div').hide();
-//        }
+        yearRange: "1960:1999"
+
     });
 
-    $("#loginModal").on("change", "#fs-upImage", function () {
-        var type = $(this)[0].files[0].type;
-        var arrayMimeType = ['image/jpeg', 'image/png'];
-
-        if (arrayMimeType.indexOf(type) == -1) { //Khong co trong danh sach mime hinh
-            $(this).val("");
-            $("#fs-upfile-create-user-error").text("Select 'jpeg' , 'png'");
-        } else {
-            $("#fs-upfile-create-user-error").text("");
-        }
+    /* --------------- SEARCH PRODUCT BY NAME -------------------- */
+    $("body").on("keyup", "#fs-search-top-input", function () {
+        var kw = $(this).val();
+        $.ajax({
+            url: "ajax/searchProductByKeyWord.html",
+            method: "POST",
+            data: {keyword: kw},
+            success: function (response) {
+                $("#fs-on-search-result").html(response);
+            }
+        });
     });
-    
-    $("#fs-form-update-account").on("change", "#fs-upImage-acc", function () {
-        var type = $(this)[0].files[0].type;
-        var arrayMimeType = ['image/jpeg', 'image/png'];
 
-        if (arrayMimeType.indexOf(type) == -1) { //Khong co trong danh sach mime hinh
-            $(this).val("");
-            $("#fs-upfile-update-user-error").text("Select 'jpeg' , 'png'");
-        } else {
-            $("#fs-upfile-update-user-error").text("");
-        }
-    });
-    
 
     /* --------------- PRODUCT INDEX -------------------- */
     /* LOAD IMG TO RECENT VIEW FROM LOCALSTORAGE */
     // Check browser support
     if (typeof (Storage) != "undefined") {
-// Retrieve
         if (localStorage.getItem("productsArrLocal") != null) {
             var productsArrLocal = JSON.parse(localStorage.getItem("productsArrLocal"));
             productsArrLocal.reverse();
             var liProdStr = "";
-            var liProdStrIndexPage = "";
             $.each(productsArrLocal, function (i, prod) {
                 liProdStr += "<div>\n\
                                 <a href=\"" + prod.productID + "-" + prod.productColorID + "-" + prod.productNameNA + ".html\">\n\
@@ -72,22 +48,7 @@ $(document).ready(function () {
                                 </a>\n\
                             </div>";
             });
-            console.log(productsArrLocal);
-//            for(var i = productsArrLocal.length - 1; i > productsArrLocal.length - 4; i--){
-//                liProdStrIndexPage += "<li>\n\
-//                                        <div class=\"fw-thumb\">\n\
-//                                            <img src=\"assets/images/products/"+ productsArrLocal[i].productImg +"\" alt=\""+ productsArrLocal[i].productImg +"\"/>\n\
-//                                        </div>\n\
-//                                            <div class=\"fw-info\">\n\
-//                                                <h4>\n\
-//                                                    <a href=\"" + productsArrLocal[i].productID + "-" + productsArrLocal[i].productColorID + "-" + productsArrLocal[i].productNameNA + ".html\">"+ productsArrLocal[i].productName +"</a>\n\
-//                                                </h4>\n\
-//                                                <span class=\"fw-price\">$ "+ productsArrLocal[i].price +".00</span>\n\
-//                                            </div>\n\
-//                                        </li>";
-//            }
             $("#fs-recent-view-product").html(liProdStr);
-            // $("#fs-recent-product-index-page").html(liProdStrIndexPage);
         }
     } else {
         $("#fs-localStorage-result").text("Sorry, your browser does not support Web Storage...");
@@ -103,6 +64,16 @@ $(document).ready(function () {
 
     });
 
+    /* Rating */
+    for (var i = 0; i < 3; i++) {
+        var rating = $('#fs-index-top-rating-result-' + i).data('current-rating');
+        $('#fs-index-top-rating-result-' + i).barrating({
+            theme: 'fontawesome-stars-o',
+            initialRating: rating,
+            showSelectedRating: false,
+            readonly: true,
+        });
+    }
     /* SLIDE PRODUCTS IN INDEX */
     $("#isotope").isotope({
         filter: '.isotope_to_all',
@@ -218,14 +189,15 @@ $(document).ready(function () {
 
     /* AJAX CALL MODAL */
     $(".body").on("click", ".fs-product-modal", function () {
+        $(".fs-quantity-in-stock").text("---");
         $('#error-cart-product-modal').html("");
         var productID = $(this).attr("fs-product");
         var colorID = $(this).attr("fs-product-modal-color");
         var productModal = $("#productModal");
         $(".fs-modal-input-number").val(1);
         $(".fs-modal-btn-quantity-minus").attr("disabled", "disabled");
-        $(".fs-modal-btn-quantity-plus").removeAttr("disabled");
-        console.log("ProductID: " + productID + " colorID: " + colorID);
+        //$(".fs-modal-btn-quantity-plus").removeAttr("disabled");
+
         $.ajax({
             url: "ajax/findProduct.html",
             data: {productID: productID},
@@ -236,19 +208,27 @@ $(document).ready(function () {
                 $("h3.fs-product-name").text(response.productName);
                 $("h3.fs-product-name").attr("fs-product-modal-id", productID);
                 $("div.fs-product-price").text("$ " + response.price + ".00");
+
+
                 /* Init color img  */
                 var colorImgStr = "<p>Color<span>*</span></p>";
                 var sizeStr = "";
                 var str_change_big_img = "";
                 var str_change_small_img = "";
-                $.each(response.productColorList, function (i, item) {
+                $.each(response.productColorListWorking, function (i, item) {
                     colorImgStr += "<div class=\"fs-product-modal-color-border\">\n\
                                         <img fs-color=\"" + item.colorID + "\" src=\"assets/images/products/colors/" + item.urlColorImg + "\" class=\"img-responsive\" alt=\"" + item.urlColorImg + "\" title=\"" + item.color + "\"/>\n\
                                     </div>";
                     if (item.colorID == colorID) {
                         /* Init size By ColorID */
-                        $.each(item.sizeList, function (j, size) {
-                            sizeStr += "<div class=\"fs-particular-size\" fs-size=\"" + size.sizeID + "\">" + size.productSize + "</div>";
+
+                        $.each(item.sizeListWorking, function (j, size) {
+                            if (size.quantity == 0) {
+                                sizeStr += "<div class=\"fs-particular-size fs-unselectable\" fs-size=\"" + size.sizeID + "\">" + size.productSize + "</div>";
+                            } else {
+                                sizeStr += "<div class=\"fs-particular-size\" fs-size=\"" + size.sizeID + "\">" + size.productSize + "</div>";
+                            }
+
                         });
                         /* Init product Image By Color*/
                         $.each(item.productSubImgsList, function (k, subImg) {
@@ -259,6 +239,11 @@ $(document).ready(function () {
                 });
                 var finalStrToChangeImg = "<div class=\"owl-carousel sync1 fs-main-product-img\">" + str_change_big_img + "</div><div class=\"owl-carousel sync2 fs-main-product-img\">" + str_change_small_img + "</div>";
                 $("div.fs-product-modal-color").html(colorImgStr);
+                $(".fs-product-modal-color-border").each(function () {
+                    if ($(this).children("img").attr("fs-color") == colorID) {
+                        $(this).addClass("fs-product-selected");
+                    }
+                });
                 $("#fs-product-modal-size").html(sizeStr);
                 $("#fs-product-modal-slide-img").html(finalStrToChangeImg);
                 fsCreateOwlCarousel();
@@ -273,6 +258,7 @@ $(document).ready(function () {
                     var input = $("input[name='emailUser']");
                     if (input.val() != "") {
                         //Có session
+//            $(this).addClass("fs-heart-color");
                         if (!$(this).hasClass("fs-heart-color")) {
                             $(this).addClass("fs-heart-color");
                             $.ajax({
@@ -281,15 +267,21 @@ $(document).ready(function () {
                                 data: {userID: userID, productID: productID},
                                 success: function (response) {
                                     if (response == "1") {
-                                        $("#fs-mess-wl-error").text("");
-                                        $("#fs-mess-wl-success").text("SUCCESS");
-                                        $("#fs-mess-body-wl").text("Add Wish List success.");
-                                        $("#fs-wl-ajax-error").modal("show");
+                                        swal({
+                                            title: "<h1 style='color: #31b131;'>Success</h1>",
+                                            text: "Add Wish List success.",
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                            html: true
+                                        });
                                     } else if (response == "0") {
-                                            $("#fs-mess-wl-success").text("");
-                                            $("#fs-mess-wl-error").text("ERROR");
-                                            $("#fs-mess-body-wl").text("Error, Fail add wishlist.");
-                                            $("#fs-wl-ajax-error").modal("show");
+                                        swal({
+                                            title: "<h1 style='color: #F65D20;' >Error!",
+                                            text: "Error, Fail add wishlist",
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                            html: true
+                                        });
                                     }
                                 }
                             });
@@ -300,35 +292,36 @@ $(document).ready(function () {
                                 method: "POST",
                                 data: {userID: userID, productID: productID},
                                 success: function (response) {
-                                    if (response == "1") {
-                                        $("#fs-mess-wl-success").text("");
-                                        $("#fs-mess-wl-error").text("DELETE");
-                                        $("#fs-mess-body-wl").text("Delete Wish List success.");
-                                        $("#fs-wl-ajax-error").modal("show");
+                                    if (response == "10") {
+                                        swal({
+                                            title: "<h1 style='color: #ff0000;' >Delete</h1>",
+                                            text: "Delete Wish List success.",
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                            html: true
+                                        });
                                     }
                                 }
                             });
                         }
+
                     } else {
                         //Khong có session
-                        productModal.modal("hide");
                         $("#fs-modal-mess").modal("show");
-                        $(".fs-modal-wl-close").click(function(){
-                            productModal.modal("show");
-                        });
                         $(".fs-btn-login-wl").click(function () {
                             $("#fs-modal-mess").modal("hide");
                             productModal.modal("hide");
-                            window.location = window.location.href;
-//                            $("#loginModal").modal("show");
+                            $("#loginModal").modal("show");
                         });
                     }
+
                 });
             }
         });
     });
     /* MODAL - EVENT CLICK ON COLOR IMG */
     $("div.fs-product-modal-color").on("click", ".fs-product-modal-color-border", function () {
+        $(".fs-quantity-in-stock").text("---");
         $('#error-cart-product-modal').html("");
         $(".fs-product-modal-color-border").removeClass("fs-product-selected");
         $(this).addClass("fs-product-selected");
@@ -359,7 +352,8 @@ $(document).ready(function () {
                 fsCreateOwlCarousel();
                 /* Change Size */
                 var str_change_size = "";
-                $.each(response.sizeList, function (i, item) {
+
+                $.each(response.sizeListWorking, function (i, item) {
                     if (item.quantity == 0) {
                         str_change_size += "<div class=\"fs-particular-size fs-unselectable\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
                     } else {
@@ -400,6 +394,7 @@ $(document).ready(function () {
         $('#error-cart-product-modal').html("");
         $(this).data("oldVal", $(this).val()); //Lấy value từ input, lưu vào key "oldValue"
     });
+
     $(".fs-modal-input-number").on("change", function () {
         var currentValue = parseInt($(".fs-modal-input-number").val());
         var minValue = parseInt($(".fs-modal-input-number").attr("min"));
@@ -408,15 +403,13 @@ $(document).ready(function () {
             $(".fs-modal-btn-quantity-minus").removeAttr("disabled");
         } else {
             $('#error-cart-product-modal').html("<div class=\"alert alert-danger\"><strong>QUANTITY MUST BE AT LEAST 1</strong></div>");
-//            alert("Quantity must be at least 1!");
             $(this).val($(this).data('oldVal'));
         }
 
         if (currentValue <= maxValue) {
             $(".fs-modal-btn-quantity-plus").removeAttr("disabled");
         } else {
-            $('#error-cart-product-modal').html("<div class=\"alert alert-danger\"><strong>QUANTITY MUST BE LESS THAN 10</strong></div>");
-//            alert("Quantity must be less than 10!");
+            $('#error-cart-product-modal').html("<div class=\"alert alert-danger\"><strong>QUANTITY MUST BE LESS THAN " + maxValue + "</strong></div>");
             $(this).val($(this).data('oldVal'));
         }
     });
@@ -439,6 +432,9 @@ $(document).ready(function () {
     /* ------------------ PRODUCT_DETAIL ------------------- */
     /* CHANGE DATA WHEN CHOOSE A COLOR */
     $(".fs-product-color-border").on("click", function () {
+        $(".fs-quantity-in-stock").text("---");
+        $(".fs-input-number, .fs-modal-input-number").attr("disabled", "disabled");
+        $(".fs-btn-quantity-plus, .fs-modal-btn-quantity-plus").attr("disabled", "disabled");
         $("#error-product-detail").html("");
         $(".fs-product-color-border").removeClass("fs-product-selected");
         $(this).addClass("fs-product-selected");
@@ -471,7 +467,7 @@ $(document).ready(function () {
                 fsCreateOwlCarousel();
                 /* Change Size */
                 var str_change_size = "";
-                $.each(response.sizeList, function (i, item) {
+                $.each(response.sizeListWorking, function (i, item) {
                     if (item.quantity == 0) {
                         str_change_size += "<div class=\"fs-particular-size fs-unselectable\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
                     } else {
@@ -484,14 +480,30 @@ $(document).ready(function () {
     });
     /* EVENT CLICK WHEN CHOOSE SIZE */
     $(document).on("click", ".fs-particular-size", function () {
+        $('#error-cart-product-modal').html("");
         $("#error-product-detail").html("");
-        $(".fs-modal-error").text("");
         var classList = $(this).attr("class").split(" ");
         var rs = $.inArray("fs-unselectable", classList);
         if (rs == -1) {
             $(".fs-particular-size").removeClass("fs-product-selected");
             $(this).addClass("fs-product-selected");
         }
+
+        var sizeID = $(this).attr("fs-size");
+
+        $.ajax({
+            url: "ajax/checkquantity.html",
+            method: "POST",
+            data: {sizeID: sizeID},
+            success: function (response) {
+                if (response != 0) {
+                    $(".fs-input-number, .fs-modal-input-number").removeAttr("disabled");
+                    $(".fs-btn-quantity-plus, .fs-modal-btn-quantity-plus").removeAttr("disabled");
+                    $(".fs-quantity-in-stock").text("In Stock (" + response + ")");
+                    $(".fs-input-number, .fs-modal-input-number").attr("max", response);
+                }
+            }
+        });
     });
     /* EVENT INCREASE OR DECREASE QUANTITY */
     $(".fs-btn-number").click(function () {
@@ -532,32 +544,30 @@ $(document).ready(function () {
             $(".fs-btn-quantity-minus").removeAttr("disabled");
         } else {
             $("#error-product-detail").html("<div class=\"alert alert-danger\"><strong>QUANTITY MUST BE AT LEAST 1</strong></div>");
-//            alert("Quantity must be at least 1!");
             $(this).val($(this).data('oldValue'));
         }
         if (currentValue <= maxValue) {
             $(".fs-btn-quantity-plus").removeAttr("disabled");
         } else {
-            $("#error-product-detail").html("<div class=\"alert alert-danger\"><strong>QUANTITY MUST BE LESS THAN 10</strong></div>");
-//            alert("Quantity must be less than 10!");
+            $("#error-product-detail").html("<div class=\"alert alert-danger\"><strong>QUANTITY MUST BE LESS THAN " + maxValue + "</strong></div>");
             $(this).val($(this).data('oldValue'));
         }
     });
 
-    $(".fs-input-number").keydown(function (e) {
-        $("#error-product-detail").html("");
-        var press = e.keyCode || e.which;
-        // Allow: backspace, delete, tab, escape, enter and .
-        if ($.inArray(press, [46, 8, 9, 27, 13, 190, 17]) !== -1) {
-            // let it happen, don't do anything
-            $(this).blur().focus();
-            return;
-        }
-        // Ensure that it is a number and stop the keypress
-        if ((press < 48 || press > 57) && (press < 96 || press > 105) && (press < 112 || press > 123)) {
-            e.preventDefault();
-        }
-    });
+//    $(".fs-input-number").keydown(function (e) {
+//        $("#error-product-detail").html("");
+//        var press = e.keyCode || e.which;
+//        // Allow: backspace, delete, tab, escape, enter and .
+//        if ($.inArray(press, [46, 8, 9, 27, 13, 190, 17]) != -1) {
+//            // let it happen, don't do anything
+//            $(this).blur().focus();
+//            return;
+//        }
+//        // Ensure that it is a number and stop the keypress
+//        if ((press < 48 || press > 57) && (press < 96 || press > 105) && (press < 112 || press > 123)) {
+//            e.preventDefault();
+//        }
+//    });
 
     $('#fs-rating-star').barrating({
         theme: 'fontawesome-stars-o',
@@ -729,8 +739,8 @@ $(document).ready(function () {
                             var result = "";
                             $.each(response, function (i, prod) {
                                 var renderColor = "";
-                                if (prod.productColorList.length > 1) {
-                                    $.each(prod.productColorList, function (j, color) {
+                                if (prod.productColorListWorking.length > 1) {
+                                    $.each(prod.productColorListWorking, function (j, color) {
                                         renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
                                                 + "              class=\"img-responsive fs-index-color-img\" \n"
                                                 + "              fs-index-color-img=\"" + color.colorID + "\" \n"
@@ -751,7 +761,7 @@ $(document).ready(function () {
                                             + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                             + "                     data-toggle=\"modal\" \n"
                                             + "                     fs-product=\"" + prod.productID + "\" \n"
-                                            + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                            + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                             + "                </div>\n"
                                             + "                <div class=\"product-overlay\">\n"
                                             + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -760,7 +770,7 @@ $(document).ready(function () {
                                             + "          </div>\n"
                                             + "      <div class=\"product-info\">\n"
                                             + "          <h4 class=\"product-title\">\n"
-                                            + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                            + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                             + "                 " + prod.productName + "\n"
                                             + "              </a>\n"
                                             + "          </h4>\n"
@@ -783,7 +793,7 @@ $(document).ready(function () {
                                             + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                             + "                     data-toggle=\"modal\" \n"
                                             + "                     fs-product=\"" + prod.productID + "\" \n"
-                                            + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                            + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                             + "                </div>\n"
                                             + "                <div class=\"product-overlay\">\n"
                                             + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -792,11 +802,13 @@ $(document).ready(function () {
                                             + "          </div>\n"
                                             + "      <div class=\"product-info\">\n"
                                             + "          <h4 class=\"product-title\">\n"
-                                            + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                            + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                             + "                 " + prod.productName + "\n"
                                             + "              </a>\n"
                                             + "          </h4>\n"
-                                            + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                            + "          <span class=\"product-price\">\n"
+                                            + "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100)
+                                            + "          </span>\n"
                                             + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
                                             + renderColor
                                             + "          </div>\n"
@@ -810,10 +822,7 @@ $(document).ready(function () {
                     }, 400);
                 }
             });
-
         }
-
-
     });
 
     /* AJAX ON CHANGE SORT PRODUCT BY  */
@@ -862,8 +871,8 @@ $(document).ready(function () {
                         var result = "";
                         $.each(response, function (i, prod) {
                             var renderColor = "";
-                            if (prod.productColorList.length > 1) {
-                                $.each(prod.productColorList, function (j, color) {
+                            if (prod.productColorListWorking.length > 1) {
+                                $.each(prod.productColorListWorking, function (j, color) {
                                     renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
                                             + "              class=\"img-responsive fs-index-color-img\" \n"
                                             + "              fs-index-color-img=\"" + color.colorID + "\" \n"
@@ -884,7 +893,7 @@ $(document).ready(function () {
                                         + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                         + "                     data-toggle=\"modal\" \n"
                                         + "                     fs-product=\"" + prod.productID + "\" \n"
-                                        + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                        + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                         + "                </div>\n"
                                         + "                <div class=\"product-overlay\">\n"
                                         + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -893,7 +902,7 @@ $(document).ready(function () {
                                         + "          </div>\n"
                                         + "      <div class=\"product-info\">\n"
                                         + "          <h4 class=\"product-title\">\n"
-                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                         + "                 " + prod.productName + "\n"
                                         + "              </a>\n"
                                         + "          </h4>\n"
@@ -916,7 +925,7 @@ $(document).ready(function () {
                                         + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                         + "                     data-toggle=\"modal\" \n"
                                         + "                     fs-product=\"" + prod.productID + "\" \n"
-                                        + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                        + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                         + "                </div>\n"
                                         + "                <div class=\"product-overlay\">\n"
                                         + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -925,11 +934,13 @@ $(document).ready(function () {
                                         + "          </div>\n"
                                         + "      <div class=\"product-info\">\n"
                                         + "          <h4 class=\"product-title\">\n"
-                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                         + "                 " + prod.productName + "\n"
                                         + "              </a>\n"
                                         + "          </h4>\n"
-                                        + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                        + "          <span class=\"product-price\">\n"
+                                        + "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100)
+                                        + "          </span>\n"
                                         + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
                                         + renderColor
                                         + "          </div>\n"
@@ -1005,8 +1016,8 @@ $(document).ready(function () {
                         var result = "";
                         $.each(response, function (i, prod) {
                             var renderColor = "";
-                            if (prod.productColorList.length > 1) {
-                                $.each(prod.productColorList, function (j, color) {
+                            if (prod.productColorListWorking.length > 1) {
+                                $.each(prod.productColorListWorking, function (j, color) {
                                     renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
                                             + "              class=\"img-responsive fs-index-color-img\" \n"
                                             + "              fs-index-color-img=\"" + color.colorID + "\" \n"
@@ -1027,7 +1038,7 @@ $(document).ready(function () {
                                         + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                         + "                     data-toggle=\"modal\" \n"
                                         + "                     fs-product=\"" + prod.productID + "\" \n"
-                                        + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                        + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                         + "                </div>\n"
                                         + "                <div class=\"product-overlay\">\n"
                                         + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -1036,7 +1047,7 @@ $(document).ready(function () {
                                         + "          </div>\n"
                                         + "      <div class=\"product-info\">\n"
                                         + "          <h4 class=\"product-title\">\n"
-                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                         + "                 " + prod.productName + "\n"
                                         + "              </a>\n"
                                         + "          </h4>\n"
@@ -1059,7 +1070,7 @@ $(document).ready(function () {
                                         + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                         + "                     data-toggle=\"modal\" \n"
                                         + "                     fs-product=\"" + prod.productID + "\" \n"
-                                        + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                        + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                         + "                </div>\n"
                                         + "                <div class=\"product-overlay\">\n"
                                         + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -1068,11 +1079,13 @@ $(document).ready(function () {
                                         + "          </div>\n"
                                         + "      <div class=\"product-info\">\n"
                                         + "          <h4 class=\"product-title\">\n"
-                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                         + "                 " + prod.productName + "\n"
                                         + "              </a>\n"
                                         + "          </h4>\n"
-                                        + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                        + "          <span class=\"product-price\">\n"
+                                        + "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100)
+                                        + "          </span>\n"
                                         + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
                                         + renderColor
                                         + "          </div>\n"
@@ -1188,8 +1201,8 @@ $(document).ready(function () {
                                     var result = "";
                                     $.each(response, function (i, prod) {
                                         var renderColor = "";
-                                        if (prod.productColorList.length > 1) {
-                                            $.each(prod.productColorList, function (j, color) {
+                                        if (prod.productColorListWorking.length > 1) {
+                                            $.each(prod.productColorListWorking, function (j, color) {
                                                 renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
                                                         + "              class=\"img-responsive fs-index-color-img\" \n"
                                                         + "              fs-index-color-img=\"" + color.colorID + "\" \n"
@@ -1210,7 +1223,7 @@ $(document).ready(function () {
                                                     + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                                     + "                     data-toggle=\"modal\" \n"
                                                     + "                     fs-product=\"" + prod.productID + "\" \n"
-                                                    + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                    + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                                     + "                </div>\n"
                                                     + "                <div class=\"product-overlay\">\n"
                                                     + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -1219,7 +1232,7 @@ $(document).ready(function () {
                                                     + "          </div>\n"
                                                     + "      <div class=\"product-info\">\n"
                                                     + "          <h4 class=\"product-title\">\n"
-                                                    + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                    + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                                     + "                 " + prod.productName + "\n"
                                                     + "              </a>\n"
                                                     + "          </h4>\n"
@@ -1242,7 +1255,7 @@ $(document).ready(function () {
                                                     + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                                     + "                     data-toggle=\"modal\" \n"
                                                     + "                     fs-product=\"" + prod.productID + "\" \n"
-                                                    + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                    + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                                     + "                </div>\n"
                                                     + "                <div class=\"product-overlay\">\n"
                                                     + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -1251,11 +1264,13 @@ $(document).ready(function () {
                                                     + "          </div>\n"
                                                     + "      <div class=\"product-info\">\n"
                                                     + "          <h4 class=\"product-title\">\n"
-                                                    + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                    + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                                     + "                 " + prod.productName + "\n"
                                                     + "              </a>\n"
                                                     + "          </h4>\n"
-                                                    + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                                    + "          <span class=\"product-price\">\n"
+                                                    + "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100)
+                                                    + "          </span>\n"
                                                     + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
                                                     + renderColor
                                                     + "          </div>\n"
@@ -1366,8 +1381,8 @@ $(document).ready(function () {
                                 var result = "";
                                 $.each(response, function (i, prod) {
                                     var renderColor = "";
-                                    if (prod.productColorList.length > 1) {
-                                        $.each(prod.productColorList, function (j, color) {
+                                    if (prod.productColorListWorking.length > 1) {
+                                        $.each(prod.productColorListWorking, function (j, color) {
                                             renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
                                                     + "              class=\"img-responsive fs-index-color-img\" \n"
                                                     + "              fs-index-color-img=\"" + color.colorID + "\" \n"
@@ -1388,7 +1403,7 @@ $(document).ready(function () {
                                                 + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                                 + "                     data-toggle=\"modal\" \n"
                                                 + "                     fs-product=\"" + prod.productID + "\" \n"
-                                                + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                                 + "                </div>\n"
                                                 + "                <div class=\"product-overlay\">\n"
                                                 + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -1397,7 +1412,7 @@ $(document).ready(function () {
                                                 + "          </div>\n"
                                                 + "      <div class=\"product-info\">\n"
                                                 + "          <h4 class=\"product-title\">\n"
-                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                                 + "                 " + prod.productName + "\n"
                                                 + "              </a>\n"
                                                 + "          </h4>\n"
@@ -1420,7 +1435,7 @@ $(document).ready(function () {
                                                 + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                                 + "                     data-toggle=\"modal\" \n"
                                                 + "                     fs-product=\"" + prod.productID + "\" \n"
-                                                + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                                 + "                </div>\n"
                                                 + "                <div class=\"product-overlay\">\n"
                                                 + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -1429,11 +1444,13 @@ $(document).ready(function () {
                                                 + "          </div>\n"
                                                 + "      <div class=\"product-info\">\n"
                                                 + "          <h4 class=\"product-title\">\n"
-                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                                 + "                 " + prod.productName + "\n"
                                                 + "              </a>\n"
                                                 + "          </h4>\n"
-                                                + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                                + "          <span class=\"product-price\">\n"
+                                                + "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100)
+                                                + "          </span>\n"
                                                 + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
                                                 + renderColor
                                                 + "          </div>\n"
@@ -1537,8 +1554,8 @@ $(document).ready(function () {
                                 var result = "";
                                 $.each(response, function (i, prod) {
                                     var renderColor = "";
-                                    if (prod.productColorList.length > 1) {
-                                        $.each(prod.productColorList, function (j, color) {
+                                    if (prod.productColorListWorking.length > 1) {
+                                        $.each(prod.productColorListWorking, function (j, color) {
                                             renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
                                                     + "              class=\"img-responsive fs-index-color-img\" \n"
                                                     + "              fs-index-color-img=\"" + color.colorID + "\" \n"
@@ -1559,7 +1576,7 @@ $(document).ready(function () {
                                                 + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                                 + "                     data-toggle=\"modal\" \n"
                                                 + "                     fs-product=\"" + prod.productID + "\" \n"
-                                                + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                                 + "                </div>\n"
                                                 + "                <div class=\"product-overlay\">\n"
                                                 + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -1568,7 +1585,7 @@ $(document).ready(function () {
                                                 + "          </div>\n"
                                                 + "      <div class=\"product-info\">\n"
                                                 + "          <h4 class=\"product-title\">\n"
-                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                                 + "                 " + prod.productName + "\n"
                                                 + "              </a>\n"
                                                 + "          </h4>\n"
@@ -1591,7 +1608,7 @@ $(document).ready(function () {
                                                 + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                                 + "                     data-toggle=\"modal\" \n"
                                                 + "                     fs-product=\"" + prod.productID + "\" \n"
-                                                + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                                 + "                </div>\n"
                                                 + "                <div class=\"product-overlay\">\n"
                                                 + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -1600,11 +1617,13 @@ $(document).ready(function () {
                                                 + "          </div>\n"
                                                 + "      <div class=\"product-info\">\n"
                                                 + "          <h4 class=\"product-title\">\n"
-                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                                 + "                 " + prod.productName + "\n"
                                                 + "              </a>\n"
                                                 + "          </h4>\n"
-                                                + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                                + "          <span class=\"product-price\">\n"
+                                                + "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100)
+                                                + "          </span>\n"
                                                 + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
                                                 + renderColor
                                                 + "          </div>\n"
@@ -1674,8 +1693,8 @@ $(document).ready(function () {
                             var result = "";
                             $.each(response, function (i, prod) {
                                 var renderColor = "";
-                                if (prod.productColorList.length > 1) {
-                                    $.each(prod.productColorList, function (j, color) {
+                                if (prod.productColorListWorking.length > 1) {
+                                    $.each(prod.productColorListWorking, function (j, color) {
                                         renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
                                                 + "              class=\"img-responsive fs-index-color-img\" \n"
                                                 + "              fs-index-color-img=\"" + color.colorID + "\" \n"
@@ -1696,18 +1715,16 @@ $(document).ready(function () {
                                             + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                             + "                     data-toggle=\"modal\" \n"
                                             + "                     fs-product=\"" + prod.productID + "\" \n"
-                                            + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                            + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                             + "                </div>\n"
                                             + "                <div class=\"product-overlay\">\n"
                                             + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
-                                            + "                     <a class=\"likeitem fa fa-heart-o fs-wl-add-sub-a\" \n"
-                                            + "                     fs-userID=\"" + userID + "\" \n"
-                                            + "                     fs-productID=\"" + prod.productID + "\"></a>\n"
+                                            + "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n"
                                             + "                </div>\n"
                                             + "          </div>\n"
                                             + "      <div class=\"product-info\">\n"
                                             + "          <h4 class=\"product-title\">\n"
-                                            + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                            + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                             + "                 " + prod.productName + "\n"
                                             + "              </a>\n"
                                             + "          </h4>\n"
@@ -1730,22 +1747,22 @@ $(document).ready(function () {
                                             + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                             + "                     data-toggle=\"modal\" \n"
                                             + "                     fs-product=\"" + prod.productID + "\" \n"
-                                            + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                            + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                             + "                </div>\n"
                                             + "                <div class=\"product-overlay\">\n"
                                             + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
-                                            + "                     <a class=\"likeitem fa fa-heart-o fs-wl-add-sub-a\" \n"
-                                            + "                     fs-userID=\"" + userID + "\" \n"
-                                            + "                     fs-productID=\"" + prod.productID + "\"></a>\n"
+                                            + "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n"
                                             + "                </div>\n"
                                             + "          </div>\n"
                                             + "      <div class=\"product-info\">\n"
                                             + "          <h4 class=\"product-title\">\n"
-                                            + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                            + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                             + "                 " + prod.productName + "\n"
                                             + "              </a>\n"
                                             + "          </h4>\n"
-                                            + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                            + "          <span class=\"product-price\">\n"
+                                            + "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100)
+                                            + "          </span>\n"
                                             + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
                                             + renderColor
                                             + "          </div>\n"
@@ -1760,76 +1777,9 @@ $(document).ready(function () {
                 }
             });
         }
+
+
     });
-
-//    MODAL WISH-LIST
-
-    $("#fs-shop-content-sub-category").on("click",".fs-wl-add-sub-a", function(){
-        var input = $("input[name='emailUser']");
-        var userID = $(this).attr("fs-userID");
-        var productID = $(this).attr("fs-productID");
-        
-         if (input.val() != "") {
-            //Có session
-            if (!$(this).hasClass("fs-heart-color")) {
-                $(this).addClass("fs-heart-color");
-                $.ajax({
-                    url: "user/ajax/addWishList.html",
-                    method: "POST",
-                    data: {userID: userID, productID: productID},
-                    success: function (response) {
-                        if (response == "1") {
-                            swal({
-                                title: "<h1 style='color: #31b131;'>Success</h1>",
-                                text: "Add Wish List success.",
-                                timer: 2000,
-                                showConfirmButton: false,
-                                html: true
-                            });
-                        } else if (response == "0") {
-                            swal({
-                                title: "<h1 style='color: #F65D20;' >Error!",
-                                text: "Error, Fail add wishlist",
-                                timer: 2000,
-                                showConfirmButton: false,
-                                html: true
-                            });
-                        }
-                    }
-                });
-            } else {
-                $(this).removeClass("fs-heart-color");
-                $.ajax({
-                    url: "user/ajax/deleteWishListt.html",
-                    method: "POST",
-                    data: {userID: userID, productID: productID},
-                    success: function (response) {
-                        if (response == "1") {
-                            swal({
-                                title: "<h1 style='color: #ff0000;' >Delete</h1>",
-                                text: "Delete Wish List success.",
-                                timer: 2000,
-                                showConfirmButton: false,
-                                html: true
-                            });
-                        }
-                    }
-                });
-            }
-
-        } else {
-            //Khong có session
-            $("#fs-modal-mess").modal("show");
-            $(".fs-btn-login-wl").click(function () {
-                $("#fs-modal-mess").modal("hide");
-                window.location = window.location.href;
-//                $("#loginModal").modal("show");
-            });
-        }
-        
-        
-    });
-    
     /* AJAX ON CHANGE SORT PRODUCT BY  */
     $("#fs-shop-content-sub-category").on("change", "#fs-sort-product-by", function () {
         var sortBy = $(this).val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
@@ -1874,8 +1824,8 @@ $(document).ready(function () {
                         var result = "";
                         $.each(response, function (i, prod) {
                             var renderColor = "";
-                            if (prod.productColorList.length > 1) {
-                                $.each(prod.productColorList, function (j, color) {
+                            if (prod.productColorListWorking.length > 1) {
+                                $.each(prod.productColorListWorking, function (j, color) {
                                     renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
                                             + "              class=\"img-responsive fs-index-color-img\" \n"
                                             + "              fs-index-color-img=\"" + color.colorID + "\" \n"
@@ -1896,7 +1846,7 @@ $(document).ready(function () {
                                         + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                         + "                     data-toggle=\"modal\" \n"
                                         + "                     fs-product=\"" + prod.productID + "\" \n"
-                                        + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                        + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                         + "                </div>\n"
                                         + "                <div class=\"product-overlay\">\n"
                                         + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -1905,7 +1855,7 @@ $(document).ready(function () {
                                         + "          </div>\n"
                                         + "      <div class=\"product-info\">\n"
                                         + "          <h4 class=\"product-title\">\n"
-                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                         + "                 " + prod.productName + "\n"
                                         + "              </a>\n"
                                         + "          </h4>\n"
@@ -1928,7 +1878,7 @@ $(document).ready(function () {
                                         + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                         + "                     data-toggle=\"modal\" \n"
                                         + "                     fs-product=\"" + prod.productID + "\" \n"
-                                        + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                        + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                         + "                </div>\n"
                                         + "                <div class=\"product-overlay\">\n"
                                         + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -1937,11 +1887,13 @@ $(document).ready(function () {
                                         + "          </div>\n"
                                         + "      <div class=\"product-info\">\n"
                                         + "          <h4 class=\"product-title\">\n"
-                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                         + "                 " + prod.productName + "\n"
                                         + "              </a>\n"
                                         + "          </h4>\n"
-                                        + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                        + "          <span class=\"product-price\">\n"
+                                        + "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100)
+                                        + "          </span>\n"
                                         + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
                                         + renderColor
                                         + "          </div>\n"
@@ -2011,8 +1963,8 @@ $(document).ready(function () {
                         var result = "";
                         $.each(response, function (i, prod) {
                             var renderColor = "";
-                            if (prod.productColorList.length > 1) {
-                                $.each(prod.productColorList, function (j, color) {
+                            if (prod.productColorListWorking.length > 1) {
+                                $.each(prod.productColorListWorking, function (j, color) {
                                     renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
                                             + "              class=\"img-responsive fs-index-color-img\" \n"
                                             + "              fs-index-color-img=\"" + color.colorID + "\" \n"
@@ -2033,7 +1985,7 @@ $(document).ready(function () {
                                         + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                         + "                     data-toggle=\"modal\" \n"
                                         + "                     fs-product=\"" + prod.productID + "\" \n"
-                                        + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                        + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                         + "                </div>\n"
                                         + "                <div class=\"product-overlay\">\n"
                                         + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -2042,7 +1994,7 @@ $(document).ready(function () {
                                         + "          </div>\n"
                                         + "      <div class=\"product-info\">\n"
                                         + "          <h4 class=\"product-title\">\n"
-                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                         + "                 " + prod.productName + "\n"
                                         + "              </a>\n"
                                         + "          </h4>\n"
@@ -2065,7 +2017,7 @@ $(document).ready(function () {
                                         + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                         + "                     data-toggle=\"modal\" \n"
                                         + "                     fs-product=\"" + prod.productID + "\" \n"
-                                        + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                        + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                         + "                </div>\n"
                                         + "                <div class=\"product-overlay\">\n"
                                         + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -2074,11 +2026,13 @@ $(document).ready(function () {
                                         + "          </div>\n"
                                         + "      <div class=\"product-info\">\n"
                                         + "          <h4 class=\"product-title\">\n"
-                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                        + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                         + "                 " + prod.productName + "\n"
                                         + "              </a>\n"
                                         + "          </h4>\n"
-                                        + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                        + "          <span class=\"product-price\">\n"
+                                        + "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100)
+                                        + "          </span>\n"
                                         + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
                                         + renderColor
                                         + "          </div>\n"
@@ -2190,8 +2144,8 @@ $(document).ready(function () {
                                     var result = "";
                                     $.each(response, function (i, prod) {
                                         var renderColor = "";
-                                        if (prod.productColorList.length > 1) {
-                                            $.each(prod.productColorList, function (j, color) {
+                                        if (prod.productColorListWorking.length > 1) {
+                                            $.each(prod.productColorListWorking, function (j, color) {
                                                 renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
                                                         + "              class=\"img-responsive fs-index-color-img\" \n"
                                                         + "              fs-index-color-img=\"" + color.colorID + "\" \n"
@@ -2212,7 +2166,7 @@ $(document).ready(function () {
                                                     + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                                     + "                     data-toggle=\"modal\" \n"
                                                     + "                     fs-product=\"" + prod.productID + "\" \n"
-                                                    + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                    + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                                     + "                </div>\n"
                                                     + "                <div class=\"product-overlay\">\n"
                                                     + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -2221,7 +2175,7 @@ $(document).ready(function () {
                                                     + "          </div>\n"
                                                     + "      <div class=\"product-info\">\n"
                                                     + "          <h4 class=\"product-title\">\n"
-                                                    + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                    + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                                     + "                 " + prod.productName + "\n"
                                                     + "              </a>\n"
                                                     + "          </h4>\n"
@@ -2244,7 +2198,7 @@ $(document).ready(function () {
                                                     + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                                     + "                     data-toggle=\"modal\" \n"
                                                     + "                     fs-product=\"" + prod.productID + "\" \n"
-                                                    + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                    + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                                     + "                </div>\n"
                                                     + "                <div class=\"product-overlay\">\n"
                                                     + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -2253,11 +2207,13 @@ $(document).ready(function () {
                                                     + "          </div>\n"
                                                     + "      <div class=\"product-info\">\n"
                                                     + "          <h4 class=\"product-title\">\n"
-                                                    + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                    + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                                     + "                 " + prod.productName + "\n"
                                                     + "              </a>\n"
                                                     + "          </h4>\n"
-                                                    + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                                    + "          <span class=\"product-price\">\n"
+                                                    + "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100)
+                                                    + "          </span>\n"
                                                     + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
                                                     + renderColor
                                                     + "          </div>\n"
@@ -2360,8 +2316,8 @@ $(document).ready(function () {
                                 var result = "";
                                 $.each(response, function (i, prod) {
                                     var renderColor = "";
-                                    if (prod.productColorList.length > 1) {
-                                        $.each(prod.productColorList, function (j, color) {
+                                    if (prod.productColorListWorking.length > 1) {
+                                        $.each(prod.productColorListWorking, function (j, color) {
                                             renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
                                                     + "              class=\"img-responsive fs-index-color-img\" \n"
                                                     + "              fs-index-color-img=\"" + color.colorID + "\" \n"
@@ -2382,7 +2338,7 @@ $(document).ready(function () {
                                                 + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                                 + "                     data-toggle=\"modal\" \n"
                                                 + "                     fs-product=\"" + prod.productID + "\" \n"
-                                                + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                                 + "                </div>\n"
                                                 + "                <div class=\"product-overlay\">\n"
                                                 + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -2391,7 +2347,7 @@ $(document).ready(function () {
                                                 + "          </div>\n"
                                                 + "      <div class=\"product-info\">\n"
                                                 + "          <h4 class=\"product-title\">\n"
-                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                                 + "                 " + prod.productName + "\n"
                                                 + "              </a>\n"
                                                 + "          </h4>\n"
@@ -2414,7 +2370,7 @@ $(document).ready(function () {
                                                 + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                                 + "                     data-toggle=\"modal\" \n"
                                                 + "                     fs-product=\"" + prod.productID + "\" \n"
-                                                + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                                 + "                </div>\n"
                                                 + "                <div class=\"product-overlay\">\n"
                                                 + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -2423,11 +2379,13 @@ $(document).ready(function () {
                                                 + "          </div>\n"
                                                 + "      <div class=\"product-info\">\n"
                                                 + "          <h4 class=\"product-title\">\n"
-                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                                 + "                 " + prod.productName + "\n"
                                                 + "              </a>\n"
                                                 + "          </h4>\n"
-                                                + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                                + "          <span class=\"product-price\">\n"
+                                                + "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100)
+                                                + "          </span>\n"
                                                 + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
                                                 + renderColor
                                                 + "          </div>\n"
@@ -2525,8 +2483,8 @@ $(document).ready(function () {
                                 var result = "";
                                 $.each(response, function (i, prod) {
                                     var renderColor = "";
-                                    if (prod.productColorList.length > 1) {
-                                        $.each(prod.productColorList, function (j, color) {
+                                    if (prod.productColorListWorking.length > 1) {
+                                        $.each(prod.productColorListWorking, function (j, color) {
                                             renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n"
                                                     + "              class=\"img-responsive fs-index-color-img\" \n"
                                                     + "              fs-index-color-img=\"" + color.colorID + "\" \n"
@@ -2547,7 +2505,7 @@ $(document).ready(function () {
                                                 + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                                 + "                     data-toggle=\"modal\" \n"
                                                 + "                     fs-product=\"" + prod.productID + "\" \n"
-                                                + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                                 + "                </div>\n"
                                                 + "                <div class=\"product-overlay\">\n"
                                                 + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -2556,7 +2514,7 @@ $(document).ready(function () {
                                                 + "          </div>\n"
                                                 + "      <div class=\"product-info\">\n"
                                                 + "          <h4 class=\"product-title\">\n"
-                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                                 + "                 " + prod.productName + "\n"
                                                 + "              </a>\n"
                                                 + "          </h4>\n"
@@ -2579,7 +2537,7 @@ $(document).ready(function () {
                                                 + "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
                                                 + "                     data-toggle=\"modal\" \n"
                                                 + "                     fs-product=\"" + prod.productID + "\" \n"
-                                                + "                     fs-product-modal-color=\"" + prod.productColorList[0].colorID + "\">\n"
+                                                + "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n"
                                                 + "                </div>\n"
                                                 + "                <div class=\"product-overlay\">\n"
                                                 + "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n"
@@ -2588,11 +2546,13 @@ $(document).ready(function () {
                                                 + "          </div>\n"
                                                 + "      <div class=\"product-info\">\n"
                                                 + "          <h4 class=\"product-title\">\n"
-                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorList[0].colorID + "-" + prod.productNameNA + ".html\">\n"
+                                                + "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n"
                                                 + "                 " + prod.productName + "\n"
                                                 + "              </a>\n"
                                                 + "          </h4>\n"
-                                                + "          <span class=\"product-price\">$" + prod.price + ".00</span>\n"
+                                                + "          <span class=\"product-price\">\n"
+                                                + "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100)
+                                                + "          </span>\n"
                                                 + "          <div class=\"item-colors\" style=\"height: 25px;\">\n"
                                                 + renderColor
                                                 + "          </div>\n"
@@ -2612,6 +2572,7 @@ $(document).ready(function () {
     /*======================================END VINH - PRODUCT==================================================*/
 
     /*========================================NGAN - ORDER====================================================*/
+    $("select#select-quantity-shoppingcart").selectBoxIt();
     //Load cart in header
     $.ajax({
         url: "orders/ajax/cart.html",
@@ -2636,17 +2597,12 @@ $(document).ready(function () {
                 maxcount = maxcount + 5;
             }
         });
-
-        //check session
     }
     ;
 
     //checkout.jsp
     //Discount in checkout.jsp
     //Load form discount in checkout
-    $("#coupon_code").keyup(function () {
-        $("#fs-checkout-discountvou-error").text("");
-    });
     $("input[name=address-chose]").on("click", function () {
         var checked = $('input[name=address-chose]:checked').val();
         if (checked == "difference") {
@@ -2659,78 +2615,145 @@ $(document).ready(function () {
         e.preventDefault();
         var errorHead = "<div class=\"alert alert-danger\"><strong>";
         var errorFoot = "</strong></div>";
+        var addressSize = $("input[name=addressSize]").val();
         var addressChoose = $("input[name=address-chose]:checked").val();
-        if (addressChoose == null) {
-            $('#error-checkout').html(errorHead + "ADDRESS METHOD must be CHOOSEN!" + errorFoot);
-            $('body,html').animate({
-                scrollTop: 0
-            }, 500);
-        } else {
-            if (addressChoose == "difference") {
-                var firstname = $('input[name=diffFirstname]').val().trim();
-                var lastname = $('input[name=diffLastname]').val().trim();
-                var phone = $('input[name=diffPhone]').val().trim();
-                var address = $('input[name=diffAddress]').val().trim();
-                var note = $('input[name=note]').val().trim();
-                if (firstname == "") {
-                    $('#error-checkout-firstname').text("FIRSTNAME REQUIRED");
-                    $('body,html').animate({
-                        scrollTop: $('#diff-address').offset().top
-                    }, 500);
-                } else if (firstname.length < 4 || firstname.length > 30) {
-                    $('#error-checkout-firstname').text("FIRSTNAME LENGTH 4 - 30 CHARACTERS");
-                    $('body,html').animate({
-                        scrollTop: $('#diff-address').offset().top
-                    }, 500);
-                } else if (lastname == "") {
-                    $('#error-checkout-lastname').text("LASTNAME REQUIRED");
-                    $('body,html').animate({
-                        scrollTop: $('.shipping-address').offset().top
-                    }, 500);
-                } else if (lastname.length < 4 || lastname.length > 30) {
-                    $('#error-checkout-lastname').text("LASTNAME LENGTH 4 - 30 CHARACTERS");
-                    $('body,html').animate({
-                        scrollTop: $('.shipping-address').offset().top
-                    }, 500);
-                } else if (phone == "") {
-                    $('#error-checkout-phone').text("PHONE REQUIRED");
-                    $('body,html').animate({
-                        scrollTop: $('.shipping-address').offset().top
-                    }, 500);
-                } else if (!phone.match("^(01[2689]|09)[0-9]{8}$")) { // Regex phone /^(01[2689]|09)[0-9]{8}$/
-                    $('#error-checkout-phone').text("ENTER VALID PHONE");
-                    $('body,html').animate({
-                        scrollTop: $('.shipping-address').offset().top
-                    }, 500);
-                } else if (address == "") {
-                    $('#error-checkout-address').text("ADDRESS REQUIRED");
-                    $('body,html').animate({
-                        scrollTop: $('.shipping-address').offset().top
-                    }, 500);
-                } else if (address.length < 4 || address.length > 100) {
-                    $('#error-checkout-address').text("ADDRESS LENGTH 4 - 100 CHARACTERS");
-                    $('body,html').animate({
-                        scrollTop: $('.shipping-address').offset().top
-                    }, 500);
-                } else if (note.length > 500) {
-                    $('#error-checkout-note').text("NOTE LENGTH MAXIMUM 500 CHARACTERS");
-                    $('body,html').animate({
-                        scrollTop: $('.shipping-address').offset().top
-                    }, 500);
-                } else {
-                    $('#checkout-form').submit();
-                }
+        if (addressSize == "0") {
+            var firstname = $('input[name=diffFirstname]').val().trim();
+            var lastname = $('input[name=diffLastname]').val().trim();
+            var phone = $('input[name=diffPhone]').val().trim();
+            var address = $('input[name=diffAddress]').val().trim();
+            var note = $('input[name=note]').val().trim();
+            if (firstname == "") {
+                $('#error-checkout-firstname').text("FIRSTNAME REQUIRED");
+                $('body,html').animate({
+                    scrollTop: $('#diff-address').offset().top
+                }, 500);
+            } else if (firstname.length < 4 || firstname.length > 30) {
+                $('#error-checkout-firstname').text("FIRSTNAME LENGTH 4 - 30 CHARACTERS");
+                $('body,html').animate({
+                    scrollTop: $('#diff-address').offset().top
+                }, 500);
+            } else if (lastname == "") {
+                $('#error-checkout-lastname').text("LASTNAME REQUIRED");
+                $('body,html').animate({
+                    scrollTop: $('.shipping-address').offset().top
+                }, 500);
+            } else if (lastname.length < 4 || lastname.length > 30) {
+                $('#error-checkout-lastname').text("LASTNAME LENGTH 4 - 30 CHARACTERS");
+                $('body,html').animate({
+                    scrollTop: $('.shipping-address').offset().top
+                }, 500);
+            } else if (phone == "") {
+                $('#error-checkout-phone').text("PHONE REQUIRED");
+                $('body,html').animate({
+                    scrollTop: $('.shipping-address').offset().top
+                }, 500);
+            } else if (!phone.match("^(01[2689]|09)[0-9]{8}$")) { // Regex phone /^(01[2689]|09)[0-9]{8}$/
+                $('#error-checkout-phone').text("ENTER VALID PHONE");
+                $('body,html').animate({
+                    scrollTop: $('.shipping-address').offset().top
+                }, 500);
+            } else if (address == "") {
+                $('#error-checkout-address').text("ADDRESS REQUIRED");
+                $('body,html').animate({
+                    scrollTop: $('.shipping-address').offset().top
+                }, 500);
+            } else if (address.length < 4 || address.length > 100) {
+                $('#error-checkout-address').text("ADDRESS LENGTH 4 - 100 CHARACTERS");
+                $('body,html').animate({
+                    scrollTop: $('.shipping-address').offset().top
+                }, 500);
+            } else if (note.length > 500) {
+                $('#error-checkout-note').text("NOTE LENGTH MAXIMUM 500 CHARACTERS");
+                $('body,html').animate({
+                    scrollTop: $('.shipping-address').offset().top
+                }, 500);
             } else {
-                if (note.length > 500) {
-                    $('#error-checkout-note').text("NOTE LENGTH MAXIMUM 500 CHARACTERS");
-                    $('body,html').animate({
-                        scrollTop: $('.shipping-address').offset().top
-                    }, 500);
+                $('#checkout-form').submit();
+            }
+        } else {
+            if (addressChoose == null) {
+                $('#error-checkout').html(errorHead + "ADDRESS METHOD must be CHOOSEN!" + errorFoot);
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 500);
+            } else {
+                var note = $('input[name=note]').val().trim();
+                if (addressChoose == "difference") {
+                    var firstname = $('input[name=diffFirstname]').val().trim();
+                    var lastname = $('input[name=diffLastname]').val().trim();
+                    var phone = $('input[name=diffPhone]').val().trim();
+                    var address = $('input[name=diffAddress]').val().trim();
+                    if (firstname == "") {
+                        $('#error-checkout-firstname').text("FIRSTNAME REQUIRED");
+                        $('body,html').animate({
+                            scrollTop: $('#diff-address').offset().top
+                        }, 500);
+                    } else if (firstname.length < 4 || firstname.length > 30) {
+                        $('#error-checkout-firstname').text("FIRSTNAME LENGTH 4 - 30 CHARACTERS");
+                        $('body,html').animate({
+                            scrollTop: $('#diff-address').offset().top
+                        }, 500);
+                    } else if (lastname == "") {
+                        $('#error-checkout-lastname').text("LASTNAME REQUIRED");
+                        $('body,html').animate({
+                            scrollTop: $('.shipping-address').offset().top
+                        }, 500);
+                    } else if (lastname.length < 4 || lastname.length > 30) {
+                        $('#error-checkout-lastname').text("LASTNAME LENGTH 4 - 30 CHARACTERS");
+                        $('body,html').animate({
+                            scrollTop: $('.shipping-address').offset().top
+                        }, 500);
+                    } else if (phone == "") {
+                        $('#error-checkout-phone').text("PHONE REQUIRED");
+                        $('body,html').animate({
+                            scrollTop: $('.shipping-address').offset().top
+                        }, 500);
+                    } else if (!phone.match("^(01[2689]|09)[0-9]{8}$")) { // Regex phone /^(01[2689]|09)[0-9]{8}$/
+                        $('#error-checkout-phone').text("ENTER VALID PHONE");
+                        $('body,html').animate({
+                            scrollTop: $('.shipping-address').offset().top
+                        }, 500);
+                    } else if (address == "") {
+                        $('#error-checkout-address').text("ADDRESS REQUIRED");
+                        $('body,html').animate({
+                            scrollTop: $('.shipping-address').offset().top
+                        }, 500);
+                    } else if (address.length < 4 || address.length > 100) {
+                        $('#error-checkout-address').text("ADDRESS LENGTH 4 - 100 CHARACTERS");
+                        $('body,html').animate({
+                            scrollTop: $('.shipping-address').offset().top
+                        }, 500);
+                    } else if (note.length > 500) {
+                        $('#error-checkout-note').text("NOTE LENGTH MAXIMUM 500 CHARACTERS");
+                        $('body,html').animate({
+                            scrollTop: $('.shipping-address').offset().top
+                        }, 500);
+                    } else {
+                        $('#checkout-form').submit();
+                    }
                 } else {
-                    $('#checkout-form').submit();
+                    if (note.length > 500) {
+                        $('#error-checkout-note').text("NOTE LENGTH MAXIMUM 500 CHARACTERS");
+                        $('body,html').animate({
+                            scrollTop: $('.shipping-address').offset().top
+                        }, 500);
+                    } else {
+                        $('#checkout-form').submit();
+                    }
                 }
             }
         }
+    });
+    $('#checkout-form').on('keyup keypress', function (e) {
+        var keyCode = e.keyCode || e.which;
+        if (keyCode === 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+    $("#coupon_code").keydown(function () {
+        $("#fs-checkout-discountvou-error").text("");
     });
     $("input[name=address-chose]").on("click", function () {
         $('#error-checkout').html("");
@@ -2756,7 +2779,7 @@ $(document).ready(function () {
         $(".cart-table").add("<tfoot class=\"foot\"></tfoot>");
         var discountCode = $("input[name=coupon_code]").val().trim();
         var emailUser = $('input[name=emailUser]').val().trim();
-        var hiddenDiscountCode = $('input[name=discount-code-input]').val().trim();
+        var hiddenDiscountCode = $('input[name=discount-code-input]').val();
         if (hiddenDiscountCode == null) {
             if (discountCode == "") {
                 $("#fs-checkout-discountvou-error").text("ENTER YOUR DISCOUNT CODE!");
@@ -2803,6 +2826,62 @@ $(document).ready(function () {
             $("#fs-checkout-discountvou-error").text("You already have input discount code");
         }
     });
+    $("input[name=coupon_code]").keypress(function (e) {
+        if (e.which == 13) {
+            $("#fs-checkout-discountvou-error").text("");
+            $(".cart-table").remove(".foot");
+            $(".cart-table").add("<tfoot class=\"foot\"></tfoot>");
+            var discountCode = $("input[name=coupon_code]").val().trim();
+            var emailUser = $('input[name=emailUser]').val().trim();
+            var hiddenDiscountCode = $('input[name=discount-code-input]').val();
+            if (hiddenDiscountCode == null) {
+                if (discountCode == "") {
+                    $("#fs-checkout-discountvou-error").text("ENTER YOUR DISCOUNT CODE!");
+                } else {
+                    $.ajax({
+                        url: "orders/ajax/discount.html",
+                        method: "POST",
+                        data: {discountCode: discountCode, emailUser: emailUser},
+                        dataType: 'JSON',
+                        success: function (response) {
+                            if (response != null) {
+                                var xResponse = response.status;
+                                if (xResponse != "1" && xResponse != "0" && xResponse != "2" && xResponse != "3" && xResponse != "4" && xResponse != "5" && xResponse != "6") {
+                                    $(".discount-show").html(response.showDiscountPercent);
+                                    $(".foot").html(response.showDiscount);
+                                } else {
+                                    $.get("orders/ajax/nodiscount.html", function (responsenodiscount) {
+                                        if (xResponse == "1" || xResponse == "6") {
+                                            $("#fs-checkout-discountvou-error").text("Wrong Discount Code or Discount Code not existed");
+                                            $(".foot").html(responsenodiscount);
+                                        } else if (xResponse == "0") {
+                                            $("#fs-checkout-discountvou-error").text("Your Discount Code is out of quantity");
+                                            $(".foot").html(responsenodiscount);
+                                        } else if (xResponse == "2") {
+                                            $("#fs-checkout-discountvou-error").text("Your Discount Code Begin Date: " + response.showDiscount);
+                                            $(".foot").html(responsenodiscount);
+                                        } else if (xResponse == "3") {
+                                            $("#fs-checkout-discountvou-error").text("Your Discount Code End Date: " + response.showDiscount);
+                                            $(".foot").html(responsenodiscount);
+                                        } else if (xResponse == "4") {
+                                            $("#fs-checkout-discountvou-error").text("Your Discount Code Already Used");
+                                            $(".foot").html(responsenodiscount);
+                                        } else if (xResponse == "5") {
+                                            $("#fs-checkout-discountvou-error").text("Error Happened!");
+                                            $(".foot").html(responsenodiscount);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
+                }
+            } else {
+                $("#fs-checkout-discountvou-error").text("You already have input discount code");
+            }
+        }
+        ;
+    });
 
     //Cancel Order side client in order-history-detail.jsp
     $('#confirm-cancel-order').on('show.bs.modal', function (e) {
@@ -2848,6 +2927,9 @@ $(document).ready(function () {
                                     + "<strong>NOT ENOUGH STOCK! PLEASE ENTER DIFFERENT QUANTITY</strong>\n"
                                     + "</div>");
                         } else {
+                            $('body,html').animate({
+                                scrollTop: 0
+                            }, 500);
                             $("#error-product-detail").html("<div class=\"alert alert-success\">\n"
                                     + "<strong>ADD PRODUCT TO CART SUCCESSFULLY</strong>\n"
                                     + "</div>");
@@ -2914,23 +2996,38 @@ $(document).ready(function () {
     $(".fs-modal-close").on("click", function () {
         $('#error-cart-product-modal').html("");
     });
+
+//    var orderUrl = window.location.href;
+//    if (orderUrl.includes("order-history")) {
+//        window.onbeforeunload = function () {
+//            $.ajax({
+//                url: "orders/ajax/getSession.html",
+//                method: "GET",
+//                dataType: 'html',
+//                success: function (response) {
+//                    if (response == "0") {
+//                        $("#loginModal").modal('show');
+//                    }
+//                }
+//            });
+//        }
+//    }
     /*==========================END NGAN - ORDER==================================*/
 
     /*===========================DUONG - USER===================================*/
     //THÔNG BÁO KHI CLICK VÀO ADD ADDRESS KHI VƯỢT QUÁ MỨC CHO PHÉP
-//    $(".fs-add-address-user").on("click", function () {
-//        var userID = $(this).attr("fs-userID");
-//        var modal = $(this).attr("fs-message");
-//        $.ajax({
-//            url: "user/address-add/" + userID + ".html",
-//            method: "GET",
-//            data: {userID: userID},
-//            success: function (response) {
-//                alert('không thể thêm address');
-//            }
-//        });
-//    });
-
+    $(".fs-add-address-user").on("click", function () {
+        var userID = $(this).attr("fs-userID");
+        var modal = $(this).attr("fs-message");
+        $.ajax({
+            url: "user/address-add/" + userID + ".html",
+            method: "GET",
+            data: {userID: userID},
+            success: function (response) {
+                alert('không thể thêm address');
+            }
+        });
+    });
     //CUỘN LẠI, HIỆN RA TABLE ADDRESS-LIST
 
     $(".fs-panel").on("click", ".panel-heading span.clickable", function () {
@@ -2959,7 +3056,6 @@ $(document).ready(function () {
     });
     $("div#fs-table-add-address span.clickable").click();
 
-
     // CẢNH CÁO KHI BẤM XÓA
     $(".fs-delete-button-AD").click(function () {
         var addressID = $(this).attr("fs-addressID");
@@ -2974,7 +3070,6 @@ $(document).ready(function () {
         }, function (isConfirm) {
             if (!isConfirm)
                 return;
-            $("#fs-list-id-" + addressID).remove();
             $.ajax({
                 url: "user/deleteAddress/" + addressID + ".html",
                 type: "POST",
@@ -2984,7 +3079,7 @@ $(document).ready(function () {
                 success: function (response) {
                     if (response == "1")
                         swal("Done!", "It was succesfully deleted!", "success");
-//                    window.location = window.location.href;
+                    window.location = window.location.href;
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     swal("Error deleting!", "Please try again", "error");
@@ -3001,8 +3096,6 @@ $(document).ready(function () {
         $(this).find("p").html("");
         $(this).find("span#glypcn-fs-login-user").remove("span");
         $(this).find("span#glypcn-fs-create-user").remove("span");
-        $(this).find("#fs-error-show").text("");
-        $(this).find("#fs-error-show-register").text("");
     });
 
     // BẮT LỖI FORM LOGIN USER MODAL
@@ -3045,9 +3138,8 @@ $(document).ready(function () {
         e.preventDefault();
         var email = $("#fs-email-login-user").val().trim();
         var pass = $("#fs-pass-login-user").val().trim();
-//        var checkremember = $("#fs-check-remember").val();
-        var checkremember = $('input[name="checkremember"]:checked').val();
-//        alert(checkremember);
+        var checkremember = $("#fs-check-remember").val();
+
         if (!checkEmail(email)) {
             return false;
         } else if (pass == "") { // => đúng là pass != ==
@@ -3069,6 +3161,7 @@ $(document).ready(function () {
             div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
         } else {
+//            $("#fs-form-login-user").submit();
             $("#fs-pass-login-user-error").text("");
             var div = $("#fs-pass-login-user").closest("div.fs-pass-user");
             div.removeClass("has-error");
@@ -3102,7 +3195,7 @@ $(document).ready(function () {
         email = $("#fs-email-login-user").val().trim();
         if ($("#loginModal").modal('show')) {
             $("#fs-error-show").text("Email is wrong!");
-            $("#fs-email-login-user").focus();
+//            $("#fs-email-login-user").focus();
             var div = $("#fs-email-login-user").closest("div.fs-email-user");
             div.removeClass("has-success");
             $("#glypcn-fs-login-user").remove();
@@ -3116,7 +3209,7 @@ $(document).ready(function () {
         password = $("#fs-pass-login-user").val().trim();
         if ($("#loginModal").modal('show')) {
             $("#fs-error-show").text("Password is wrong!");
-            $("#fs-pass-login-user").focus();
+//            $("#fs-pass-login-user").focus();
             var div = $("#fs-pass-login-user").closest("div.fs-pass-user");
             div.removeClass("has-success");
             $("#glypcn-fs-login-user").remove();
@@ -3456,61 +3549,42 @@ $(document).ready(function () {
 
         if (!checkemail(email)) {
             return false;
-        }
-
-        if (!checkPass(password)) {
+        } else if (!checkPass(password)) {
             return false;
-        }
-        if (!checkRePass(repassword, password)) {
+        } else if (!checkRePass(repassword, password)) {
             return false;
-        }
-        if (!checkFirstName(firstname)) {
+        } else if (!checkFirstName(firstname)) {
             return true;
-        }
-        if (!checkLastName(lastname)) {
+        } else if (!checkLastName(lastname)) {
+            return false;
+        } else if (!checkBirthDay(birthday)) {
             return false;
         }
-        if (!checkBirthDay(birthday)) {
-            return false;
-        }
+        else {
+            $.ajax({
+                url: "user/register.html",
+                method: "POST",
+                //data: $("#fs-form-create-user").serialize(),
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                //dataType: 'html',
+                success: function (response) {
+                    console.log(response);
+                    if (response == "2") {
+                        $("#fs-error-show-register").html("<div class=\"col-md-5  alert alert-danger\">FAILED!. Account is exists!</div>");
+                    } else if (response == "0") {
+                        $("#fs-error-show-register").html("<div class=\"col-md-5  alert alert-danger\">FAILED!. Error was happened!!</div>");
+                    } else {
+                        var currentUrl = window.location.href;
+                        window.location = currentUrl;
+                        $("#loginModal").modal('hide');
+                    }
 
-        if (phone != "") {
-            if (!checkPhone(phone)) {
-                return false;
-            }
-            if (!checkAddress(address)) {
-                return false;
-            }
-        } else {
-            $("#fs-phone-create-user-error").text("");
-            $("#fs-address-create-user-error").text("");
-        }
-
-//        else {
-        $.ajax({
-            url: "user/register.html",
-            method: "POST",
-            //data: $("#fs-form-create-user").serialize(),
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            //dataType: 'html',
-            success: function (response) {
-                console.log(response);
-                if (response == "2") {
-                    $("#fs-error-show-register").html("<div class=\"alert alert-danger\">FAILED!. Account is exists!</div>");
-                } else if (response == "0") {
-                    $("#fs-error-show-register").html("<div class=\"alert alert-danger\">FAILED!. Error was happened!!</div>");
-                } else {
-                    var currentUrl = window.location.href;
-                    window.location = currentUrl;
-                    $("#loginModal").modal('hide');
                 }
-
-            }
-        });
-//        }
+            });
+        }
     });
 //        VALIDATION REGISTER KEYUP
 
@@ -3819,9 +3893,6 @@ $(document).ready(function () {
             $("#fs-repass-user-error").text("");
             $(".fs-form-change-pass").submit();
         }
-
-
-
     });
 
     // VALIDATION CHANGE PASS KEYUP
@@ -3871,9 +3942,6 @@ $(document).ready(function () {
         e.preventDefault();
         var address = $(".fs-address-add").val().trim();
         var phone = $(".fs-phone-add").val().trim();
-//        phone = phone.replace('(+84)', '0');
-//        phone = phone.replace('+84', '0');
-//        phone = phone.replace('0084', '0');
         var regex = new RegExp(/^(01[2689]|09)[0-9]{8}$/);
 
         if (address == "") {
@@ -3892,24 +3960,6 @@ $(document).ready(function () {
             $("#fs-phone-add-user-error").text("");
             $(".fs-form-add-address").submit();
         }
-
-//        if((address.length > 10 && address.length < 255) && regex.test(phone)){
-//            var userID = $(this).attr("fs-userID");
-//            $.ajax({
-//                url: "user/address-add/"+ userID +".html",
-//                method: "POST",
-//                data:{userID: userID},
-//                success: function (response) {
-//                    if(response == "1"){
-//                        alert("trùng");
-//                    }else if(response == "2") {
-//                        alert("ok");
-//                    }else{
-//                        alert("hihi");
-//                    }
-//                }
-//            });
-//        }
 
     });
 
@@ -4000,6 +4050,7 @@ $(document).ready(function () {
             $("#fs-phone-update-user-error").text("Phone begin 01 or 09 and 10 to 11 number");
         } else {
             $("#fs-phone-update-user-error").text("");
+//            $(".fs-form-update-address").submit();
         }
     });
 
@@ -4012,6 +4063,7 @@ $(document).ready(function () {
         var input = $("input[name='emailUser']");
         if (input.val() != "") {
             //Có session
+//            $(this).addClass("fs-heart-color");
             if (!$(this).hasClass("fs-heart-color")) {
                 $(this).addClass("fs-heart-color");
                 $.ajax({
@@ -4045,7 +4097,7 @@ $(document).ready(function () {
                     method: "POST",
                     data: {userID: userID, productID: productID},
                     success: function (response) {
-                        if (response == "1") {
+                        if (response == "10") {
                             swal({
                                 title: "<h1 style='color: #ff0000;' >Delete</h1>",
                                 text: "Delete Wish List success.",
@@ -4063,8 +4115,7 @@ $(document).ready(function () {
             $("#fs-modal-mess").modal("show");
             $(".fs-btn-login-wl").click(function () {
                 $("#fs-modal-mess").modal("hide");
-                window.location = window.location.href;
-//                $("#loginModal").modal("show");
+                $("#loginModal").modal("show");
             });
         }
     });
@@ -4112,7 +4163,7 @@ $(document).ready(function () {
                     method: "POST",
                     data: {userID: userID, productID: productID},
                     success: function (response) {
-                        if (response == "1") {
+                        if (response == "10") {
                             swal({
                                 title: "<h1 style='color: #ff0000;' >Delete</h1>",
                                 text: "Delete Wish List success.",
@@ -4130,8 +4181,7 @@ $(document).ready(function () {
             $("#fs-modal-mess").modal("show");
             $(".fs-btn-login-wl").click(function () {
                 $("#fs-modal-mess").modal("hide");
-                window.location = window.location.href;
-//                $("#loginModal").modal("show");
+                $("#loginModal").modal("show");
             });
         }
     });
@@ -4145,6 +4195,7 @@ $(document).ready(function () {
         var input = $("input[name='emailUser']");
         if (input.val() != "") {
             //Có session
+//            $(this).addClass("fs-heart-color");
             if (!$(this).hasClass("fs-heart-color")) {
                 $(this).addClass("fs-heart-color");
                 $.ajax({
@@ -4176,9 +4227,9 @@ $(document).ready(function () {
                 $.ajax({
                     url: "user/ajax/deleteWishListt.html",
                     method: "POST",
-                    data: {productID: productID,userID: userID },
+                    data: {userID: userID, productID: productID},
                     success: function (response) {
-                        if (response == "1") {
+                        if (response == "10") {
                             swal({
                                 title: "<h1 style='color: #ff0000;' >Delete</h1>",
                                 text: "Delete Wish List success.",
@@ -4193,12 +4244,11 @@ $(document).ready(function () {
 
         } else {
             //Khong có session
-            $("#fs-modal-mess").modal("show");
-            $(".fs-btn-login-wl").click(function () {
-                $("#fs-modal-mess").modal("hide");
-                window.location = window.location.href;
-//                $("#loginModal").modal("show");
-            });
+//            $("#fs-modal-mess").modal("show");
+//            $(".fs-btn-login-wl").click(function () {
+//                $("#fs-modal-mess").modal("hide");
+            $("#loginModal").modal("show");
+//            });
         }
     });
 
@@ -4226,9 +4276,6 @@ $(document).ready(function () {
             }
         });
     });
-
-
-
 
     /*===========================END DUONG - USER===================================*/
 

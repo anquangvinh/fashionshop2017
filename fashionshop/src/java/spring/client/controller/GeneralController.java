@@ -1,5 +1,6 @@
 package spring.client.controller;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -47,16 +48,28 @@ public class GeneralController {
         }
         List<Object> bestSellerList = productStateLessBean.getTop3ProductBestSeller();
         List<Products> mostViewList = productStateLessBean.getTop3ProductMostViewed();
-
+        
+        List<Object[]> productTopRateList = productStateLessBean.getProductTop3Rated();
+        List<Object[]> newTopRateList = new ArrayList<>();
+        
+        for (Object[] rate : productTopRateList) {
+            int productID = (int) rate[0];
+            Products product = productStateLessBean.findProductByID(productID);
+            double avgRating = (double) rate[1];
+            Object[] newObj = new Object[]{product, avgRating};
+            newTopRateList.add(newObj);
+        }
+        
         model.addAttribute("cateList", cateList);
         model.addAttribute("latestProducts", productStateLessBean.productList("client")); //lấy sản phẩm mới nhất
         model.addAttribute("bestSellerList", bestSellerList); //lấy sản phẩm bán chạy nhất
         model.addAttribute("mostViewList", mostViewList); //lấy sản phẩm xem nhiều nhất
+        model.addAttribute("productTopRateList", newTopRateList); //lấy sản phẩm được rate nhiều nhất
         model.addAttribute("blogListIndex", blogListIndex);
         return "client/pages/index";
     }
 
-    @RequestMapping(value = "/admin/index")
+    @RequestMapping(value = "/admin")
     public String admin(ModelMap model) {
         return "admin/pages/index";
     }
@@ -79,7 +92,7 @@ public class GeneralController {
             session.setAttribute("findUsersID", userfindUserID.getUserID());
             session.setAttribute("USfirstname", userfindUserID.getFirstName() + " " + userfindUserID.getLastName());
 
-            if (checkremember != null && checkremember == 1) {
+            if (checkremember == 1) {
                 Cookie ckEmail = new Cookie("emailU", email);
                 ckEmail.setMaxAge(24 * 60 * 60);
                 response.addCookie(ckEmail);
