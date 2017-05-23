@@ -62,14 +62,11 @@ public class RolesStateLessBean implements RolesStateLessBeanLocal {
 
     @Override
     public boolean editRolesForUsers(int userID, int roleID) {
-        Users user = getEm().find(Users.class, userID); //Lấy ra user cũ, mọi thứ đều cũ
-        user.getRole().getUserList().remove(user); //Lấy ra cái role cũ. từ role cũ có dc cái list chứa user, lấy cái list đó, remove user này đi
-        Roles role = findRoles(roleID); //role mới
+        Users user = getEm().find(Users.class, userID);
+        Roles role = findRoles(roleID);
         
-        user.setRole(role); //set Role mới cho user
-        role.getUserList().add(user); //vào cái role mới, có userList mới của role này, add thằng user này vào.
-        
-        getEm().merge(user); //lưu vào database
+        user.setRole(role);
+        getEm().merge(user);
         return true;
     }
 
