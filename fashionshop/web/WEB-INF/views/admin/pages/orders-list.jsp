@@ -18,42 +18,6 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <c:set value="${orderStatus}" var="orderStatus"/>
-                <table width="100%" class="table table-striped table-bordered table-hover">
-                    <tr>
-                        <th colspan="5" class="text-center fs-valign-middle">SELECT ORDER STATUS OPTION</th>
-                    </tr>
-                    <tr>
-                        <%
-                            int orderStatus = Integer.parseInt(pageContext.getAttribute("orderStatus").toString());
-                            String btnPrimary = "class=\"btn btn-primary\"";
-                            String btnWarning = "class=\"btn btn-warning\"";
-                            String classOrder1 = btnPrimary;
-                            String classOrder2 = btnPrimary;
-                            String classOrder3 = btnPrimary;
-                            String classOrder4 = btnPrimary;
-                            String classOrder5 = btnPrimary;
-                            if (orderStatus == 4) {
-                                classOrder1 = btnWarning;
-                            } else if (orderStatus == 2) {
-                                classOrder2 = btnWarning;
-                            } else if (orderStatus == 3) {
-                                classOrder3 = btnWarning;
-                            } else if (orderStatus == 1) {
-                                classOrder4 = btnWarning;
-                            } else if (orderStatus == 0) {
-                                classOrder5 = btnWarning;
-                            }
-                        %>
-                        <td class="text-center fs-valign-middle"><a href="admin/orders/list.html" <%= classOrder1%>>ALL ORDER</a></td>
-                        <td class="text-center fs-valign-middle"><a href="admin/orders/list/2.html" <%= classOrder2%>>PENDING</a></td>
-                        <td class="text-center fs-valign-middle"><a href="admin/orders/list/3.html" <%= classOrder3%>>CONFIRMED</a></td>
-                        <td class="text-center fs-valign-middle"><a href="admin/orders/list/1.html" <%= classOrder4%>>COMPLETED</a></td>
-                        <td class="text-center fs-valign-middle"><a href="admin/orders/list/0.html" <%= classOrder5%>>CANCELED</a></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col-lg-12">
                 <!--id="dataTables-example"-->
                 <table width="100%" class="table table-striped table-bordered table-hover" id="tableOrder">
                     <thead>
@@ -80,44 +44,35 @@
                                     <fmt:formatDate value="${order.ordersDate}" pattern="dd-MM-yyyy hh:mm:ss"/>
                                 </td>
                                 <td class="text-center fs-valign-middle">
-                                    <c:choose>
-                                        <c:when test="${order.status == 1}">
-                                            <select name="status-order" id="id-status-order" class="form-control input-sm" style="color: #00cc66;"
-                                                    onchange="window.location = 'admin/orders/confirmstatusOrder/${order.ordersID}/' + this.value + '.html';">
+                                    <select name="status-order" id="id-status-order" class="form-control input-sm" 
+                                            onchange="window.location = 'admin/orders/confirmstatusOrder/${order.ordersID}/' + this.value + '.html';">
+                                        <c:choose>
+                                            <c:when test="${order.status == 1}">
                                                 <option value="1" <c:out value="selected"/>>Completed</option>
                                                 <option value="2">Pending</option>
                                                 <option value="3">Confirmed</option>
                                                 <option value="0">Canceled</option>
-                                            </select>
-                                        </c:when>
-                                        <c:when test="${order.status == 2}">
-                                            <select name="status-order" id="id-status-order" class="form-control input-sm" 
-                                                    onchange="window.location = 'admin/orders/confirmstatusOrder/${order.ordersID}/' + this.value + '.html';">
+                                            </c:when>
+                                            <c:when test="${order.status == 2}">
                                                 <option value="1">Completed</option>
                                                 <option value="2" <c:out value="selected"/>>Pending</option>
                                                 <option value="3">Confirmed</option>
                                                 <option value="0">Canceled</option>
-                                            </select>
-                                        </c:when>
-                                        <c:when test="${order.status == 3}">
-                                            <select name="status-order" id="id-status-order" class="form-control input-sm" style="color: blue;"
-                                                    onchange="window.location = 'admin/orders/confirmstatusOrder/${order.ordersID}/' + this.value + '.html';">
+                                            </c:when>
+                                            <c:when test="${order.status == 3}">
                                                 <option value="1">Completed</option>
                                                 <option value="2">Pending</option>
                                                 <option value="3" <c:out value="selected"/>>Confirmed</option>
                                                 <option value="0">Canceled</option>
-                                            </select>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <select name="status-order" id="id-status-order" class="form-control input-sm" style="color: red;" 
-                                                    onchange="window.location = 'admin/orders/confirmstatusOrder/${order.ordersID}/' + this.value + '.html';">
+                                            </c:when>
+                                            <c:otherwise>
                                                 <option value="1">Completed</option>
                                                 <option value="2">Pending</option>
                                                 <option value="3">Confirmed</option>
                                                 <option value="0"  <c:out value="selected"/>>Canceled</option>
-                                            </select>
-                                        </c:otherwise>
-                                    </c:choose>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </select>
                                 </td>
                             </tr>
                         </c:forEach>

@@ -32,8 +32,7 @@
                 </div>-->
                 <div class="side-widget space50">
                     <h3><span>Month</span></h3>
-                    <select id="monthblog" class="form-control" onchange="window.location = 'blog/'+this.value+'.html';">
-                        <option value="">Select blog by month</option>
+                    <select class="form-control" id="sel1">
                         <option value="1">January</option>
                         <option value="2">February</option>
                         <option value="3">March</option>
@@ -65,8 +64,34 @@
 
                     </ul>
                 </div>
+                <div class="side-widget space50">
+                    <h3><span>Archives</span></h3>
+                    <ul class="list-unstyled cat-list">
+                        <li> <a href="#">June 2015</a> <i class="icon-plus2"></i></li>
+                        <li> <a href="#">May 2015</a> <i class="icon-plus2"></i></li>
+                        <li> <a href="#">April 2015</a> <i class="icon-plus2"></i></li>
+                    </ul>
+                </div>
             </aside>
             <div class="col-md-9 col-sm-8 blog-content">
+                <!--                <article class="blogpost">
+                                    <div class="space30"></div>
+                                     Media Gallery 
+                                    <div class="post-media">
+                                        <div class="blog-slider">
+                                            <div class="item">						
+                                                <img src="assets/images/blog/1/1097x600c.jpeg" alt=""/>
+                                            </div>
+                                            <div class="item">						
+                                                <img src="assets/images/blog/1/1097x600a.jpeg" alt=""/>
+                                            </div>
+                                            <div class="item">						
+                                                <img src="assets/images/blog/1/1097x600.jpeg"  alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>-->
+
                 <c:forEach items="${getBlogsListByCate}" var="blogclient" begin="0" end="10" varStatus="no">
                     <div class="col-md-12 col-sm-8 blog-content" >
                         <article class="blogpost">

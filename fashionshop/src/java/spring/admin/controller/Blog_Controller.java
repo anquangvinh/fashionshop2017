@@ -5,24 +5,22 @@
  */
 package spring.admin.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static javassist.CtMethod.ConstParameter.string;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -30,14 +28,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import spring.ejb.BlogsSBLocal;
 import spring.ejb.BlogCategoriesSBLocal;
 import spring.ejb.UsersStateLessBeanLocal;
 import spring.entity.BlogCategories;
-import spring.entity.BlogChart;
 import spring.entity.Blogs;
 import spring.entity.Users;
 import spring.functions.SharedFunctions;
@@ -131,49 +127,7 @@ public class Blog_Controller {
 
     @RequestMapping(value = "listchartblog")
     public String blogListChart(ModelMap model) {
-        List<BlogCategories> blogCategoriesList = categoriesSB.getBlogCategoriesList();
-        List<BlogChart> blogChartList = new ArrayList<>();
-        for (BlogCategories blogCategory : blogCategoriesList) {
-            BlogChart blogChart = new BlogChart();
-            blogChart.setLabel(blogCategory.getBlogCateName());
-            blogChart.setValue(blogsSB.getAllNumberBlogsInCate(blogCategory.getBlogCateID()));
-            blogChartList.add(blogChart);
-        }
-        model.addAttribute("getAllNumberBlogsInCate", blogChartList);
         return "admin/pages/blog-statistics";
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "ajax/getBlogView", method = RequestMethod.GET)
-    public String getBlogView() {
-        List<BlogChart> blogChartList = new ArrayList<>();
-        List<BlogCategories> blogCategoryList = blogCategoriesSB.getBlogCategoriesList();
-        for (BlogCategories blogCategory : blogCategoryList) {
-            String label = blogCategory.getBlogCateName();
-            int value = 0;
-            List<Blogs> blogList = blogsSB.getListBlogsByCategory(blogCategory.getBlogCateID());
-            if (blogList != null) {
-                for (Blogs blog : blogList) {
-                    if (blog.getBlogViews() == null) {
-                        value += 0;
-                    } else {
-                        value += blog.getBlogViews();
-                    }
-                }
-            }
-            BlogChart blogChart = new BlogChart();
-            blogChart.setLabel(label);
-            blogChart.setValue(value);
-            blogChartList.add(blogChart);
-        }
-        Collections.sort(blogChartList, new BlogChart.BlogChartComparator());
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            String result = mapper.writeValueAsString(blogChartList);
-            return result;
-        } catch (Exception e) {
-            return e.getMessage();
-        }
     }
 
     @RequestMapping(value = "create", method = RequestMethod.GET)
@@ -257,7 +211,7 @@ public class Blog_Controller {
             @PathVariable("blogID") Integer blogID,
             @RequestParam("upImageBlog") MultipartFile image,
             RedirectAttributes redirectAttr, HttpServletRequest Request) {
-        Blogs normalTargetBlog = blogsSB.findBlogsByID(blogID); //Blogs Khi chưa chỉnh sửa
+        Blogs normalTargetProduct = blogsSB.findBlogsByID(blogID); //Blogs Khi chưa chỉnh sửa
 
         String email = String.valueOf(Request.getSession().getAttribute("email"));
         if (email != null) {
@@ -266,11 +220,7 @@ public class Blog_Controller {
                 updatedTargetBlogs.setUser(user);
             }
         }
-        if (normalTargetBlog.getBlogViews() == null) {
-            updatedTargetBlogs.setBlogViews(0);
-        } else {
-            updatedTargetBlogs.setBlogViews(normalTargetBlog.getBlogViews());
-        }
+
         updatedTargetBlogs.setBlogTitleNA(shareFunc.changeText(updatedTargetBlogs.getBlogTitle()));
         updatedTargetBlogs.setPostedDate(new Date());
         updatedTargetBlogs.setContent(Request.getParameter("editor1"));
@@ -280,7 +230,7 @@ public class Blog_Controller {
                 String path = app.getRealPath("/assets/images/") + "/" + updatedTargetBlogs.getBlogImg();
                 image.transferTo(new File(path));
             } else {
-                updatedTargetBlogs.setBlogImg(normalTargetBlog.getBlogImg());
+                updatedTargetBlogs.setBlogImg(normalTargetProduct.getBlogImg());
             }
         } catch (IOException | IllegalStateException ex) {
             Logger.getLogger(Blog_Controller.class.getName()).log(Level.SEVERE, null, ex);
@@ -302,16 +252,16 @@ public class Blog_Controller {
 
         return "redirect:/admin/blog/edit/" + blogID + ".html";
     }
-
+    
     @RequestMapping(value = "confirmStatusBlog/{blogID}/{status}", method = RequestMethod.GET)
     public String confirmStatusBlog(@PathVariable("blogID") Integer blogID,
-            @PathVariable("status") String status) {
+            @PathVariable("status") String status){
         Blogs targetBlogs = blogsSB.findBlogsByID(blogID);
         if (targetBlogs != null) {
             targetBlogs.setStatus(Short.parseShort(status));
             if (blogsSB.editBlogs(targetBlogs)) {
                 return "redirect:/admin/blog/list.html";
-            } else {
+            }else{
                 return "redirect:/admin/blog/list.html";
             }
         }
@@ -332,7 +282,7 @@ public class Blog_Controller {
                 flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">"
                         + "<strong>Blog category must have no blogs</strong></div>");
                 return "redirect:/admin/blog/category.html";
-            } else {
+            }else{
                 flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">"
                         + "<strong>Delete process have error</strong></div>");
                 return "redirect:/admin/blog/category.html";
@@ -342,8 +292,8 @@ public class Blog_Controller {
                 + "<strong>Can't find Blog Category ID</strong></div>");
         return "redirect:/admin/blog/category.html";
     }
-
-    @RequestMapping(value = "/deleteBlog/{blogID}", method = RequestMethod.GET)
+    
+     @RequestMapping(value = "/deleteBlog/{blogID}", method = RequestMethod.GET)
     public String deleteBlog(@PathVariable("blogID") Integer blogID,
             RedirectAttributes flashAttr) {
         Blogs blog = blogsSB.findBlogsByID(blogID);
@@ -351,9 +301,10 @@ public class Blog_Controller {
             int errorCheck = blogsSB.deleteBlog(blog);
             if (errorCheck == 1) {
                 flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">"
-                        + "<strong>Blog: " + blog.getBlogTitle() + " Deleted</strong></div>");
+                        + "<strong>Blog: " + blog.getBlogTitle()+ " Deleted</strong></div>");
                 return "redirect:/admin/blog/list.html";
-            } else {
+            }
+            else{
                 flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">"
                         + "<strong>Delete process have error</strong></div>");
                 return "redirect:/admin/blog/list.html";

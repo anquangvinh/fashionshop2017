@@ -298,15 +298,20 @@ input.fs-color-checkbox:checked + label:before, input.fs-size-checkbox:checked +
 /* CSS FOR MESS-WISHLIST: */
 
 .fs-modal-wl-mess{
-    /*display:none;*/
-    padding: 20px ;
+    width:70%;
+    height:70%;
+    display:none;
+    padding: 90px;
+    position:fixed;
     top:90px;
-    left: 200px;
-    right: 200px;
+    left:280px;
     text-align: center;
     /*background:rgba(20,10,10,0.75);*/
 }
 
+/*.fs-modal-wl-mess:hover{
+  background:rgba(0,10,40,0.75);
+}*/
 .fs-modal-wl-close{
     width:30px;
     height:30px;
@@ -374,6 +379,24 @@ input.fs-color-checkbox:checked + label:before, input.fs-size-checkbox:checked +
     width: 100%;
 }
 
+/*@media (min-width: 400px){
+    .fs-btn-wl{
+        display: inline-block;
+        margin-right: 2.5em;
+    }
+    .fs-btn-wl:nth-of-type(even){
+        margin-right: 0;
+    }
+}
+
+@media (min-width: 600px){
+   .fs-btn-wl:nth-of-type(even){
+        margin-right: 2.5em;
+    } 
+    .fs-btn-wl:nth-of-type(5){
+        margin-right: 0;
+    }
+}*/
 
 .fs-btn-wl:hover{
     text-decoration: none;
@@ -381,16 +404,6 @@ input.fs-color-checkbox:checked + label:before, input.fs-size-checkbox:checked +
 
 .fs-heart-color {
     background: #d6644a !important;
-}
-
-.fs-modal-mess-wl{
-    width: 50%;
-    height: 50%;
-    padding: 5px;
-    top:90px;
-    left: 200px;
-    right: 200px;
-    text-align: center;
 }
 
 /* PRODUCT DETAIL */
@@ -438,4 +451,3 @@ input.fs-color-checkbox:checked + label:before, input.fs-size-checkbox:checked +
     border-bottom: 1px solid #ededed;
 }
 /* CSS FOR USER-LOGIN-MODAL: */
-

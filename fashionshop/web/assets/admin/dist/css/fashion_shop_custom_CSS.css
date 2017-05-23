@@ -201,6 +201,7 @@ tr.shown td.details-control{
         50% 50% 
         no-repeat;
 }
+
 .fs-widget {
     background-color: #fbfbfb;
     -webkit-box-shadow: 1px 0 10px 1px rgba(0, 0, 0, .3);
@@ -221,4 +222,5 @@ tr.shown td.details-control{
     height: 300px;
     margin:auto;
 }
+/* Load More Blog */
 

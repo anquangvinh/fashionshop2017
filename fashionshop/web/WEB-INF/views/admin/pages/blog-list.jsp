@@ -84,7 +84,9 @@
                     </tbody>
                 </table>
 
+                <!-- /.table-responsive -->
             </div>
+            <!-- /.col-lg-12 -->
         </div>
         <!-- /.row -->
     </div>

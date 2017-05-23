@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,6 +41,7 @@ import spring.entity.Categories;
 import spring.entity.ProductColors;
 import spring.entity.ProductSubImgs;
 import spring.entity.Products;
+import spring.entity.ReturningVisitor;
 import spring.entity.SizesByColor;
 import spring.entity.SubCategories;
 import spring.functions.SharedFunctions;
@@ -1405,67 +1407,67 @@ public class Product_Controller {
      *                                                                       *
      ========================================================================*/
 
-//    @ResponseBody
-//    @RequestMapping(value = "ajax/getReturningVisitorData", method = RequestMethod.POST)
-//    public String getReturningVisitorData() {
-//        List<ReturningVisitor> returningVisitorList = productStateLessBean.getReturningVisitorList();
-//        int countNewVisitor = 0;
-//        int countReturningVisitor = 0;
-//        for (ReturningVisitor visitor : returningVisitorList) {
-//            if (visitor.getVisitTimes() == 1) {
-//                countNewVisitor++;
-//            } else {
-//                countReturningVisitor++;
-//            }
-//        }
-//
-//        String result = countNewVisitor + "-" + countReturningVisitor;
-//        return result;
-//    }
-//
-//    @RequestMapping(value = "ajax/getVisitTimes", method = RequestMethod.POST)
-//    @ResponseBody
-//    @SuppressWarnings("empty-statement")
-//    public String getVisitTimes(
-//            @RequestParam(value = "month", required = false) Integer month,
-//            @RequestParam(value = "week", required = false) Integer week
-//    ) {
-//        if (month == null) {
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("MM");
-//            month = Integer.parseInt(dateFormat.format(new Date()));
-//        }
-//
-//        String weekCondition = "";
-//
-//        if (week != null) {
-//            weekCondition = "AND ((DAY(r.onDate)-1) / 7) + 1 = " + week;
-//        }
-//
-//        List<Object[]> resultList = productStateLessBean.getVisitTimesByMonthAndWeek(month, weekCondition);
-//        List<long[]> testList = new ArrayList<>();
-//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-//        for (Object[] rs : resultList) {
-//            String date = (String) rs[0];
-//            try {
-//                Date newDate = formatter.parse(date);
-//                long timeStamp = newDate.getTime();
-//                long[] newArray = new long[]{timeStamp, (int) rs[1]};
-//                testList.add(newArray);
-//            } catch (ParseException ex) {
-//                Logger.getLogger(Product_Controller.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-//
-//        ObjectMapper mapper = new ObjectMapper();
-//        String result = "";
-//
-//        try {
-//            result = mapper.writeValueAsString(testList);
-//        } catch (JsonProcessingException ex) {
-//            Logger.getLogger(Product_Controller.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return result;
-//    }
+    @ResponseBody
+    @RequestMapping(value = "ajax/getReturningVisitorData", method = RequestMethod.POST)
+    public String getReturningVisitorData() {
+        List<ReturningVisitor> returningVisitorList = productStateLessBean.getReturningVisitorList();
+        int countNewVisitor = 0;
+        int countReturningVisitor = 0;
+        for (ReturningVisitor visitor : returningVisitorList) {
+            if (visitor.getVisitTimes() == 1) {
+                countNewVisitor++;
+            } else {
+                countReturningVisitor++;
+            }
+        }
+
+        String result = countNewVisitor + "-" + countReturningVisitor;
+        return result;
+    }
+
+    @RequestMapping(value = "ajax/getVisitTimes", method = RequestMethod.POST)
+    @ResponseBody
+    @SuppressWarnings("empty-statement")
+    public String getVisitTimes(
+            @RequestParam(value = "month", required = false) Integer month,
+            @RequestParam(value = "week", required = false) Integer week
+    ) {
+        if (month == null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM");
+            month = Integer.parseInt(dateFormat.format(new Date()));
+        }
+
+        String weekCondition = "";
+
+        if (week != null) {
+            weekCondition = "AND ((DAY(r.onDate)-1) / 7) + 1 = " + week;
+        }
+
+        List<Object[]> resultList = productStateLessBean.getVisitTimesByMonthAndWeek(month, weekCondition);
+        List<long[]> testList = new ArrayList<>();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        for (Object[] rs : resultList) {
+            String date = (String) rs[0];
+            try {
+                Date newDate = formatter.parse(date);
+                long timeStamp = newDate.getTime();
+                long[] newArray = new long[]{timeStamp, (int) rs[1]};
+                testList.add(newArray);
+            } catch (ParseException ex) {
+                Logger.getLogger(Product_Controller.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        String result = "";
+
+        try {
+            result = mapper.writeValueAsString(testList);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(Product_Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
 
     //Chuẩn bị dữ liệu cho select box Category
     @ModelAttribute("categories")

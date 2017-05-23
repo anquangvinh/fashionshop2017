@@ -96,10 +96,15 @@ public class UserAddressesStateLessBean implements UserAddressesStateLessBeanLoc
         
             try {
                     Users user = findUserID(userID);
+//                    if(!email.equals("")){
+//                        u.setEmail(email);
+//                        error = 4;
+//                    }else{
                     userAddresses.setUser(user);
                     userAddresses.getAddressID();
                     getEm().merge(userAddresses);
                     error = 1;
+//                    }
                 
             } catch (Exception e) {
                 error = 0;

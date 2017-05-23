@@ -64,7 +64,7 @@ public class LoginController {
             
             if (session.getAttribute("request_url") == null || ((String) session.getAttribute("request_url")).equals("/admin/logout.html")) {
                 session.removeAttribute("request_url");
-                return "redirect:/admin/index.html";     
+                return "redirect:/admin.html";     
             } else {
                 return "redirect:" + session.getAttribute("request_url");
             }

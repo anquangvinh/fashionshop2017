@@ -238,8 +238,7 @@
                                          data-toggle="modal" >
                                     </div>
                                     <div class="product-overlay">
-<!--                                        <a href="#" class="addcart fa fa-shopping-cart"></a>
-                                        <a href="#" class="compare fa fa-signal"></a>-->
+                                        <a href="#" class="addcart fa fa-shopping-cart"></a>
                                         <a class="likeitem fa fa-heart-o fs-wishlish-add" 
                                            fs-userID="${sessionScope.findUsersID}" 
                                            fs-productID="${product.productID}" ></a>
@@ -526,21 +525,15 @@
         </div>
     </div>
 
-    <!--MODAL THONG BAO CHO KHI CO MODAL-->
-    <div id="fs-wl-ajax-error" class="modal fade fs-modal-mess-wl" tabindex="-1" role="dialog">
-        <div class="modal-content fs-modal-wl-content">
-            <!--<h1 id="fs-mess-wl" style="color: #31b131; text-align: center">SUCCESS</h1>-->
-            <h1 id="fs-mess-wl-success" style="color: #31b131; text-align: center"></h1>
-            <h1 id="fs-mess-wl-error" style="color: #F65D20; text-align: center"></h1>
 
-            <div class="modal-header">
-                <button class="close" data-dismiss="modal">&times;</button>
-                <!--<h1 id="fs-mess-wl" style="color: #31b131; text-align: center"></h1>-->
-            </div>
-            <div class="modal-body">
-                <!--<p id="fs-mess-body-wl">Add Wish List success.</p>-->
-                <p id="fs-mess-body-wl"></p>
-            </div>
+    <!--MODAL THONG BAO THANH CONG-->
+    <!--    <div id="fs-wl-ajax-error" class="modal fade" >
+        <div class="modal-header">
+          <button class="close" data-dismiss="modal">&times;</button>
+          <h3>SUCCESS</h3>
         </div>
-    </div>
-    <div class="ajax-progress"></div>
+        <div class="modal-body">
+          <p>Add Wish List success.</p>
+        </div>
+      </div>
+      <div class="ajax-progress"></div>-->
