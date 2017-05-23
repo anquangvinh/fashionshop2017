@@ -77,9 +77,16 @@
                             <i class="fa fa-search"></i>
                         </span>
                         <form class="searchtop">
-                            <input type="text" placeholder="Search entire store here.">
+                            <input type="text" id="fs-search-top-input" placeholder="Search by Product Name...">
+                            <div style="background-color: white">
+                                <ul id="fs-on-search-result">
+                                    
+                                </ul>
+                            </div>
                         </form>
+                        
                     </div>
+                    
                 </div>
                 <!-- Navmenu -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -95,8 +102,8 @@
                                    aria-expanded="false">${category.cateName}</a>
                                 <ul class="dropdown-menu submenu" role="menu">
                                     <c:forEach items="${category.subCateList}" var="subCate">
-                                        <li><a href="subCategory/${category.cateNameNA}-${subCate.subCateID}-${subCate.subCateNameNA}.html">${subCate.subCateName}</a></li>
-                                        </c:forEach>
+                                        <li><a href="${category.cateNameNA}/${subCate.subCateID}-${subCate.subCateNameNA}.html">${subCate.subCateName}</a></li>
+                                    </c:forEach>
                                 </ul>
                             </li>
                         </c:forEach>
