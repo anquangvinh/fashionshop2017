@@ -14,11 +14,21 @@
             <aside class="col-md-3 col-sm-4">
                 <div class="side-widget space50">
                     <h3><span>Search</span></h3>
-                    <form role="form" class="search-widget" method="POST" action="blog-categories.html">
-                        <input class="form-control" type="text" name="searchBlog"/>
+                    <form role="form" class="search-widget">
+                        <input class="form-control" type="text">
                         <button type="submit"><i class="fa fa-search"></i></button>
                     </form>
                 </div>
+<!--                <div class="side-widget space50">
+                    <h3><span>Categories</span></h3>
+
+                    <c:forEach items="${getBlogCateListDetail}" var="blogcateclientdetail">
+                        <ul class="list-unstyled cat-list">
+                            <li> <a href="blog-categories/${blogcateclientdetail.blogCateID}.html">${blogcateclientdetail.blogCateName}</a></li>
+                        </ul>
+                    </c:forEach>
+
+                </div>-->
                 <div class="side-widget space50">
                     <h3><span>Popular Post</span></h3>
                     <ul class="list-unstyled popular-post">

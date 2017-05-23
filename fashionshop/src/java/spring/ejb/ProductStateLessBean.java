@@ -5,6 +5,7 @@
  */
 package spring.ejb;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import javax.ejb.Stateless;
@@ -16,6 +17,7 @@ import spring.entity.ProductColors;
 import spring.entity.ProductRating;
 import spring.entity.ProductSubImgs;
 import spring.entity.Products;
+import spring.entity.ReturningVisitor;
 import spring.entity.SizesByColor;
 import spring.entity.SubCategories;
 
@@ -646,52 +648,52 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
     }
     
     /* Returning Visitor */
-//    @Override
-//    public List<ReturningVisitor> getReturningVisitorList() {
-//        String sql = "SELECT v FROM ReturningVisitor v";
-//        Query q = getEntityManager().createQuery(sql, ReturningVisitor.class);
-//
-//        return q.getResultList();
-//    }
-//
-//    @Override
-//    public List<Object[]> getVisitTimesByMonthAndWeek(int month, String weekCondition) {
-//        String sql = "SELECT r.onDate, sum(r.visitTimes) AS visits "
-//                + "FROM ReturningVisitor r "
-//                + "WHERE MONTH(r.onDate) = ? "
-//                + weekCondition
-//                + "GROUP BY r.onDate";
-//        Query q = getEntityManager().createNativeQuery(sql);
-//        q.setParameter(1, month);
-//        return q.getResultList();
-//    }
-//
-//    @Override
-//    public void createNewVisitor(ReturningVisitor newVisitor) {
-//        getEntityManager().persist(newVisitor);
-//    }
-//
-//    @Override
-//    public ReturningVisitor getReturningVisitorByIDAndDate(String visitorID, Date date) {
-//        try {
-//            String sql = "SELECT r FROM ReturningVisitor r "
-//                    + "WHERE r.visitorID = :visitorID "
-//                    + "AND r.onDate = :date";
-//            Query q = getEntityManager().createQuery(sql, ReturningVisitor.class);
-//            q.setParameter("visitorID", visitorID);
-//            q.setParameter("date", date);
-//            return (ReturningVisitor) q.getSingleResult();
-//        } catch (Exception e) {
-//            return null;
-//        }
-//    }
-//    
-//    @Override
-//    public void updateVisitTimes (ReturningVisitor visitor){
-//        if(getEntityManager().find(ReturningVisitor.class, visitor.getReVisitID())!= null){
-//            getEntityManager().merge(visitor);
-//        }
-//    }
+    @Override
+    public List<ReturningVisitor> getReturningVisitorList() {
+        String sql = "SELECT v FROM ReturningVisitor v";
+        Query q = getEntityManager().createQuery(sql, ReturningVisitor.class);
+
+        return q.getResultList();
+    }
+
+    @Override
+    public List<Object[]> getVisitTimesByMonthAndWeek(int month, String weekCondition) {
+        String sql = "SELECT r.onDate, sum(r.visitTimes) AS visits "
+                + "FROM ReturningVisitor r "
+                + "WHERE MONTH(r.onDate) = ? "
+                + weekCondition
+                + "GROUP BY r.onDate";
+        Query q = getEntityManager().createNativeQuery(sql);
+        q.setParameter(1, month);
+        return q.getResultList();
+    }
+
+    @Override
+    public void createNewVisitor(ReturningVisitor newVisitor) {
+        getEntityManager().persist(newVisitor);
+    }
+
+    @Override
+    public ReturningVisitor getReturningVisitorByIDAndDate(String visitorID, Date date) {
+        try {
+            String sql = "SELECT r FROM ReturningVisitor r "
+                    + "WHERE r.visitorID = :visitorID "
+                    + "AND r.onDate = :date";
+            Query q = getEntityManager().createQuery(sql, ReturningVisitor.class);
+            q.setParameter("visitorID", visitorID);
+            q.setParameter("date", date);
+            return (ReturningVisitor) q.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    @Override
+    public void updateVisitTimes (ReturningVisitor visitor){
+        if(getEntityManager().find(ReturningVisitor.class, visitor.getReVisitID())!= null){
+            getEntityManager().merge(visitor);
+        }
+    }
 
     @Override
     public boolean addProductSubImage(ProductSubImgs newSubImg) {

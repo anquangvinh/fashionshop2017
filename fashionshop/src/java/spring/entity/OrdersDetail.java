@@ -39,12 +39,12 @@ public class OrdersDetail implements Serializable {
     @JsonBackReference
     private SizesByColor size;
     
-    public float getTotalPrice() {
+    public double getTotalPrice() {
         return price*quantity;
     }
     
     public float getSubTotal(){
-        return (getTotalPrice()-product.getProductDiscountPrice());
+        return ((price * quantity)-product.getProductDiscountPrice());
     }
 
     public Integer getOrdersDetailID() {

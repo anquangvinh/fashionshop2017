@@ -7,6 +7,7 @@
 <!-- BREADCRUMBS -->
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%--<%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>--%>
 <style>
     .ui-datepicker {
         height: auto !important;
@@ -64,6 +65,9 @@
                                         <input name="checkremember" id="fs-check-remember" class="input-chkbox" type="checkbox" value="1">
                                         <label for="fs-check-remember" >Remember me</label>
                                     </li>
+                                    <!--                                                        <li class="col-md-6 col-sm-12 pwd text-right">
+                                                                                                <label > <a href="#"> forgot password? </a> </label>                                               
+                                                                                            </li>-->
                                 </ul>
                                 <div class="buttons-set">
                                     <button class="btn-black fs-button-login-user" type="submit"><span>Login</span></button>
@@ -128,8 +132,8 @@
                                     </li>
                                     <li class="col-md-6 col-sm-12">  
                                         <label><i class="fa fa-birthday-cake"></i> Birthday</label>
-                                        <div class="fs-birthday-create" >
-                                            <span id="fs-birthday-create"><input name="birthday" id="txtBirthday" class="input-text" /></span>
+                                        <div class="fs-birthday-create">
+                                            <input name="birthday" id="txtBirthday" class="input-text" />
                                             <p class="help-block" style="color: red; text-align: center; margin-top: -10px;" id="fs-bday-create-user-error"></p>
                                         </div>
                                     </li>
@@ -153,7 +157,6 @@
                                     <li class="col-md-12 col-sm-12">
                                         <label>Avatar <em>*</em></label>
                                         <input type="file" id="fs-upImage" name="upImage" class="input-text fs-login-file-input">
-                                        <p class="help-block" style="color: red; text-align: center; margin-top: -10px;" id="fs-upfile-create-user-error"></p>
                                     </li>
                                 </ul>
                                 <div class="buttons-set text-center">

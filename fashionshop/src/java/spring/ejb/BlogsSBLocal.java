@@ -7,6 +7,7 @@ package spring.ejb;
 
 import java.util.List;
 import javax.ejb.Local;
+import spring.entity.BlogCategories;
 import spring.entity.Blogs;
 
 /**
@@ -17,16 +18,12 @@ import spring.entity.Blogs;
 public interface BlogsSBLocal {
 
     public List<Blogs> getAllBlogs();
-
     public List<Blogs> getAllBlogsIndex();
-
-    public List<Blogs> getAllBlogsIndexMonth();
-
+     public List<Blogs> getAllBlogsIndexMonth();
     public List<Blogs> getAllBlogsAdmin();
 
     List<Blogs> getListBlogsByCategory(int blogCateID);
 
-    public List<Blogs> getAllBlogsByMonth(int month);
 
     boolean blogAdd(Blogs newBlogs);
 
@@ -35,11 +32,9 @@ public interface BlogsSBLocal {
     boolean editBlogs(Blogs targetBlogs);
 
     List<Blogs> findBlogsByTitle(String blogTitle, List<Integer> monthList);
-
+    
 //    BlogCategories findBlogCategoryByBlogCateName(String blogCateName);
-    int deleteBlog(Blogs blog);
     
-      public Integer getAllNumberBlogsInCate(int blogCateID);
-    
+       int deleteBlog(Blogs blog);
 
 }
