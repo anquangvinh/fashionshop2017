@@ -2,10 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="loginModal.jsp"></jsp:include>
-<script>var ctx = "${pageContext.request.contextPath}";</script>
-    <!-- TOPBAR -->
-    <div class="top_bar">
-        <div class="container">
             <div class="row">
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
