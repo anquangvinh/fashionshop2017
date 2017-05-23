@@ -3534,7 +3534,6 @@ $(document).ready(function () {
 //        changeYear: true
 //    });
     /* BẮT validation CKSinder */
-//    $("select#monthblog").selectBoxIt();
 
     /* BẮT validation CREATE BLOG CATEGORY */
     // blog-category-add
