@@ -107,13 +107,14 @@
         <script src="assets/admin/dist/js/bootstrap-editable.js" type="text/javascript"></script>
 
         <!--Flot Chart-->
+        <script src="assets/admin/vendor/flot/excanvas.js" type="text/javascript"></script>
         <script src="assets/admin/vendor/flot/jquery.flot.js"></script>
         <script src="assets/admin/vendor/flot/jquery.flot.pie.js"></script>
         <script src="assets/admin/vendor/flot/jquery.flot.resize.js"></script>
         <script src="assets/admin/vendor/flot/jquery.flot.time.js"></script>
         <script src="assets/admin/vendor/flot-tooltip/jquery.flot.tooltip.min.js"></script>
         <script src="assets/admin/vendor/flot/jquery.flot.axislabels.js"></script>
-        
+
         <!-- Page-Level Demo Scripts - Tables - Use for reference -->
         <script src="assets/admin/dist/js/fashion_shop_custom_JS.js" type="text/javascript"></script>
 
