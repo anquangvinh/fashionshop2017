@@ -16,6 +16,87 @@ $(document).ready(function () {
         $("#fs-error-div").hide("fade", 1500);
     }, 3000);
     /*==============================VINH - PRODUCT============================*/
+    $(".fs-product-chart-page").on("click", ".fs-menu-choose-cate-chart", function () {
+        var cateID = $(this).attr("fs-cate-id");
+        if(cateID == 0) {
+            $("#fs-chart-heading-panel").text("Number Of Products In Category");
+        } else {
+            $("#fs-chart-heading-panel").text("Number Of Products In "+$(this).text().toUpperCase());
+        }
+        $.ajax({
+            url: "admin/ajax/getDataNumberOfProductBySubCate.html",
+            method: "POST",
+            data: {cateID: cateID},
+            dataType: 'JSON',
+            success: function (response) {
+                var cateFlotChartData = response;
+
+                var cateChartObj = $.plot($("#fs-category-flot-pie-chart"), cateFlotChartData, {
+                    series: {
+                        pie: {
+                            show: true,
+                            label: {
+                                show: true,
+                                radius: 3 / 3,
+                                formatter: function labelFormatter(label, series) {
+                                    return "<div style='font-size:13pt; text-align:center; padding:2px;color:black; '>" + label + "<br/>" + Math.round(series.percent) + "%</div>";
+                                },
+                                threshold: 0.1
+                            }
+                        }
+                    },
+                    grid: {
+                        hoverable: true
+                    },
+                    tooltip: true,
+                    tooltipOpts: {
+                        content: "<span style='font-size:25px'>Products: %n</span>", // show percentages, rounding to 2 decimal places
+                        shifts: {
+                            x: 20,
+                            y: 0
+                        },
+                        defaultTheme: false
+                    }
+                });
+            }
+        });
+    });
+    $.ajax({
+        url: "admin/ajax/getDataNumberOfProductByCate.html",
+        method: "POST",
+        dataType: 'JSON',
+        success: function (response) {
+            var cateFlotChartData = response;
+
+            var cateChartObj = $.plot($("#fs-category-flot-pie-chart"), cateFlotChartData, {
+                series: {
+                    pie: {
+                        show: true,
+                        label: {
+                            show: true,
+                            radius: 1 / 3,
+                            formatter: function labelFormatter(label, series) {
+                                return "<div style='font-size:13pt; text-align:center; padding:2px;color:black; '>" + label + "<br/>" + Math.round(series.percent) + "%</div>";
+                            },
+                            threshold: 0.1
+                        }
+                    }
+                },
+                grid: {
+                    hoverable: true
+                },
+                tooltip: true,
+                tooltipOpts: {
+                    content: "<span style='font-size:25px'>Products: %n</span>", // show percentages, rounding to 2 decimal places
+                    shifts: {
+                        x: 20,
+                        y: 0
+                    },
+                    defaultTheme: false
+                }
+            });
+        }
+    });
     /* Pie chart returning visitor */
 //    $.ajax({
 //        url: "admin/ajax/getReturningVisitorData.html",
@@ -188,7 +269,99 @@ $(document).ready(function () {
 //        }
 //    });
 
+    /* PRODUCT RATING */
+    $('#rating-dataTable').DataTable({
+        responsive: true,
+        columnDefs: [
+            {"orderable": false, "targets": [1, 2, 3, 4]}, //disable thuộc tính order của các cột 1,2,3,4,5,6
+            {"width": "10%", "targets": 0},
+            {"width": "17%", "targets": 1},
+            {"width": "15%", "targets": 2},
+            {"width": "13%", "targets": 3},
+            {"width": "25%", "targets": 4},
+            {"width": "15%", "targets": 5},
+        ],
+    });
 
+    $("#fs-rating-admin-page").on("change", ".fs-rating-status", function () {
+        var stt = $(this).val();
+        var ratingID = $(this).attr("fs-rating-id");
+
+        if (stt == 1) {
+            $(this).siblings(".fs-rating-stt-icon").html("<i class=\"fa fa-eye\" aria-hidden=\"true\" style=\"font-size: 25px; color: #23527C\"></i>");
+        } else if (stt == 2) {
+            $(this).siblings(".fs-rating-stt-icon").html("<i class=\"fa fa-eye-slash\" aria-hidden=\"true\" style=\"font-size: 25px; color: orangered\"></i>");
+        } else {
+            $(this).siblings(".fs-rating-stt-icon").empty();
+        }
+
+        $.ajax({
+            url: "admin/ajax/changeRatingStatus.html",
+            method: "POST",
+            data: {ratingID: ratingID, stt: stt},
+            success: function (response) {
+                if (response == "0") {
+                    $.notify({
+                        icon: 'glyphicon glyphicon-ok-sign',
+                        title: '<strong>Success!</strong>',
+                        message: 'Rating Status was changed!'
+                    }, {
+                        type: 'success',
+                        placement: {
+                            from: 'top',
+                            align: 'right'
+                        },
+                        delay: 2500,
+                        timer: 200,
+                        mouse_over: 'pause',
+                        animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                        },
+                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-4 alert alert-{0}" role="alert">' +
+                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                '<span data-notify="icon"></span> ' +
+                                '<span data-notify="title">{1}</span> ' +
+                                '<span data-notify="message">{2}</span>' +
+                                '<div class="progress" data-notify="progressbar">' +
+                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                '</div>' +
+                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                '</div>'
+                    });
+                } else {
+                    $.notify({
+                        icon: 'glyphicon glyphicon-warning-sign',
+                        title: '<strong>Error!</strong>',
+                        message: 'Change Rating Status FAILED!, Please Refresh (F5) and do it again!.'
+                    }, {
+                        type: 'danger',
+                        placement: {
+                            from: 'top',
+                            align: 'right'
+                        },
+                        delay: 3000,
+                        timer: 200,
+                        mouse_over: 'pause',
+                        animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                        },
+                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                '<span data-notify="icon"></span> ' +
+                                '<span data-notify="title">{1}</span> ' +
+                                '<span data-notify="message">{2}</span>' +
+                                '<div class="progress" data-notify="progressbar">' +
+                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                '</div>' +
+                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                '</div>'
+                    });
+                }
+            }
+        });
+    });
 
     /* PRODUCT CATEGORY - SUBCATEGORY */
     /* Validation Create Category */
@@ -553,14 +726,15 @@ $(document).ready(function () {
     $('#productList_dataTable').DataTable({
         responsive: true,
         columnDefs: [
-            {"orderable": false, "targets": [1, 2, 3, 4, 5, 6]}, //disable thuộc tính order của các cột 1,2,3,4,5,6
+            {"orderable": false, "targets": [1, 2, 3, 4, 5, 6, 7]}, //disable thuộc tính order của các cột 1,2,3,4,5,6
             {"width": "8%", "targets": 0},
             {"width": "9%", "targets": 1},
-            {"width": "21%", "targets": 2},
-            {"width": "20%", "targets": 3},
+            {"width": "18%", "targets": 2},
+            {"width": "17%", "targets": 3},
             {"width": "17%", "targets": 4},
             {"width": "5%", "targets": 5},
-            {"width": "20%", "targets": 6}
+            {"width": "3%", "targets": 6},
+            {"width": "22%", "targets": 7}
         ],
         //Tạo DOM cho các component trong datatable
         dom: '<"row text-center"<"col-lg-4"l><"#fs_product_filter.col-lg-4"><"col-lg-4"f>><"row"<"col-lg-12">t><"row"<"col-xs-4"i><"col-xs-8"p>>',
@@ -3360,7 +3534,6 @@ $(document).ready(function () {
 //        changeYear: true
 //    });
     /* BẮT validation CKSinder */
-//    $("select#monthblog").selectBoxIt();
 
     /* BẮT validation CREATE BLOG CATEGORY */
     // blog-category-add

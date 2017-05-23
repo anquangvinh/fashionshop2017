@@ -88,7 +88,7 @@
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
-
+                
                 <li>
                     <a href="#"><i class="fa fa-cubes fa-fw"></i> Product SubCategory<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
@@ -111,10 +111,19 @@
                         <li>
                             <a href="admin/product/create.html"><i class="fa fa-plus" aria-hidden="true"></i> New</a>
                         </li>
+                        <li>
+                            <a href="admin/product-chart.html"><i class="fa fa-pie-chart" aria-hidden="true"></i> Statistics</a>
+                        </li>
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
-
+                
+                <li>
+                    <a href="admin/product/managerating.html">
+                        <i class="fa fa-star" style="color: #FFCC01"></i> Rating Star<span class="fa arrow"></span>
+                    </a>
+                </li>
+                
                 <li>
                     <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Orders<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
