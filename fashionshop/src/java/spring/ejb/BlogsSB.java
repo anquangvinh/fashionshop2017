@@ -10,7 +10,6 @@ import javax.ejb.Stateless;
 import javax.persistence.Query;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import spring.entity.BlogCategories;
 import spring.entity.Blogs;
 
 /**
@@ -51,7 +50,12 @@ public class BlogsSB implements BlogsSBLocal {
         return q.getResultList();
     }
 
-
+    @Override
+    public List<Blogs> getAllBlogsByMonth(int month) {
+        Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE FUNCTION('MONTH',b.postedDate) = FUNCTION('MONTH',:month)", Blogs.class);
+        q.setParameter("month", "1990-" + String.valueOf(month) + "-20");
+        return q.getResultList();
+    }
 
     @Override
     public List<Blogs> getListBlogsByCategory(int blogCateID) {
@@ -111,16 +115,6 @@ public class BlogsSB implements BlogsSBLocal {
         }
     }
 
-//        @Override
-//    public BlogCategories findBlogCategoryByBlogCateName(String blogCateName) {
-//        try {
-//            Query q = getEntityManager().createQuery("SELECT b FROM BlogCategories b WHERE b.blogCateName LIKE :blogCateName", BlogCategories.class);
-//            q.setParameter("blogCateName", blogCateName);
-//            return (BlogCategories) q.getSingleResult();
-//        } catch (Exception e) {
-//            return null;
-//        }
-//    }
     @Override
     public int deleteBlog(Blogs blog) {
         try {
@@ -133,6 +127,13 @@ public class BlogsSB implements BlogsSBLocal {
         } catch (Exception e) {
             return 0;
         }
+    }
+
+    @Override
+    public Integer getAllNumberBlogsInCate(int blogCateID) {
+        Query q = getEntityManager().createQuery("SELECT COUNT(b.blogID) FROM Blogs b WHERE b.blogCategory.blogCateID = :blogCateID", Blogs.class);
+        q.setParameter("blogCateID", blogCateID);
+        return Integer.parseInt(q.getSingleResult().toString());
     }
 
 }

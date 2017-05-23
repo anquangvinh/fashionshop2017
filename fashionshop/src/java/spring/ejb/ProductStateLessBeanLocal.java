@@ -39,11 +39,13 @@ public interface ProductStateLessBeanLocal {
 
     int updateCategory(Categories targetCate);
 
+    boolean deleteCategory(int cateID);
     /*========================================================================
      *                                                                       *
      *                       SUB-CATEGORY TREATMENT                          *
      *                                                                       *
      ========================================================================*/
+
     List<SubCategories> subCategoryList();
 
     SubCategories findSubCategoryByID(int subCateID);
@@ -51,6 +53,8 @@ public interface ProductStateLessBeanLocal {
     int createNewSubCategory(SubCategories newSubCate);
 
     int updateSubCategory(SubCategories targetSubCategory);
+    
+    boolean deleteSubCate (int subCateID);
 
     /*========================================================================
      *                                                                       *
@@ -64,6 +68,8 @@ public interface ProductStateLessBeanLocal {
     List<Object> getTop3ProductBestSeller();
 
     List<Products> getTop3ProductMostViewed();
+    
+    List<Object[]> getProductTop3Rated();
 
     ProductColors findProductColorByColorID(int colorID);
 
@@ -88,26 +94,47 @@ public interface ProductStateLessBeanLocal {
     List<Object[]> filterProductBySubCategory(int subCateID, int page, int itemPerPage, float fromPrice, float toPrice, String filterColor, String filterSize, int sortBy);
 
     List<Object[]> productsByFilter_OfASubCategory(int subCateID, float fromPrice, float toPrice, String filterColor, String filterSize);
-    
-    boolean updateProductGeneralInfo (Products targetProduct);
-    
+
+    boolean updateProductGeneralInfo(Products targetProduct);
+
     boolean updateProductColorStatus(int colorID, short newStt);
-    
+
     ProductColors getProductColorByID(int colorID);
-    
+
     boolean updateProductColor(ProductColors targetColor);
-    
+
     ProductSubImgs getProductSubImgByID(int subImgID);
-    
-    boolean updateProductSubImg (ProductSubImgs targetSubImg);
-    
-    int deleteProductSubImg (int targetSubImgID);
-    
+
+    boolean updateProductSubImg(ProductSubImgs targetSubImg);
+
+    int deleteProductSubImg(int targetSubImgID);
+
     SizesByColor getSizeByID(int sizeID);
-    
-    boolean updateSize (SizesByColor targetSize);
-    
+
+    boolean updateSize(SizesByColor targetSize);
+
     int deleteProductSize(int sizeID);
-    
+
     boolean createNewProductRating(int productID, ProductRating newProductRating);
+    
+    List<ProductColors> getProductColorsListOfAProductByName (int productID, String color);
+    
+    boolean createNewProductColor(ProductColors newProductColors);
+    
+    boolean addProductSubImage(ProductSubImgs newSubImg);
+    
+    boolean addSize(SizesByColor newSize);
+    
+    List<Products> getSearchedProducts(String prodName);
+    
+    /* returning visitor */
+//    List<ReturningVisitor> getReturningVisitorList ();
+//    
+//    List<Object[]> getVisitTimesByMonthAndWeek(int month, String weekCondition);
+//    
+//    void createNewVisitor (ReturningVisitor newVisitor);
+//    
+//    ReturningVisitor getReturningVisitorByIDAndDate(String visitorID, Date date);
+//    
+//    void updateVisitTimes (ReturningVisitor visitor);
 }
