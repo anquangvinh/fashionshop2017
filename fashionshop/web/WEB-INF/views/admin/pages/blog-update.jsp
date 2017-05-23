@@ -21,6 +21,8 @@
         <div class="row">
             <form:form action="" id="fs-form-update-blog" name="blogupdateForm" method="POST" modelAttribute="targetBlogs" enctype="multipart/form-data">
                 <div class="col-md-5">
+                    ${sessionScope.tensession}
+                    ${status}
                     <div class="form-group">
                         <label>Categories <span class="fs-color-red">*</span></label>
                         <p class="help-block" id="fs-select-box-blog-category-error"></p>
@@ -40,25 +42,17 @@
                         <label>Title <span class="fs-color-red">*</span></label>  
                         <p class="help-block" id="fs-blog-update-title-error"></p>
                         <form:input path="blogTitle" id="fs-blog-update-line-title" cssClass="form-control" />
-                        <!--Error Message-->
-                        <!--                            <div style="color:red; margin-top: 10px;">
-                        <form:errors path="blogTitle"/>
-                    </div>-->
                     </div>
                     <div class="form-group">
                         <label>Summary <span class="fs-color-red">*</span></label>
                         <p class="help-block" id="fs-blog-summary-error"></p>
                         <form:input path="blogSummary" id="fs-blog-update-line-summary" cssClass="form-control" />
-                        <!--Error Message-->
-                        <!--                            <div style="color:red; margin-top: 10px;">
-                        <form:errors path="blogSummary"/>
-                    </div>-->
                     </div>
                     <div class="form-group">
                         <label>Image <span class="fs-color-red">*</span></label>
                         <p id="fs-error-mess-blog-img" class="help-block"></p>
                         <input type="file" id="upImageBlog" name="upImageBlog">
-                        <img class="responsive" style="width: 400px" src="assets/images/blog/1/${targetBlogs.blogImg}" alt=""/>
+                        <img class="responsive" style="width: 280px" src="assets/images/blog/1/${targetBlogs.blogImg}" alt=""/>
                     </div>
                 </div>
                 <!--                        <div class="form-group">
@@ -85,49 +79,19 @@
                                 <form:errors path="content"/>
                             </div>
                         </div>
-                        <!--                        <div class="form-group">
-                                                    <label>Status</label>
-                                                    <div>
-                                                        <label class="radio-inline">
-                        <form:radiobutton path="status" value="0" id="rdoEnable" label="Enable" />
-                    </label>
-                    <label class="radio-inline">
-                        <form:radiobutton path="status" value="1" id="rdoDisable" label="Disable" />
-                    </label>
-
-
-                </div>
-            </div>-->
-                        <label>Status</label>
-                        <form action="" data-toggle="validator">
-                            <div class="form-inline required">
-                                <div class="form-group has-feedback">
-                                    <label class="input-group">
-                                        <span class="input-group-addon">
-                                            <form:radiobutton id="rdoEnable" path="status" value="0" checked="checked"  />
-                                        </span>
-                                        <div class="form-control form-control-static">
-                                            Enable
-                                        </div>
-                                        <span class="glyphicon form-control-feedback "></span>
-                                    </label>
-                                </div>
-                                <div class="form-group has-feedback ">
-                                    <label class="input-group">
-                                        <span class="input-group-addon">
-                                            <form:radiobutton id="rdoDisable" path="status" value="1" />
-                                        </span>
-                                        <div class="form-control form-control-static">
-                                            Disable
-                                        </div>
-                                        <span class="glyphicon form-control-feedback "></span>
-                                    </label>
-                                </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <div>
+                                <label class="radio-inline">
+                                    <form:radiobutton path="status" value="0" id="rdoEnable" label="Enable" />
+                                </label>
+                                <label class="radio-inline">
+                                    <form:radiobutton path="status" value="1" id="rdoDisable" label="Disable" />
+                                </label>
                             </div>
-                        </form>
-                        ${status}
-                        <form:button id="fs-button-update-blog" type="submit" class="btn btn-warning" style="width: 20%" >Update  <i class="fa fa-edit"></i></form:button>
-                        <form:button type="reset" class="btn btn-default"> &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;Reset&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;   </form:button>
+                        </div>
+                        <form:button id="fs-button-update-blog" type="submit" class="btn btn-warning" style="width: 20%" >Update<i class="fa fa-edit"></i></form:button>
+                        <form:button type="reset" class="btn btn-default" style="width: 20%"> Reset </form:button>
                         </div>
                 </form:form>
                 <!-- /.col-lg-12 -->

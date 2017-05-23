@@ -109,6 +109,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="space50"></div>
                     <div class="row" style="position: relative;">
                         <div id="fs-ajax-loading"></div>
@@ -130,7 +131,7 @@
                                                  fs-product-modal-color="${product.productColorListWorking[0].colorID}">
                                             </div>
                                             <div class="product-overlay">
-                                                <a href="#" class="addcart fa fa-shopping-cart"></a>
+<!--                                                 <a href="#" class="addcart fa fa-shopping-cart"></a> -->
                                                 <a href="#" class="likeitem fa fa-heart-o"></a>
                                             </div>
                                         </div>

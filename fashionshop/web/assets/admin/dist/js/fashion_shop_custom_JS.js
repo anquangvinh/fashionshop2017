@@ -3360,7 +3360,6 @@ $(document).ready(function () {
 //        changeYear: true
 //    });
     /* BẮT validation CKSinder */
-
 //    $("select#monthblog").selectBoxIt();
 
     /* BẮT validation CREATE BLOG CATEGORY */
@@ -3588,6 +3587,60 @@ $(document).ready(function () {
         }
     });
 
+// Chart
+
+//var data = [
+//      { y: '2014', a: 50, b: 90},
+//      { y: '2015', a: 65,  b: 75},
+//      { y: '2016', a: 50,  b: 50},
+//      { y: '2017', a: 75,  b: 60},
+//      { y: '2018', a: 80,  b: 65},
+//      { y: '2019', a: 90,  b: 70},
+//      { y: '2020', a: 100, b: 75},
+//      { y: '2021', a: 115, b: 75},
+//      { y: '2022', a: 120, b: 85},
+//      { y: '2023', a: 145, b: 85},
+//      { y: '2024', a: 160, b: 95}
+//    ],
+//    config = {
+//      data: data,
+//      xkey: 'y',
+//      ykeys: ['a', 'b'],
+//      labels: ['Total Income', 'Total Outcome'],
+//      fillOpacity: 0.6,
+//      hideHover: 'auto',
+//      behaveLikeLine: true,
+//      resize: true,
+//      pointFillColors:['#ffffff'],
+//      pointStrokeColors: ['black'],
+//      lineColors:['gray','red']
+//  };
+//config.element = 'pie-chart';
+//Morris.Area(config);
+//config.element = 'line-chart';
+//Morris.Line(config);
+//config.element = 'bar-chart';
+//Morris.Bar(config);
+//config.element = 'stacked';
+//config.stacked = true;
+//Morris.Bar(config);
+    if (window.location.href.includes("listchartblog")) {
+        $.ajax({
+            url: "admin/blog/ajax/getBlogView.html",
+            method: 'GET',
+            dataType: 'JSON',
+            success: function (response) {
+                Morris.Donut({
+                    element: 'donut-blog-chart',
+                    data: response,
+                    formatter: function (y, data) { return y + " views"}
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
     /*===============================END THANH - BLOG =================================*/
 
     /*==============================DUONG - USER============================*/
@@ -4068,7 +4121,6 @@ $(document).ready(function () {
 
     /*==============================NGAN - ORDER============================*/
     //Thiết lập cho bảng order list
-//    $("select#id-status-order").selectBoxIt();
     $('#tableOrder').DataTable({
         responsive: true,
         order: [[4, "desc"]],
@@ -4076,7 +4128,6 @@ $(document).ready(function () {
     });
 
     //Thiết lập cho bảng order details list
-//    $("select#id-status-orderdetail").selectBoxIt();
     $('#tableOrderDetails').DataTable({
         responsive: true,
         columnDefs: [{"orderable": false, "targets": [2, 3, 8]}]
@@ -4219,8 +4270,6 @@ $(document).ready(function () {
     });
 
     //Order-list-detail-add.jsp
-//    $("select#productOrDetailAddColor").selectBoxIt();
-//    $("select#productOrDetailAddSize").selectBoxIt();
     $('#tableProductOrderDetailAdd').DataTable({
         responsive: true,
         order: [[0, "asc"]],
@@ -4419,57 +4468,115 @@ $(document).ready(function () {
     $('input[name=productOrDetailAddQuantity]').keypress(function () {
         $("#error-orderDetail-add").html("");
     });
+
+    //orders-chart.jsp
+    $('select[name=order-chart-year]').on("change", function () {
+        $('#day-money-order-chart').remove();
+        $('#day-money-order-chart-div').html("<div id=\"day-money-order-chart\" ></div>");
+    });
     if (window.location.href.includes("orderchart")) {
-        var orderDonut = Morris.Donut({
-            element: 'area-chart',
-            data: [
-                {label: "Socks", value: 30},
-                {label: "Underwear", value: 15},
-                {label: "Shirt", value: 45},
-                {label: "Pant", value: 10}
-            ]
-        });
         $.ajax({
-            url: "admin/orders/ajax/getOrderListForChart.html",
+            url: "admin/orders/ajax/orderDonutQuantitySubcategory.html",
             method: "GET",
             dataType: 'JSON',
             success: function (response) {
-//                config = {
-//                    data: response,
-//                    xkey: "category",
-//                    ykeys: "paymentTotal",
-//                    labels: ["Payment Total"],
-//                    fillOpacity: 1,
-//                    hideHover: "auto",
-//                    behaveLikeLine: true,
-//                    resize: true,
-//                    pointFillColors: ["#ffffff"],
-//                    pointStrokeColors: ["black"],
-//                    lineColors: ["red"]
-//                };
-//                config.element = "area-chart";
-//                Morris.Line(config);
-//                var ddata = response;
-//                ddata = ddata.replace(/Label/g, 'label');
-//                ddata = ddata.replace(/Value/g, 'value');
-//                console.log(ddata);
-//                orderDonut.setData(ddata);
+                Morris.Donut({
+                    element: 'donut-chart-subcategory',
+                    data: response
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
             }
         });
-//        var data = [
-//            {y: '2014', a: 50, b: 90},
-//            {y: '2015', a: 65, b: 75},
-//            {y: '2016', a: 50, b: 50},
-//            {y: '2017', a: 75, b: 60},
-//            {y: '2018', a: 80, b: 65},
-//            {y: '2019', a: 90, b: 70},
-//            {y: '2020', a: 100, b: 75},
-//            {y: '2021', a: 115, b: 75},
-//            {y: '2022', a: 120, b: 85},
-//            {y: '2023', a: 145, b: 85},
-//            {y: '2024', a: 160, b: 95}
-//        ];
-
+        $.ajax({
+            url: "admin/orders/ajax/orderDonutQuantityCategory.html",
+            method: "GET",
+            dataType: 'JSON',
+            success: function (response) {
+                Morris.Donut({
+                    element: 'donut-chart-category',
+                    data: response
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+        $.ajax({
+            url: "admin/orders/ajax/orderDonutMoneyCategory.html",
+            method: "GET",
+            dataType: 'JSON',
+            success: function (response) {
+                Morris.Donut({
+                    element: 'donut-chart-category-money',
+                    data: response,
+                    formatter: function (y, data) {
+                        return '$' + y
+                    }
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+        $.ajax({
+            url: "admin/orders/ajax/orderDonutMoneySubcategory.html",
+            method: "GET",
+            dataType: 'JSON',
+            success: function (response) {
+                Morris.Donut({
+                    element: 'donut-chart-subcategory-money',
+                    data: response,
+                    formatter: function (y, data) {
+                        return '$' + y
+                    }
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+        var year = $('#order-chart-year').val();
+        $.ajax({
+            url: "admin/orders/ajax/getMonthOrderedByYear.html",
+            method: "GET",
+            data: {year: year},
+            dataType: 'JSON',
+            success: function (response) {
+                for (var i = 0, max = 12; i < max; i++) {
+                    $("#btn-order-month-" + (i + 1).toString()).attr("disabled", "disabled");
+                }
+                $.each(response, function (i, item) {
+                    $("#btn-order-month-" + item).removeAttr("disabled");
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        })
     }
+    $('#order-chart-year').on("change", function () {
+        $('#day-money-order-chart').remove();
+        $('#day-money-order-chart-div').html("<div id=\"day-money-order-chart\" ></div>");
+        var year = $('#order-chart-year').val();
+        $.ajax({
+            url: "admin/orders/ajax/getMonthOrderedByYear.html",
+            method: "GET",
+            data: {year: year},
+            dataType: 'JSON',
+            success: function (response) {
+                for (var i = 0, max = 12; i < max; i++) {
+                    $("#btn-order-month-" + (i + 1).toString()).attr("disabled", "disabled");
+                }
+                $.each(response, function (i, item) {
+                    $("#btn-order-month-" + item).removeAttr("disabled");
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        })
+    });
     /*==============================END NGAN - ORDER============================*/
 });
