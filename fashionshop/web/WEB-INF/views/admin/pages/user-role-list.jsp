@@ -27,7 +27,7 @@
                     </thead>
                     <tbody>
                         <c:forEach items="${rlist}" var="roles" varStatus="no">
-                            <tr class="odd gradeX">
+                            <tr class="odd gradeX" id="fs-role-list-id-${roles.roleID}">
                                 <td class="text-center fs-valign-middle">${no.index + 1}</td>
                                 <td class="text-center fs-valign-middle">${roles.roleName}</td>
                                 <td class="text-center fs-valign-middle">

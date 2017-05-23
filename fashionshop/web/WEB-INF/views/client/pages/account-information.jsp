@@ -65,7 +65,8 @@
                                 </li>
                                 <li class="col-md-12 col-sm-12">
                                     <label>Avatar <em>*</em></label>
-                                    <input type="file" id="upImage" name="upImage" class="input-text fs-login-file-input">
+                                    <input type="file" id="fs-upImage-acc" name="upImage" class="input-text fs-login-file-input">
+                                    <p class="help-block" style="color: red; text-align: center; margin-top: -10px;" id="fs-upfile-update-user-error"></p>
                                 </li>
                             </ul>
                             <div class="buttons-set">

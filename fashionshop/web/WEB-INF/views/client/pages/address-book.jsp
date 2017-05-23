@@ -30,6 +30,7 @@
                             </ul>
                             <div class="buttons-set">
                                 <button class="btn-black fs-button-update-address" type="submit"><span><span>Update</span></span></button>
+                                <a href="user/address-list/${sessionScope.findUsersID}.html" class="btn btn-black"><span><span>Back</span></span></a>
                             </div>
                         </form:form>
                     </div>                                    

@@ -168,22 +168,6 @@ public class UserController {
         return "redirect:/user/change-password/" + userID + ".html";
     }
 
-//    @RequestMapping(value = "address-add/{userID}", method = RequestMethod.GET)
-//    public String addressAdd(@PathVariable("userID") int userID, ModelMap model) {
-//        List<UserAddresses> listAddress = usersStateLessBean.getUserByID(userID).getUserAddressList();
-//        if (listAddress.size() < 20) {
-//            //2 dòng này thêm để render ra menu chính
-//            List<Categories> cateList = productStateLessBean.categoryList();
-//            model.addAttribute("cateList", cateList);
-//
-////            return "client/pages/address-user-add";
-//            return "client/pages/address-list";
-//        } else {
-//            model.addAttribute("message", "Không thể thêm AddressUser");
-//            return "redirect:/user/myaccount.html";
-//        }
-//
-//    }
     @RequestMapping(value = "address-add/{userID}", method = RequestMethod.POST)
     public String addressAdd(@PathVariable("userID") int userID, @ModelAttribute("userAddress") UserAddresses userAddress,
             RedirectAttributes redirectAttributes) {
@@ -203,6 +187,8 @@ public class UserController {
 
     @RequestMapping(value = "address-list/{userID}")
     public String addresslist(ModelMap model, @PathVariable("userID") int userID) {
+        List<UserAddresses> listAddress = usersStateLessBean.getUserByID(userID).getUserAddressList();
+        model.addAttribute("listua", listAddress);
         //2 dòng này thêm để render ra menu chính
         List<Categories> cateList = productStateLessBean.categoryList();
         model.addAttribute("cateList", cateList);
@@ -234,9 +220,7 @@ public class UserController {
         int error;
         model.addAttribute("addressID", userAddresses.getAddressID());
         error = userAddressesStateLessBean.editAddressUser(userAddresses, userID);
-        if (error == 2) {
-            redirectAttributes.addFlashAttribute("error", "Trùng");
-        } else if (error == 1) {
+        if (error == 1) {
             redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-success\">Update Address Successfully!</div>");
         } else if (error == 0) {
             redirectAttributes.addFlashAttribute("error", "lỗi");
@@ -278,11 +262,11 @@ public class UserController {
             @ModelAttribute("updateUser") Users updateUser,
             RedirectAttributes redirectAttributes, @RequestParam("upImage") MultipartFile image) {
         Users oldUser = usersStateLessBean.getUserByID(userID); // thong tin user chua chinh sua
-
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
         try {
             if (!image.isEmpty()) {
-                updateUser.setAvatar(image.getOriginalFilename());
-                String path = app.getRealPath("/assets/images/") + "/" + updateUser.getAvatar();
+                updateUser.setAvatar(simpleDateFormat.format(new Date()) + sharedFunc.changeText(image.getOriginalFilename()));
+                String path = app.getRealPath("/assets/images/avatar/") + "/" + updateUser.getAvatar();
                 image.transferTo(new File(path));
             } else {
                 updateUser.setAvatar(oldUser.getAvatar());
@@ -370,9 +354,8 @@ public class UserController {
     @ResponseBody
     @RequestMapping(value = "ajax/deleteWishListt", method = RequestMethod.POST)
     public String deleteWLL(@RequestParam("productID") int productID,@RequestParam("userID") int userID, ModelMap model){
-
             usersStateLessBean.deleteWL(productID, userID);
-        return "10";
+        return "1";
     }
     
     private UsersStateLessBeanLocal lookupUsersStateLessBeanLocal() {

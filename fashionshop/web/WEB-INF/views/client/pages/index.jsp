@@ -526,15 +526,21 @@
         </div>
     </div>
 
+    <!--MODAL THONG BAO CHO KHI CO MODAL-->
+    <div id="fs-wl-ajax-error" class="modal fade fs-modal-mess-wl" tabindex="-1" role="dialog">
+        <div class="modal-content fs-modal-wl-content">
+            <!--<h1 id="fs-mess-wl" style="color: #31b131; text-align: center">SUCCESS</h1>-->
+            <h1 id="fs-mess-wl-success" style="color: #31b131; text-align: center"></h1>
+            <h1 id="fs-mess-wl-error" style="color: #F65D20; text-align: center"></h1>
 
-    <!--MODAL THONG BAO THANH CONG-->
-    <!--    <div id="fs-wl-ajax-error" class="modal fade" >
-        <div class="modal-header">
-          <button class="close" data-dismiss="modal">&times;</button>
-          <h3>SUCCESS</h3>
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+                <!--<h1 id="fs-mess-wl" style="color: #31b131; text-align: center"></h1>-->
+            </div>
+            <div class="modal-body">
+                <!--<p id="fs-mess-body-wl">Add Wish List success.</p>-->
+                <p id="fs-mess-body-wl"></p>
+            </div>
         </div>
-        <div class="modal-body">
-          <p>Add Wish List success.</p>
-        </div>
-      </div>
-      <div class="ajax-progress"></div>-->
+    </div>
+    <div class="ajax-progress"></div>

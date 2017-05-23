@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>--%>
+<<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
@@ -37,7 +37,7 @@
                                             <th class="text-center" style="background: lavenderblush;padding: 10px;">ACTION</th>
                                         </tr>
                                         <c:forEach var="uad" items="${ualist}" varStatus="no">
-                                            <tr >
+                                            <tr id="fs-list-id-${uad.addressID}" >
                                                 <td align="center" style="border: 4px #B8E834 #fff;
                                                     width: auto; padding: 10px;background: #f8f8f8" >${no.index + 1}</td>
                                                 <td align="center" style="border: 4px #B8E834 #fff;
@@ -55,7 +55,7 @@
                                 </div>
                             </div>
                         </div>   
-                        <div class="panel panel-warning fs-panel-add">
+                        <div class="panel panel-warning fs-panel-add ">
                             <div class="panel-heading " id="fs-table-add-address" style="padding: 10px;">
                                 <h3 class="panel-title text-center">Add New Address</h3>
                                 <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
@@ -63,6 +63,30 @@
                             <div class="panel-body">
                                 <form:form id="shipping-zip-form" cssClass="fs-form-add-address" action="user/address-add/${sessionScope.findUsersID}.html" method="post" modelAttribute="userAddress">                                       
                                     ${error}
+                                    <c:set var="aaa" value="${listua}"/>
+                                    <c:choose>
+                                        <c:when test="${fn:length(aaa) > 17}">
+                                        <p style="color: red; text-align: center; font-size: 16px">You cannot insert Address</p>
+                                        <ul class="form-list row">
+                                        <li class="col-md-6 col-sm-6">
+                                            <label >Address <em>*</em></label>
+                                            <form:input path="address" id="txtaddress"  cssClass="input-text fs-address-add" disabled="true"/>
+                                            <p class="help-block" style="color: red; text-align: center; margin-top: -10px;" id="fs-address-add-user-error"></p>
+                                            <span></span>
+                                        </li>
+                                        <li class="col-md-6 col-sm-6">
+                                            <label ><i class="fa fa-phone"></i> Phone Number <em>*</em></label>
+                                            <form:input path="phoneNumber" id="txtphone" cssClass="input-text fs-phone-add" disabled="true"/>
+                                            <p class="help-block" style="color: red; text-align: center; margin-top: -10px;" id="fs-phone-add-user-error"></p>
+                                        </li>
+                                    </ul>
+<!--                                    <div class="buttons-set" >
+                                        <button class="btn-black fs-button-add-address" type="submit" fs-userID="${sessionScope.findUsersID}"><span><span>Create</span></span></button>
+                                        <button class="btn-black fs-button-reset-address" type="reset"><span><span>Cancel</span></span></button>
+                                    </div>-->
+                                        </c:when>
+                                        <c:otherwise>
+                                        <p style="color: #00A8FF; text-align: center; font-size: 16px">You can insert 20 Address</p>
                                     <ul class="form-list row">
                                         <li class="col-md-6 col-sm-6">
                                             <label >Address <em>*</em></label>
@@ -76,12 +100,14 @@
                                             <p class="help-block" style="color: red; text-align: center; margin-top: -10px;" id="fs-phone-add-user-error"></p>
                                         </li>
                                     </ul>
-                                    <div class="buttons-set">
-                                        <button class="btn-black fs-button-add-address" type="submit"><span><span>Create</span></span></button>
+                                    <div class="buttons-set" >
+                                        <button class="btn-black fs-button-add-address" type="submit" fs-userID="${sessionScope.findUsersID}"><span><span>Create</span></span></button>
                                         <button class="btn-black fs-button-reset-address" type="reset"><span><span>Cancel</span></span></button>
                                     </div>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </form:form>
-                            </div>
+                            </div >
                         </div>
                     </div>                                    
                 </div>
