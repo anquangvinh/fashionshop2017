@@ -216,37 +216,38 @@ public class OrdersController {
         return "client/pages/shoppingcart";
     }
 
-    @RequestMapping(value = "updatecart", method = RequestMethod.POST)
-    public String updatecart(ModelMap model, HttpServletRequest request, RedirectAttributes flashAttr) {
-        String error = "";
+    @RequestMapping(value = "updatecart/{codeIdentity}/{quantity}", method = RequestMethod.GET)
+    public String updateQuantity(ModelMap model, RedirectAttributes flashAttr,
+              @PathVariable("codeIdentity") String codeIdentity,
+              @PathVariable("quantity") int quantity) {
         for (CartLineInfo cartLineInfo : orderStateFulBean.showCart()) {
             String codeIdentify = cartLineInfo.getProduct().getProductID() + "-"
                       + cartLineInfo.getSizesByColor().getSizeID() + "-"
                       + cartLineInfo.getSizesByColor().getColor().getColorID();
-            if (request.getParameter(codeIdentify) != null) {
-                CartLineInfo oldCartLineInfo = cartLineInfo;
-                cartLineInfo.setQuantity(Integer.parseInt(request.getParameter(codeIdentify)));
+            if (codeIdentify.equals(codeIdentity)) {
                 SizesByColor sizesByColor = orderStateLessBean.getSizesByColorBySizeIDandColorID(cartLineInfo.getSizesByColor().getSizeID(), cartLineInfo.getSizesByColor().getColor().getColorID());
                 if (sizesByColor != null) {
-                    if (sizesByColor.getQuantity() < Integer.parseInt(request.getParameter(codeIdentify))) {
-                        error += " " + sizesByColor.getColor().getProduct().getProductName() + "  ";
+                    if (sizesByColor.getQuantity() < quantity) {
+                        flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
+                                  + "<strong>YOUR ITEM " + cartLineInfo.getProduct().getProductName() + " | SIZE: " + cartLineInfo.getSizesByColor().getProductSize() + " | COLOR: " + cartLineInfo.getSizesByColor().getColor().getColor() + " OUT OF STOCK</strong>\n"
+                                  + "</div>");
+                        return "redirect:/orders/shoppingcart.html";
                     } else {
+                        CartLineInfo oldCartLineInfo = cartLineInfo;
+                        cartLineInfo.setQuantity(quantity);
                         orderStateFulBean.updateProduct(oldCartLineInfo, cartLineInfo);
+                        flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
+                                  + "<strong>UPDATE ITEM CART SUCCESSFULLY</strong>\n"
+                                  + "</div>");
+                        return "redirect:/orders/shoppingcart.html";
                     }
                 }
             }
         }
-        if (error.equals("")) {
-            flashAttr.addFlashAttribute("error", "<div class=\"alert alert-success\">\n"
-                      + "<strong>UPDATE CART SUCCESSFULLY</strong>\n"
-                      + "</div>");
-            return "redirect:/orders/shoppingcart.html";
-        } else {
-            flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
-                      + "<strong>PRODUCT" + error + " OUT OF STOCK</strong>\n"
-                      + "</div>");
-            return "redirect:/orders/shoppingcart.html";
-        }
+        flashAttr.addFlashAttribute("error", "<div class=\"alert alert-danger\">\n"
+                  + "<strong>ERROR HAPPEN</strong>\n"
+                  + "</div>");
+        return "redirect:/orders/shoppingcart.html";
     }
 
     @RequestMapping(value = "deleteitemCart/{productid}/{sizeID}/{colorID}", method = RequestMethod.GET)

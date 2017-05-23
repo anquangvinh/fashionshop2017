@@ -3756,7 +3756,8 @@ $(document).ready(function () {
         });
 
         return beginStr + dataStr + endStr;
-    };
+    }
+    ;
 
     function UserIDTableFromJson(json) {
         var beginStr = '<table class="heavyTable" style="width: 40%;border: 1px solid #38678f;max-width: 380px; height: 20px; border-collapse: collapse;background: white;" >' +
@@ -3789,7 +3790,8 @@ $(document).ready(function () {
         });
 
         return beginStr + dataStr + endStr;
-    };
+    }
+    ;
 
     $("#fs-user-dataTables").on("click", ".fs-user-dataTable-control-button", function () {
         var userID = $(this).attr("fs-userID");
@@ -4435,8 +4437,10 @@ $(document).ready(function () {
                 $("#error-orderDetail-add").html(errorHead + "PLEASE CHOOSE SIZE" + errorFoot);
             } else if (quantity == "") {
                 $("#error-orderDetail-add").html(errorHead + "PLEASE ENTER QUANTITY" + errorFoot);
-            } else if (quantity < 1 || quantity > 10) {
-                $("#error-orderDetail-add").html(errorHead + "QUANTITY MUST 1 TO 10" + errorFoot);
+            } else if (quantity < 1) {
+                $("#error-orderDetail-add").html(errorHead + "QUANTITY MUST EQUAL OR GREATER THAN 1" + errorFoot);
+            } else if (Math.floor(quantity) != quantity) {
+                $("#error-orderDetail-add").html(errorHead + "QUANTITY MUST NOT BE DECIMAL" + errorFoot);
             } else {
                 $.ajax({
                     url: "admin/orders/ajax/addOrderDetail.html",

@@ -3117,22 +3117,6 @@ $(document).ready(function() {
     $(".fs-modal-close").on("click", function() {
         $('#error-cart-product-modal').html("");
     });
-
-    //    var orderUrl = window.location.href;
-    //    if (orderUrl.includes("order-history")) {
-    //        window.onbeforeunload = function () {
-    //            $.ajax({
-    //                url: "orders/ajax/getSession.html",
-    //                method: "GET",
-    //                dataType: 'html',
-    //                success: function (response) {
-    //                    if (response == "0") {
-    //                        $("#loginModal").modal('show');
-    //                    }
-    //                }
-    //            });
-    //        }
-    //    }
     /*==========================END NGAN - ORDER==================================*/
 
     /*===========================DUONG - USER===================================*/
