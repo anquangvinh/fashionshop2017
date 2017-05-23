@@ -27,6 +27,7 @@
                             <th class="text-center fs-valign-middle">Product</th>
                             <th class="text-center fs-valign-middle">Image</th>
                             <th class="text-center fs-valign-middle">Posted Date</th>
+                            <th class="text-center fs-valign-middle">Views</th>
                             <th class="text-center fs-valign-middle">Actions</th>
                         </tr>
                     </thead>
@@ -81,7 +82,9 @@
                                 <td class="text-center fs-valign-middle">
                                     <fmt:formatDate pattern="dd/MM/yyyy" value="${product.postedDate}"/>
                                 </td>
-
+                                <td class="text-center fs-valign-middle">
+                                    ${product.productViews}
+                                </td>
                                 <td class="text-center fs-valign-middle">
                                     <a href="${product.productID}-${product.productColorList[0].colorID}-${product.productNameNA}.html" class="btn btn-info" style="margin-top: 4px;">
                                         <i class="fa fa-info-circle" aria-hidden="true"></i> Detail

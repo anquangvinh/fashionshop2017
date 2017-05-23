@@ -439,3 +439,6 @@ input.fs-color-checkbox:checked + label:before, input.fs-size-checkbox:checked +
 }
 /* CSS FOR USER-LOGIN-MODAL: */
 
+#fs-filter-product-by-sub-categorySelectBoxItContainer, #fs-filter-product-by-categorySelectBoxIt {
+    margin-left: 20px;
+}

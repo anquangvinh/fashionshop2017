@@ -285,6 +285,7 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
                 + "ROUND(AVG(CAST(r.rating AS FLOAT)), 1) as avrage, "
                 + "COUNT(r.productID) as numberOfRate "
                 + "FROM ProductRating r "
+                + "WHERE r.status = 1 "
                 + "GROUP BY r.productID "
                 + "ORDER BY numberOfRate DESC, avrage DESC";
         Query q = getEntityManager().createNativeQuery(sql);
@@ -728,4 +729,66 @@ public class ProductStateLessBean implements ProductStateLessBeanLocal {
         return q.getResultList();
     }
     
+    @Override
+    public List<Products> getAllSearchedProducts(String prodName) {
+        String sql = "SELECT p FROM Products p WHERE p.productName LIKE :keyword AND p.status = 1";
+        Query q = getEntityManager().createQuery(sql, Products.class);
+        q.setParameter("keyword", "%"+prodName+"%");
+        return q.getResultList();
+    }
+    
+    @Override
+    public List<ProductRating> getAllRating(){
+        String sql = "SELECT r FROM ProductRating r ORDER BY r.ratingID DESC";
+        Query q = getEntityManager().createQuery(sql, ProductRating.class);
+        return q.getResultList();
+    }
+    
+    @Override
+    public boolean updateRatingStt(int ratingID, short stt){
+        ProductRating rating = getEntityManager().find(ProductRating.class, ratingID);
+        rating.setStatus(stt);
+        
+        try {
+            getEntityManager().merge(rating);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public List<Products> getProductFilterByCateAndSubCate(String searched, String condition) {
+        String sql = "SELECT p FROM Products p WHERE p.productName LIKE :searched " + condition;
+        Query q = getEntityManager().createQuery(sql, Products.class);
+        q.setParameter("searched", "%"+searched+"%");
+        return q.getResultList();
+    }
+    
+    @Override
+    public List<Object[]> getNumberOfProductByCategory (){
+        String sql = "SELECT c.cateName AS label, COUNT(p.category) AS data "
+                + "FROM Products p "
+                + "JOIN p.category c "
+                + "GROUP BY c.cateName";
+        
+        Query q = getEntityManager().createQuery(sql);
+        return q.getResultList();
+        
+    }
+    
+    @Override
+    public List<Object[]> getNumberOfProductOfSubCateByCate (int cateID){
+        String sql = "SELECT sc.subCateName, COUNT(p.subCate) "
+                + "FROM Products p "
+                + "JOIN p.subCate sc WHERE p.category.cateID = :cateID "
+                + "GROUP BY sc.subCateName";
+        
+        Query q = getEntityManager().createQuery(sql);
+        q.setParameter("cateID", cateID);
+        return q.getResultList();
+        
+    }
+
 }
