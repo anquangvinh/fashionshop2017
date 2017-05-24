@@ -78,7 +78,7 @@ $(document).ready(function () {
             });
 
         } else {
-            
+
             $("#fs-filter-product-by-sub-category").html("<option value=\"0\">-- Please select sub-category --</option>");
             //lấy dữ liệu cho subcategory
             $.ajax({
@@ -158,26 +158,39 @@ $(document).ready(function () {
             productsArrLocal.reverse();
             var liProdStr = "";
             $.each(productsArrLocal, function (i, prod) {
-                liProdStr += "<div>\n\
+                $.ajax({
+                    url: "ajax/checkProductStatus.html",
+                    method: "POST",
+                    data: {productID: prod.productID},
+                    success: function (response) {
+                        if (response == "1") {
+                            liProdStr += "<div>\n\
                                 <a href=\"" + prod.productID + "-" + prod.productColorID + "-" + prod.productNameNA + ".html\">\n\
                                     <img style=\"width: 150px\" src=\"assets/images/products/" + prod.productImg + "\" class=\"img-responsive\" alt=\"" + prod.productImg + "\"/>\n\
                                 </a>\n\
                             </div>";
+                        }
+
+                        if (productsArrLocal.length == (i + 1)) {
+                            $("#fs-recent-view-product").html(liProdStr);
+                            $("#fs-recent-view-product").owlCarousel({
+                                items: 6,
+                                margin: 35,
+                                loop: true,
+                                navigation: true,
+                                autoPlay: 2500,
+                                stopOnHover: true
+                            });
+                        }
+                    }
+                });
             });
-            $("#fs-recent-view-product").html(liProdStr);
         }
     } else {
         $("#fs-localStorage-result").text("Sorry, your browser does not support Web Storage...");
     }
 
-    $("#fs-recent-view-product").owlCarousel({
-        items: 6,
-        margin: 35,
-        loop: true,
-        navigation: true,
-        autoPlay: 2500,
-        stopOnHover: true
-    });
+
 
     /* Rating */
     for (var i = 0; i < 3; i++) {
@@ -4676,9 +4689,9 @@ $(document).ready(function () {
         var selectBlogMonth = $('select[name=monthblogSelect]').val();
         if (selectBlogMonth != "0") {
             if (searchTextBlog == "") {
-                window.location = 'blog/'+selectBlogMonth+'.html';
+                window.location = 'blog/' + selectBlogMonth + '.html';
             } else {
-                window.location = 'blog-categories/'+searchTextBlog+'/'+selectBlogMonth+'.html';
+                window.location = 'blog-categories/' + searchTextBlog + '/' + selectBlogMonth + '.html';
             }
         }
     });

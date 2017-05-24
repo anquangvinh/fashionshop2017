@@ -328,7 +328,9 @@ public class ProductController {
                                     cnt++;
                                 }
                                 Products recentprd = productStateLessBean.findProductByID(Integer.parseInt(prodID));
-                                recentProductList.add(recentprd);
+                                if(recentprd.getStatus() == 1){
+                                    recentProductList.add(recentprd);
+                                }
                             }
                             model.addAttribute("recentProductList", recentProductList);
 
@@ -798,7 +800,20 @@ public class ProductController {
 
         return result;
     }
-
+    
+    @RequestMapping(value = "ajax/checkProductStatus", method = RequestMethod.POST)
+    @ResponseBody
+    public String checkProductStatus(
+            @RequestParam("productID") Integer productID
+    ){
+        Products target = productStateLessBean.findProductByID(productID);
+        if(target.getStatus() == 1){
+            return "1";
+        } else {
+            return "0";
+        }
+    }
+    
     private ProductStateLessBeanLocal lookupProductStateLessBeanLocal() {
         try {
             Context c = new InitialContext();
