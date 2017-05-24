@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     /* USER JS AREA */
     /* REGISTER FORM */
     $("#txtBirthday").datepicker({
@@ -10,25 +10,25 @@ $(document).ready(function() {
         yearRange: "1960:1999"
     });
 
-    $("#loginModal").on("change", "#fs-upImage", function() {
+    $("#loginModal").on("change", "#fs-upImage", function () {
         var type = $(this)[0].files[0].type;
         var arrayMimeType = ['image/jpeg', 'image/png'];
 
         if (arrayMimeType.indexOf(type) == -1) { //Khong co trong danh sach mime hinh
             $(this).val("");
-            $("#fs-upfile-create-user-error").text("Select 'jpeg' , 'png'");
+            $("#fs-upfile-create-user-error").text("Select 'jpg' , 'png'");
         } else {
             $("#fs-upfile-create-user-error").text("");
         }
     });
 
-    $("#fs-form-update-account").on("change", "#fs-upImage-acc", function() {
+    $("#fs-form-update-account").on("change", "#fs-upImage-acc", function () {
         var type = $(this)[0].files[0].type;
         var arrayMimeType = ['image/jpeg', 'image/png'];
 
         if (arrayMimeType.indexOf(type) == -1) { //Khong co trong danh sach mime hinh
             $(this).val("");
-            $("#fs-upfile-update-user-error").text("Select 'jpeg' , 'png'");
+            $("#fs-upfile-update-user-error").text("Select 'jpg' , 'png'");
         } else {
             $("#fs-upfile-update-user-error").text("");
         }
@@ -36,7 +36,7 @@ $(document).ready(function() {
 
 
     /* --------------- SEARCH PRODUCT BY NAME -------------------- */
-    $("body").on("keyup", "#fs-search-top-input", function() {
+    $("body").on("keyup", "#fs-search-top-input", function () {
         var kw = $(this).val();
         $.ajax({
             url: "ajax/searchProductByKeyWord.html",
@@ -44,7 +44,7 @@ $(document).ready(function() {
             data: {
                 keyword: kw
             },
-            success: function(response) {
+            success: function (response) {
                 $("#fs-on-search-result").html(response);
             }
         });
@@ -54,12 +54,12 @@ $(document).ready(function() {
     /* --------------- PRODUCT INDEX -------------------- */
     /* LOAD IMG TO RECENT VIEW FROM LOCALSTORAGE */
     // Check browser support
-    if (typeof(Storage) != "undefined") {
+    if (typeof (Storage) != "undefined") {
         if (localStorage.getItem("productsArrLocal") != null) {
             var productsArrLocal = JSON.parse(localStorage.getItem("productsArrLocal"));
             productsArrLocal.reverse();
             var liProdStr = "";
-            $.each(productsArrLocal, function(i, prod) {
+            $.each(productsArrLocal, function (i, prod) {
                 liProdStr += "<div>\n\
                                 <a href=\"" + prod.productID + "-" + prod.productColorID + "-" + prod.productNameNA + ".html\">\n\
                                     <img style=\"width: 150px\" src=\"assets/images/products/" + prod.productImg + "\" class=\"img-responsive\" alt=\"" + prod.productImg + "\"/>\n\
@@ -98,7 +98,7 @@ $(document).ready(function() {
     });
 
     /* INDEX - CHANGE IMG WHEN CHOOSE COLOR */
-    $("body").on("click", ".fs-index-color-img", function() {
+    $("body").on("click", ".fs-index-color-img", function () {
         var colorID = $(this).attr("fs-index-color-img");
         var productID = $(this).attr("fs-product");
         //Change link of product Title to productDetail
@@ -118,12 +118,12 @@ $(document).ready(function() {
                 colorID: colorID
             },
             dataType: 'json',
-            success: function(response) {
+            success: function (response) {
                 $("img[fs-product-for-img=" + productID + "]")
-                    .hide()
-                    .attr("src", "assets/images/products/subImg/" + response.productSubImgsList[0].urlImg)
-                    .attr("alt", response.productSubImgsList[0].urlImg)
-                    .fadeIn(600);
+                        .hide()
+                        .attr("src", "assets/images/products/subImg/" + response.productSubImgsList[0].urlImg)
+                        .attr("alt", response.productSubImgsList[0].urlImg)
+                        .fadeIn(600);
             }
         });
     });
@@ -152,25 +152,28 @@ $(document).ready(function() {
             itemsMobile: [479, 2],
             pagination: false,
             responsiveRefreshRate: 100,
-            afterInit: function(el) {
+            afterInit: function (el) {
                 el.find(".owl-item").eq(0).addClass("synced");
             }
         });
-    };
+    }
+    ;
 
     function syncPosition(el) {
         var current = this.currentItem;
         $(".sync2")
-            .find(".owl-item")
-            .removeClass("synced")
-            .eq(current)
-            .addClass("synced");
+                .find(".owl-item")
+                .removeClass("synced")
+                .eq(current)
+                .addClass("synced");
         if ($(".sync2").data("owlCarousel") != undefined) {
             center(current);
-        };
-    };
+        }
+        ;
+    }
+    ;
 
-    $(".sync2").on("click", ".owl-item", function(e) {
+    $(".sync2").on("click", ".owl-item", function (e) {
         e.preventDefault();
         var number = $(this).data("owlItem");
         sync1.trigger("owl.goTo", number);
@@ -184,7 +187,8 @@ $(document).ready(function() {
             if (num == sync2visible[i]) {
                 found = true;
             }
-        };
+        }
+        ;
 
         if (found == false) {
             if (num > sync2visible[sync2visible.length - 1]) {
@@ -199,8 +203,10 @@ $(document).ready(function() {
             sync2.trigger("owl.goTo", sync2visible[1]);
         } else if (num == sync2visible[0]) {
             sync2.trigger("owl.goTo", num - 1);
-        };
-    };
+        }
+        ;
+    }
+    ;
 
     // prettyPhoto
     // ---------------------------------------------------------------------------------------
@@ -212,7 +218,7 @@ $(document).ready(function() {
 
 
     /* AJAX CALL MODAL */
-    $("body").on("click", ".fs-product-modal", function() {
+    $("body").on("click", ".fs-product-modal", function () {
         $(".fs-quantity-in-stock").text("---");
         $('#error-cart-product-modal').html("");
         var productID = $(this).attr("fs-product");
@@ -229,7 +235,7 @@ $(document).ready(function() {
             },
             method: "POST",
             dataType: "json",
-            success: function(response) {
+            success: function (response) {
                 /* Init Name and Price */
                 $("h3.fs-product-name").text(response.productName);
                 $("h3.fs-product-name").attr("fs-product-modal-id", productID);
@@ -241,14 +247,14 @@ $(document).ready(function() {
                 var sizeStr = "";
                 var str_change_big_img = "";
                 var str_change_small_img = "";
-                $.each(response.productColorListWorking, function(i, item) {
+                $.each(response.productColorListWorking, function (i, item) {
                     colorImgStr += "<div class=\"fs-product-modal-color-border\">\n\
                                         <img fs-color=\"" + item.colorID + "\" src=\"assets/images/products/colors/" + item.urlColorImg + "\" class=\"img-responsive\" alt=\"" + item.urlColorImg + "\" title=\"" + item.color + "\"/>\n\
                                     </div>";
                     if (item.colorID == colorID) {
                         /* Init size By ColorID */
 
-                        $.each(item.sizeListWorking, function(j, size) {
+                        $.each(item.sizeListWorking, function (j, size) {
                             if (size.quantity == 0) {
                                 sizeStr += "<div class=\"fs-particular-size fs-unselectable\" fs-size=\"" + size.sizeID + "\">" + size.productSize + "</div>";
                             } else {
@@ -257,7 +263,7 @@ $(document).ready(function() {
 
                         });
                         /* Init product Image By Color*/
-                        $.each(item.productSubImgsList, function(k, subImg) {
+                        $.each(item.productSubImgsList, function (k, subImg) {
                             str_change_big_img += "<div class=\"item\"><img src=\"assets/images/products/subImg/" + subImg.urlImg + "\" alt=\"" + subImg.urlImg + "\"></div>";
                             str_change_small_img += "<div class=\"item\"><img src=\"assets/images/products/subImg/" + subImg.urlImg + "\" alt=\"" + subImg.urlImg + "\"></div>";
                         });
@@ -265,7 +271,7 @@ $(document).ready(function() {
                 });
                 var finalStrToChangeImg = "<div class=\"owl-carousel sync1 fs-main-product-img\">" + str_change_big_img + "</div><div class=\"owl-carousel sync2 fs-main-product-img\">" + str_change_small_img + "</div>";
                 $("div.fs-product-modal-color").html(colorImgStr);
-                $(".fs-product-modal-color-border").each(function() {
+                $(".fs-product-modal-color-border").each(function () {
                     if ($(this).children("img").attr("fs-color") == colorID) {
                         $(this).addClass("fs-product-selected");
                     }
@@ -279,66 +285,9 @@ $(document).ready(function() {
             }
         });
     });
-    // ADD WISHLIST MODAL
 
-    //    $(".fs-wl-add-detail").click(function () {
-    //        var userID = $(this).attr("fs-userID");
-    //        var input = $("input[name='emailUser']");
-    //        if (input.val() != "") {
-    //            //Có session
-    //            if (!$(this).hasClass("fs-heart-color")) {
-    //                $(this).addClass("fs-heart-color");
-    //                $.ajax({
-    //                    url: "user/ajax/addWishList.html",
-    //                    method: "POST",
-    //                    data: {userID: userID, productID: productID},
-    //                    success: function (response) {
-    //                        if (response == "1") {
-    //                            $("#fs-mess-wl-error").text("");
-    //                            $("#fs-mess-wl-success").text("SUCCESS");
-    //                            $("#fs-mess-body-wl").text("Add Wish List success.");
-    //                            $("#fs-wl-ajax-error").modal("show");
-    //                        } else if (response == "0") {
-    //                            $("#fs-mess-wl-success").text("");
-    //                            $("#fs-mess-wl-error").text("ERROR");
-    //                            $("#fs-mess-body-wl").text("Error, Fail add wishlist.");
-    //                            $("#fs-wl-ajax-error").modal("show");
-    //                        }
-    //                    }
-    //                });
-    //            } else {
-    //                $(this).removeClass("fs-heart-color");
-    //                $.ajax({
-    //                    url: "user/ajax/deleteWishListt.html",
-    //                    method: "POST",
-    //                    data: {userID: userID, productID: productID},
-    //                    success: function (response) {
-    //                        if (response == "1") {
-    //                            $("#fs-mess-wl-success").text("");
-    //                            $("#fs-mess-wl-error").text("DELETE");
-    //                            $("#fs-mess-body-wl").text("Delete Wish List success.");
-    //                            $("#fs-wl-ajax-error").modal("show");
-    //                        }
-    //                    }
-    //                });
-    //            }
-    //        } else {
-    //            //Khong có session
-    //            productModal.modal("hide");
-    //            $("#fs-modal-mess").modal("show");
-    //            $(".fs-modal-wl-close").click(function () {
-    //                productModal.modal("show");
-    //            });
-    //            $(".fs-btn-login-wl").click(function () {
-    //                $("#fs-modal-mess").modal("hide");
-    //                productModal.modal("hide");
-    //                window.location = window.location.href;
-    ////                            $("#loginModal").modal("show");
-    //            });
-    //        }
-    //    });
     /* MODAL - EVENT CLICK ON COLOR IMG */
-    $("div.fs-product-modal-color").on("click", ".fs-product-modal-color-border", function() {
+    $("div.fs-product-modal-color").on("click", ".fs-product-modal-color-border", function () {
         $(".fs-quantity-in-stock").text("---");
         $('#error-cart-product-modal').html("");
         $(".fs-product-modal-color-border").removeClass("fs-product-selected");
@@ -356,12 +305,12 @@ $(document).ready(function() {
                 colorID: colorID
             },
             dataType: "json",
-            success: function(response) {
+            success: function (response) {
 
                 /* Change Image */
                 var str_change_big_img = "";
                 var str_change_small_img = "";
-                $.each(response.productSubImgsList, function(i, item) {
+                $.each(response.productSubImgsList, function (i, item) {
                     if (item.status != 0) {
                         str_change_big_img += "<div class=\"item\"><img src=\"assets/images/products/subImg/" + item.urlImg + "\" alt=\"" + item.urlImg + "\"></div>";
                         str_change_small_img += "<div class=\"item\"><img src=\"assets/images/products/subImg/" + item.urlImg + "\" alt=\"" + item.urlImg + "\"></div>";
@@ -373,7 +322,7 @@ $(document).ready(function() {
                 /* Change Size */
                 var str_change_size = "";
 
-                $.each(response.sizeListWorking, function(i, item) {
+                $.each(response.sizeListWorking, function (i, item) {
                     if (item.quantity == 0) {
                         str_change_size += "<div class=\"fs-particular-size fs-unselectable\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
                     } else {
@@ -385,7 +334,7 @@ $(document).ready(function() {
         });
     });
     /* EVENT INCREASE OR DECREASE QUANTITY */
-    $(".fs-modal-btn-number").click(function() {
+    $(".fs-modal-btn-number").click(function () {
         $('#error-cart-product-modal').html("");
         var action = $(this).attr("data-type");
         var currentVal = parseInt($(".fs-modal-input-number").val());
@@ -410,12 +359,12 @@ $(document).ready(function() {
             $(".fs-modal-input-number").val(1);
         }
     });
-    $(".fs-modal-input-number").focusin(function() {
+    $(".fs-modal-input-number").focusin(function () {
         $('#error-cart-product-modal').html("");
         $(this).data("oldVal", $(this).val()); //Lấy value từ input, lưu vào key "oldValue"
     });
 
-    $(".fs-modal-input-number").on("change", function() {
+    $(".fs-modal-input-number").on("change", function () {
         var currentValue = parseInt($(".fs-modal-input-number").val());
         var minValue = parseInt($(".fs-modal-input-number").attr("min"));
         var maxValue = parseInt($(".fs-modal-input-number").attr("max"));
@@ -433,7 +382,7 @@ $(document).ready(function() {
             $(this).val($(this).data('oldVal'));
         }
     });
-    $(".fs-modal-input-number").keydown(function(e) {
+    $(".fs-modal-input-number").keydown(function (e) {
         $('#error-cart-product-modal').html("");
         var press = e.keyCode || e.which;
         // Allow: backspace, delete, tab, escape, enter and .
@@ -451,7 +400,7 @@ $(document).ready(function() {
     });
     /* ------------------ PRODUCT_DETAIL ------------------- */
     /* CHANGE DATA WHEN CHOOSE A COLOR */
-    $(".fs-product-color-border").on("click", function() {
+    $(".fs-product-color-border").on("click", function () {
         $(".fs-quantity-in-stock").text("---");
         $(".fs-input-number, .fs-modal-input-number").attr("disabled", "disabled");
         $(".fs-btn-quantity-plus, .fs-modal-btn-quantity-plus").attr("disabled", "disabled");
@@ -466,12 +415,12 @@ $(document).ready(function() {
                 colorID: colorID
             },
             dataType: "json",
-            success: function(response) {
+            success: function (response) {
 
                 /* Change Image */
                 var str_change_big_img = "";
                 var str_change_small_img = "";
-                $.each(response.productSubImgsList, function(i, item) {
+                $.each(response.productSubImgsList, function (i, item) {
                     if (item.status != 0) {
                         str_change_big_img += "<div class=\"item\">\n\
                                                     <img src=\"assets/images/products/subImg/" + item.urlImg + "\" alt=\"" + item.urlImg + "\"/>\n\
@@ -489,7 +438,7 @@ $(document).ready(function() {
                 fsCreateOwlCarousel();
                 /* Change Size */
                 var str_change_size = "";
-                $.each(response.sizeListWorking, function(i, item) {
+                $.each(response.sizeListWorking, function (i, item) {
                     if (item.quantity == 0) {
                         str_change_size += "<div class=\"fs-particular-size fs-unselectable\" fs-size=\"" + item.sizeID + "\">" + item.productSize + "</div>";
                     } else {
@@ -501,7 +450,7 @@ $(document).ready(function() {
         });
     });
     /* EVENT CLICK WHEN CHOOSE SIZE */
-    $(document).on("click", ".fs-particular-size", function() {
+    $(document).on("click", ".fs-particular-size", function () {
         $('#error-cart-product-modal').html("");
         $("#error-product-detail").html("");
         var classList = $(this).attr("class").split(" ");
@@ -519,7 +468,7 @@ $(document).ready(function() {
             data: {
                 sizeID: sizeID
             },
-            success: function(response) {
+            success: function (response) {
                 if (response != 0) {
                     $(".fs-input-number, .fs-modal-input-number").removeAttr("disabled");
                     $(".fs-btn-quantity-plus, .fs-modal-btn-quantity-plus").removeAttr("disabled");
@@ -530,7 +479,7 @@ $(document).ready(function() {
         });
     });
     /* EVENT INCREASE OR DECREASE QUANTITY */
-    $(".fs-btn-number").click(function() {
+    $(".fs-btn-number").click(function () {
         $("#error-product-detail").html("");
         var action = $(this).attr("data-type");
         var currentVal = parseInt($(".fs-input-number").val());
@@ -556,11 +505,11 @@ $(document).ready(function() {
         }
     });
 
-    $(".fs-input-number").focusin(function() {
+    $(".fs-input-number").focusin(function () {
         $("#error-product-detail").html("");
         $(this).data("oldValue", $(this).val()); //Lấy value từ input, lưu vào key "oldValue"
     });
-    $(".fs-input-number").on("change", function() {
+    $(".fs-input-number").on("change", function () {
         var currentValue = parseInt($(".fs-input-number").val());
         var minValue = parseInt($(".fs-input-number").attr("min"));
         var maxValue = parseInt($(".fs-input-number").attr("max"));
@@ -597,8 +546,8 @@ $(document).ready(function() {
         theme: 'fontawesome-stars-o',
         showSelectedRating: false,
         //readonly: true,
-        onSelect: function(value, text, event) {
-            if (typeof(event) !== 'undefined') {
+        onSelect: function (value, text, event) {
+            if (typeof (event) !== 'undefined') {
                 // rating was selected by a user
                 $("#fs-div-vote-value").html("<strong style=\"font-size: 20px; color: #d6644a\">" + value + " </strong>Star");
                 $("#fs-rating-star").val(value);
@@ -625,9 +574,10 @@ $(document).ready(function() {
             showSelectedRating: false,
             readonly: true
         });
-    };
+    }
+    ;
 
-    $("#fs-product-detail-page").on("click", "#fs-btn-rating-review", function() {
+    $("#fs-product-detail-page").on("click", "#fs-btn-rating-review", function () {
         var ratingVal = $("#fs-rating-star").val();
         var review = $("#fs-review-product").val();
         var userID = $(this).attr("fs-user-id");
@@ -641,12 +591,12 @@ $(document).ready(function() {
                 ratingVal: ratingVal,
                 review: review
             },
-            beforeSend: function(xhr) {
+            beforeSend: function (xhr) {
                 $("#fs-ajax-loading-2").css("display", "block");
             },
-            success: function(response) {
+            success: function (response) {
                 if (response == "ok") {
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $("#fs-ajax-loading-2").css("display", "none");
                         $("#fs-form-rating-review").empty();
                         $("#fs-form-rating-review").html("<h3>Thank you for your review! </h3>");
@@ -668,15 +618,15 @@ $(document).ready(function() {
                                 exit: 'animated fadeOutRight'
                             },
                             template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
-                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
-                                '<span data-notify="icon"></span> ' +
-                                '<span data-notify="title">{1}</span> ' +
-                                '<span data-notify="message">{2}</span>' +
-                                '<div class="progress" data-notify="progressbar">' +
-                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
-                                '</div>' +
-                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
-                                '</div>'
+                                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                    '<span data-notify="icon"></span> ' +
+                                    '<span data-notify="title">{1}</span> ' +
+                                    '<span data-notify="message">{2}</span>' +
+                                    '<div class="progress" data-notify="progressbar">' +
+                                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                    '</div>' +
+                                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                    '</div>'
                         });
                     }, 600);
                 } else {
@@ -698,22 +648,22 @@ $(document).ready(function() {
                             exit: 'animated fadeOutRight'
                         },
                         template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
-                            '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
-                            '<span data-notify="icon"></span> ' +
-                            '<span data-notify="title">{1}</span> ' +
-                            '<span data-notify="message">{2}</span>' +
-                            '<div class="progress" data-notify="progressbar">' +
-                            '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
-                            '</div>' +
-                            '<a href="{3}" target="{4}" data-notify="url"></a>' +
-                            '</div>'
+                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                                '<span data-notify="icon"></span> ' +
+                                '<span data-notify="title">{1}</span> ' +
+                                '<span data-notify="message">{2}</span>' +
+                                '<div class="progress" data-notify="progressbar">' +
+                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                '</div>' +
+                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                '</div>'
                     });
                 }
             }
         });
     });
 
-    $("#fs-product-detail-page").on("click", "#fs-btn-login-to-review", function() {
+    $("#fs-product-detail-page").on("click", "#fs-btn-login-to-review", function () {
         $("#loginModal").modal("show");
     });
     /* PRODUCT CATEGORY-GRID */
@@ -723,7 +673,8 @@ $(document).ready(function() {
     $("#fs-sort-product-by").selectBoxIt();
     $("#fs-number-of-item-on-page").selectBoxIt();
     /* AJAX ON CLICK PAGE */
-    $("#fs-shop-content").on("click", ".fs-page-number", function() {
+    $("#fs-shop-content").on("click", ".fs-page-number", function () {
+        var userID = $("input[name='findUsersID']").val();
         if (!$(this).hasClass("fs-page-number-active")) {
             $(".fs-page-number").removeClass("fs-page-number-active");
             $(this).addClass("fs-page-number-active");
@@ -756,31 +707,167 @@ $(document).ready(function() {
                     sizeFilterArr: sizeFilterArr
                 },
                 dataType: 'JSON',
-                beforeSend: function() {
+                beforeSend: function () {
                     $("#fs-ajax-loading").css("display", "block");
                 },
-                success: function(response) {
-                    setTimeout(function() {
+                success: function (response) {
+                    setTimeout(function () {
                         $("#fs-ajax-loading").css("display", "none");
                         if (response != "") {
                             $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
                             //Change product content
                             var result = "";
-                            $.each(response, function(i, prod) {
+                            $.each(response, function (i, prod) {
                                 var renderColor = "";
                                 if (prod.productColorListWorking.length > 1) {
-                                    $.each(prod.productColorListWorking, function(j, color) {
+                                    $.each(prod.productColorListWorking, function (j, color) {
                                         renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n" +
-                                            "              class=\"img-responsive fs-index-color-img\" \n" +
-                                            "              fs-index-color-img=\"" + color.colorID + "\" \n" +
-                                            "              fs-product=\"" + prod.productID + "\" \n" +
-                                            "              alt=\"" + color.urlColorImg + "\" \n" +
-                                            "              title=\"" + color.color + "\"/>";
+                                                "              class=\"img-responsive fs-index-color-img\" \n" +
+                                                "              fs-index-color-img=\"" + color.colorID + "\" \n" +
+                                                "              fs-product=\"" + prod.productID + "\" \n" +
+                                                "              alt=\"" + color.urlColorImg + "\" \n" +
+                                                "              title=\"" + color.color + "\"/>";
                                     });
                                 }
 
                                 if (prod.productDiscount == 0) {
                                     result += "<div class=\"col-md-4 col-sm-6\">\n" +
+                                            "     <div class=\"product-item\">\n" +
+                                            "          <div class=\"item-thumb\">\n" +
+                                            "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                            "                    class=\"img-responsive\" \n" +
+                                            "                    alt=\"" + prod.urlImg + "\"\n" +
+                                            "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                            "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                            "                     data-toggle=\"modal\" \n" +
+                                            "                     fs-product=\"" + prod.productID + "\" \n" +
+                                            "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                            "                </div>\n" +
+                                            "                <div class=\"product-overlay\">\n" +
+                                            "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                            "                     <a class=\"likeitem fa fa-heart-o fs-wl-add-cate-a\" \n" +
+                                            "                       fs-userID=\"" + userID + "\" \n" +
+                                            "                       fs-productID=\"" + prod.productID + "\"></a>\n" +
+                                            "                </div>\n" +
+                                            "          </div>\n" +
+                                            "      <div class=\"product-info\">\n" +
+                                            "          <h4 class=\"product-title\">\n" +
+                                            "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                            "                 " + prod.productName + "\n" +
+                                            "              </a>\n" +
+                                            "          </h4>\n" +
+                                            "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
+                                            "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                            renderColor +
+                                            "          </div>\n" +
+                                            "      </div>\n" +
+                                            "    </div>\n" +
+                                            "</div>";
+                                } else {
+                                    result += "<div class=\"col-md-4 col-sm-6\">\n" +
+                                            "     <div class=\"product-item\">\n" +
+                                            "          <div class=\"item-thumb\">\n" +
+                                            "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
+                                            "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                            "                    class=\"img-responsive\" \n" +
+                                            "                    alt=\"" + prod.urlImg + "\"\n" +
+                                            "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                            "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                            "                     data-toggle=\"modal\" \n" +
+                                            "                     fs-product=\"" + prod.productID + "\" \n" +
+                                            "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                            "                </div>\n" +
+                                            "                <div class=\"product-overlay\">\n" +
+                                            "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                            "                     <a class=\"likeitem fa fa-heart-o fs-wl-add-cate-a\" \n" +
+                                            "                       fs-userID=\"" + userID + "\" \n" +
+                                            "                       fs-productID=\"" + prod.productID + "\"></a>\n" +
+                                            "                </div>\n" +
+                                            "          </div>\n" +
+                                            "      <div class=\"product-info\">\n" +
+                                            "          <h4 class=\"product-title\">\n" +
+                                            "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                            "                 " + prod.productName + "\n" +
+                                            "              </a>\n" +
+                                            "          </h4>\n" +
+                                            "          <span class=\"product-price\">\n" +
+                                            "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
+                                            "          </span>\n" +
+                                            "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                            renderColor +
+                                            "          </div>\n" +
+                                            "      </div>\n" +
+                                            "    </div>\n" +
+                                            "</div>";
+                                }
+                            });
+                            $("#fs-change-data-here").html(result);
+                        }
+                    }, 400);
+                }
+            });
+        }
+    });
+
+    /* AJAX ON CHANGE SORT PRODUCT BY  */
+    $("#fs-shop-content").on("change", "#fs-sort-product-by", function () {
+        var sortBy = $(this).val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
+        var cateID = $(this).attr("fs-category");
+        var page = 1;
+        var itemPerPage = $("#fs-number-of-item-on-page").val();
+        $(".fs-page-number").removeClass("fs-page-number-active");
+        $(".fs-page-number[fs-page-number='1']").addClass("fs-page-number-active");
+        var numberOfProducts = parseInt($("#fs-number-of-products").text());
+        var from = (page - 1) * itemPerPage + 1;
+        var to = (page - 1) * itemPerPage + parseInt(itemPerPage);
+        if (to > numberOfProducts) {
+            to = numberOfProducts;
+        }
+        var currentProductPageInfo = from + " - " + to;
+
+        var fromPrice = $("#fs-price-from-text").text(); //Lọc giá Product "Từ"
+        var toPrice = $("#fs-price-to-text").text(); //Lọc giá Product "Đến
+
+        $.ajax({
+            url: "ajax/productPagination.html",
+            method: "POST",
+            data: {
+                cateID: cateID,
+                page: page,
+                itemPerPage: itemPerPage,
+                sortBy: sortBy,
+                fromPrice: fromPrice,
+                toPrice: toPrice,
+                colorFilterArr: colorFilterArr,
+                sizeFilterArr: sizeFilterArr
+            },
+            dataType: 'JSON',
+            beforeSend: function () {
+                $("#fs-ajax-loading").css("display", "block");
+            },
+            success: function (response) {
+                setTimeout(function () {
+                    $("#fs-ajax-loading").css("display", "none");
+                    if (response != 0) {
+                        $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
+
+                        //Change product content
+                        var result = "";
+                        $.each(response, function (i, prod) {
+                            var renderColor = "";
+                            if (prod.productColorListWorking.length > 1) {
+                                $.each(prod.productColorListWorking, function (j, color) {
+                                    renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n" +
+                                            "              class=\"img-responsive fs-index-color-img\" \n" +
+                                            "              fs-index-color-img=\"" + color.colorID + "\" \n" +
+                                            "              fs-product=\"" + prod.productID + "\" \n" +
+                                            "              alt=\"" + color.urlColorImg + "\" \n" +
+                                            "              title=\"" + color.color + "\"/>";
+                                });
+                            }
+
+                            if (prod.productDiscount == 0) {
+                                result += "<div class=\"col-md-4 col-sm-6\">\n" +
                                         "     <div class=\"product-item\">\n" +
                                         "          <div class=\"item-thumb\">\n" +
                                         "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
@@ -810,8 +897,8 @@ $(document).ready(function() {
                                         "      </div>\n" +
                                         "    </div>\n" +
                                         "</div>";
-                                } else {
-                                    result += "<div class=\"col-md-4 col-sm-6\">\n" +
+                            } else {
+                                result += "<div class=\"col-md-4 col-sm-6\">\n" +
                                         "     <div class=\"product-item\">\n" +
                                         "          <div class=\"item-thumb\">\n" +
                                         "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
@@ -844,138 +931,6 @@ $(document).ready(function() {
                                         "      </div>\n" +
                                         "    </div>\n" +
                                         "</div>";
-                                }
-                            });
-                            $("#fs-change-data-here").html(result);
-                        }
-                    }, 400);
-                }
-            });
-        }
-    });
-
-    /* AJAX ON CHANGE SORT PRODUCT BY  */
-    $("#fs-shop-content").on("change", "#fs-sort-product-by", function() {
-        var sortBy = $(this).val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
-        var cateID = $(this).attr("fs-category");
-        var page = 1;
-        var itemPerPage = $("#fs-number-of-item-on-page").val();
-        $(".fs-page-number").removeClass("fs-page-number-active");
-        $(".fs-page-number[fs-page-number='1']").addClass("fs-page-number-active");
-        var numberOfProducts = parseInt($("#fs-number-of-products").text());
-        var from = (page - 1) * itemPerPage + 1;
-        var to = (page - 1) * itemPerPage + parseInt(itemPerPage);
-        if (to > numberOfProducts) {
-            to = numberOfProducts;
-        }
-        var currentProductPageInfo = from + " - " + to;
-
-        var fromPrice = $("#fs-price-from-text").text(); //Lọc giá Product "Từ"
-        var toPrice = $("#fs-price-to-text").text(); //Lọc giá Product "Đến
-
-        $.ajax({
-            url: "ajax/productPagination.html",
-            method: "POST",
-            data: {
-                cateID: cateID,
-                page: page,
-                itemPerPage: itemPerPage,
-                sortBy: sortBy,
-                fromPrice: fromPrice,
-                toPrice: toPrice,
-                colorFilterArr: colorFilterArr,
-                sizeFilterArr: sizeFilterArr
-            },
-            dataType: 'JSON',
-            beforeSend: function() {
-                $("#fs-ajax-loading").css("display", "block");
-            },
-            success: function(response) {
-                setTimeout(function() {
-                    $("#fs-ajax-loading").css("display", "none");
-                    if (response != 0) {
-                        $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
-
-                        //Change product content
-                        var result = "";
-                        $.each(response, function(i, prod) {
-                            var renderColor = "";
-                            if (prod.productColorListWorking.length > 1) {
-                                $.each(prod.productColorListWorking, function(j, color) {
-                                    renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n" +
-                                        "              class=\"img-responsive fs-index-color-img\" \n" +
-                                        "              fs-index-color-img=\"" + color.colorID + "\" \n" +
-                                        "              fs-product=\"" + prod.productID + "\" \n" +
-                                        "              alt=\"" + color.urlColorImg + "\" \n" +
-                                        "              title=\"" + color.color + "\"/>";
-                                });
-                            }
-
-                            if (prod.productDiscount == 0) {
-                                result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                    "     <div class=\"product-item\">\n" +
-                                    "          <div class=\"item-thumb\">\n" +
-                                    "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                    "                    class=\"img-responsive\" \n" +
-                                    "                    alt=\"" + prod.urlImg + "\"\n" +
-                                    "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                    "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                    "                     data-toggle=\"modal\" \n" +
-                                    "                     fs-product=\"" + prod.productID + "\" \n" +
-                                    "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                    "                </div>\n" +
-                                    "                <div class=\"product-overlay\">\n" +
-                                    "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                    "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
-                                    "                </div>\n" +
-                                    "          </div>\n" +
-                                    "      <div class=\"product-info\">\n" +
-                                    "          <h4 class=\"product-title\">\n" +
-                                    "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                    "                 " + prod.productName + "\n" +
-                                    "              </a>\n" +
-                                    "          </h4>\n" +
-                                    "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
-                                    "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                    renderColor +
-                                    "          </div>\n" +
-                                    "      </div>\n" +
-                                    "    </div>\n" +
-                                    "</div>";
-                            } else {
-                                result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                    "     <div class=\"product-item\">\n" +
-                                    "          <div class=\"item-thumb\">\n" +
-                                    "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
-                                    "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                    "                    class=\"img-responsive\" \n" +
-                                    "                    alt=\"" + prod.urlImg + "\"\n" +
-                                    "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                    "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                    "                     data-toggle=\"modal\" \n" +
-                                    "                     fs-product=\"" + prod.productID + "\" \n" +
-                                    "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                    "                </div>\n" +
-                                    "                <div class=\"product-overlay\">\n" +
-                                    "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                    "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
-                                    "                </div>\n" +
-                                    "          </div>\n" +
-                                    "      <div class=\"product-info\">\n" +
-                                    "          <h4 class=\"product-title\">\n" +
-                                    "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                    "                 " + prod.productName + "\n" +
-                                    "              </a>\n" +
-                                    "          </h4>\n" +
-                                    "          <span class=\"product-price\">\n" +
-                                    "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
-                                    "          </span>\n" +
-                                    "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                    renderColor +
-                                    "          </div>\n" +
-                                    "      </div>\n" +
-                                    "    </div>\n" +
-                                    "</div>";
                             }
                         });
                         $("#fs-change-data-here").html(result);
@@ -986,7 +941,7 @@ $(document).ready(function() {
     });
 
     /* AJAX ON CHANGE NUMBER OF PRODUCT PER PAGE */
-    $("#fs-shop-content").on("change", "#fs-number-of-item-on-page", function() {
+    $("#fs-shop-content").on("change", "#fs-number-of-item-on-page", function () {
         var sortBy = $("#fs-sort-product-by").val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
         var itemPerPage = $("#fs-number-of-item-on-page").val();
         var page = 1;
@@ -1029,11 +984,11 @@ $(document).ready(function() {
                 sizeFilterArr: sizeFilterArr
             },
             dataType: 'JSON',
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#fs-ajax-loading").css("display", "block");
             },
-            success: function(response) {
-                setTimeout(function() {
+            success: function (response) {
+                setTimeout(function () {
                     $("#fs-ajax-loading").css("display", "none");
                     if (response != 0) {
                         $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
@@ -1043,84 +998,84 @@ $(document).ready(function() {
 
                         //Change product content
                         var result = "";
-                        $.each(response, function(i, prod) {
+                        $.each(response, function (i, prod) {
                             var renderColor = "";
                             if (prod.productColorListWorking.length > 1) {
-                                $.each(prod.productColorListWorking, function(j, color) {
+                                $.each(prod.productColorListWorking, function (j, color) {
                                     renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n" +
-                                        "              class=\"img-responsive fs-index-color-img\" \n" +
-                                        "              fs-index-color-img=\"" + color.colorID + "\" \n" +
-                                        "              fs-product=\"" + prod.productID + "\" \n" +
-                                        "              alt=\"" + color.urlColorImg + "\" \n" +
-                                        "              title=\"" + color.color + "\"/>";
+                                            "              class=\"img-responsive fs-index-color-img\" \n" +
+                                            "              fs-index-color-img=\"" + color.colorID + "\" \n" +
+                                            "              fs-product=\"" + prod.productID + "\" \n" +
+                                            "              alt=\"" + color.urlColorImg + "\" \n" +
+                                            "              title=\"" + color.color + "\"/>";
                                 });
                             }
 
                             if (prod.productDiscount == 0) {
                                 result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                    "     <div class=\"product-item\">\n" +
-                                    "          <div class=\"item-thumb\">\n" +
-                                    "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                    "                    class=\"img-responsive\" \n" +
-                                    "                    alt=\"" + prod.urlImg + "\"\n" +
-                                    "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                    "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                    "                     data-toggle=\"modal\" \n" +
-                                    "                     fs-product=\"" + prod.productID + "\" \n" +
-                                    "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                    "                </div>\n" +
-                                    "                <div class=\"product-overlay\">\n" +
-                                    "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                    "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
-                                    "                </div>\n" +
-                                    "          </div>\n" +
-                                    "      <div class=\"product-info\">\n" +
-                                    "          <h4 class=\"product-title\">\n" +
-                                    "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                    "                 " + prod.productName + "\n" +
-                                    "              </a>\n" +
-                                    "          </h4>\n" +
-                                    "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
-                                    "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                    renderColor +
-                                    "          </div>\n" +
-                                    "      </div>\n" +
-                                    "    </div>\n" +
-                                    "</div>";
+                                        "     <div class=\"product-item\">\n" +
+                                        "          <div class=\"item-thumb\">\n" +
+                                        "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                        "                    class=\"img-responsive\" \n" +
+                                        "                    alt=\"" + prod.urlImg + "\"\n" +
+                                        "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                        "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                        "                     data-toggle=\"modal\" \n" +
+                                        "                     fs-product=\"" + prod.productID + "\" \n" +
+                                        "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                        "                </div>\n" +
+                                        "                <div class=\"product-overlay\">\n" +
+                                        "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                        "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
+                                        "                </div>\n" +
+                                        "          </div>\n" +
+                                        "      <div class=\"product-info\">\n" +
+                                        "          <h4 class=\"product-title\">\n" +
+                                        "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                        "                 " + prod.productName + "\n" +
+                                        "              </a>\n" +
+                                        "          </h4>\n" +
+                                        "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
+                                        "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                        renderColor +
+                                        "          </div>\n" +
+                                        "      </div>\n" +
+                                        "    </div>\n" +
+                                        "</div>";
                             } else {
                                 result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                    "     <div class=\"product-item\">\n" +
-                                    "          <div class=\"item-thumb\">\n" +
-                                    "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
-                                    "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                    "                    class=\"img-responsive\" \n" +
-                                    "                    alt=\"" + prod.urlImg + "\"\n" +
-                                    "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                    "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                    "                     data-toggle=\"modal\" \n" +
-                                    "                     fs-product=\"" + prod.productID + "\" \n" +
-                                    "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                    "                </div>\n" +
-                                    "                <div class=\"product-overlay\">\n" +
-                                    "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                    "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
-                                    "                </div>\n" +
-                                    "          </div>\n" +
-                                    "      <div class=\"product-info\">\n" +
-                                    "          <h4 class=\"product-title\">\n" +
-                                    "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                    "                 " + prod.productName + "\n" +
-                                    "              </a>\n" +
-                                    "          </h4>\n" +
-                                    "          <span class=\"product-price\">\n" +
-                                    "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
-                                    "          </span>\n" +
-                                    "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                    renderColor +
-                                    "          </div>\n" +
-                                    "      </div>\n" +
-                                    "    </div>\n" +
-                                    "</div>";
+                                        "     <div class=\"product-item\">\n" +
+                                        "          <div class=\"item-thumb\">\n" +
+                                        "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
+                                        "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                        "                    class=\"img-responsive\" \n" +
+                                        "                    alt=\"" + prod.urlImg + "\"\n" +
+                                        "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                        "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                        "                     data-toggle=\"modal\" \n" +
+                                        "                     fs-product=\"" + prod.productID + "\" \n" +
+                                        "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                        "                </div>\n" +
+                                        "                <div class=\"product-overlay\">\n" +
+                                        "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                        "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
+                                        "                </div>\n" +
+                                        "          </div>\n" +
+                                        "      <div class=\"product-info\">\n" +
+                                        "          <h4 class=\"product-title\">\n" +
+                                        "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                        "                 " + prod.productName + "\n" +
+                                        "              </a>\n" +
+                                        "          </h4>\n" +
+                                        "          <span class=\"product-price\">\n" +
+                                        "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
+                                        "          </span>\n" +
+                                        "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                        renderColor +
+                                        "          </div>\n" +
+                                        "      </div>\n" +
+                                        "    </div>\n" +
+                                        "</div>";
                             }
                         });
                         $("#fs-change-data-here").html(result);
@@ -1131,7 +1086,7 @@ $(document).ready(function() {
     });
 
     /* FILTER PRODUCT BY PRICE */
-    $("#fs-shop-content").on("click", "#fs-btn-filter-price", function() {
+    $("#fs-shop-content").on("click", "#fs-btn-filter-price", function () {
 
         $(this).attr("fs-filter", "yes");
         var page = 1;
@@ -1173,7 +1128,7 @@ $(document).ready(function() {
                     colorFilterArr: colorFilterArr,
                     sizeFilterArr: sizeFilterArr
                 },
-                success: function(numberOfProducts) {
+                success: function (numberOfProducts) {
                     $.ajax({
                         url: "ajax/productPagination.html",
                         method: "POST",
@@ -1188,11 +1143,11 @@ $(document).ready(function() {
                             sizeFilterArr: sizeFilterArr
                         },
                         dataType: 'JSON',
-                        beforeSend: function() {
+                        beforeSend: function () {
                             $("#fs-ajax-loading").css("display", "block");
                         },
-                        success: function(response) {
-                            setTimeout(function() {
+                        success: function (response) {
+                            setTimeout(function () {
                                 $("#fs-ajax-loading").css("display", "none");
                                 if (response.length == 0) {
                                     $("#fs-change-data-here").html("<div class='col-xs-12'><h1>Nothing To Show!</h1></div>");
@@ -1228,21 +1183,201 @@ $(document).ready(function() {
 
                                     //Change product content
                                     var result = "";
-                                    $.each(response, function(i, prod) {
+                                    $.each(response, function (i, prod) {
                                         var renderColor = "";
                                         if (prod.productColorListWorking.length > 1) {
-                                            $.each(prod.productColorListWorking, function(j, color) {
+                                            $.each(prod.productColorListWorking, function (j, color) {
                                                 renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n" +
-                                                    "              class=\"img-responsive fs-index-color-img\" \n" +
-                                                    "              fs-index-color-img=\"" + color.colorID + "\" \n" +
-                                                    "              fs-product=\"" + prod.productID + "\" \n" +
-                                                    "              alt=\"" + color.urlColorImg + "\" \n" +
-                                                    "              title=\"" + color.color + "\"/>";
+                                                        "              class=\"img-responsive fs-index-color-img\" \n" +
+                                                        "              fs-index-color-img=\"" + color.colorID + "\" \n" +
+                                                        "              fs-product=\"" + prod.productID + "\" \n" +
+                                                        "              alt=\"" + color.urlColorImg + "\" \n" +
+                                                        "              title=\"" + color.color + "\"/>";
                                             });
                                         }
 
                                         if (prod.productDiscount == 0) {
                                             result += "<div class=\"col-md-4 col-sm-6\">\n" +
+                                                    "     <div class=\"product-item\">\n" +
+                                                    "          <div class=\"item-thumb\">\n" +
+                                                    "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                                    "                    class=\"img-responsive\" \n" +
+                                                    "                    alt=\"" + prod.urlImg + "\"\n" +
+                                                    "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                                    "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                                    "                     data-toggle=\"modal\" \n" +
+                                                    "                     fs-product=\"" + prod.productID + "\" \n" +
+                                                    "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                                    "                </div>\n" +
+                                                    "                <div class=\"product-overlay\">\n" +
+                                                    "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                                    "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
+                                                    "                </div>\n" +
+                                                    "          </div>\n" +
+                                                    "      <div class=\"product-info\">\n" +
+                                                    "          <h4 class=\"product-title\">\n" +
+                                                    "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                                    "                 " + prod.productName + "\n" +
+                                                    "              </a>\n" +
+                                                    "          </h4>\n" +
+                                                    "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
+                                                    "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                                    renderColor +
+                                                    "          </div>\n" +
+                                                    "      </div>\n" +
+                                                    "    </div>\n" +
+                                                    "</div>";
+                                        } else {
+                                            result += "<div class=\"col-md-4 col-sm-6\">\n" +
+                                                    "     <div class=\"product-item\">\n" +
+                                                    "          <div class=\"item-thumb\">\n" +
+                                                    "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
+                                                    "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                                    "                    class=\"img-responsive\" \n" +
+                                                    "                    alt=\"" + prod.urlImg + "\"\n" +
+                                                    "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                                    "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                                    "                     data-toggle=\"modal\" \n" +
+                                                    "                     fs-product=\"" + prod.productID + "\" \n" +
+                                                    "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                                    "                </div>\n" +
+                                                    "                <div class=\"product-overlay\">\n" +
+                                                    "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                                    "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
+                                                    "                </div>\n" +
+                                                    "          </div>\n" +
+                                                    "      <div class=\"product-info\">\n" +
+                                                    "          <h4 class=\"product-title\">\n" +
+                                                    "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                                    "                 " + prod.productName + "\n" +
+                                                    "              </a>\n" +
+                                                    "          </h4>\n" +
+                                                    "          <span class=\"product-price\">\n" +
+                                                    "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
+                                                    "          </span>\n" +
+                                                    "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                                    renderColor +
+                                                    "          </div>\n" +
+                                                    "      </div>\n" +
+                                                    "    </div>\n" +
+                                                    "</div>";
+                                        }
+                                    });
+                                    $("#fs-change-data-here").html(result);
+
+                                    $("#fs-price-from").val("");
+                                    $("#fs-price-to").val("");
+                                }
+                            }, 400);
+                        }
+                    });
+                }
+
+            });
+
+        }
+    });
+
+    /* FILTER PRODUCT BY COLOR */
+    $("#fs-shop-content").on("change", ".fs-color-checkbox", function () {
+        if (this.checked) { //Check
+            colorFilterArr.push($(this).val());
+        } else { //Bỏ Check
+            var index = colorFilterArr.indexOf($(this).val());
+            if (index > -1) {
+                colorFilterArr.splice(index, 1);
+            }
+        }
+
+        var page = 1;
+        var fromPrice = $("#fs-price-from-text").text(); //Lọc giá Product "Từ"
+        var toPrice = $("#fs-price-to-text").text(); //Lọc giá Product "Đến"
+        var cateID = $("#fs-price-from").attr("fs-category");
+        var sortBy = $("#fs-sort-product-by").val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
+        var itemPerPage = $("#fs-number-of-item-on-page").val();
+
+        $.ajax({
+            url: "ajax/getNumberOfProductsByFilter_OfACategory.html",
+            method: "POST",
+            data: {
+                cateID: cateID,
+                fromPrice: fromPrice,
+                toPrice: toPrice,
+                colorFilterArr: colorFilterArr,
+                sizeFilterArr: sizeFilterArr
+            },
+            success: function (numberOfProducts) {
+                $.ajax({
+                    url: "ajax/productPagination.html",
+                    method: "POST",
+                    data: {
+                        cateID: cateID,
+                        page: page,
+                        itemPerPage: itemPerPage,
+                        sortBy: sortBy,
+                        fromPrice: fromPrice,
+                        toPrice: toPrice,
+                        colorFilterArr: colorFilterArr,
+                        sizeFilterArr: sizeFilterArr
+                    },
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                        $("#fs-ajax-loading").css("display", "block");
+                    },
+                    success: function (response) {
+
+                        setTimeout(function () {
+                            $("#fs-ajax-loading").css("display", "none");
+                            if (response.length == 0) {
+                                $("#fs-change-data-here").html("<div class='col-xs-12'><h1>Nothing To Show!</h1></div>");
+
+                                //change productPageInfo
+                                var from = 0;
+                                var to = 0;
+                                var currentProductPageInfo = from + " - " + to;
+                                $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
+                                $(".fs-number-of-products").text(numberOfProducts);
+                            } else {
+                                //Tổng số sản phẩm
+                                var numberOfPages = Math.ceil(parseInt(numberOfProducts) / itemPerPage);
+
+                                //Change pagination
+                                var pagination = "<li><span class=\"fs-page-number fs-page-number-active\" fs-page-number=\"1\" fs-category=\"" + cateID + "\">1</span></li>";
+                                if (numberOfPages > 1) {
+                                    for (var i = 2; i <= numberOfPages; i++) {
+                                        pagination += "<li><span class=\"fs-page-number\" fs-page-number=\"" + i + "\" fs-category=\"" + cateID + "\">" + i + "</span></li>";
+                                    }
+                                }
+
+                                $(".fs-ul-page-nav").html(pagination);
+
+                                //change productPageInfo
+                                var from = (page - 1) * itemPerPage + 1;
+                                var to = (page - 1) * itemPerPage + parseInt(itemPerPage);
+                                if (to > parseInt(numberOfProducts)) {
+                                    to = parseInt(numberOfProducts);
+                                }
+                                var currentProductPageInfo = from + " - " + to;
+                                $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
+                                $(".fs-number-of-products").text(numberOfProducts);
+
+                                //Change product content
+                                var result = "";
+                                $.each(response, function (i, prod) {
+                                    var renderColor = "";
+                                    if (prod.productColorListWorking.length > 1) {
+                                        $.each(prod.productColorListWorking, function (j, color) {
+                                            renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n" +
+                                                    "              class=\"img-responsive fs-index-color-img\" \n" +
+                                                    "              fs-index-color-img=\"" + color.colorID + "\" \n" +
+                                                    "              fs-product=\"" + prod.productID + "\" \n" +
+                                                    "              alt=\"" + color.urlColorImg + "\" \n" +
+                                                    "              title=\"" + color.color + "\"/>";
+                                        });
+                                    }
+
+                                    if (prod.productDiscount == 0) {
+                                        result += "<div class=\"col-md-4 col-sm-6\">\n" +
                                                 "     <div class=\"product-item\">\n" +
                                                 "          <div class=\"item-thumb\">\n" +
                                                 "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
@@ -1272,8 +1407,8 @@ $(document).ready(function() {
                                                 "      </div>\n" +
                                                 "    </div>\n" +
                                                 "</div>";
-                                        } else {
-                                            result += "<div class=\"col-md-4 col-sm-6\">\n" +
+                                    } else {
+                                        result += "<div class=\"col-md-4 col-sm-6\">\n" +
                                                 "     <div class=\"product-item\">\n" +
                                                 "          <div class=\"item-thumb\">\n" +
                                                 "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
@@ -1306,186 +1441,6 @@ $(document).ready(function() {
                                                 "      </div>\n" +
                                                 "    </div>\n" +
                                                 "</div>";
-                                        }
-                                    });
-                                    $("#fs-change-data-here").html(result);
-
-                                    $("#fs-price-from").val("");
-                                    $("#fs-price-to").val("");
-                                }
-                            }, 400);
-                        }
-                    });
-                }
-
-            });
-
-        }
-    });
-
-    /* FILTER PRODUCT BY COLOR */
-    $("#fs-shop-content").on("change", ".fs-color-checkbox", function() {
-        if (this.checked) { //Check
-            colorFilterArr.push($(this).val());
-        } else { //Bỏ Check
-            var index = colorFilterArr.indexOf($(this).val());
-            if (index > -1) {
-                colorFilterArr.splice(index, 1);
-            }
-        }
-
-        var page = 1;
-        var fromPrice = $("#fs-price-from-text").text(); //Lọc giá Product "Từ"
-        var toPrice = $("#fs-price-to-text").text(); //Lọc giá Product "Đến"
-        var cateID = $("#fs-price-from").attr("fs-category");
-        var sortBy = $("#fs-sort-product-by").val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
-        var itemPerPage = $("#fs-number-of-item-on-page").val();
-
-        $.ajax({
-            url: "ajax/getNumberOfProductsByFilter_OfACategory.html",
-            method: "POST",
-            data: {
-                cateID: cateID,
-                fromPrice: fromPrice,
-                toPrice: toPrice,
-                colorFilterArr: colorFilterArr,
-                sizeFilterArr: sizeFilterArr
-            },
-            success: function(numberOfProducts) {
-                $.ajax({
-                    url: "ajax/productPagination.html",
-                    method: "POST",
-                    data: {
-                        cateID: cateID,
-                        page: page,
-                        itemPerPage: itemPerPage,
-                        sortBy: sortBy,
-                        fromPrice: fromPrice,
-                        toPrice: toPrice,
-                        colorFilterArr: colorFilterArr,
-                        sizeFilterArr: sizeFilterArr
-                    },
-                    dataType: 'JSON',
-                    beforeSend: function() {
-                        $("#fs-ajax-loading").css("display", "block");
-                    },
-                    success: function(response) {
-
-                        setTimeout(function() {
-                            $("#fs-ajax-loading").css("display", "none");
-                            if (response.length == 0) {
-                                $("#fs-change-data-here").html("<div class='col-xs-12'><h1>Nothing To Show!</h1></div>");
-
-                                //change productPageInfo
-                                var from = 0;
-                                var to = 0;
-                                var currentProductPageInfo = from + " - " + to;
-                                $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
-                                $(".fs-number-of-products").text(numberOfProducts);
-                            } else {
-                                //Tổng số sản phẩm
-                                var numberOfPages = Math.ceil(parseInt(numberOfProducts) / itemPerPage);
-
-                                //Change pagination
-                                var pagination = "<li><span class=\"fs-page-number fs-page-number-active\" fs-page-number=\"1\" fs-category=\"" + cateID + "\">1</span></li>";
-                                if (numberOfPages > 1) {
-                                    for (var i = 2; i <= numberOfPages; i++) {
-                                        pagination += "<li><span class=\"fs-page-number\" fs-page-number=\"" + i + "\" fs-category=\"" + cateID + "\">" + i + "</span></li>";
-                                    }
-                                }
-
-                                $(".fs-ul-page-nav").html(pagination);
-
-                                //change productPageInfo
-                                var from = (page - 1) * itemPerPage + 1;
-                                var to = (page - 1) * itemPerPage + parseInt(itemPerPage);
-                                if (to > parseInt(numberOfProducts)) {
-                                    to = parseInt(numberOfProducts);
-                                }
-                                var currentProductPageInfo = from + " - " + to;
-                                $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
-                                $(".fs-number-of-products").text(numberOfProducts);
-
-                                //Change product content
-                                var result = "";
-                                $.each(response, function(i, prod) {
-                                    var renderColor = "";
-                                    if (prod.productColorListWorking.length > 1) {
-                                        $.each(prod.productColorListWorking, function(j, color) {
-                                            renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n" +
-                                                "              class=\"img-responsive fs-index-color-img\" \n" +
-                                                "              fs-index-color-img=\"" + color.colorID + "\" \n" +
-                                                "              fs-product=\"" + prod.productID + "\" \n" +
-                                                "              alt=\"" + color.urlColorImg + "\" \n" +
-                                                "              title=\"" + color.color + "\"/>";
-                                        });
-                                    }
-
-                                    if (prod.productDiscount == 0) {
-                                        result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                            "     <div class=\"product-item\">\n" +
-                                            "          <div class=\"item-thumb\">\n" +
-                                            "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                            "                    class=\"img-responsive\" \n" +
-                                            "                    alt=\"" + prod.urlImg + "\"\n" +
-                                            "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                            "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                            "                     data-toggle=\"modal\" \n" +
-                                            "                     fs-product=\"" + prod.productID + "\" \n" +
-                                            "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                            "                </div>\n" +
-                                            "                <div class=\"product-overlay\">\n" +
-                                            "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                            "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
-                                            "                </div>\n" +
-                                            "          </div>\n" +
-                                            "      <div class=\"product-info\">\n" +
-                                            "          <h4 class=\"product-title\">\n" +
-                                            "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                            "                 " + prod.productName + "\n" +
-                                            "              </a>\n" +
-                                            "          </h4>\n" +
-                                            "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
-                                            "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                            renderColor +
-                                            "          </div>\n" +
-                                            "      </div>\n" +
-                                            "    </div>\n" +
-                                            "</div>";
-                                    } else {
-                                        result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                            "     <div class=\"product-item\">\n" +
-                                            "          <div class=\"item-thumb\">\n" +
-                                            "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
-                                            "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                            "                    class=\"img-responsive\" \n" +
-                                            "                    alt=\"" + prod.urlImg + "\"\n" +
-                                            "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                            "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                            "                     data-toggle=\"modal\" \n" +
-                                            "                     fs-product=\"" + prod.productID + "\" \n" +
-                                            "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                            "                </div>\n" +
-                                            "                <div class=\"product-overlay\">\n" +
-                                            "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                            "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
-                                            "                </div>\n" +
-                                            "          </div>\n" +
-                                            "      <div class=\"product-info\">\n" +
-                                            "          <h4 class=\"product-title\">\n" +
-                                            "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                            "                 " + prod.productName + "\n" +
-                                            "              </a>\n" +
-                                            "          </h4>\n" +
-                                            "          <span class=\"product-price\">\n" +
-                                            "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
-                                            "          </span>\n" +
-                                            "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                            renderColor +
-                                            "          </div>\n" +
-                                            "      </div>\n" +
-                                            "    </div>\n" +
-                                            "</div>";
                                     }
                                 });
                                 $("#fs-change-data-here").html(result);
@@ -1498,7 +1453,7 @@ $(document).ready(function() {
     });
 
     /* FILTER PRODUCT BY SIZE */
-    $("#fs-shop-content").on("change", ".fs-size-checkbox", function() {
+    $("#fs-shop-content").on("change", ".fs-size-checkbox", function () {
         if (this.checked) { //Check
             sizeFilterArr.push($(this).val());
         } else { //Bỏ Check
@@ -1525,7 +1480,7 @@ $(document).ready(function() {
                 colorFilterArr: colorFilterArr,
                 sizeFilterArr: sizeFilterArr
             },
-            success: function(numberOfProducts) {
+            success: function (numberOfProducts) {
                 $.ajax({
                     url: "ajax/productPagination.html",
                     method: "POST",
@@ -1540,12 +1495,12 @@ $(document).ready(function() {
                         sizeFilterArr: sizeFilterArr
                     },
                     dataType: 'JSON',
-                    beforeSend: function() {
+                    beforeSend: function () {
                         $("#fs-ajax-loading").css("display", "block");
                     },
-                    success: function(response) {
+                    success: function (response) {
 
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $("#fs-ajax-loading").css("display", "none");
                             if (response.length == 0) {
                                 $("#fs-change-data-here").html("<div class='col-xs-12'><h1>Nothing To Show!</h1></div>");
@@ -1581,84 +1536,84 @@ $(document).ready(function() {
 
                                 //Change product content
                                 var result = "";
-                                $.each(response, function(i, prod) {
+                                $.each(response, function (i, prod) {
                                     var renderColor = "";
                                     if (prod.productColorListWorking.length > 1) {
-                                        $.each(prod.productColorListWorking, function(j, color) {
+                                        $.each(prod.productColorListWorking, function (j, color) {
                                             renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n" +
-                                                "              class=\"img-responsive fs-index-color-img\" \n" +
-                                                "              fs-index-color-img=\"" + color.colorID + "\" \n" +
-                                                "              fs-product=\"" + prod.productID + "\" \n" +
-                                                "              alt=\"" + color.urlColorImg + "\" \n" +
-                                                "              title=\"" + color.color + "\"/>";
+                                                    "              class=\"img-responsive fs-index-color-img\" \n" +
+                                                    "              fs-index-color-img=\"" + color.colorID + "\" \n" +
+                                                    "              fs-product=\"" + prod.productID + "\" \n" +
+                                                    "              alt=\"" + color.urlColorImg + "\" \n" +
+                                                    "              title=\"" + color.color + "\"/>";
                                         });
                                     }
 
                                     if (prod.productDiscount == 0) {
                                         result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                            "     <div class=\"product-item\">\n" +
-                                            "          <div class=\"item-thumb\">\n" +
-                                            "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                            "                    class=\"img-responsive\" \n" +
-                                            "                    alt=\"" + prod.urlImg + "\"\n" +
-                                            "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                            "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                            "                     data-toggle=\"modal\" \n" +
-                                            "                     fs-product=\"" + prod.productID + "\" \n" +
-                                            "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                            "                </div>\n" +
-                                            "                <div class=\"product-overlay\">\n" +
-                                            "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                            "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
-                                            "                </div>\n" +
-                                            "          </div>\n" +
-                                            "      <div class=\"product-info\">\n" +
-                                            "          <h4 class=\"product-title\">\n" +
-                                            "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                            "                 " + prod.productName + "\n" +
-                                            "              </a>\n" +
-                                            "          </h4>\n" +
-                                            "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
-                                            "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                            renderColor +
-                                            "          </div>\n" +
-                                            "      </div>\n" +
-                                            "    </div>\n" +
-                                            "</div>";
+                                                "     <div class=\"product-item\">\n" +
+                                                "          <div class=\"item-thumb\">\n" +
+                                                "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                                "                    class=\"img-responsive\" \n" +
+                                                "                    alt=\"" + prod.urlImg + "\"\n" +
+                                                "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                                "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                                "                     data-toggle=\"modal\" \n" +
+                                                "                     fs-product=\"" + prod.productID + "\" \n" +
+                                                "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                                "                </div>\n" +
+                                                "                <div class=\"product-overlay\">\n" +
+                                                "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                                "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
+                                                "                </div>\n" +
+                                                "          </div>\n" +
+                                                "      <div class=\"product-info\">\n" +
+                                                "          <h4 class=\"product-title\">\n" +
+                                                "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                                "                 " + prod.productName + "\n" +
+                                                "              </a>\n" +
+                                                "          </h4>\n" +
+                                                "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
+                                                "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                                renderColor +
+                                                "          </div>\n" +
+                                                "      </div>\n" +
+                                                "    </div>\n" +
+                                                "</div>";
                                     } else {
                                         result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                            "     <div class=\"product-item\">\n" +
-                                            "          <div class=\"item-thumb\">\n" +
-                                            "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
-                                            "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                            "                    class=\"img-responsive\" \n" +
-                                            "                    alt=\"" + prod.urlImg + "\"\n" +
-                                            "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                            "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                            "                     data-toggle=\"modal\" \n" +
-                                            "                     fs-product=\"" + prod.productID + "\" \n" +
-                                            "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                            "                </div>\n" +
-                                            "                <div class=\"product-overlay\">\n" +
-                                            "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                            "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
-                                            "                </div>\n" +
-                                            "          </div>\n" +
-                                            "      <div class=\"product-info\">\n" +
-                                            "          <h4 class=\"product-title\">\n" +
-                                            "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                            "                 " + prod.productName + "\n" +
-                                            "              </a>\n" +
-                                            "          </h4>\n" +
-                                            "          <span class=\"product-price\">\n" +
-                                            "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
-                                            "          </span>\n" +
-                                            "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                            renderColor +
-                                            "          </div>\n" +
-                                            "      </div>\n" +
-                                            "    </div>\n" +
-                                            "</div>";
+                                                "     <div class=\"product-item\">\n" +
+                                                "          <div class=\"item-thumb\">\n" +
+                                                "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
+                                                "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                                "                    class=\"img-responsive\" \n" +
+                                                "                    alt=\"" + prod.urlImg + "\"\n" +
+                                                "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                                "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                                "                     data-toggle=\"modal\" \n" +
+                                                "                     fs-product=\"" + prod.productID + "\" \n" +
+                                                "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                                "                </div>\n" +
+                                                "                <div class=\"product-overlay\">\n" +
+                                                "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                                "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
+                                                "                </div>\n" +
+                                                "          </div>\n" +
+                                                "      <div class=\"product-info\">\n" +
+                                                "          <h4 class=\"product-title\">\n" +
+                                                "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                                "                 " + prod.productName + "\n" +
+                                                "              </a>\n" +
+                                                "          </h4>\n" +
+                                                "          <span class=\"product-price\">\n" +
+                                                "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
+                                                "          </span>\n" +
+                                                "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                                renderColor +
+                                                "          </div>\n" +
+                                                "      </div>\n" +
+                                                "    </div>\n" +
+                                                "</div>";
                                     }
                                 });
                                 $("#fs-change-data-here").html(result);
@@ -1676,7 +1631,7 @@ $(document).ready(function() {
     var sizeFilterArrSubCate = [];
 
     /* AJAX ON CLICK PAGE */
-    $("#fs-shop-content-sub-category").on("click", ".fs-page-number", function() {
+    $("#fs-shop-content-sub-category").on("click", ".fs-page-number", function () {
         var input = $("input[name='emailUser']").val();
         var userID = $("input[name='findUsersID']").val();
         if (!$(this).hasClass("fs-page-number-active")) {
@@ -1711,98 +1666,98 @@ $(document).ready(function() {
                     sizeFilterArrSubCate: sizeFilterArrSubCate
                 },
                 dataType: 'JSON',
-                beforeSend: function() {
+                beforeSend: function () {
                     $("#fs-ajax-loading").css("display", "block");
                 },
-                success: function(response) {
-                    setTimeout(function() {
+                success: function (response) {
+                    setTimeout(function () {
                         $("#fs-ajax-loading").css("display", "none");
                         if (response != "") {
                             $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
                             //Change product content
                             var result = "";
-                            $.each(response, function(i, prod) {
+                            $.each(response, function (i, prod) {
                                 var renderColor = "";
                                 if (prod.productColorListWorking.length > 1) {
-                                    $.each(prod.productColorListWorking, function(j, color) {
+                                    $.each(prod.productColorListWorking, function (j, color) {
                                         renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n" +
-                                            "              class=\"img-responsive fs-index-color-img\" \n" +
-                                            "              fs-index-color-img=\"" + color.colorID + "\" \n" +
-                                            "              fs-product=\"" + prod.productID + "\" \n" +
-                                            "              alt=\"" + color.urlColorImg + "\" \n" +
-                                            "              title=\"" + color.color + "\"/>";
+                                                "              class=\"img-responsive fs-index-color-img\" \n" +
+                                                "              fs-index-color-img=\"" + color.colorID + "\" \n" +
+                                                "              fs-product=\"" + prod.productID + "\" \n" +
+                                                "              alt=\"" + color.urlColorImg + "\" \n" +
+                                                "              title=\"" + color.color + "\"/>";
                                     });
                                 }
 
                                 if (prod.productDiscount == 0) {
                                     result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                        "     <div class=\"product-item\">\n" +
-                                        "          <div class=\"item-thumb\">\n" +
-                                        "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                        "                    class=\"img-responsive\" \n" +
-                                        "                    alt=\"" + prod.urlImg + "\"\n" +
-                                        "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                        "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                        "                     data-toggle=\"modal\" \n" +
-                                        "                     fs-product=\"" + prod.productID + "\" \n" +
-                                        "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                        "                </div>\n" +
-                                        "                <div class=\"product-overlay\">\n" +
-                                        "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                        "                     <a class=\"likeitem fa fa-heart-o fs-wl-add-sub-a\" \n" +
-                                        "                     fs-userID=\"" + userID + "\" \n" +
-                                        "                     fs-productID=\"" + prod.productID + "\"></a>\n" +
-                                        "                </div>\n" +
-                                        "          </div>\n" +
-                                        "      <div class=\"product-info\">\n" +
-                                        "          <h4 class=\"product-title\">\n" +
-                                        "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                        "                 " + prod.productName + "\n" +
-                                        "              </a>\n" +
-                                        "          </h4>\n" +
-                                        "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
-                                        "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                        renderColor +
-                                        "          </div>\n" +
-                                        "      </div>\n" +
-                                        "    </div>\n" +
-                                        "</div>";
+                                            "     <div class=\"product-item\">\n" +
+                                            "          <div class=\"item-thumb\">\n" +
+                                            "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                            "                    class=\"img-responsive\" \n" +
+                                            "                    alt=\"" + prod.urlImg + "\"\n" +
+                                            "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                            "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                            "                     data-toggle=\"modal\" \n" +
+                                            "                     fs-product=\"" + prod.productID + "\" \n" +
+                                            "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                            "                </div>\n" +
+                                            "                <div class=\"product-overlay\">\n" +
+                                            "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                            "                     <a class=\"likeitem fa fa-heart-o fs-wl-add-sub-a\" \n" +
+                                            "                     fs-userID=\"" + userID + "\" \n" +
+                                            "                     fs-productID=\"" + prod.productID + "\"></a>\n" +
+                                            "                </div>\n" +
+                                            "          </div>\n" +
+                                            "      <div class=\"product-info\">\n" +
+                                            "          <h4 class=\"product-title\">\n" +
+                                            "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                            "                 " + prod.productName + "\n" +
+                                            "              </a>\n" +
+                                            "          </h4>\n" +
+                                            "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
+                                            "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                            renderColor +
+                                            "          </div>\n" +
+                                            "      </div>\n" +
+                                            "    </div>\n" +
+                                            "</div>";
                                 } else {
                                     result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                        "     <div class=\"product-item\">\n" +
-                                        "          <div class=\"item-thumb\">\n" +
-                                        "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
-                                        "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                        "                    class=\"img-responsive\" \n" +
-                                        "                    alt=\"" + prod.urlImg + "\"\n" +
-                                        "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                        "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                        "                     data-toggle=\"modal\" \n" +
-                                        "                     fs-product=\"" + prod.productID + "\" \n" +
-                                        "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                        "                </div>\n" +
-                                        "                <div class=\"product-overlay\">\n" +
-                                        "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                        "                     <a class=\"likeitem fa fa-heart-o fs-wl-add-sub-a\" \n" +
-                                        "                     fs-userID=\"" + userID + "\" \n" +
-                                        "                     fs-productID=\"" + prod.productID + "\"></a>\n" +
-                                        "                </div>\n" +
-                                        "          </div>\n" +
-                                        "      <div class=\"product-info\">\n" +
-                                        "          <h4 class=\"product-title\">\n" +
-                                        "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                        "                 " + prod.productName + "\n" +
-                                        "              </a>\n" +
-                                        "          </h4>\n" +
-                                        "          <span class=\"product-price\">\n" +
-                                        "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
-                                        "          </span>\n" +
-                                        "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                        renderColor +
-                                        "          </div>\n" +
-                                        "      </div>\n" +
-                                        "    </div>\n" +
-                                        "</div>";
+                                            "     <div class=\"product-item\">\n" +
+                                            "          <div class=\"item-thumb\">\n" +
+                                            "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
+                                            "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                            "                    class=\"img-responsive\" \n" +
+                                            "                    alt=\"" + prod.urlImg + "\"\n" +
+                                            "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                            "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                            "                     data-toggle=\"modal\" \n" +
+                                            "                     fs-product=\"" + prod.productID + "\" \n" +
+                                            "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                            "                </div>\n" +
+                                            "                <div class=\"product-overlay\">\n" +
+                                            "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                            "                     <a class=\"likeitem fa fa-heart-o fs-wl-add-sub-a\" \n" +
+                                            "                     fs-userID=\"" + userID + "\" \n" +
+                                            "                     fs-productID=\"" + prod.productID + "\"></a>\n" +
+                                            "                </div>\n" +
+                                            "          </div>\n" +
+                                            "      <div class=\"product-info\">\n" +
+                                            "          <h4 class=\"product-title\">\n" +
+                                            "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                            "                 " + prod.productName + "\n" +
+                                            "              </a>\n" +
+                                            "          </h4>\n" +
+                                            "          <span class=\"product-price\">\n" +
+                                            "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
+                                            "          </span>\n" +
+                                            "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                            renderColor +
+                                            "          </div>\n" +
+                                            "      </div>\n" +
+                                            "    </div>\n" +
+                                            "</div>";
                                 }
                             });
                             $("#fs-change-data-here").html(result);
@@ -1815,7 +1770,7 @@ $(document).ready(function() {
 
     //    MODAL WISH-LIST
 
-    $("#fs-shop-content-sub-category").on("click", ".fs-wl-add-sub-a", function() {
+    $("#fs-shop-content-sub-category").on("click", ".fs-wl-add-sub-a", function () {
         var input = $("input[name='emailUser']");
         var userID = $(this).attr("fs-userID");
         var productID = $(this).attr("fs-productID");
@@ -1831,7 +1786,7 @@ $(document).ready(function() {
                         userID: userID,
                         productID: productID
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response == "1") {
                             swal({
                                 title: "<h1 style='color: #31b131;'>Success</h1>",
@@ -1860,7 +1815,7 @@ $(document).ready(function() {
                         userID: userID,
                         productID: productID
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response == "1") {
                             swal({
                                 title: "<h1 style='color: #ff0000;' >Delete</h1>",
@@ -1876,19 +1831,15 @@ $(document).ready(function() {
 
         } else {
             //Khong có session
-            $("#fs-modal-mess").modal("show");
-            $(".fs-btn-login-wl").click(function() {
-                $("#fs-modal-mess").modal("hide");
-                window.location = window.location.href;
-                //                $("#loginModal").modal("show");
-            });
+            $("#loginModal").modal("show");
+
         }
 
 
     });
 
     /* AJAX ON CHANGE SORT PRODUCT BY  */
-    $("#fs-shop-content-sub-category").on("change", "#fs-sort-product-by", function() {
+    $("#fs-shop-content-sub-category").on("change", "#fs-sort-product-by", function () {
         var sortBy = $(this).val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
         var subCateID = $(this).attr("fs-subCategory");
         var page = 1;
@@ -1919,94 +1870,94 @@ $(document).ready(function() {
                 sizeFilterArrSubCate: sizeFilterArrSubCate
             },
             dataType: 'JSON',
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#fs-ajax-loading").css("display", "block");
             },
-            success: function(response) {
-                setTimeout(function() {
+            success: function (response) {
+                setTimeout(function () {
                     $("#fs-ajax-loading").css("display", "none");
                     if (response != 0) {
                         $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
                         //Change product content
                         var result = "";
-                        $.each(response, function(i, prod) {
+                        $.each(response, function (i, prod) {
                             var renderColor = "";
                             if (prod.productColorListWorking.length > 1) {
-                                $.each(prod.productColorListWorking, function(j, color) {
+                                $.each(prod.productColorListWorking, function (j, color) {
                                     renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n" +
-                                        "              class=\"img-responsive fs-index-color-img\" \n" +
-                                        "              fs-index-color-img=\"" + color.colorID + "\" \n" +
-                                        "              fs-product=\"" + prod.productID + "\" \n" +
-                                        "              alt=\"" + color.urlColorImg + "\" \n" +
-                                        "              title=\"" + color.color + "\"/>";
+                                            "              class=\"img-responsive fs-index-color-img\" \n" +
+                                            "              fs-index-color-img=\"" + color.colorID + "\" \n" +
+                                            "              fs-product=\"" + prod.productID + "\" \n" +
+                                            "              alt=\"" + color.urlColorImg + "\" \n" +
+                                            "              title=\"" + color.color + "\"/>";
                                 });
                             }
 
                             if (prod.productDiscount == 0) {
                                 result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                    "     <div class=\"product-item\">\n" +
-                                    "          <div class=\"item-thumb\">\n" +
-                                    "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                    "                    class=\"img-responsive\" \n" +
-                                    "                    alt=\"" + prod.urlImg + "\"\n" +
-                                    "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                    "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                    "                     data-toggle=\"modal\" \n" +
-                                    "                     fs-product=\"" + prod.productID + "\" \n" +
-                                    "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                    "                </div>\n" +
-                                    "                <div class=\"product-overlay\">\n" +
-                                    "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                    "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
-                                    "                </div>\n" +
-                                    "          </div>\n" +
-                                    "      <div class=\"product-info\">\n" +
-                                    "          <h4 class=\"product-title\">\n" +
-                                    "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                    "                 " + prod.productName + "\n" +
-                                    "              </a>\n" +
-                                    "          </h4>\n" +
-                                    "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
-                                    "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                    renderColor +
-                                    "          </div>\n" +
-                                    "      </div>\n" +
-                                    "    </div>\n" +
-                                    "</div>";
+                                        "     <div class=\"product-item\">\n" +
+                                        "          <div class=\"item-thumb\">\n" +
+                                        "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                        "                    class=\"img-responsive\" \n" +
+                                        "                    alt=\"" + prod.urlImg + "\"\n" +
+                                        "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                        "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                        "                     data-toggle=\"modal\" \n" +
+                                        "                     fs-product=\"" + prod.productID + "\" \n" +
+                                        "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                        "                </div>\n" +
+                                        "                <div class=\"product-overlay\">\n" +
+                                        "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                        "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
+                                        "                </div>\n" +
+                                        "          </div>\n" +
+                                        "      <div class=\"product-info\">\n" +
+                                        "          <h4 class=\"product-title\">\n" +
+                                        "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                        "                 " + prod.productName + "\n" +
+                                        "              </a>\n" +
+                                        "          </h4>\n" +
+                                        "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
+                                        "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                        renderColor +
+                                        "          </div>\n" +
+                                        "      </div>\n" +
+                                        "    </div>\n" +
+                                        "</div>";
                             } else {
                                 result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                    "     <div class=\"product-item\">\n" +
-                                    "          <div class=\"item-thumb\">\n" +
-                                    "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
-                                    "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                    "                    class=\"img-responsive\" \n" +
-                                    "                    alt=\"" + prod.urlImg + "\"\n" +
-                                    "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                    "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                    "                     data-toggle=\"modal\" \n" +
-                                    "                     fs-product=\"" + prod.productID + "\" \n" +
-                                    "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                    "                </div>\n" +
-                                    "                <div class=\"product-overlay\">\n" +
-                                    "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                    "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
-                                    "                </div>\n" +
-                                    "          </div>\n" +
-                                    "      <div class=\"product-info\">\n" +
-                                    "          <h4 class=\"product-title\">\n" +
-                                    "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                    "                 " + prod.productName + "\n" +
-                                    "              </a>\n" +
-                                    "          </h4>\n" +
-                                    "          <span class=\"product-price\">\n" +
-                                    "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
-                                    "          </span>\n" +
-                                    "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                    renderColor +
-                                    "          </div>\n" +
-                                    "      </div>\n" +
-                                    "    </div>\n" +
-                                    "</div>";
+                                        "     <div class=\"product-item\">\n" +
+                                        "          <div class=\"item-thumb\">\n" +
+                                        "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
+                                        "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                        "                    class=\"img-responsive\" \n" +
+                                        "                    alt=\"" + prod.urlImg + "\"\n" +
+                                        "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                        "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                        "                     data-toggle=\"modal\" \n" +
+                                        "                     fs-product=\"" + prod.productID + "\" \n" +
+                                        "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                        "                </div>\n" +
+                                        "                <div class=\"product-overlay\">\n" +
+                                        "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                        "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
+                                        "                </div>\n" +
+                                        "          </div>\n" +
+                                        "      <div class=\"product-info\">\n" +
+                                        "          <h4 class=\"product-title\">\n" +
+                                        "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                        "                 " + prod.productName + "\n" +
+                                        "              </a>\n" +
+                                        "          </h4>\n" +
+                                        "          <span class=\"product-price\">\n" +
+                                        "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
+                                        "          </span>\n" +
+                                        "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                        renderColor +
+                                        "          </div>\n" +
+                                        "      </div>\n" +
+                                        "    </div>\n" +
+                                        "</div>";
                             }
                         });
                         $("#fs-change-data-here").html(result);
@@ -2016,7 +1967,7 @@ $(document).ready(function() {
         });
     });
     /* AJAX ON CHANGE NUMBER OF PRODUCT PER PAGE */
-    $("#fs-shop-content-sub-category").on("change", "#fs-number-of-item-on-page", function() {
+    $("#fs-shop-content-sub-category").on("change", "#fs-number-of-item-on-page", function () {
         var sortBy = $("#fs-sort-product-by").val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
         var itemPerPage = $("#fs-number-of-item-on-page").val();
         var page = 1;
@@ -2056,11 +2007,11 @@ $(document).ready(function() {
                 sizeFilterArrSubCate: sizeFilterArrSubCate
             },
             dataType: 'JSON',
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#fs-ajax-loading").css("display", "block");
             },
-            success: function(response) {
-                setTimeout(function() {
+            success: function (response) {
+                setTimeout(function () {
                     $("#fs-ajax-loading").css("display", "none");
                     if (response != 0) {
                         $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
@@ -2068,84 +2019,84 @@ $(document).ready(function() {
                         $(".fs-ul-page-nav").html(pagination);
                         //Change product content
                         var result = "";
-                        $.each(response, function(i, prod) {
+                        $.each(response, function (i, prod) {
                             var renderColor = "";
                             if (prod.productColorListWorking.length > 1) {
-                                $.each(prod.productColorListWorking, function(j, color) {
+                                $.each(prod.productColorListWorking, function (j, color) {
                                     renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n" +
-                                        "              class=\"img-responsive fs-index-color-img\" \n" +
-                                        "              fs-index-color-img=\"" + color.colorID + "\" \n" +
-                                        "              fs-product=\"" + prod.productID + "\" \n" +
-                                        "              alt=\"" + color.urlColorImg + "\" \n" +
-                                        "              title=\"" + color.color + "\"/>";
+                                            "              class=\"img-responsive fs-index-color-img\" \n" +
+                                            "              fs-index-color-img=\"" + color.colorID + "\" \n" +
+                                            "              fs-product=\"" + prod.productID + "\" \n" +
+                                            "              alt=\"" + color.urlColorImg + "\" \n" +
+                                            "              title=\"" + color.color + "\"/>";
                                 });
                             }
 
                             if (prod.productDiscount == 0) {
                                 result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                    "     <div class=\"product-item\">\n" +
-                                    "          <div class=\"item-thumb\">\n" +
-                                    "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                    "                    class=\"img-responsive\" \n" +
-                                    "                    alt=\"" + prod.urlImg + "\"\n" +
-                                    "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                    "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                    "                     data-toggle=\"modal\" \n" +
-                                    "                     fs-product=\"" + prod.productID + "\" \n" +
-                                    "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                    "                </div>\n" +
-                                    "                <div class=\"product-overlay\">\n" +
-                                    "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                    "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
-                                    "                </div>\n" +
-                                    "          </div>\n" +
-                                    "      <div class=\"product-info\">\n" +
-                                    "          <h4 class=\"product-title\">\n" +
-                                    "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                    "                 " + prod.productName + "\n" +
-                                    "              </a>\n" +
-                                    "          </h4>\n" +
-                                    "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
-                                    "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                    renderColor +
-                                    "          </div>\n" +
-                                    "      </div>\n" +
-                                    "    </div>\n" +
-                                    "</div>";
+                                        "     <div class=\"product-item\">\n" +
+                                        "          <div class=\"item-thumb\">\n" +
+                                        "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                        "                    class=\"img-responsive\" \n" +
+                                        "                    alt=\"" + prod.urlImg + "\"\n" +
+                                        "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                        "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                        "                     data-toggle=\"modal\" \n" +
+                                        "                     fs-product=\"" + prod.productID + "\" \n" +
+                                        "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                        "                </div>\n" +
+                                        "                <div class=\"product-overlay\">\n" +
+                                        "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                        "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
+                                        "                </div>\n" +
+                                        "          </div>\n" +
+                                        "      <div class=\"product-info\">\n" +
+                                        "          <h4 class=\"product-title\">\n" +
+                                        "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                        "                 " + prod.productName + "\n" +
+                                        "              </a>\n" +
+                                        "          </h4>\n" +
+                                        "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
+                                        "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                        renderColor +
+                                        "          </div>\n" +
+                                        "      </div>\n" +
+                                        "    </div>\n" +
+                                        "</div>";
                             } else {
                                 result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                    "     <div class=\"product-item\">\n" +
-                                    "          <div class=\"item-thumb\">\n" +
-                                    "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
-                                    "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                    "                    class=\"img-responsive\" \n" +
-                                    "                    alt=\"" + prod.urlImg + "\"\n" +
-                                    "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                    "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                    "                     data-toggle=\"modal\" \n" +
-                                    "                     fs-product=\"" + prod.productID + "\" \n" +
-                                    "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                    "                </div>\n" +
-                                    "                <div class=\"product-overlay\">\n" +
-                                    "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                    "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
-                                    "                </div>\n" +
-                                    "          </div>\n" +
-                                    "      <div class=\"product-info\">\n" +
-                                    "          <h4 class=\"product-title\">\n" +
-                                    "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                    "                 " + prod.productName + "\n" +
-                                    "              </a>\n" +
-                                    "          </h4>\n" +
-                                    "          <span class=\"product-price\">\n" +
-                                    "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
-                                    "          </span>\n" +
-                                    "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                    renderColor +
-                                    "          </div>\n" +
-                                    "      </div>\n" +
-                                    "    </div>\n" +
-                                    "</div>";
+                                        "     <div class=\"product-item\">\n" +
+                                        "          <div class=\"item-thumb\">\n" +
+                                        "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
+                                        "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                        "                    class=\"img-responsive\" \n" +
+                                        "                    alt=\"" + prod.urlImg + "\"\n" +
+                                        "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                        "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                        "                     data-toggle=\"modal\" \n" +
+                                        "                     fs-product=\"" + prod.productID + "\" \n" +
+                                        "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                        "                </div>\n" +
+                                        "                <div class=\"product-overlay\">\n" +
+                                        "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                        "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
+                                        "                </div>\n" +
+                                        "          </div>\n" +
+                                        "      <div class=\"product-info\">\n" +
+                                        "          <h4 class=\"product-title\">\n" +
+                                        "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                        "                 " + prod.productName + "\n" +
+                                        "              </a>\n" +
+                                        "          </h4>\n" +
+                                        "          <span class=\"product-price\">\n" +
+                                        "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
+                                        "          </span>\n" +
+                                        "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                        renderColor +
+                                        "          </div>\n" +
+                                        "      </div>\n" +
+                                        "    </div>\n" +
+                                        "</div>";
                             }
                         });
                         $("#fs-change-data-here").html(result);
@@ -2155,7 +2106,7 @@ $(document).ready(function() {
         });
     });
     /* FILTER PRODUCT BY PRICE */
-    $("#fs-shop-content-sub-category").on("click", "#fs-btn-filter-price", function() {
+    $("#fs-shop-content-sub-category").on("click", "#fs-btn-filter-price", function () {
 
         $(this).attr("fs-filter", "yes");
         var page = 1;
@@ -2196,7 +2147,7 @@ $(document).ready(function() {
                     colorFilterArrSubCate: colorFilterArrSubCate,
                     sizeFilterArrSubCate: sizeFilterArrSubCate
                 },
-                success: function(numberOfProducts) {
+                success: function (numberOfProducts) {
                     $.ajax({
                         url: "ajax/productPaginationForSubCate.html",
                         method: "POST",
@@ -2211,11 +2162,11 @@ $(document).ready(function() {
                             sizeFilterArrSubCate: sizeFilterArrSubCate
                         },
                         dataType: 'JSON',
-                        beforeSend: function() {
+                        beforeSend: function () {
                             $("#fs-ajax-loading").css("display", "block");
                         },
-                        success: function(response) {
-                            setTimeout(function() {
+                        success: function (response) {
+                            setTimeout(function () {
                                 $("#fs-ajax-loading").css("display", "none");
                                 if (response.length == 0) {
                                     $("#fs-change-data-here").html("<div class='col-xs-12'><h1>Nothing To Show!</h1></div>");
@@ -2249,21 +2200,193 @@ $(document).ready(function() {
                                     $(".fs-number-of-products").text(numberOfProducts);
                                     //Change product content
                                     var result = "";
-                                    $.each(response, function(i, prod) {
+                                    $.each(response, function (i, prod) {
                                         var renderColor = "";
                                         if (prod.productColorListWorking.length > 1) {
-                                            $.each(prod.productColorListWorking, function(j, color) {
+                                            $.each(prod.productColorListWorking, function (j, color) {
                                                 renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n" +
-                                                    "              class=\"img-responsive fs-index-color-img\" \n" +
-                                                    "              fs-index-color-img=\"" + color.colorID + "\" \n" +
-                                                    "              fs-product=\"" + prod.productID + "\" \n" +
-                                                    "              alt=\"" + color.urlColorImg + "\" \n" +
-                                                    "              title=\"" + color.color + "\"/>";
+                                                        "              class=\"img-responsive fs-index-color-img\" \n" +
+                                                        "              fs-index-color-img=\"" + color.colorID + "\" \n" +
+                                                        "              fs-product=\"" + prod.productID + "\" \n" +
+                                                        "              alt=\"" + color.urlColorImg + "\" \n" +
+                                                        "              title=\"" + color.color + "\"/>";
                                             });
                                         }
 
                                         if (prod.productDiscount == 0) {
                                             result += "<div class=\"col-md-4 col-sm-6\">\n" +
+                                                    "     <div class=\"product-item\">\n" +
+                                                    "          <div class=\"item-thumb\">\n" +
+                                                    "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                                    "                    class=\"img-responsive\" \n" +
+                                                    "                    alt=\"" + prod.urlImg + "\"\n" +
+                                                    "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                                    "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                                    "                     data-toggle=\"modal\" \n" +
+                                                    "                     fs-product=\"" + prod.productID + "\" \n" +
+                                                    "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                                    "                </div>\n" +
+                                                    "                <div class=\"product-overlay\">\n" +
+                                                    "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                                    "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
+                                                    "                </div>\n" +
+                                                    "          </div>\n" +
+                                                    "      <div class=\"product-info\">\n" +
+                                                    "          <h4 class=\"product-title\">\n" +
+                                                    "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                                    "                 " + prod.productName + "\n" +
+                                                    "              </a>\n" +
+                                                    "          </h4>\n" +
+                                                    "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
+                                                    "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                                    renderColor +
+                                                    "          </div>\n" +
+                                                    "      </div>\n" +
+                                                    "    </div>\n" +
+                                                    "</div>";
+                                        } else {
+                                            result += "<div class=\"col-md-4 col-sm-6\">\n" +
+                                                    "     <div class=\"product-item\">\n" +
+                                                    "          <div class=\"item-thumb\">\n" +
+                                                    "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
+                                                    "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                                    "                    class=\"img-responsive\" \n" +
+                                                    "                    alt=\"" + prod.urlImg + "\"\n" +
+                                                    "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                                    "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                                    "                     data-toggle=\"modal\" \n" +
+                                                    "                     fs-product=\"" + prod.productID + "\" \n" +
+                                                    "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                                    "                </div>\n" +
+                                                    "                <div class=\"product-overlay\">\n" +
+                                                    "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                                    "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
+                                                    "                </div>\n" +
+                                                    "          </div>\n" +
+                                                    "      <div class=\"product-info\">\n" +
+                                                    "          <h4 class=\"product-title\">\n" +
+                                                    "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                                    "                 " + prod.productName + "\n" +
+                                                    "              </a>\n" +
+                                                    "          </h4>\n" +
+                                                    "          <span class=\"product-price\">\n" +
+                                                    "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
+                                                    "          </span>\n" +
+                                                    "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                                    renderColor +
+                                                    "          </div>\n" +
+                                                    "      </div>\n" +
+                                                    "    </div>\n" +
+                                                    "</div>";
+                                        }
+                                    });
+                                    $("#fs-change-data-here").html(result);
+                                    $("#fs-price-from").val("");
+                                    $("#fs-price-to").val("");
+                                }
+                            }, 400);
+                        }
+                    });
+                }
+
+            });
+        }
+    });
+    /* FILTER PRODUCT BY COLOR */
+    $("#fs-shop-content-sub-category").on("change", ".fs-color-checkbox", function () {
+        if (this.checked) { //Check
+            colorFilterArrSubCate.push($(this).val());
+        } else { //Bỏ Check
+            var index = colorFilterArrSubCate.indexOf($(this).val());
+            if (index > -1) {
+                colorFilterArrSubCate.splice(index, 1);
+            }
+        }
+
+        var page = 1;
+        var fromPrice = $("#fs-price-from-text").text(); //Lọc giá Product "Từ"
+        var toPrice = $("#fs-price-to-text").text(); //Lọc giá Product "Đến"
+        var subCateID = $("#fs-price-from").attr("fs-subCategory");
+        var sortBy = $("#fs-sort-product-by").val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
+        var itemPerPage = $("#fs-number-of-item-on-page").val();
+        $.ajax({
+            url: "ajax/getNumberOfProductsByFilter_OfASubCategory.html",
+            method: "POST",
+            data: {
+                subCateID: subCateID,
+                fromPrice: fromPrice,
+                toPrice: toPrice,
+                colorFilterArrSubCate: colorFilterArrSubCate,
+                sizeFilterArrSubCate: sizeFilterArrSubCate
+            },
+            success: function (numberOfProducts) {
+                $.ajax({
+                    url: "ajax/productPaginationForSubCate.html",
+                    method: "POST",
+                    data: {
+                        subCateID: subCateID,
+                        page: page,
+                        itemPerPage: itemPerPage,
+                        sortBy: sortBy,
+                        fromPrice: fromPrice,
+                        toPrice: toPrice,
+                        colorFilterArrSubCate: colorFilterArrSubCate,
+                        sizeFilterArrSubCate: sizeFilterArrSubCate
+                    },
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                        $("#fs-ajax-loading").css("display", "block");
+                    },
+                    success: function (response) {
+
+                        setTimeout(function () {
+                            $("#fs-ajax-loading").css("display", "none");
+                            if (response.length == 0) {
+                                $("#fs-change-data-here").html("<div class='col-xs-12'><h1>Nothing To Show!</h1></div>");
+                                //change productPageInfo
+                                var from = 0;
+                                var to = 0;
+                                var currentProductPageInfo = from + " - " + to;
+                                $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
+                                $(".fs-number-of-products").text(numberOfProducts);
+                            } else {
+                                //Tổng số sản phẩm
+                                var numberOfPages = Math.ceil(parseInt(numberOfProducts) / itemPerPage);
+                                //Change pagination
+                                var pagination = "<li><span class=\"fs-page-number fs-page-number-active\" fs-page-number=\"1\" fs-subCategory=\"" + subCateID + "\">1</span></li>";
+                                if (numberOfPages > 1) {
+                                    for (var i = 2; i <= numberOfPages; i++) {
+                                        pagination += "<li><span class=\"fs-page-number\" fs-page-number=\"" + i + "\" fs-subCategory=\"" + subCateID + "\">" + i + "</span></li>";
+                                    }
+                                }
+
+                                $(".fs-ul-page-nav").html(pagination);
+                                //change productPageInfo
+                                var from = (page - 1) * itemPerPage + 1;
+                                var to = (page - 1) * itemPerPage + parseInt(itemPerPage);
+                                if (to > parseInt(numberOfProducts)) {
+                                    to = parseInt(numberOfProducts);
+                                }
+                                var currentProductPageInfo = from + " - " + to;
+                                $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
+                                $(".fs-number-of-products").text(numberOfProducts);
+                                //Change product content
+                                var result = "";
+                                $.each(response, function (i, prod) {
+                                    var renderColor = "";
+                                    if (prod.productColorListWorking.length > 1) {
+                                        $.each(prod.productColorListWorking, function (j, color) {
+                                            renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n" +
+                                                    "              class=\"img-responsive fs-index-color-img\" \n" +
+                                                    "              fs-index-color-img=\"" + color.colorID + "\" \n" +
+                                                    "              fs-product=\"" + prod.productID + "\" \n" +
+                                                    "              alt=\"" + color.urlColorImg + "\" \n" +
+                                                    "              title=\"" + color.color + "\"/>";
+                                        });
+                                    }
+
+                                    if (prod.productDiscount == 0) {
+                                        result += "<div class=\"col-md-4 col-sm-6\">\n" +
                                                 "     <div class=\"product-item\">\n" +
                                                 "          <div class=\"item-thumb\">\n" +
                                                 "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
@@ -2293,8 +2416,8 @@ $(document).ready(function() {
                                                 "      </div>\n" +
                                                 "    </div>\n" +
                                                 "</div>";
-                                        } else {
-                                            result += "<div class=\"col-md-4 col-sm-6\">\n" +
+                                    } else {
+                                        result += "<div class=\"col-md-4 col-sm-6\">\n" +
                                                 "     <div class=\"product-item\">\n" +
                                                 "          <div class=\"item-thumb\">\n" +
                                                 "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
@@ -2327,178 +2450,6 @@ $(document).ready(function() {
                                                 "      </div>\n" +
                                                 "    </div>\n" +
                                                 "</div>";
-                                        }
-                                    });
-                                    $("#fs-change-data-here").html(result);
-                                    $("#fs-price-from").val("");
-                                    $("#fs-price-to").val("");
-                                }
-                            }, 400);
-                        }
-                    });
-                }
-
-            });
-        }
-    });
-    /* FILTER PRODUCT BY COLOR */
-    $("#fs-shop-content-sub-category").on("change", ".fs-color-checkbox", function() {
-        if (this.checked) { //Check
-            colorFilterArrSubCate.push($(this).val());
-        } else { //Bỏ Check
-            var index = colorFilterArrSubCate.indexOf($(this).val());
-            if (index > -1) {
-                colorFilterArrSubCate.splice(index, 1);
-            }
-        }
-
-        var page = 1;
-        var fromPrice = $("#fs-price-from-text").text(); //Lọc giá Product "Từ"
-        var toPrice = $("#fs-price-to-text").text(); //Lọc giá Product "Đến"
-        var subCateID = $("#fs-price-from").attr("fs-subCategory");
-        var sortBy = $("#fs-sort-product-by").val(); //1: Newest; 2: Low to High Price; 3: High to Low Price
-        var itemPerPage = $("#fs-number-of-item-on-page").val();
-        $.ajax({
-            url: "ajax/getNumberOfProductsByFilter_OfASubCategory.html",
-            method: "POST",
-            data: {
-                subCateID: subCateID,
-                fromPrice: fromPrice,
-                toPrice: toPrice,
-                colorFilterArrSubCate: colorFilterArrSubCate,
-                sizeFilterArrSubCate: sizeFilterArrSubCate
-            },
-            success: function(numberOfProducts) {
-                $.ajax({
-                    url: "ajax/productPaginationForSubCate.html",
-                    method: "POST",
-                    data: {
-                        subCateID: subCateID,
-                        page: page,
-                        itemPerPage: itemPerPage,
-                        sortBy: sortBy,
-                        fromPrice: fromPrice,
-                        toPrice: toPrice,
-                        colorFilterArrSubCate: colorFilterArrSubCate,
-                        sizeFilterArrSubCate: sizeFilterArrSubCate
-                    },
-                    dataType: 'JSON',
-                    beforeSend: function() {
-                        $("#fs-ajax-loading").css("display", "block");
-                    },
-                    success: function(response) {
-
-                        setTimeout(function() {
-                            $("#fs-ajax-loading").css("display", "none");
-                            if (response.length == 0) {
-                                $("#fs-change-data-here").html("<div class='col-xs-12'><h1>Nothing To Show!</h1></div>");
-                                //change productPageInfo
-                                var from = 0;
-                                var to = 0;
-                                var currentProductPageInfo = from + " - " + to;
-                                $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
-                                $(".fs-number-of-products").text(numberOfProducts);
-                            } else {
-                                //Tổng số sản phẩm
-                                var numberOfPages = Math.ceil(parseInt(numberOfProducts) / itemPerPage);
-                                //Change pagination
-                                var pagination = "<li><span class=\"fs-page-number fs-page-number-active\" fs-page-number=\"1\" fs-subCategory=\"" + subCateID + "\">1</span></li>";
-                                if (numberOfPages > 1) {
-                                    for (var i = 2; i <= numberOfPages; i++) {
-                                        pagination += "<li><span class=\"fs-page-number\" fs-page-number=\"" + i + "\" fs-subCategory=\"" + subCateID + "\">" + i + "</span></li>";
-                                    }
-                                }
-
-                                $(".fs-ul-page-nav").html(pagination);
-                                //change productPageInfo
-                                var from = (page - 1) * itemPerPage + 1;
-                                var to = (page - 1) * itemPerPage + parseInt(itemPerPage);
-                                if (to > parseInt(numberOfProducts)) {
-                                    to = parseInt(numberOfProducts);
-                                }
-                                var currentProductPageInfo = from + " - " + to;
-                                $(".fs-change-currentProductPageInfo").text(currentProductPageInfo);
-                                $(".fs-number-of-products").text(numberOfProducts);
-                                //Change product content
-                                var result = "";
-                                $.each(response, function(i, prod) {
-                                    var renderColor = "";
-                                    if (prod.productColorListWorking.length > 1) {
-                                        $.each(prod.productColorListWorking, function(j, color) {
-                                            renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n" +
-                                                "              class=\"img-responsive fs-index-color-img\" \n" +
-                                                "              fs-index-color-img=\"" + color.colorID + "\" \n" +
-                                                "              fs-product=\"" + prod.productID + "\" \n" +
-                                                "              alt=\"" + color.urlColorImg + "\" \n" +
-                                                "              title=\"" + color.color + "\"/>";
-                                        });
-                                    }
-
-                                    if (prod.productDiscount == 0) {
-                                        result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                            "     <div class=\"product-item\">\n" +
-                                            "          <div class=\"item-thumb\">\n" +
-                                            "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                            "                    class=\"img-responsive\" \n" +
-                                            "                    alt=\"" + prod.urlImg + "\"\n" +
-                                            "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                            "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                            "                     data-toggle=\"modal\" \n" +
-                                            "                     fs-product=\"" + prod.productID + "\" \n" +
-                                            "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                            "                </div>\n" +
-                                            "                <div class=\"product-overlay\">\n" +
-                                            "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                            "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
-                                            "                </div>\n" +
-                                            "          </div>\n" +
-                                            "      <div class=\"product-info\">\n" +
-                                            "          <h4 class=\"product-title\">\n" +
-                                            "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                            "                 " + prod.productName + "\n" +
-                                            "              </a>\n" +
-                                            "          </h4>\n" +
-                                            "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
-                                            "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                            renderColor +
-                                            "          </div>\n" +
-                                            "      </div>\n" +
-                                            "    </div>\n" +
-                                            "</div>";
-                                    } else {
-                                        result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                            "     <div class=\"product-item\">\n" +
-                                            "          <div class=\"item-thumb\">\n" +
-                                            "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
-                                            "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                            "                    class=\"img-responsive\" \n" +
-                                            "                    alt=\"" + prod.urlImg + "\"\n" +
-                                            "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                            "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                            "                     data-toggle=\"modal\" \n" +
-                                            "                     fs-product=\"" + prod.productID + "\" \n" +
-                                            "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                            "                </div>\n" +
-                                            "                <div class=\"product-overlay\">\n" +
-                                            "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                            "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
-                                            "                </div>\n" +
-                                            "          </div>\n" +
-                                            "      <div class=\"product-info\">\n" +
-                                            "          <h4 class=\"product-title\">\n" +
-                                            "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                            "                 " + prod.productName + "\n" +
-                                            "              </a>\n" +
-                                            "          </h4>\n" +
-                                            "          <span class=\"product-price\">\n" +
-                                            "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
-                                            "          </span>\n" +
-                                            "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                            renderColor +
-                                            "          </div>\n" +
-                                            "      </div>\n" +
-                                            "    </div>\n" +
-                                            "</div>";
                                     }
                                 });
                                 $("#fs-change-data-here").html(result);
@@ -2510,7 +2461,7 @@ $(document).ready(function() {
         });
     });
     /* FILTER PRODUCT BY SIZE */
-    $("#fs-shop-content-sub-category").on("change", ".fs-size-checkbox", function() {
+    $("#fs-shop-content-sub-category").on("change", ".fs-size-checkbox", function () {
         if (this.checked) { //Check
             sizeFilterArrSubCate.push($(this).val());
         } else { //Bỏ Check
@@ -2536,7 +2487,7 @@ $(document).ready(function() {
                 colorFilterArrSubCate: colorFilterArrSubCate,
                 sizeFilterArrSubCate: sizeFilterArrSubCate
             },
-            success: function(numberOfProducts) {
+            success: function (numberOfProducts) {
                 $.ajax({
                     url: "ajax/productPaginationForSubCate.html",
                     method: "POST",
@@ -2551,12 +2502,12 @@ $(document).ready(function() {
                         sizeFilterArrSubCate: sizeFilterArrSubCate
                     },
                     dataType: 'JSON',
-                    beforeSend: function() {
+                    beforeSend: function () {
                         $("#fs-ajax-loading").css("display", "block");
                     },
-                    success: function(response) {
+                    success: function (response) {
 
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $("#fs-ajax-loading").css("display", "none");
                             if (response.length == 0) {
                                 $("#fs-change-data-here").html("<div class='col-xs-12'><h1>Nothing To Show!</h1></div>");
@@ -2588,84 +2539,84 @@ $(document).ready(function() {
                                 $(".fs-number-of-products").text(numberOfProducts);
                                 //Change product content
                                 var result = "";
-                                $.each(response, function(i, prod) {
+                                $.each(response, function (i, prod) {
                                     var renderColor = "";
                                     if (prod.productColorListWorking.length > 1) {
-                                        $.each(prod.productColorListWorking, function(j, color) {
+                                        $.each(prod.productColorListWorking, function (j, color) {
                                             renderColor += "<img src=\"assets/images/products/colors/" + color.urlColorImg + "\" \n" +
-                                                "              class=\"img-responsive fs-index-color-img\" \n" +
-                                                "              fs-index-color-img=\"" + color.colorID + "\" \n" +
-                                                "              fs-product=\"" + prod.productID + "\" \n" +
-                                                "              alt=\"" + color.urlColorImg + "\" \n" +
-                                                "              title=\"" + color.color + "\"/>";
+                                                    "              class=\"img-responsive fs-index-color-img\" \n" +
+                                                    "              fs-index-color-img=\"" + color.colorID + "\" \n" +
+                                                    "              fs-product=\"" + prod.productID + "\" \n" +
+                                                    "              alt=\"" + color.urlColorImg + "\" \n" +
+                                                    "              title=\"" + color.color + "\"/>";
                                         });
                                     }
 
                                     if (prod.productDiscount == 0) {
                                         result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                            "     <div class=\"product-item\">\n" +
-                                            "          <div class=\"item-thumb\">\n" +
-                                            "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                            "                    class=\"img-responsive\" \n" +
-                                            "                    alt=\"" + prod.urlImg + "\"\n" +
-                                            "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                            "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                            "                     data-toggle=\"modal\" \n" +
-                                            "                     fs-product=\"" + prod.productID + "\" \n" +
-                                            "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                            "                </div>\n" +
-                                            "                <div class=\"product-overlay\">\n" +
-                                            "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                            "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
-                                            "                </div>\n" +
-                                            "          </div>\n" +
-                                            "      <div class=\"product-info\">\n" +
-                                            "          <h4 class=\"product-title\">\n" +
-                                            "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                            "                 " + prod.productName + "\n" +
-                                            "              </a>\n" +
-                                            "          </h4>\n" +
-                                            "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
-                                            "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                            renderColor +
-                                            "          </div>\n" +
-                                            "      </div>\n" +
-                                            "    </div>\n" +
-                                            "</div>";
+                                                "     <div class=\"product-item\">\n" +
+                                                "          <div class=\"item-thumb\">\n" +
+                                                "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                                "                    class=\"img-responsive\" \n" +
+                                                "                    alt=\"" + prod.urlImg + "\"\n" +
+                                                "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                                "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                                "                     data-toggle=\"modal\" \n" +
+                                                "                     fs-product=\"" + prod.productID + "\" \n" +
+                                                "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                                "                </div>\n" +
+                                                "                <div class=\"product-overlay\">\n" +
+                                                "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                                "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
+                                                "                </div>\n" +
+                                                "          </div>\n" +
+                                                "      <div class=\"product-info\">\n" +
+                                                "          <h4 class=\"product-title\">\n" +
+                                                "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                                "                 " + prod.productName + "\n" +
+                                                "              </a>\n" +
+                                                "          </h4>\n" +
+                                                "          <span class=\"product-price\">$" + prod.price + ".00</span>\n" +
+                                                "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                                renderColor +
+                                                "          </div>\n" +
+                                                "      </div>\n" +
+                                                "    </div>\n" +
+                                                "</div>";
                                     } else {
                                         result += "<div class=\"col-md-4 col-sm-6\">\n" +
-                                            "     <div class=\"product-item\">\n" +
-                                            "          <div class=\"item-thumb\">\n" +
-                                            "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
-                                            "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
-                                            "                    class=\"img-responsive\" \n" +
-                                            "                    alt=\"" + prod.urlImg + "\"\n" +
-                                            "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
-                                            "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
-                                            "                     data-toggle=\"modal\" \n" +
-                                            "                     fs-product=\"" + prod.productID + "\" \n" +
-                                            "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
-                                            "                </div>\n" +
-                                            "                <div class=\"product-overlay\">\n" +
-                                            "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                            "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
-                                            "                </div>\n" +
-                                            "          </div>\n" +
-                                            "      <div class=\"product-info\">\n" +
-                                            "          <h4 class=\"product-title\">\n" +
-                                            "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
-                                            "                 " + prod.productName + "\n" +
-                                            "              </a>\n" +
-                                            "          </h4>\n" +
-                                            "          <span class=\"product-price\">\n" +
-                                            "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
-                                            "          </span>\n" +
-                                            "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
-                                            renderColor +
-                                            "          </div>\n" +
-                                            "      </div>\n" +
-                                            "    </div>\n" +
-                                            "</div>";
+                                                "     <div class=\"product-item\">\n" +
+                                                "          <div class=\"item-thumb\">\n" +
+                                                "               <span class=\"badge offer\">-" + prod.productDiscount + "%</span>\n" +
+                                                "               <img src=\"assets/images/products/" + prod.urlImg + "\" \n" +
+                                                "                    class=\"img-responsive\" \n" +
+                                                "                    alt=\"" + prod.urlImg + "\"\n" +
+                                                "                    fs-product-for-img=\"" + prod.productID + "\"/>\n" +
+                                                "                <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n" +
+                                                "                     data-toggle=\"modal\" \n" +
+                                                "                     fs-product=\"" + prod.productID + "\" \n" +
+                                                "                     fs-product-modal-color=\"" + prod.productColorListWorking[0].colorID + "\">\n" +
+                                                "                </div>\n" +
+                                                "                <div class=\"product-overlay\">\n" +
+                                                "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
+                                                "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
+                                                "                </div>\n" +
+                                                "          </div>\n" +
+                                                "      <div class=\"product-info\">\n" +
+                                                "          <h4 class=\"product-title\">\n" +
+                                                "              <a href=\"" + prod.productID + "-" + prod.productColorListWorking[0].colorID + "-" + prod.productNameNA + ".html\">\n" +
+                                                "                 " + prod.productName + "\n" +
+                                                "              </a>\n" +
+                                                "          </h4>\n" +
+                                                "          <span class=\"product-price\">\n" +
+                                                "               <small class=\"cutprice\">$ " + prod.price + ".00 </small>  $ " + (prod.price - prod.price * prod.productDiscount / 100) +
+                                                "          </span>\n" +
+                                                "          <div class=\"item-colors\" style=\"height: 25px;\">\n" +
+                                                renderColor +
+                                                "          </div>\n" +
+                                                "      </div>\n" +
+                                                "    </div>\n" +
+                                                "</div>";
                                     }
                                 });
                                 $("#fs-change-data-here").html(result);
@@ -2685,7 +2636,7 @@ $(document).ready(function() {
         url: "orders/ajax/cart.html",
         method: "GET",
         dataType: 'html',
-        success: function(response) {
+        success: function (response) {
             $("#cart").html(response).fadeIn(1000);
         }
     });
@@ -2697,19 +2648,20 @@ $(document).ready(function() {
         var mincount = 5;
         var maxcount = 10;
         $("#table-order-history tbody tr").slice(5).hide();
-        $(window).scroll(function() {
+        $(window).scroll(function () {
             if ($(window).scrollTop() + $(window).height() >= $(document).height() - 450) {
                 $("#table-order-history tbody tr").slice(mincount, maxcount).fadeIn(1000);
                 mincount = mincount + 5;
                 maxcount = maxcount + 5;
             }
         });
-    };
+    }
+    ;
 
     //checkout.jsp
     //Discount in checkout.jsp
     //Load form discount in checkout
-    $("input[name=address-chose]").on("click", function() {
+    $("input[name=address-chose]").on("click", function () {
         var checked = $('input[name=address-chose]:checked').val();
         if (checked == "difference") {
             $('.shipping-address').css("display", "list-item");
@@ -2717,7 +2669,7 @@ $(document).ready(function() {
             $('.shipping-address').prop("style", false);
         }
     });
-    $('#btnCheckoutPlaceOrder').on("click", function(e) {
+    $('#btnCheckoutPlaceOrder').on("click", function (e) {
         e.preventDefault();
         var errorHead = "<div class=\"alert alert-danger\"><strong>";
         var errorFoot = "</strong></div>";
@@ -2851,35 +2803,35 @@ $(document).ready(function() {
             }
         }
     });
-    $('#checkout-form').on('keyup keypress', function(e) {
+    $('#checkout-form').on('keyup keypress', function (e) {
         var keyCode = e.keyCode || e.which;
         if (keyCode === 13) {
             e.preventDefault();
             return false;
         }
     });
-    $("#coupon_code").keydown(function() {
+    $("#coupon_code").keydown(function () {
         $("#fs-checkout-discountvou-error").text("");
     });
-    $("input[name=address-chose]").on("click", function() {
+    $("input[name=address-chose]").on("click", function () {
         $('#error-checkout').html("");
     });
-    $('input[name=diffFirstname]').keydown(function() {
+    $('input[name=diffFirstname]').keydown(function () {
         $('#error-checkout-firstname').text("");
     });
-    $('input[name=diffLastname]').keydown(function() {
+    $('input[name=diffLastname]').keydown(function () {
         $('#error-checkout-lastname').text("");
     });
-    $('input[name=diffPhone]').keydown(function() {
+    $('input[name=diffPhone]').keydown(function () {
         $('#error-checkout-phone').text("");
     });
-    $('input[name=diffAddress]').keydown(function() {
+    $('input[name=diffAddress]').keydown(function () {
         $('#error-checkout-address').text("");
     });
-    $('input[name=note]').keydown(function() {
+    $('input[name=note]').keydown(function () {
         $('#error-checkout-note').text("");
     });
-    $('.discount-code #discount-order').on("click", function() {
+    $('.discount-code #discount-order').on("click", function () {
         $("#fs-checkout-discountvou-error").text("");
         $(".cart-table").remove(".foot");
         $(".cart-table").add("<tfoot class=\"foot\"></tfoot>");
@@ -2898,14 +2850,14 @@ $(document).ready(function() {
                         emailUser: emailUser
                     },
                     dataType: 'JSON',
-                    success: function(response) {
+                    success: function (response) {
                         if (response != null) {
                             var xResponse = response.status;
                             if (xResponse != "1" && xResponse != "0" && xResponse != "2" && xResponse != "3" && xResponse != "4" && xResponse != "5" && xResponse != "6") {
                                 $(".discount-show").html(response.showDiscountPercent);
                                 $(".foot").html(response.showDiscount);
                             } else {
-                                $.get("orders/ajax/nodiscount.html", function(responsenodiscount) {
+                                $.get("orders/ajax/nodiscount.html", function (responsenodiscount) {
                                     if (xResponse == "1" || xResponse == "6") {
                                         $("#fs-checkout-discountvou-error").text("Wrong Discount Code or Discount Code not existed");
                                         $(".foot").html(responsenodiscount);
@@ -2935,7 +2887,7 @@ $(document).ready(function() {
             $("#fs-checkout-discountvou-error").text("You already have input discount code");
         }
     });
-    $("input[name=coupon_code]").keypress(function(e) {
+    $("input[name=coupon_code]").keypress(function (e) {
         if (e.which == 13) {
             $("#fs-checkout-discountvou-error").text("");
             $(".cart-table").remove(".foot");
@@ -2955,14 +2907,14 @@ $(document).ready(function() {
                             emailUser: emailUser
                         },
                         dataType: 'JSON',
-                        success: function(response) {
+                        success: function (response) {
                             if (response != null) {
                                 var xResponse = response.status;
                                 if (xResponse != "1" && xResponse != "0" && xResponse != "2" && xResponse != "3" && xResponse != "4" && xResponse != "5" && xResponse != "6") {
                                     $(".discount-show").html(response.showDiscountPercent);
                                     $(".foot").html(response.showDiscount);
                                 } else {
-                                    $.get("orders/ajax/nodiscount.html", function(responsenodiscount) {
+                                    $.get("orders/ajax/nodiscount.html", function (responsenodiscount) {
                                         if (xResponse == "1" || xResponse == "6") {
                                             $("#fs-checkout-discountvou-error").text("Wrong Discount Code or Discount Code not existed");
                                             $(".foot").html(responsenodiscount);
@@ -2991,33 +2943,34 @@ $(document).ready(function() {
             } else {
                 $("#fs-checkout-discountvou-error").text("You already have input discount code");
             }
-        };
+        }
+        ;
     });
 
     //Cancel Order side client in order-history-detail.jsp
-    $('#confirm-cancel-order').on('show.bs.modal', function(e) {
+    $('#confirm-cancel-order').on('show.bs.modal', function (e) {
         $(this).find('.btn-cancel-order-ok').attr('href', $(e.relatedTarget).data('href'));
     });
 
     //Add to cart in product-detail.jsp
-    $("#fs-product-detail-add-to-cart").on("click", function() {
+    $("#fs-product-detail-add-to-cart").on("click", function () {
         var colorID = $(".fs-product-color .fs-product-selected").find("img").attr("fs-color");
         var sizeID = $("#fs-product-size .fs-product-selected").attr("fs-size");
         var productID = $(".fs-product-detail-name").attr("fs-product-id");
         var quantity = $(".fs-input-number").val();
         if (colorID == null && sizeID == null) {
             $("#error-product-detail").html("<div class=\"alert alert-danger\">\n" +
-                "<strong>YOU MUST CHOOSE COLOR AND SIZE</strong>\n" +
-                "</div>");
+                    "<strong>YOU MUST CHOOSE COLOR AND SIZE</strong>\n" +
+                    "</div>");
         } else {
             if (colorID == null) {
                 $("#error-product-detail").html("<div class=\"alert alert-danger\">\n" +
-                    "<strong>YOU MUST CHOOSE COLOR</strong>\n" +
-                    "</div>");
+                        "<strong>YOU MUST CHOOSE COLOR</strong>\n" +
+                        "</div>");
             } else if (sizeID == null) {
                 $("#error-product-detail").html("<div class=\"alert alert-danger\">\n" +
-                    "<strong>YOU MUST CHOOSE SIZE</strong>\n" +
-                    "</div>");
+                        "<strong>YOU MUST CHOOSE SIZE</strong>\n" +
+                        "</div>");
             } else {
                 $.ajax({
                     url: "orders/ajax/addtocart.html",
@@ -3029,31 +2982,31 @@ $(document).ready(function() {
                         quantity: quantity
                     },
                     dataType: 'html',
-                    success: function(response) {
+                    success: function (response) {
                         if (response == "3") {
                             $("#error-product-detail").html("<div class=\"alert alert-danger\">\n" +
-                                "<strong>PRODUCT ERROR</strong>\n" +
-                                "</div>");
+                                    "<strong>PRODUCT ERROR</strong>\n" +
+                                    "</div>");
                         } else if (response == "2") {
                             $("#error-product-detail").html("<div class=\"alert alert-danger\">\n" +
-                                "<strong>COLOR AND SIZE ERROR</strong>\n" +
-                                "</div>");
+                                    "<strong>COLOR AND SIZE ERROR</strong>\n" +
+                                    "</div>");
                         } else if (response == "1") {
                             $("#error-product-detail").html("<div class=\"alert alert-danger\">\n" +
-                                "<strong>NOT ENOUGH STOCK! PLEASE ENTER DIFFERENT QUANTITY</strong>\n" +
-                                "</div>");
+                                    "<strong>NOT ENOUGH STOCK! PLEASE ENTER DIFFERENT QUANTITY</strong>\n" +
+                                    "</div>");
                         } else {
                             $('body,html').animate({
                                 scrollTop: 0
                             }, 500);
                             $("#error-product-detail").html("<div class=\"alert alert-success\">\n" +
-                                "<strong>ADD PRODUCT TO CART SUCCESSFULLY</strong>\n" +
-                                "</div>");
+                                    "<strong>ADD PRODUCT TO CART SUCCESSFULLY</strong>\n" +
+                                    "</div>");
                             $.ajax({
                                 url: "orders/ajax/cart.html",
                                 method: "GET",
                                 dataType: 'html',
-                                success: function(response) {
+                                success: function (response) {
                                     $("#cart").html(response).fadeIn(1000);
                                 }
                             });
@@ -3065,7 +3018,7 @@ $(document).ready(function() {
     });
 
     //Add to cart in modal.jsp
-    $(".fs-modal-btn-addtobag").on("click", function() {
+    $(".fs-modal-btn-addtobag").on("click", function () {
         var errorHead = "<div class=\"alert alert-danger\"><strong>";
         var errorHeadSuccess = "<div class=\"alert alert-success\"><strong>";
         var errorFoot = "</strong></div>";
@@ -3091,7 +3044,7 @@ $(document).ready(function() {
                         quantity: quantity
                     },
                     dataType: 'html',
-                    success: function(response) {
+                    success: function (response) {
                         if (response == "3") {
                             $('#error-cart-product-modal').html(errorHead + "PRODUCT ERROR!" + errorFoot);
                         } else if (response == "2") {
@@ -3104,7 +3057,7 @@ $(document).ready(function() {
                                 url: "orders/ajax/cart.html",
                                 method: "GET",
                                 dataType: 'html',
-                                success: function(response) {
+                                success: function (response) {
                                     $("#cart").html(response).fadeIn(1000);
                                 }
                             });
@@ -3114,7 +3067,7 @@ $(document).ready(function() {
             }
         }
     });
-    $(".fs-modal-close").on("click", function() {
+    $(".fs-modal-close").on("click", function () {
         $('#error-cart-product-modal').html("");
     });
 
@@ -3152,7 +3105,7 @@ $(document).ready(function() {
 
     //CUỘN LẠI, HIỆN RA TABLE ADDRESS-LIST
 
-    $(".fs-panel").on("click", ".panel-heading span.clickable", function() {
+    $(".fs-panel").on("click", ".panel-heading span.clickable", function () {
         var abc = $(this);
         if (!abc.hasClass("panel-collapsed")) {
             abc.closest(".panel").find(".panel-body").slideUp();
@@ -3164,7 +3117,7 @@ $(document).ready(function() {
             abc.find("i").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
         }
     });
-    $(".fs-panel-add").on("click", ".panel-heading span.clickable", function() {
+    $(".fs-panel-add").on("click", ".panel-heading span.clickable", function () {
         var abc = $(this);
         if (!abc.hasClass("panel-collapsed")) {
             abc.closest(".panel").find(".panel-body").slideUp();
@@ -3176,11 +3129,11 @@ $(document).ready(function() {
             abc.find("i").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
         }
     });
-    //    $("div#fs-table-add-address span.clickable").click();
+    $("div#fs-table-add-address span.clickable").click();
 
 
     // CẢNH CÁO KHI BẤM XÓA
-    $(".fs-delete-button-AD").click(function() {
+    $(".fs-delete-button-AD").click(function () {
         var addressID = $(this).attr("fs-addressID");
         swal({
             title: "Are you sure?",
@@ -3190,7 +3143,7 @@ $(document).ready(function() {
             confirmButtonColor: "#DD6B55",
             confirmButtonText: "Yes, delete it!",
             closeOnConfirm: false
-        }, function(isConfirm) {
+        }, function (isConfirm) {
             if (!isConfirm)
                 return;
             $("#fs-list-id-" + addressID).remove();
@@ -3200,12 +3153,12 @@ $(document).ready(function() {
                 data: {
                     addressID: addressID
                 },
-                success: function(response) {
+                success: function (response) {
                     if (response == "1")
                         swal("Done!", "It was succesfully deleted!", "success");
                     //                    window.location = window.location.href;
                 },
-                error: function(xhr, ajaxOptions, thrownError) {
+                error: function (xhr, ajaxOptions, thrownError) {
                     swal("Error deleting!", "Please try again", "error");
                 }
             });
@@ -3215,7 +3168,7 @@ $(document).ready(function() {
 
     // CHINH TRANG THAI CHO MODAL(BAM RA NGOAI KHONG TAT MODAL)
 
-    $("#loginModal").on("hidden.bs.modal", function(e) {
+    $("#loginModal").on("hidden.bs.modal", function (e) {
         $(this).find("input").val("").end().find("input[type=checkbox], input[type=radio]").prop("checked", "").end();
         $(this).find("p").html("");
         $(this).find("span#glypcn-fs-login-user").remove("span");
@@ -3228,7 +3181,7 @@ $(document).ready(function() {
 
     function checkEmail(email) {
         email = $("#fs-email-login-user").val().trim();
-        var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
+        var pattern = new RegExp(/^[A-Za-z][A-Za-z0-9]+([._][A-Za-z0-9]+)*[@][A-Za-z]+[.][A-Za-z]{2,4}([.][A-Za-z]{2,4})?$/);
         if (email == "") {
             $("#fs-email-login-user-error").text("Email cannot be empty!");
             $("#fs-email-login-user").focus();
@@ -3256,15 +3209,15 @@ $(document).ready(function() {
             div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
             return true;
         }
-    };
+    }
+    ;
 
     // VALIDATION CLICK BUTTON LOGIN
 
-    $(".fs-button-login-user").click(function(e) {
+    $(".fs-button-login-user").click(function (e) {
         e.preventDefault();
         var email = $("#fs-email-login-user").val().trim();
         var pass = $("#fs-pass-login-user").val().trim();
-        //        var checkremember = $("#fs-check-remember").val();
         var checkremember = $('input[name="checkremember"]:checked').val();
         //        alert(checkremember);
         if (!checkEmail(email)) {
@@ -3303,14 +3256,17 @@ $(document).ready(function() {
                     checkremember: checkremember
                 },
                 //dataType: 'html',
-                success: function(response) {
+                success: function (response) {
                     if (response == "2") {
                         EmailWrong(email);
                     } else if (response == "3") {
                         PassWrong(pass);
                     } else if (response == "4") {
                         $("#fs-error-show").text("Fail account wrong!");
-                    } else {
+                    } else if (response == "5") {
+                        $("#fs-error-show").text("Fail, Error was happened!");
+                    }
+                    else {
                         var currentUrl = window.location.href;
                         window.location = currentUrl;
                         $("#loginModal").modal('hide');
@@ -3333,7 +3289,8 @@ $(document).ready(function() {
             div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
         }
-    };
+    }
+    ;
 
     function PassWrong(password) {
         password = $("#fs-pass-login-user").val().trim();
@@ -3347,18 +3304,19 @@ $(document).ready(function() {
             div.append('<span id="glypcn-fs-login-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
             return false;
         }
-    };
+    }
+    ;
 
     // VALIDATION KEYUP 
 
-    $("#fs-email-login-user").keyup(function() {
+    $("#fs-email-login-user").keyup(function () {
         var email = $("#fs-email-login-user").val().trim();
         //        $("#fs-error-show").text("");
         if (!checkEmail(email)) {
             return false;
         }
     });
-    $("#fs-pass-login-user").keyup(function() {
+    $("#fs-pass-login-user").keyup(function () {
         var pass = $("#fs-pass-login-user").val().trim();
         //        $("#fs-error-show").text("");
         if (pass == "") {
@@ -3394,7 +3352,7 @@ $(document).ready(function() {
 
     function checkemail(email) {
         email = $("#fs-create-email").val().trim();
-        var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
+        var pattern = new RegExp(/^[A-Za-z][A-Za-z0-9]+([._][A-Za-z0-9]+)*[@][A-Za-z]+[.][A-Za-z]{2,4}([.][A-Za-z]{2,4})?$/);
         if (email == "") {
             $("#fs-email-create-user-error").text("Email cannot be empty!");
             $("#fs-create-email").focus();
@@ -3422,7 +3380,8 @@ $(document).ready(function() {
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
             return true;
         }
-    };
+    }
+    ;
 
     function checkPass(password) {
         password = $("#password").val().trim();
@@ -3453,7 +3412,8 @@ $(document).ready(function() {
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
             return true;
         }
-    };
+    }
+    ;
 
     function checkRePass(repassword, password) {
         repassword = $("#Repassword").val().trim();
@@ -3494,7 +3454,8 @@ $(document).ready(function() {
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
             return true;
         }
-    };
+    }
+    ;
 
     function checkFirstName(firstname) {
         firstname = $("#fs-create-firstname").val().trim();
@@ -3525,7 +3486,8 @@ $(document).ready(function() {
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
             return true;
         }
-    };
+    }
+    ;
 
     function checkLastName(lastname) {
         lastname = $("#fs-create-lastname").val().trim();
@@ -3556,7 +3518,8 @@ $(document).ready(function() {
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
             return true;
         }
-    };
+    }
+    ;
 
     function checkBirthDay(birthday) {
         birthday = $("#txtBirthday").val().trim();
@@ -3578,10 +3541,10 @@ $(document).ready(function() {
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
             return true;
         }
-    };
+    }
+    ;
 
     function checkPhone(phone) {
-        //        var regex = new RegExp(/^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/);
         var regex = new RegExp(/^(01[2689]|09)[0-9]{8}$/);
         phone = $("#fs-create-phone").val().trim();
         if (phone == "") {
@@ -3612,7 +3575,8 @@ $(document).ready(function() {
             return true;
         }
 
-    };
+    }
+    ;
 
     function checkAddress(address) {
         address = $("#fs-create-address").val().trim();
@@ -3643,9 +3607,10 @@ $(document).ready(function() {
             div.append('<span id="glypcn-fs-create-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
             return true;
         }
-    };
+    }
+    ;
 
-    $("body").on("click", "#fs-button-create-user", function(e) {
+    $("body").on("click", "#fs-button-create-user", function (e) {
         e.preventDefault();
         console.log("123");
         var email = $("#fs-create-email").val().trim();
@@ -3711,7 +3676,7 @@ $(document).ready(function() {
             contentType: false,
             processData: false,
             //dataType: 'html',
-            success: function(response) {
+            success: function (response) {
                 console.log(response);
                 if (response == "2") {
                     $("#fs-error-show-register").html("<div class=\"alert alert-danger\">FAILED!. Account is exists!</div>");
@@ -3729,50 +3694,50 @@ $(document).ready(function() {
     });
     //        VALIDATION REGISTER KEYUP
 
-    $("#fs-create-email").keyup(function() {
+    $("#fs-create-email").keyup(function () {
         var email = $("#fs-create-email").val().trim();
         if (!checkemail(email)) {
             return false;
         }
     });
-    $("#password").keyup(function() {
+    $("#password").keyup(function () {
         var password = $("#password").val().trim();
         if (!checkPass(password)) {
             return false;
         }
     });
-    $("#Repassword").keyup(function() {
+    $("#Repassword").keyup(function () {
         var repassword = $("#Repassword").val().trim();
         var password = $("#password").val().trim();
         if (!checkRePass(repassword, password)) {
             return false;
         }
     });
-    $("#fs-create-firstname").keyup(function() {
+    $("#fs-create-firstname").keyup(function () {
         var firstname = $("#fs-create-firstname").val().trim();
         if (!checkFirstName(firstname)) {
             return false;
         }
     });
-    $("#fs-create-lastname").keyup(function() {
+    $("#fs-create-lastname").keyup(function () {
         var lastname = $("#fs-create-lastname").val().trim();
         if (!checkLastName(lastname)) {
             return false;
         }
     });
-    $("#txtBirthday").keyup(function() {
+    $("#txtBirthday").keyup(function () {
         var birthday = $("#txtBirthday").val().trim();
         if (!checkBirthDay(birthday)) {
             return false;
         }
     });
-    $("#fs-create-phone").keyup(function() {
+    $("#fs-create-phone").keyup(function () {
         var phone = $("#fs-create-phone").val().trim();
         if (!checkPhone(phone)) {
             return false;
         }
     });
-    $("#fs-create-address").keyup(function() {
+    $("#fs-create-address").keyup(function () {
         var address = $("#fs-create-address").val().trim();
         if (!checkAddress(address)) {
             return false;
@@ -3781,7 +3746,7 @@ $(document).ready(function() {
 
     //    BẮT VALIDATION CẬP NHẬT THÔNG TIN CÁ NHÂN     
 
-    $("#txtbirthday").click(function() {
+    $("#txtbirthday").click(function () {
         $("#txtbirthday").datepicker({
             dateFormat: "dd/mm/yy",
             showAnim: "drop",
@@ -3797,7 +3762,7 @@ $(document).ready(function() {
 
     function emailcheck(email) {
         email = $("#fs-update-email").val().trim();
-        var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
+        var pattern = new RegExp(/^[A-Za-z][A-Za-z0-9]+([._][A-Za-z0-9]+)*[@][A-Za-z]+[.][A-Za-z]{2,4}([.][A-Za-z]{2,4})?$/);
         if (email == "") {
             $("#fs-email-update-user-error").text("Email cannot be empty!");
             $("#fs-update-email").focus();
@@ -3825,7 +3790,8 @@ $(document).ready(function() {
             div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
             return true;
         }
-    };
+    }
+    ;
 
     function checkfirstName(firstname) {
         firstname = $("#fs-update-firstname").val().trim();
@@ -3856,7 +3822,8 @@ $(document).ready(function() {
             div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
             return true;
         }
-    };
+    }
+    ;
 
     function checklastName(lastname) {
         lastname = $("#fs-update-lastname").val().trim();
@@ -3887,7 +3854,8 @@ $(document).ready(function() {
             div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
             return true;
         }
-    };
+    }
+    ;
 
 
     function checkbirthDay(birthday) {
@@ -3910,9 +3878,10 @@ $(document).ready(function() {
             div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
             return true;
         }
-    };
+    }
+    ;
 
-    $(".fs-button-update-user").click(function(e) {
+    $(".fs-button-update-user").click(function (e) {
         var email = $("#fs-update-email").val().trim();
         var firstname = $("#fs-update-firstname").val().trim();
         var lastname = $("#fs-update-lastname").val().trim();
@@ -3935,61 +3904,27 @@ $(document).ready(function() {
 
     // VALIDATION KEYUP UPDATE-ACCOUNT
 
-    $("#fs-update-email").keyup(function() {
+    $("#fs-update-email").keyup(function () {
         var email = $("#fs-update-email").val().trim();
         if (!emailcheck(email)) {
             return false;
         }
     });
-    // BẮT EMAIL TRÙNG:
-    //    $("#fs-update-email").keyup(function () {
-    //        var email = $("#fs-update-email").val();
-    //        $.ajax({
-    //            url: "ajax/emailExist.html",
-    //            method: "POST",
-    ////            data: {email: email},
-    //            dataType: "JSON",
-    //            success: function (response) {
-    //                for (var i = 0; i < response.length; i++) {
-    //                    var item = response[i];
-    //                    if (email == item) {
-    //                        $("#fs-email-update-user-error").text("Email is Exist!");
-    //                        $("#fs-update-email").focus();
-    //                        var div = $("#fs-update-email").closest("div.fs-email-update");
-    //                        div.removeClass("has-success");
-    //                        $("#glypcn-fs-update-user").remove();
-    //                        div.addClass("has-error has-feedback");
-    //                        div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-remove form-control-feedback"></span>');
-    //                        return false;
-    //                    }
-    ////                    else {
-    ////                        $("#fs-email-update-user-error").text("");
-    ////                        var div = $("#fs-update-email").closest("div.fs-email-update");
-    ////                        div.removeClass("has-error");
-    ////                        div.addClass("has-success has-feedback");
-    ////                        $("#glypcn-fs-update-user").remove();
-    ////                        div.append('<span id="glypcn-fs-update-user" class="glyphicon glyphicon-ok form-control-feedback"></span>');
-    ////                        return true;
-    ////                    }
-    //
-    //                }
-    //            }
-    //        });
-    //    });
-    $("#fs-update-firstname").keyup(function() {
+
+    $("#fs-update-firstname").keyup(function () {
         var firstname = $("#fs-update-firstname").val().trim();
         if (!checkfirstName(firstname)) {
             return false;
         }
     });
-    $("#fs-update-lastname").keyup(function() {
+    $("#fs-update-lastname").keyup(function () {
         var lastname = $("#fs-update-lastname").val().trim();
         if (!checklastName(lastname)) {
             return false;
         }
     });
 
-    $("#txtbirthday").keyup(function() {
+    $("#txtbirthday").keyup(function () {
         var birthday = $("#txtbirthday").val().trim();
         if (!checkbirthDay(birthday)) {
             return false;
@@ -3998,7 +3933,7 @@ $(document).ready(function() {
 
     // VALIDATION CHANGE PASS CLICK
 
-    $(".fs-button-change-pass").click(function(e) {
+    $(".fs-button-change-pass").click(function (e) {
         e.preventDefault();
         var oldpass = $(".fs-old-pass").val().trim();
         var pass = $(".fs-password").val().trim();
@@ -4006,26 +3941,40 @@ $(document).ready(function() {
 
         if (oldpass == "") {
             $("#fs-oldpass-user-error").text("Current Password cannot be empty!");
+            $(".fs-old-pass").focus();
+            return false;
         } else if (oldpass.length < 6 || oldpass.length > 100) {
             $("#fs-oldpass-user-error").text("Current Password has 6 to 100 characters!");
+            $(".fs-old-pass").focus();
+            return false;
         } else {
             $("#fs-oldpass-user-error").text("");
         }
 
         if (pass == "") {
             $("#fs-pass-user-error").text("Password cannot be empty!");
+            $(".fs-password").focus();
+            return false;
         } else if (pass.length < 6 || pass.length > 100) {
             $("#fs-pass-user-error").text("Password has 6 to 100 characters!");
+            $(".fs-password").focus();
+            return false;
         } else {
             $("#fs-pass-user-error").text("");
         }
 
         if (repass == "") {
             $("#fs-repass-user-error").text("Password Confirm cannot be empty!");
+            $(".fs-repass").focus();
+            return false;
         } else if (repass != pass) {
             $("#fs-repass-user-error").text("Password Confirm is different with Password");
+            $(".fs-repass").focus();
+            return false;
         } else if (repass.length < 6 || repass.length > 100) {
             $("#fs-repass-user-error").text("Password Confirm has 6 to 100 characters!");
+            $(".fs-repass").focus();
+            return false;
         } else {
             $("#fs-repass-user-error").text("");
             $(".fs-form-change-pass").submit();
@@ -4037,7 +3986,7 @@ $(document).ready(function() {
 
     // VALIDATION CHANGE PASS KEYUP
 
-    $(".fs-old-pass").keyup(function() {
+    $(".fs-old-pass").keyup(function () {
         var oldpass = $(".fs-old-pass").val().trim();
 
         if (oldpass == "") {
@@ -4049,7 +3998,7 @@ $(document).ready(function() {
         }
     });
 
-    $(".fs-password").keyup(function() {
+    $(".fs-password").keyup(function () {
         var pass = $(".fs-password").val().trim();
 
         if (pass == "") {
@@ -4061,7 +4010,7 @@ $(document).ready(function() {
         }
     });
 
-    $(".fs-repass").keyup(function() {
+    $(".fs-repass").keyup(function () {
         var repass = $(".fs-repass").val().trim();
         var pass = $(".fs-password").val().trim();
 
@@ -4078,60 +4027,49 @@ $(document).ready(function() {
 
     // VALIDATION CREATE ADDRESS CLICK
 
-    $(".fs-button-add-address").click(function(e) {
+    $(".fs-button-add-address").click(function (e) {
         e.preventDefault();
         var address = $(".fs-address-add").val().trim();
         var phone = $(".fs-phone-add").val().trim();
-        //        phone = phone.replace('(+84)', '0');
-        //        phone = phone.replace('+84', '0');
-        //        phone = phone.replace('0084', '0');
         var regex = new RegExp(/^(01[2689]|09)[0-9]{8}$/);
 
         if (address == "") {
             $("#fs-address-add-user-error").text("Address cannot be empty!");
+            $(".fs-address-add").focus();
+            return false;
         } else if (address.length < 10 || address.length > 255) {
             $("#fs-address-add-user-error").text("Address has 10 to 255 characters!");
+            $(".fs-address-add").focus();
+            return false;
         } else {
             $("#fs-address-add-user-error").text("");
         }
 
         if (phone == "") {
             $("#fs-phone-add-user-error").text("Phone Number cannot be empty!");
+            $(".fs-phone-add").focus();
+            return false;
         } else if (!regex.test(phone)) {
             $("#fs-phone-add-user-error").text("Phone begin 01 or 09 and 10 to 11 number");
+            $(".fs-phone-add").focus();
+            return false;
         } else {
             $("#fs-phone-add-user-error").text("");
             $(".fs-form-add-address").submit();
         }
 
-        //        if((address.length > 10 && address.length < 255) && regex.test(phone)){
-        //            var userID = $(this).attr("fs-userID");
-        //            $.ajax({
-        //                url: "user/address-add/"+ userID +".html",
-        //                method: "POST",
-        //                data:{userID: userID},
-        //                success: function (response) {
-        //                    if(response == "1"){
-        //                        alert("trùng");
-        //                    }else if(response == "2") {
-        //                        alert("ok");
-        //                    }else{
-        //                        alert("hihi");
-        //                    }
-        //                }
-        //            });
-        //        }
+
 
     });
 
-    $(".fs-button-reset-address").click(function() {
+    $(".fs-button-reset-address").click(function () {
         $("#fs-phone-add-user-error").text("");
         $("#fs-address-add-user-error").text("");
     });
 
     // VALIDATION CREATE-ADDRESS KEYUP
 
-    $(".fs-address-add").keyup(function() {
+    $(".fs-address-add").keyup(function () {
         var address = $(".fs-address-add").val().trim();
 
         if (address == "") {
@@ -4143,7 +4081,7 @@ $(document).ready(function() {
         }
     });
 
-    $(".fs-phone-add").keyup(function() {
+    $(".fs-phone-add").keyup(function () {
         var phone = $(".fs-phone-add").val().trim();
         var regex = new RegExp(/^(01[2689]|09)[0-9]{8}$/);
 
@@ -4159,7 +4097,7 @@ $(document).ready(function() {
 
     // VALIDATION UPDATE-ADDRESS CLICK
 
-    $(".fs-button-update-address").click(function(e) {
+    $(".fs-button-update-address").click(function (e) {
         e.preventDefault();
         var address = $(".fs-update-address").val().trim();
         var phone = $(".fs-update-phone").val().trim();
@@ -4167,19 +4105,26 @@ $(document).ready(function() {
 
         if (address == "") {
             $("#fs-address-update-user-error").text("Address cannot be empty!");
+            $(".fs-update-address").focus();
+            return false;
         } else if (address.length < 10 || address.length > 255) {
             $("#fs-address-update-user-error").text("Address has 10 to 255 characters!");
+            $(".fs-update-address").focus();
+            return false;
         } else {
             $("#fs-address-update-user-error").text("");
         }
 
         if (phone == "") {
             $("#fs-phone-update-user-error").text("Phone Number cannot be empty!");
+            $(".fs-update-phone").focus();
+            return false;
         } else if (!regex.test(phone)) {
             $("#fs-phone-update-user-error").text("Phone begin 01 or 09 and 10 to 11 number");
+            $(".fs-update-phone").focus();
+            return false;
         } else {
             $("#fs-phone-update-user-error").text("");
-            //            $(".fs-form-update-address").submit();
         }
 
         if ((address.length > 10 && address.length < 255) && regex.test(phone)) {
@@ -4189,7 +4134,7 @@ $(document).ready(function() {
 
     // VALIDATION UPDATE-ADDRESS KEYUP
 
-    $(".fs-update-address").keyup(function() {
+    $(".fs-update-address").keyup(function () {
         var address = $(".fs-update-address").val().trim();
 
         if (address == "") {
@@ -4201,7 +4146,7 @@ $(document).ready(function() {
         }
     });
 
-    $(".fs-update-phone").keyup(function() {
+    $(".fs-update-phone").keyup(function () {
         var phone = $(".fs-update-phone").val().trim();
         var regex = new RegExp(/^(01[2689]|09)[0-9]{8}$/);
 
@@ -4217,7 +4162,7 @@ $(document).ready(function() {
 
     // ADD WISH-LIST: PAGE HOME FEATURED PRODUCTS
 
-    $(".fs-wishlish-add").click(function() {
+    $(".fs-wishlish-add").click(function () {
         var userID = $(this).attr("fs-userID");
         var productID = $(this).attr("fs-productID");
         var input = $("input[name='emailUser']");
@@ -4232,7 +4177,7 @@ $(document).ready(function() {
                         userID: userID,
                         productID: productID
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response == "1") {
                             swal({
                                 title: "<h1 style='color: #31b131;'>Success</h1>",
@@ -4261,7 +4206,7 @@ $(document).ready(function() {
                         userID: userID,
                         productID: productID
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response == "1") {
                             swal({
                                 title: "<h1 style='color: #ff0000;' >Delete</h1>",
@@ -4277,25 +4222,19 @@ $(document).ready(function() {
 
         } else {
             //Khong có session
-            $("#fs-modal-mess").modal("show");
-            $(".fs-btn-login-wl").click(function() {
-                $("#fs-modal-mess").modal("hide");
-                window.location = window.location.href;
-                //                $("#loginModal").modal("show");
-            });
+            $("#loginModal").modal("show");
         }
     });
 
 
     // ADD WISH-LIST: PAGE HOME LATEST PRODUCTS
 
-    $(".fs-wl-add-lsp").click(function() {
+    $(".fs-wl-add-lsp").click(function () {
         var userID = $(this).attr("fs-userID");
         var productID = $(this).attr("fs-productID");
         var input = $("input[name='emailUser']");
         if (input.val() != "") {
             //Có session
-            //            $(this).addClass("fs-heart-color");
             if (!$(this).hasClass("fs-heart-color")) {
                 $(this).addClass("fs-heart-color");
                 $.ajax({
@@ -4305,7 +4244,7 @@ $(document).ready(function() {
                         userID: userID,
                         productID: productID
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response == "1") {
                             swal({
                                 title: "<h1 style='color: #31b131;'>Success</h1>",
@@ -4334,7 +4273,7 @@ $(document).ready(function() {
                         userID: userID,
                         productID: productID
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response == "1") {
                             swal({
                                 title: "<h1 style='color: #ff0000;' >Delete</h1>",
@@ -4350,19 +4289,14 @@ $(document).ready(function() {
 
         } else {
             //Khong có session
-            $("#fs-modal-mess").modal("show");
-            $(".fs-btn-login-wl").click(function() {
-                $("#fs-modal-mess").modal("hide");
-                window.location = window.location.href;
-                //                $("#loginModal").modal("show");
-            });
+            $("#loginModal").modal("show");
         }
     });
 
 
     // ADD WISH-LIST: SUB_CATEGORY
 
-    $(".fs-wl-add-sub").click(function() {
+    $(".fs-wl-add-sub").click(function () {
         var userID = $(this).attr("fs-userID");
         var productID = $(this).attr("fs-productID");
         var input = $("input[name='emailUser']");
@@ -4377,7 +4311,7 @@ $(document).ready(function() {
                         userID: userID,
                         productID: productID
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response == "1") {
                             swal({
                                 title: "<h1 style='color: #31b131;'>Success</h1>",
@@ -4406,7 +4340,7 @@ $(document).ready(function() {
                         productID: productID,
                         userID: userID
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response == "1") {
                             swal({
                                 title: "<h1 style='color: #ff0000;' >Delete</h1>",
@@ -4422,20 +4356,211 @@ $(document).ready(function() {
 
         } else {
             //Khong có session
-            $("#fs-modal-mess").modal("show");
-            $(".fs-btn-login-wl").click(function() {
-                $("#fs-modal-mess").modal("hide");
-                window.location = window.location.href;
-                //                $("#loginModal").modal("show");
-            });
+            $("#loginModal").modal("show");
+        }
+    });
+
+    // ADD WISH-LIST: CATEGORY_GRID
+
+    $("#fs-shop-content").on("click", ".fs-wl-add-cate", function () {
+        var userID = $(this).attr("fs-userID");
+        var productID = $(this).attr("fs-productID");
+        var input = $("input[name='emailUser']");
+        if (input.val() != "") {
+            //Có session
+            if (!$(this).hasClass("fs-heart-color")) {
+                $(this).addClass("fs-heart-color");
+                $.ajax({
+                    url: "user/ajax/addWishList.html",
+                    method: "POST",
+                    data: {
+                        userID: userID,
+                        productID: productID
+                    },
+                    success: function (response) {
+                        if (response == "1") {
+                            swal({
+                                title: "<h1 style='color: #31b131;'>Success</h1>",
+                                text: "Add Wish List success.",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        } else if (response == "0") {
+                            swal({
+                                title: "<h1 style='color: #F65D20;' >Error!",
+                                text: "Error, Fail add wishlist",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        }
+                    }
+                });
+            } else {
+                $(this).removeClass("fs-heart-color");
+                $.ajax({
+                    url: "user/ajax/deleteWishListt.html",
+                    method: "POST",
+                    data: {
+                        productID: productID,
+                        userID: userID
+                    },
+                    success: function (response) {
+                        if (response == "1") {
+                            swal({
+                                title: "<h1 style='color: #ff0000;' >Delete</h1>",
+                                text: "Delete Wish List success.",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        }
+                    }
+                });
+            }
+
+        } else {
+            //Khong có session
+            $("#loginModal").modal("show");
+        }
+    });
+
+    $("#fs-shop-content").on("click", ".fs-wl-add-cate-a", function () {
+        var userID = $(this).attr("fs-userID");
+        var productID = $(this).attr("fs-productID");
+        var input = $("input[name='emailUser']");
+        if (input.val() != "") {
+            //Có session
+            if (!$(this).hasClass("fs-heart-color")) {
+                $(this).addClass("fs-heart-color");
+                $.ajax({
+                    url: "user/ajax/addWishList.html",
+                    method: "POST",
+                    data: {
+                        userID: userID,
+                        productID: productID
+                    },
+                    success: function (response) {
+                        if (response == "1") {
+                            swal({
+                                title: "<h1 style='color: #31b131;'>Success</h1>",
+                                text: "Add Wish List success.",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        } else if (response == "0") {
+                            swal({
+                                title: "<h1 style='color: #F65D20;' >Error!",
+                                text: "Error, Fail add wishlist",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        }
+                    }
+                });
+            } else {
+                $(this).removeClass("fs-heart-color");
+                $.ajax({
+                    url: "user/ajax/deleteWishListt.html",
+                    method: "POST",
+                    data: {
+                        productID: productID,
+                        userID: userID
+                    },
+                    success: function (response) {
+                        if (response == "1") {
+                            swal({
+                                title: "<h1 style='color: #ff0000;' >Delete</h1>",
+                                text: "Delete Wish List success.",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        }
+                    }
+                });
+            }
+
+        } else {
+            //Khong có session
+            $("#loginModal").modal("show");
+        }
+    });
+
+    // ADD WISH LIST PAGE DETAI
+
+    $("#fs-product-detail-page").on("click", ".fs-wl-add-de-page", function () {
+        var userID = $(this).attr("fs-userID");
+        var productID = $(this).attr("fs-productID");
+        var input = $("input[name='emailUser']");
+
+        if (input.val() != "") {
+            //Có session
+            if (!$(this).hasClass("fs-heart-color")) {
+                $(this).addClass("fs-heart-color");
+                $.ajax({
+                    url: "user/ajax/addWishList.html",
+                    method: "POST",
+                    data: {
+                        userID: userID,
+                        productID: productID
+                    },
+                    success: function (response) {
+                        if (response == "1") {
+                            swal({
+                                title: "<h1 style='color: #31b131;'>Success</h1>",
+                                text: "Add Wish List success.",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        } else if (response == "0") {
+                            swal({
+                                title: "<h1 style='color: #F65D20;' >Error!",
+                                text: "Error, Fail add wishlist",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        }
+                    }
+                });
+            } else {
+                $(this).removeClass("fs-heart-color");
+                $.ajax({
+                    url: "user/ajax/deleteWishListt.html",
+                    method: "POST",
+                    data: {
+                        productID: productID,
+                        userID: userID
+                    },
+                    success: function (response) {
+                        if (response == "1") {
+                            swal({
+                                title: "<h1 style='color: #ff0000;' >Delete</h1>",
+                                text: "Delete Wish List success.",
+                                timer: 2000,
+                                showConfirmButton: false,
+                                html: true
+                            });
+                        }
+                    }
+                });
+            }
+
+        } else {
+            //Khong có session
+            $("#loginModal").modal("show");
         }
     });
 
     // DELETE WISHLIST 
 
-    $(".fs-btn-delete-wl").click(function() {
+    $(".fs-btn-delete-wl").click(function () {
         var wishID = $(this).attr("fs-wl-wlID");
-        //        alert(wishID);
         $("#fs-list-id-" + wishID).remove();
         $.ajax({
             url: "user/ajax/deleteWishList/" + wishID + ".html",
@@ -4443,7 +4568,7 @@ $(document).ready(function() {
             data: {
                 wishID: wishID
             },
-            success: function(response) {
+            success: function (response) {
                 if (response == "1") {
                     swal({
                         title: "<h1 style='color: #ff0000;'>Delete</h1>",
@@ -4459,8 +4584,6 @@ $(document).ready(function() {
     });
 
 
-
-
     /*===========================END DUONG - USER===================================*/
 
     /*========================================END DUONG - USER====================================================*/
@@ -4469,7 +4592,7 @@ $(document).ready(function() {
     var mincount = 2;
     var maxcount = 4;
     $(".image-gallery-ul li").slice(2).hide();
-    $(window).scroll(function() {
+    $(window).scroll(function () {
         if ($(window).scrollTop() + $(window).height() >= $(document).height() - 350) {
             $(".image-gallery-ul li").slice(mincount, maxcount).fadeIn(2000);
             mincount = mincount + 2;

@@ -58,11 +58,9 @@ public class UserController {
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
     public String login(ModelMap model) {
-//        Users users = new Users();
         //2 dòng này thêm để render ra menu chính
         List<Categories> cateList = productStateLessBean.categoryList();
         model.addAttribute("cateList", cateList);
-//        model.addAttribute("users", users);
         return "client/pages/index";
     }
 
@@ -171,15 +169,6 @@ public class UserController {
     @RequestMapping(value = "address-add/{userID}", method = RequestMethod.POST)
     public String addressAdd(@PathVariable("userID") int userID, @ModelAttribute("userAddress") UserAddresses userAddress,
             RedirectAttributes redirectAttributes) {
-
-        List<UserAddresses> listAddress = usersStateLessBean.getUserByID(userID).getUserAddressList();
-        for (UserAddresses list : listAddress) {
-            if (list.getAddress().equals(userAddress.getAddress()) && list.getPhoneNumber().equals(userAddress.getPhoneNumber())) {
-                redirectAttributes.addFlashAttribute("error", "bị trùng");
-                return "redirect:/user/address-add/" + userID + ".html";
-            }
-            break;
-        }
         userAddressesStateLessBean.addAddressUser(userAddress, userID);
         redirectAttributes.addFlashAttribute("error", "<div class=\"col-md-12  alert alert-success\">Create Address Successfully!</div>");
         return "redirect:/user/address-list/" + userID + ".html";
@@ -232,7 +221,6 @@ public class UserController {
     @RequestMapping(value = "deleteAddress/{addressID}", method = RequestMethod.POST)
     public String deleteaddress(@PathVariable("addressID") int addressID, ModelMap model) {
         UserAddresses usa = userAddressesStateLessBean.findAddressID(addressID);
-//        Integer userID = userAddressesStateLessBean.findAddressID(addressID).getUser().getUserID();
         if (usa != null) {
             userAddressesStateLessBean.deleteAddress(addressID);
         }
@@ -260,7 +248,7 @@ public class UserController {
     @RequestMapping(value = "account-information/{userID}", method = RequestMethod.POST)
     public String accountinfo(@PathVariable("userID") int userID,
             @ModelAttribute("updateUser") Users updateUser,
-            RedirectAttributes redirectAttributes, @RequestParam("upImage") MultipartFile image) {
+            RedirectAttributes redirectAttributes, @RequestParam("upImage") MultipartFile image, HttpSession session) {
         Users oldUser = usersStateLessBean.getUserByID(userID); // thong tin user chua chinh sua
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
         try {
@@ -287,6 +275,8 @@ public class UserController {
 
         if (error == 1) {
             Users afterUpdateUser = usersStateLessBean.getUserByID(userID);
+            session.setAttribute("emailUser", afterUpdateUser.getEmail());
+            session.setAttribute("USfirstname", afterUpdateUser.getFirstName() + " " + afterUpdateUser.getLastName());
             //Change normal date to string
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             Date date = afterUpdateUser.getBirthday();

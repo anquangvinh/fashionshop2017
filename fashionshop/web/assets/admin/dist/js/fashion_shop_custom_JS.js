@@ -4113,9 +4113,26 @@ $(document).ready(function () {
             });
         });
     });
-//    $(".fs-button-detele-role").prop('disable', true);
 
-//    $
+    if (window.location.href.includes("userstatistics")) {
+        $.ajax({
+            url: "admin/user/ajax/getCountUserRegistration.html",
+            method: 'GET',
+            dataType: 'JSON',
+            success: function (response) {
+                Morris.Bar({
+                    element: 'user-bar-chart',
+                    data: response,
+                    xkey: 'label',
+                    ykeys: ['value'],
+                    labels: ['Total User Register']
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
 
     /*==============================END DUONG - USER============================*/
 

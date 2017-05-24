@@ -38,36 +38,19 @@ public class UserAddressesStateLessBean implements UserAddressesStateLessBeanLoc
 
     @Override
     public void addAddressUser(UserAddresses userAddresses, int userID) {
-//        int error;
-
-//        Users user = findUserID(userID);
-//        UserAddresses findAD = findAddress(user.getUserID());
-//        UserAddresses findP = findPhone(user.getUserID());
-//        if (findAD != null && findP != null) {
-//            error = 2; // phone hoặc address bị trùng
-//        } else {
         try {
-//                for(){
             Users u = findUserID(userID);
-//                Users u = findUserID(userID);
-//                    if (u != null) {
             userAddresses.setUser(u);
-//                    }
+            u.getUserAddressList().add(userAddresses);
             getEm().persist(userAddresses);
-//                error = 1;
-//                }
         } catch (Exception e) {
             e.printStackTrace();
-//                error = 0;
         }
-//        }
-//        return error;
     }
-
+    
     @Override
     public UserAddresses findAddress(int userID) {
-        Query q = getEm().createQuery("SELECT ua.address FROM UserAddresses ua WHERE ua.user.userID = :userID", UserAddresses.class);
-//        q.setParameter("userID", userID);
+        Query q = getEm().createQuery("SELECT ua.address, ua.phoneNumber FROM UserAddresses ua WHERE ua.user.userID = :userID", UserAddresses.class);
         q.setParameter("userID", userID);
         try {
             return (UserAddresses) q.getSingleResult();
@@ -80,7 +63,6 @@ public class UserAddressesStateLessBean implements UserAddressesStateLessBeanLoc
     @Override
     public UserAddresses findPhone(int userID) {
         Query q = getEm().createQuery("SELECT ua.phoneNumber FROM UserAddresses ua WHERE ua.user.userID = :userID", UserAddresses.class);
-//        q.setParameter("userID", userID);
         q.setParameter("userID", userID);
         try {
             return (UserAddresses) q.getSingleResult();
@@ -140,16 +122,10 @@ public class UserAddressesStateLessBean implements UserAddressesStateLessBeanLoc
         return getEm().find(UserAddresses.class, addressID);
     }
 
-
-    @Override
-    public int editAddress(int userID, int addressID) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     @Override
     public void deleteAddress(int addressID) {
         UserAddresses findUseraddress = findAddressID(addressID);
-        findUseraddress.getAddressID();
+        findUserID(findUseraddress.getUser().getUserID()).getUserAddressList().remove(findUseraddress);
         getEm().remove(findUseraddress);
         
     }
