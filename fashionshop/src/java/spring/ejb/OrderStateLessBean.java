@@ -197,7 +197,7 @@ public class OrderStateLessBean implements OrderStateLessBeanLocal {
     @Override
     public List<DiscountVoucher> getAllDiscountVoucher() {
         try {
-            Query q = getEntityManager().createQuery("SELECT d FROM DiscountVoucher d", DiscountVoucher.class);
+            Query q = getEntityManager().createQuery("SELECT d FROM DiscountVoucher d ORDER BY d.voucherID ASC", DiscountVoucher.class);
             return q.getResultList();
         } catch (Exception e) {
             return null;
