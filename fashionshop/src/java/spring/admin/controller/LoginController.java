@@ -20,7 +20,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import spring.ejb.RolesStateLessBeanLocal;
 import spring.ejb.UsersStateLessBeanLocal;
@@ -36,12 +35,16 @@ public class LoginController {
     SharedFunctions sharedFunc;
     
     @RequestMapping(value = "/admin/login", method = RequestMethod.GET)
-    public String login() {
+    public String login(
+            HttpSession session
+    ) {
+        if(session.getAttribute("email") != null){
+            return "redirect:/admin/index.html";
+        }
         return "admin/login";
     }
     
     @RequestMapping(value = "/admin/login", method = RequestMethod.POST)
-//    @ResponseBody
     public String login(ModelMap model,
             @RequestParam("email") String email,
             @RequestParam("password") String password,

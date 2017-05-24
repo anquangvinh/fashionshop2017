@@ -37,8 +37,6 @@ public interface UserAddressesStateLessBeanLocal {
     
     UserAddresses findAddressID(int addressID);
     
-    int editAddress(int userID, int addressID);
-    
     void deleteAddress(int addressID);
     
 }

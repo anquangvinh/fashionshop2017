@@ -59,7 +59,7 @@
                         <span class="icon-bar"></span>
                     </button>
                     <!-- Logo -->
-                    <a class="navbar-brand" href="./index.html"><img src="assets/images/basic/logo.png" class="img-responsive" alt=""/></a>
+                    <a class="navbar-brand" href="./"><img src="assets/images/basic/logo.png" class="img-responsive" alt=""/></a>
                 </div>
                 <!-- Cart & Search -->
                 <div class="header-xtra pull-right">
@@ -73,8 +73,8 @@
                         <span>
                             <i class="fa fa-search"></i>
                         </span>
-                        <form class="searchtop">
-                            <input type="text" id="fs-search-top-input" placeholder="Search by Product Name...">
+                        <form class="searchtop" method="POST" action="search.html">
+                            <input type="text" name="prodKeyword" id="fs-search-top-input" placeholder="Search by Product Name...">
                             <div style="background-color: white">
                                 <ul id="fs-on-search-result">
 
@@ -89,7 +89,7 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="index.html" class="active">Home</a>
+                            <a href="./" class="active">Home</a>
                         </li>
                         <c:forEach items="${cateList}" var="category">
                             <li class="dropdown">

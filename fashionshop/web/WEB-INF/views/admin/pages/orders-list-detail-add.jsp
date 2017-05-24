@@ -78,7 +78,7 @@
                         <label>Quantity</label>
                     </div>
                     <div class="col-lg-3">
-                        <input class="form-control" type="text" id="productOrDetailAddQuantity" name="productOrDetailAddQuantity" value=""/>
+                        <input class="form-control" type="number" id="productOrDetailAddQuantity" name="productOrDetailAddQuantity" value="1"/>
                     </div>
                 </div>
                 <div class="clearfix"></div>

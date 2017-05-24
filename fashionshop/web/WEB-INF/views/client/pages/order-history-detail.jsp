@@ -40,7 +40,16 @@
                                 </tr>
                                 <tr>
                                     <th style="font-weight: 700;">Order Note</th>
-                                    <td>${order.note}</td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${order.note == null || order.note.trim().length() == 0}" >
+                                                --
+                                            </c:when>
+                                            <c:otherwise>
+                                                ${order.note}
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
                                 </tr>
                             </thead>
                             <tbody>

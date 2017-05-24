@@ -3,7 +3,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<%--<%@include file="../pages/modaldetailAD.jsp" %>--%>
 <!-- BREADCRUMBS -->
 <jsp:include page="../blocks/breadcrumbs.jsp" flush="true" />
 
@@ -65,25 +64,21 @@
                                     ${error}
                                     <c:set var="aaa" value="${listua}"/>
                                     <c:choose>
-                                        <c:when test="${fn:length(aaa) > 17}">
+                                        <c:when test="${fn:length(aaa) > 19}">
                                         <p style="color: red; text-align: center; font-size: 16px">You cannot insert Address</p>
                                         <ul class="form-list row">
                                         <li class="col-md-6 col-sm-6">
                                             <label >Address <em>*</em></label>
                                             <form:input path="address" id="txtaddress"  cssClass="input-text fs-address-add" disabled="true"/>
-                                            <p class="help-block" style="color: red; text-align: center; margin-top: -10px;" id="fs-address-add-user-error"></p>
+                                            
                                             <span></span>
                                         </li>
                                         <li class="col-md-6 col-sm-6">
                                             <label ><i class="fa fa-phone"></i> Phone Number <em>*</em></label>
                                             <form:input path="phoneNumber" id="txtphone" cssClass="input-text fs-phone-add" disabled="true"/>
-                                            <p class="help-block" style="color: red; text-align: center; margin-top: -10px;" id="fs-phone-add-user-error"></p>
+      
                                         </li>
                                     </ul>
-<!--                                    <div class="buttons-set" >
-                                        <button class="btn-black fs-button-add-address" type="submit" fs-userID="${sessionScope.findUsersID}"><span><span>Create</span></span></button>
-                                        <button class="btn-black fs-button-reset-address" type="reset"><span><span>Cancel</span></span></button>
-                                    </div>-->
                                         </c:when>
                                         <c:otherwise>
                                         <p style="color: #00A8FF; text-align: center; font-size: 16px">You can insert 20 Address</p>

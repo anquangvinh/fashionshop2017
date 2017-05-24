@@ -143,7 +143,7 @@
                     fillOpacity: 1,
                     hideHover: "auto",
                     behaveLikeLine: true,
-                    resize: true,
+                    resize: false,
                     pointFillColors: ["#ffffff"],
                     pointStrokeColors: ["black"],
                     lineColors: ["red"],

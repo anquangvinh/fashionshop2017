@@ -1,30 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
-        <file>
-            <url>web/assets/admin/dist/js/fashion_shop_custom_JS.js</url>
-            <bookmark id="1">
-                <name/>
-                <line>4120</line>
-                <key/>
-            </bookmark>
-        </file>
-    </editor-bookmarks>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group name="fashionshop2017"/>
-        <group>
-            <file>file:/C:/Users/vinh.an/Downloads/Compressed/fashionshop_23_05_eeeeeerrrrrorrrrr/fashionshop/src/java/spring/interceptor/CheckCookieUser.java</file>
-            <file>file:/C:/Users/vinh.an/Downloads/Compressed/fashionshop_23_05_eeeeeerrrrrorrrrr/fashionshop/src/java/spring/interceptor/LoginUserInterceptor.java</file>
-            <file>file:/C:/Users/vinh.an/Downloads/Compressed/fashionshop_23_05_eeeeeerrrrrorrrrr/fashionshop/web/WEB-INF/views/client/blocks/modal.jsp</file>
-            <file>file:/C:/Users/vinh.an/Downloads/Compressed/fashionshop_23_05_eeeeeerrrrrorrrrr/fashionshop/web/assets/js/fashion_shop_custom_JS.js</file>
-            <file>file:/C:/Users/vinh.an/Downloads/Compressed/fashionshop_23_05_eeeeeerrrrrorrrrr/fashionshop/src/java/spring/interceptor/LoginInterceptor.java</file>
-        </group>
-        <group name="project">
-            <file>file:/C:/Users/Phan/Documents/Git%20fashion_shop/fashionshop2017/fashionshop/src/java/spring/ejb/BlogsSBLocal.java</file>
-            <file>file:/C:/Users/Phan/Documents/Git%20fashion_shop/fashionshop2017/fashionshop/web/WEB-INF/views/client/blocks/header.jsp</file>
-            <file>file:/C:/Users/Phan/Documents/Git%20fashion_shop/fashionshop2017/fashionshop/web/WEB-INF/views/client/pages/blog.jsp</file>
-            <file>file:/C:/Users/Phan/Documents/Git%20fashion_shop/fashionshop2017/fashionshop/src/java/spring/ejb/BlogsSB.java</file>
-            <file>file:/C:/Users/Phan/Documents/Git%20fashion_shop/fashionshop2017/fashionshop/web/WEB-INF/views/client/pages/blog-categories.jsp</file>
-        </group>
-    </open-files>
-</project-private>
+deploy.ant.properties.file=C:\\Users\\vinh.an\\AppData\\Roaming\\NetBeans\\8.0.2\\config\\GlassFishEE6\\Properties\\gfv31599128638.properties
+j2ee.platform.is.jsr109=true
+j2ee.server.domain=C:/Users/vinh.an/AppData/Roaming/NetBeans/8.0.2/config/GF_4.1/domain1
+
+j2ee.server.home=C:/Program Files/glassfish-4.1/glassfish
+j2ee.server.instance=[C:\\Program Files\\glassfish-4.1\\glassfish;C:\\Program Files\\glassfish-4.1\\glassfish\\domains\\domain1]deployer:gfv3ee6:localhost:4848
+j2ee.server.middleware=C:/Program Files/glassfish-4.1
+javac.debug=true
+javadoc.preview=true
+selected.browser=Chrome
+
+user.properties.file=C:\\Users\\vinh.an\\AppData\\Roaming\\NetBeans\\8.0.2\\build.properties

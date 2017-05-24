@@ -25,11 +25,11 @@
                 <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-user">
-                <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+<!--                <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
                 </li>
                 <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                </li>
-                <li class="divider"></li>
+                </li>-->
+                <!--<li class="divider"></li>-->
                 <li><a href="admin/logout.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                 </li>
             </ul>
@@ -71,7 +71,9 @@
                         <li>
                             <a href="admin/user/list.html"><i class="fa fa-list" aria-hidden="true"></i> List</a>
                         </li>
-
+                        <li>
+                            <a href="admin/user/userstatistics.html"><i class="fa fa-list" aria-hidden="true"></i> Statistics</a>
+                        </li>
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
@@ -88,7 +90,7 @@
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
-
+                
                 <li>
                     <a href="#"><i class="fa fa-cubes fa-fw"></i> Product SubCategory<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
@@ -111,10 +113,19 @@
                         <li>
                             <a href="admin/product/create.html"><i class="fa fa-plus" aria-hidden="true"></i> New</a>
                         </li>
+                        <li>
+                            <a href="admin/product-chart.html"><i class="fa fa-pie-chart" aria-hidden="true"></i> Statistics</a>
+                        </li>
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
-
+                
+                <li>
+                    <a href="admin/product/managerating.html">
+                        <i class="fa fa-star" style="color: #FFCC01"></i> Rating Star<span class="fa arrow"></span>
+                    </a>
+                </li>
+                
                 <li>
                     <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Orders<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">

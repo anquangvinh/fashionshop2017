@@ -15,6 +15,7 @@ import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import spring.entity.Orders;
 import spring.entity.Products;
 import spring.entity.UserAddresses;
 import spring.entity.Users;
@@ -26,6 +27,7 @@ import spring.entity.WishList;
  */
 @Stateless
 public class UsersStateLessBean implements UsersStateLessBeanLocal {
+
     ProductStateLessBeanLocal productStateLessBean = lookupProductStateLessBeanLocal();
 
     @PersistenceContext
@@ -108,12 +110,12 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
     }
 
     @Override
-    public void changePass(int userID,String newpass){
+    public void changePass(int userID, String newpass) {
         Users findID = getUserByID(userID);
         findID.setPassword(newpass);
         getEm().merge(findID);
     }
-    
+
     @Override
     public int login(String email, String pass) {
         int error;
@@ -123,9 +125,9 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
         } else {
             if (userfindemail.getPassword().equals(pass)) { //trường hợp này được login => kiểm tra role ở đây
                 if (userfindemail.getRole().getRoleID() == 1 || userfindemail.getRole().getRoleID() == 2) {
-                    if(userfindemail.getStatus() == 1){
-                    error = 1; // => admin or moderator
-                    }else {
+                    if (userfindemail.getStatus() == 1) {
+                        error = 1; // => admin or moderator
+                    } else {
                         error = 4; // moderator bị block
                     }
                 } else {
@@ -146,10 +148,14 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
             error = 2; // sai email
         } else {
             if (userfindEmail.getPassword().equals(pass)) {
-                if(userfindEmail.getStatus() == 1){
-                error = 1; // login thành công
-                }else {
+                if(userfindEmail.getRole().getRoleID() != 1 && userfindEmail.getRole().getRoleID() != 2){
+                if (userfindEmail.getStatus() == 1) {
+                    error = 1; // login thành công
+                } else {
                     error = 3; // users bị block
+                }
+                }else{
+                    error = 4; // admin và moderator k đc vào
                 }
             } else {
                 error = 0; // sai password
@@ -162,26 +168,25 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
     public int updateUser(Users user) {
         int error;
         Users findID = getUserByID(user.getUserID());
-//        if(findEmail == null){
-        if(findID.getEmail().equals(user.getEmail())){ // không thay đổi email
+        Users emailNew = findUserByEmail(user.getEmail());
+        if (findID.getEmail().equals(user.getEmail())) { // không thay đổi email
             try {
                 getEm().merge(user);
                 error = 1;
             } catch (Exception e) {
                 error = 0;
             }
-        }
-        else{
-        if (findID.getEmail() != null) {
-            error = 2;// email đã có
         } else {
-            try {
-                getEm().merge(user);
-                error = 1; // update thành công
-            } catch (Exception e) {
-                error = 0; // lỗi
+            if (emailNew != null) {
+                error = 2;// email đã có
+            } else {
+                try {
+                    getEm().merge(user);
+                    error = 1; // update thành công
+                } catch (Exception e) {
+                    error = 0; // lỗi
+                }
             }
-        }
         }
         return error;
     }
@@ -200,24 +205,20 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
     }
 
     @Override
-    public int addWishlist(WishList wishList,int userID, int productID) {
+    public int addWishlist(WishList wishList, int userID, int productID) {
         int error;
         Users findUserID = getUserByID(userID);
         Products findProduct = productStateLessBean.findProductByID(productID);
-//        if(findProduct != null){
-//            error = 2; // san pham da co
-//        }else{
-            try {
-                wishList.setUser(findUserID);
-                wishList.setProduct(findProduct);
-                getEm().persist(wishList);
-                error = 1; //them thanh cong
-            } catch (Exception e) {
-                error = 0; // loi
-            }
-//        }
+        try {
+            wishList.setUser(findUserID);
+            wishList.setProduct(findProduct);
+            getEm().persist(wishList);
+            error = 1; //them thanh cong
+        } catch (Exception e) {
+            error = 0; // loi
+        }
         return error;
-        
+
     }
 
     @Override
@@ -227,7 +228,6 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
         return q.getResultList();
     }
 
-    
     private ProductStateLessBeanLocal lookupProductStateLessBeanLocal() {
         try {
             Context c = new InitialContext();
@@ -267,5 +267,40 @@ public class UsersStateLessBean implements UsersStateLessBeanLocal {
         WishList wll = findWishProductID(productID, userID);
         getEm().remove(wll);
     }
+
+    @Override
+    public Integer countUserRegisterByMonth(int month, int year) {
+        try {
+            Query q = getEm().createQuery("SELECT COUNT(u) FROM Users u WHERE FUNCTION('MONTH',u.registrationDate) = :month AND FUNCTION('YEAR',u.registrationDate) = :year AND u.role.roleName = 'User'", Users.class);
+            q.setParameter("month", month);
+            q.setParameter("year", year);
+            return Integer.parseInt(q.getSingleResult().toString());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Integer> getAllYearRegister() {
+        try {
+            Query q = getEm().createQuery("SELECT FUNCTION('YEAR',u.registrationDate) FROM Users u GROUP BY FUNCTION('YEAR',u.registrationDate) ORDER BY FUNCTION('YEAR',u.registrationDate) DESC", Users.class);
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Integer countGender(short gender) {
+        try {
+            Query q = getEm().createQuery("SELECT COUNT(u.gender) FROM Users u WHERE u.gender = :gender", Users.class);
+            q.setParameter("gender", gender);
+            return Integer.parseInt(q.getSingleResult().toString());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
 }
- 
+
