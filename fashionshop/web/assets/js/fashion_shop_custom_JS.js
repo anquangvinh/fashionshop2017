@@ -849,7 +849,9 @@ $(document).ready(function () {
                                             "                </div>\n" +
                                             "                <div class=\"product-overlay\">\n" +
                                             "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                            "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
+                                            "                     <a class=\"likeitem fa fa-heart-o fs-wl-add-cate-a\" \n" +
+                                            "                       fs-userID=\"" + userID + "\" \n" +
+                                            "                       fs-productID=\"" + prod.productID + "\"></a>\n" +
                                             "                </div>\n" +
                                             "          </div>\n" +
                                             "      <div class=\"product-info\">\n" +
@@ -881,7 +883,9 @@ $(document).ready(function () {
                                             "                </div>\n" +
                                             "                <div class=\"product-overlay\">\n" +
                                             "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                            "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
+                                            "                     <a class=\"likeitem fa fa-heart-o fs-wl-add-cate-a\" \n" +
+                                            "                       fs-userID=\"" + userID + "\" \n" +
+                                            "                       fs-productID=\"" + prod.productID + "\"></a>\n" +
                                             "                </div>\n" +
                                             "          </div>\n" +
                                             "      <div class=\"product-info\">\n" +
@@ -1873,7 +1877,7 @@ $(document).ready(function () {
         var userID = $(this).attr("fs-userID");
         var productID = $(this).attr("fs-productID");
 
-        if (input.val() != "") {
+        if (userID != "") {
             //Có session
             if (!$(this).hasClass("fs-heart-color")) {
                 $(this).addClass("fs-heart-color");
@@ -4511,7 +4515,7 @@ $(document).ready(function () {
         var userID = $(this).attr("fs-userID");
         var productID = $(this).attr("fs-productID");
         var input = $("input[name='emailUser']");
-        if (input.val() != "") {
+        if (userID != "") {
             //Có session
             if (!$(this).hasClass("fs-heart-color")) {
                 $(this).addClass("fs-heart-color");
