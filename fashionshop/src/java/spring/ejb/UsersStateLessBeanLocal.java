@@ -53,4 +53,12 @@ public interface UsersStateLessBeanLocal {
     WishList findWishProductID (int productID, int userID);
     
     void deleteWL(int productID, int userID);
+    
+    Integer countUserRegisterByMonth(int month, int year);
+    
+    List<Integer> getAllYearRegister();
+    
+    Integer countGender(short gender);
+    
+    
 }

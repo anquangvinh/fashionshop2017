@@ -131,7 +131,9 @@
                                             </div>
                                             <div class="product-overlay">
 <!--                                                 <a href="#" class="addcart fa fa-shopping-cart"></a> -->
-                                                <a href="#" class="likeitem fa fa-heart-o"></a>
+                                                <a class="likeitem fa fa-heart-o fs-wl-add-cate"
+                                                   fs-userID="${sessionScope.findUsersID}" fs-productID="${product.productID}"></a>
+                                                   <input type="hidden" name="emailUser" value="${sessionScope.emailUser}" />
                                             </div>
                                         </div>
                                         <div class="product-info">
@@ -213,6 +215,6 @@
 </div>
 
 <div class="clearfix space20"></div>
-
+<input type="hidden" name="findUsersID" value="${sessionScope.findUsersID}"/>
 <!-- MODAL -->
 <jsp:include page="../blocks/modal.jsp" flush="true" />

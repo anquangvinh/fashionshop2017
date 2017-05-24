@@ -20,12 +20,6 @@
             <mvc:exclude-mapping path="/admin/login**" />
             <bean class="spring.interceptor.LoginInterceptor" /> 
         </mvc:interceptor>
-<!--        
-        <mvc:interceptor>
-            <mvc:mapping path="/**" />
-            <mvc:exclude-mapping path="/admin/**"/>
-            <bean class="spring.interceptor.CountVisitorInterceptor" /> 
-        </mvc:interceptor>-->
         
         <!--Cái này chạy thứ 2-->
         <!--Cau hinh interceptor moi loc cookie nam o day-->

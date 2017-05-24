@@ -7,6 +7,9 @@ package spring.admin.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +28,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import spring.ejb.RolesStateLessBeanLocal;
 import spring.ejb.UsersStateLessBeanLocal;
+import spring.entity.Categories;
+import spring.entity.QuantityOrderChart;
 import spring.entity.Roles;
 import spring.entity.UserAddresses;
 import spring.entity.Users;
@@ -184,6 +189,35 @@ public class User_Controller {
         
         return "redirect:/admin/user/role.html";
     }
+    
+    @RequestMapping(value = "userstatistics", method = RequestMethod.GET)
+    public String userstatistic(ModelMap model){
+        model.addAttribute("listYearRegis", usersStateLessBean.getAllYearRegister());
+        model.addAttribute("genderfm", usersStateLessBean.countGender((short) 0));
+        model.addAttribute("genderm", usersStateLessBean.countGender((short) 1));
+        return "admin/pages/users-statistics";
+    }
+    
+    @ResponseBody
+    @RequestMapping(value = "ajax/getCountUserRegistration", method = RequestMethod.GET)
+    public String getCountUserRegistration(){
+        String[] monthString = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        List<QuantityOrderChart> userRegisterList = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            QuantityOrderChart quantityOrderChart = new QuantityOrderChart();
+            quantityOrderChart.setLabel(monthString[i]);
+            quantityOrderChart.setValue(usersStateLessBean.countUserRegisterByMonth(i+1, (new Date().getYear() + 1900)));
+            userRegisterList.add(quantityOrderChart);
+        }
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String result = mapper.writeValueAsString(userRegisterList);
+            return result;
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+    
     
     private UsersStateLessBeanLocal lookupUsersStateLessBeanLocal() {
         try {
