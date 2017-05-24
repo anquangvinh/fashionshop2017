@@ -88,12 +88,13 @@ public class BlogController {
         }
         model.addAttribute("PopularPosts", blogsSB.getAllBlogs());
         List<BlogCategories> getBlogCateList = blogCategoriesSB.getBlogCategoriesList();
-        model.addAttribute("getBlogCateList", getBlogCateList);
+//        model.addAttribute("getBlogCateList", getBlogCateList);
         //2 dòng này thêm để render ra menu chính
         List<Categories> cateList = productStateLessBean.categoryList();
-        List<Blogs> getShowAllBlogs = blogsSB.getAllBlogs();
-        model.addAttribute("blogListClient", getShowAllBlogs);
+//        List<Blogs> getShowAllBlogs = blogsSB.getAllBlogs();
+//        model.addAttribute("blogListClient", getShowAllBlogs);
         model.addAttribute("cateList", cateList);
+        model.addAttribute("blogCateListClient", getBlogCateList);
         return "client/pages/blog-categories";
     }
 
