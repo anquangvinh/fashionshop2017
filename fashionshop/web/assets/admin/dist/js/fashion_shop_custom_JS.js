@@ -4139,7 +4139,7 @@ $(document).ready(function () {
     $('#tableDiscountList').DataTable({
         responsive: true,
         columnDefs: [{"orderable": false, "targets": [5, 6]}],
-        order: [[0, "ASC"]]
+        order: [[0, "asc"]]
     });
 
     //discount-add.jsp

@@ -23,6 +23,10 @@
         <group>
             <file>file:/D:/FPT%20APTECH%20ACCP/Final%20Project/Git/fashionshop2017/fashionshop2017/fashionshop/src/java/spring/admin/controller/Orders_Controller.java</file>
             <file>file:/D:/FPT%20APTECH%20ACCP/Final%20Project/Git/fashionshop2017/fashionshop2017/fashionshop/web/WEB-INF/views/admin/pages/orders-list-detail.jsp</file>
+            <file>file:/D:/FPT%20APTECH%20ACCP/Final%20Project/Git/fashionshop2017/fashionshop2017/fashionshop/web/assets/admin/dist/js/fashion_shop_custom_JS.js</file>
+            <file>file:/D:/FPT%20APTECH%20ACCP/Final%20Project/Git/fashionshop2017/fashionshop2017/fashionshop/web/WEB-INF/views/client/blocks/header.jsp</file>
+            <file>file:/D:/FPT%20APTECH%20ACCP/Final%20Project/Git/fashionshop2017/fashionshop2017/fashionshop/src/java/spring/entity/Users.java</file>
+            <file>file:/D:/FPT%20APTECH%20ACCP/Final%20Project/Git/fashionshop2017/fashionshop2017/fashionshop/src/java/spring/ejb/OrderStateLessBean.java</file>
             <file>file:/D:/FPT%20APTECH%20ACCP/Final%20Project/Git/fashionshop2017/fashionshop2017/fashionshop/web/assets/js/fashion_shop_custom_JS.js</file>
         </group>
     </open-files>
