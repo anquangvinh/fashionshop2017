@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import spring.admin.controller.Product_Controller;
 import spring.ejb.ProductStateLessBeanLocal;
 import spring.ejb.UsersStateLessBeanLocal;
 import spring.entity.Categories;
@@ -41,6 +43,7 @@ import spring.entity.ProductRating;
 import spring.entity.Products;
 import spring.entity.SizeLetterOrder;
 import spring.entity.SizesByColor;
+import spring.entity.SubCategories;
 
 @Controller
 public class ProductController {
@@ -255,7 +258,7 @@ public class ProductController {
             currentView++;
             targetProduct.setProductViews(currentView);
             productStateLessBean.updateProductGeneralInfo(targetProduct);
-            List<ProductRating> ratingList = targetProduct.getProductRatingList();
+            List<ProductRating> ratingList = targetProduct.getProductRatingListVisible();
             float ratingAVR = 0;
             float ratingSum = 0;
             int ratingfor1 = 0;
@@ -666,13 +669,131 @@ public class ProductController {
         List<Products> productList = productStateLessBean.getSearchedProducts(keyword);
 
         String result = "";
+        if (productList.size() > 0) {
+            for (Products p : productList) {
+                result += "<li class=\"fs-search-result\">\n"
+                        + "     <a href=\"" + p.getProductID() + "-" + p.getProductColorListWorking().get(0).getColorID() + "-" + p.getProductNameNA() + ".html\">"
+                        + "         " + p.getProductName() + ""
+                        + "     </a>\n"
+                        + "</li>";
+            }
+        }
 
-        for (Products p : productList) {
-            result += "<li class=\"fs-search-result\">\n"
-                    + "     <a href=\"" + p.getProductID()+ "-" + p.getProductColorListWorking().get(0).getColorID() + "-" + p.getProductNameNA() + ".html\">"
-                    + "         "+ p.getProductName() +""
-                    + "     </a>\n"
-                    + "</li>";
+        return result;
+    }
+
+    @RequestMapping(value = "search", method = RequestMethod.POST)
+    public String searchProduct(
+            @RequestParam("prodKeyword") String prodKeyword,
+            ModelMap model
+    ) {
+        List<Products> searchedResult = productStateLessBean.getAllSearchedProducts(prodKeyword);
+        //2 dòng này thêm để render ra menu chính
+        List<Categories> cateList = productStateLessBean.categoryList();
+        model.addAttribute("cateList", cateList);
+        model.addAttribute("productsList", searchedResult);
+        model.addAttribute("searchedKeyword", prodKeyword);
+        return "client/pages/search";
+    }
+
+    @RequestMapping(value = "ajax/getSubCategory", method = RequestMethod.POST)
+    @ResponseBody
+    public String getSubCategory(@RequestParam("cateID") Integer cateID) {
+        Categories cate = productStateLessBean.findCategoryByID(cateID);
+        List<SubCategories> subCateList = cate.getSubCateList();
+        List<Properties> newList = new ArrayList<>();
+        for (SubCategories sc : subCateList) {
+            Properties prop = new Properties();
+            prop.setProperty("subCateID", sc.getSubCateID().toString());
+            prop.setProperty("subCateName", sc.getSubCateName());
+            newList.add(prop);
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        String result = "";
+        try {
+            result = mapper.writeValueAsString(newList);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(Product_Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "ajax/filterSearchedProduct", method = RequestMethod.POST)
+    @ResponseBody
+    public String filterSearchedProduct(
+            @RequestParam("cateID") Integer cateID,
+            @RequestParam("subCateID") Integer subCateID,
+            @RequestParam("searchedKeyword") String searchedKeyword
+    ) {
+        String condition = "";
+        if (subCateID == 0) {
+            if (cateID == 0) {
+                condition = "";
+            } else {
+                condition = "AND p.category.cateID = " + cateID;
+            }
+        } else {
+            condition = "AND p.category.cateID = " + cateID + " AND p.subCate.subCateID = " + subCateID + "";
+        }
+
+        List<Products> filterSearchedProducts = productStateLessBean.getProductFilterByCateAndSubCate(searchedKeyword, condition);
+        String result = "";
+        if (filterSearchedProducts.size() > 0) {
+            for (Products p : filterSearchedProducts) {
+                String disCnt = "";
+                String disCnt2 = "";
+                if (p.getProductDiscount() > 0) {
+                    disCnt += "<span class=\"badge offer\">-$" + p.getProductDiscount() + "%</span>\n";
+                    disCnt2 += " <small class=\"cutprice\">$ " + p.getPrice() + "0 </small>  $\n"
+                            + "  " + (p.getPrice() - p.getPrice() * p.getProductDiscount() / 100) + "\n";
+                } else {
+                    disCnt2 += "$ " + p.getPrice() + "0";
+                }
+
+                String color = "";
+                if (p.getProductColorListWorking().size() > 1) {
+                    for (ProductColors c : p.getProductColorListWorking()) {
+                        color += " <img src=\"assets/images/products/colors/" + c.getUrlColorImg() + "\" \n"
+                                + "     class=\"img-responsive fs-index-color-img\" \n"
+                                + "     fs-index-color-img=\"" + c.getColorID() + "\" \n"
+                                + "     fs-product=\"" + p.getProductID() + "\" \n"
+                                + "     alt=\"" + c.getUrlColorImg() + "\" \n"
+                                + "     title=\"" + c.getColor() + "\"/>\n";
+                    }
+                }
+
+                result += "<div class=\"col-md-3 col-sm-6\">\n"
+                        + "   <div class=\"product-item\">\n"
+                        + "        <div class=\"item-thumb\">\n"
+                        + disCnt
+                        + "            <img src=\"assets/images/products/" + p.getUrlImg() + "\" \n"
+                        + "                 class=\"img-responsive\" \n"
+                        + "                 alt=\"" + p.getUrlImg() + "\"\n"
+                        + "                 fs-product-for-img=\"" + p.getProductID() + "\"/>\n"
+                        + "            <div class=\"overlay-rmore fa fa-search quickview fs-product-modal\" \n"
+                        + "                 data-toggle=\"modal\" \n"
+                        + "                 fs-product=\"" + p.getProductID() + "\" \n"
+                        + "                 fs-product-modal-color=\"" + p.getProductColorListWorking().get(0).getColorID() + "\">\n"
+                        + "            </div>\n"
+                        + "            <div class=\"product-overlay\">\n"
+                        + "            </div>\n"
+                        + "        </div>\n"
+                        + "        <div class=\"product-info\">\n"
+                        + "            <h4 class=\"product-title\">\n"
+                        + "                <a href=\"" + p.getProductID() + "-" + p.getProductColorListWorking().get(0).getColorID() + "-" + p.getProductNameNA() + ".html\">\n"
+                        + "                    " + p.getProductName() + "\n"
+                        + "                </a>\n"
+                        + "            </h4>\n"
+                        + "            <span class=\"product-price\">\n"
+                        + disCnt2
+                        + "            </span>\n"
+                        + "            <div class=\"item-colors\" style=\"height: 25px;\">\n"
+                        + color
+                        + "            </div>\n"
+                        + "        </div>\n"
+                        + "    </div>\n"
+                        + "</div>";
+            }
         }
 
         return result;

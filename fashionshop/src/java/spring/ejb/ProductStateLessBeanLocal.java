@@ -53,8 +53,8 @@ public interface ProductStateLessBeanLocal {
     int createNewSubCategory(SubCategories newSubCate);
 
     int updateSubCategory(SubCategories targetSubCategory);
-    
-    boolean deleteSubCate (int subCateID);
+
+    boolean deleteSubCate(int subCateID);
 
     /*========================================================================
      *                                                                       *
@@ -68,7 +68,7 @@ public interface ProductStateLessBeanLocal {
     List<Object> getTop3ProductBestSeller();
 
     List<Products> getTop3ProductMostViewed();
-    
+
     List<Object[]> getProductTop3Rated();
 
     ProductColors findProductColorByColorID(int colorID);
@@ -116,25 +116,37 @@ public interface ProductStateLessBeanLocal {
     int deleteProductSize(int sizeID);
 
     boolean createNewProductRating(int productID, ProductRating newProductRating);
-    
-    List<ProductColors> getProductColorsListOfAProductByName (int productID, String color);
-    
+
+    List<ProductColors> getProductColorsListOfAProductByName(int productID, String color);
+
     boolean createNewProductColor(ProductColors newProductColors);
-    
+
     boolean addProductSubImage(ProductSubImgs newSubImg);
-    
+
     boolean addSize(SizesByColor newSize);
-    
+
     List<Products> getSearchedProducts(String prodName);
+
+    List<ProductRating> getAllRating();
+
+    boolean updateRatingStt(int ratingID, short stt);
+
+    List<Products> getAllSearchedProducts(String prodName);
     
-    /* returning visitor */
-//    List<ReturningVisitor> getReturningVisitorList ();
-//    
-//    List<Object[]> getVisitTimesByMonthAndWeek(int month, String weekCondition);
-//    
-//    void createNewVisitor (ReturningVisitor newVisitor);
-//    
-//    ReturningVisitor getReturningVisitorByIDAndDate(String visitorID, Date date);
-//    
-//    void updateVisitTimes (ReturningVisitor visitor);
+    List<Products> getProductFilterByCateAndSubCate(String searched, String condition);
+    
+    List<Object[]> getNumberOfProductByCategory ();
+    
+    List<Object[]> getNumberOfProductOfSubCateByCate (int cateID);
+    
+    /* returning visitor */ //    List<ReturningVisitor> getReturningVisitorList ();
+    //    
+    //    List<Object[]> getVisitTimesByMonthAndWeek(int month, String weekCondition);
+    //    
+    //    void createNewVisitor (ReturningVisitor newVisitor);
+    //    
+    //    ReturningVisitor getReturningVisitorByIDAndDate(String visitorID, Date date);
+    //    
+    //    void updateVisitTimes (ReturningVisitor visitor);
+
 }

@@ -136,4 +136,15 @@ public class BlogsSB implements BlogsSBLocal {
         return Integer.parseInt(q.getSingleResult().toString());
     }
 
+    @Override
+    public List<Blogs> findBlogsByTitleAndMonth(String blogTitle, int month) {
+        try {
+            Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE b.blogTitle LIKE :blogTitle AND FUNCTION('MONTH',b.postedDate) = FUNCTION('MONTH',:month)", Blogs.class);
+            q.setParameter("blogTitle", "%" + blogTitle + "%");
+            q.setParameter("month", "2017-"+ String.valueOf(month) +"-15");
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

@@ -19,8 +19,8 @@
                 </div>
                 <div class="side-widget space50">
                     <h3><span>Month</span></h3>
-                    <select id="monthblog" class="form-control" onchange="window.location = 'blog/'+this.value+'.html';">
-                        <option value="">Select blog by month</option>
+                    <select id="monthblogSelect" name="monthblogSelect">
+                        <option value="0">Select blog by month</option>
                         <option value="1" id="1">January</option>
                         <option value="2" id="2">February</option>
                         <option value="3" id="3">March</option>
@@ -34,9 +34,6 @@
                         <option value="11" id="11">November</option>
                         <option value="12" id="12">December</option>
                     </select>
-                    
-
-
                 </div>
                 <div class="side-widget space50">
                     <h3><span>Popular Post</span></h3>
@@ -56,39 +53,39 @@
                 </div>
             </aside>
             <div class="col-md-9 col-sm-8 blog-content">
-<!--                <div class="blog-content-list" style="display: flex;">
-                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                            <li data-target="#myCarousel" data-slide-to="1"></li>
-                            <li data-target="#myCarousel" data-slide-to="2"></li>
-                        </ol>
-                        <div class="space30">
-                            <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                                <div class="carousel-inner">
-                                    <div class="item active">
-                                        <img src="assets/images/blog/1/1097x600.jpeg" class="img-responsive" alt=""/>
+                <!--                <div class="blog-content-list" style="display: flex;">
+                                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                                        <ol class="carousel-indicators">
+                                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                                            <li data-target="#myCarousel" data-slide-to="1"></li>
+                                            <li data-target="#myCarousel" data-slide-to="2"></li>
+                                        </ol>
+                                        <div class="space30">
+                                            <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                                                <div class="carousel-inner">
+                                                    <div class="item active">
+                                                        <img src="assets/images/blog/1/1097x600.jpeg" class="img-responsive" alt=""/>
+                                                    </div>
+                                                    <div class="item">
+                                                        <img src="assets/images/blog/1/1097x600a.jpeg" class="img-responsive" alt=""/>
+                                                    </div>
+                
+                                                    <div class="item">
+                                                        <img src="assets/images/blog/1/1097x600c.jpeg" class="img-responsive" alt=""/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a class="left carousel-control" style="width: 5%" href="#myCarousel" data-slide="prev">
+                                            <span class="glyphicon glyphicon-chevron-left"></span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                        <a class="right carousel-control" style="width: 5%" href="#myCarousel" data-slide="next">
+                                            <span class="glyphicon glyphicon-chevron-right"></span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
                                     </div>
-                                    <div class="item">
-                                        <img src="assets/images/blog/1/1097x600a.jpeg" class="img-responsive" alt=""/>
-                                    </div>
-
-                                    <div class="item">
-                                        <img src="assets/images/blog/1/1097x600c.jpeg" class="img-responsive" alt=""/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <a class="left carousel-control" style="width: 5%" href="#myCarousel" data-slide="prev">
-                            <span class="glyphicon glyphicon-chevron-left"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="right carousel-control" style="width: 5%" href="#myCarousel" data-slide="next">
-                            <span class="glyphicon glyphicon-chevron-right"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
-                </div>-->
+                                </div>-->
                 <br>
                 <div class="image-gallery-list">
                     <ul class="image-gallery-ul">

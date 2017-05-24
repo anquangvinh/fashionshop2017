@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -37,6 +39,7 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import spring.ejb.ProductStateLessBeanLocal;
 import spring.entity.Categories;
+import spring.entity.ProductChart;
 import spring.entity.ProductColors;
 import spring.entity.ProductSubImgs;
 import spring.entity.Products;
@@ -315,7 +318,27 @@ public class Product_Controller {
      *                          PRODUCT TREATMENT                            *
      *                                                                       *
      ========================================================================*/
-
+    @RequestMapping(value = "product/managerating")
+    public String productRating (
+            ModelMap model
+    ){
+        model.addAttribute("ratingList", productStateLessBean.getAllRating());
+        return "admin/pages/product-rating";
+    }
+    
+    @RequestMapping(value = "ajax/changeRatingStatus", method = RequestMethod.POST)
+    @ResponseBody
+    public String changeRatingStatus (
+            @RequestParam("ratingID") Integer ratingID,
+            @RequestParam("stt") Short stt
+    ){
+        if(productStateLessBean.updateRatingStt(ratingID, stt)){
+            return "0";
+        } else {
+            return "1";
+        }
+    }
+    
     @RequestMapping(value = "product")
     public String productList(ModelMap model) {
         model.addAttribute("productList", productStateLessBean.productList("admin"));
@@ -1039,7 +1062,7 @@ public class Product_Controller {
                             + "  </button>\n";
                 }
 
-                result += "<tr class=\"text-center\">\n"
+                result += "<tr class=\"text-center\" fs-size-id=\""+ si.getSizeID() +"\">\n"
                         + "    <td class=\"fs-valign-middle\">\n"
                         + "         <span class=\"fs-edit-product-size-val\" data-type=\"text\" \n"
                         + "               data-pk=\"" + si.getSizeID() + "\" data-url=\"admin/ajax/changeProductSize.html\" \n"
@@ -1373,7 +1396,7 @@ public class Product_Controller {
                         + "  </button>\n";
             }
 
-            result += "<tr class=\"text-center\">\n"
+            result += "<tr class=\"text-center\" fs-size-id=\""+ si.getSizeID() +"\">\n"
                     + "    <td class=\"fs-valign-middle\">\n"
                     + "         <span class=\"fs-edit-product-size-val\" data-type=\"text\" \n"
                     + "               data-pk=\"" + si.getSizeID() + "\" data-url=\"admin/ajax/changeProductSize.html\" \n"
@@ -1397,6 +1420,70 @@ public class Product_Controller {
                     + " </tr>";
         }
 
+        return result;
+    }
+    
+    @RequestMapping(value = "product-chart", method = RequestMethod.GET)
+    public String productChart (ModelMap model){
+        model.addAttribute("cateList", productStateLessBean.categoryList());
+        return "admin/pages/product-chart";
+    }
+    
+    @RequestMapping(value = "ajax/getDataNumberOfProductByCate", method = RequestMethod.POST)
+    @ResponseBody
+    public String getDataNumberOfProductByCate(){
+        List<Object[]> flotCateData = productStateLessBean.getNumberOfProductByCategory();
+        List<ProductChart> dataList = new ArrayList<>();
+        for (Object[] o : flotCateData) {
+            ProductChart data = new ProductChart();
+            data.setLabel((String) o[0]);
+            data.setData((int) (long) o[1]);
+            dataList.add(data);
+        }
+        String result = "";
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            result = mapper.writeValueAsString(dataList);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(Product_Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+    
+    @RequestMapping(value = "ajax/getDataNumberOfProductBySubCate", method = RequestMethod.POST)
+    @ResponseBody
+    public String getDataNumberOfProductBySubCate(
+            @RequestParam("cateID") Integer cateID
+    ){
+        List<Object[]> flotCateData;
+        if(cateID == 0){
+            flotCateData = productStateLessBean.getNumberOfProductByCategory();
+        } else {
+            flotCateData = productStateLessBean.getNumberOfProductOfSubCateByCate(cateID);
+        }
+
+        List<ProductChart> dataList = new ArrayList<>();
+        for (Object[] o : flotCateData) {
+            ProductChart data = new ProductChart();
+            data.setLabel((String) o[0]);
+            data.setData((int) (long) o[1]);
+            dataList.add(data);
+        }
+        
+        Collections.sort(dataList, new Comparator<ProductChart>(){
+            @Override
+            public int compare(ProductChart o1, ProductChart o2) {
+                return o1.getData()- o2.getData();
+            }
+        });
+        
+        String result = "";
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            result = mapper.writeValueAsString(dataList);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(Product_Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return result;
     }
     /*========================================================================

@@ -32,20 +32,20 @@
                 </div>-->
                 <div class="side-widget space50">
                     <h3><span>Month</span></h3>
-                    <select id="monthblog" class="form-control" onchange="window.location = 'blog/'+this.value+'.html';">
-                        <option value="">Select blog by month</option>
-                        <option value="1">January</option>
-                        <option value="2">February</option>
-                        <option value="3">March</option>
-                        <option value="4">April</option>
-                        <option value="5">May</option>
-                        <option value="6">June</option>
-                        <option value="7">July</option>
-                        <option value="8">August</option>
-                        <option value="9">September</option>
-                        <option value="10">October</option>
-                        <option value="11">November</option>
-                        <option value="12">December</option>
+                    <select id="monthblogSelect" name="monthblogSelect">
+                        <option value="0">Select blog by month</option>
+                        <option value="1" id="1">January</option>
+                        <option value="2" id="2">February</option>
+                        <option value="3" id="3">March</option>
+                        <option value="4" id="4">April</option>
+                        <option value="5" id="5">May</option>
+                        <option value="6" id="6">June</option>
+                        <option value="7" id="7">July</option>
+                        <option value="8" id="8">August</option>
+                        <option value="9" id="9">September</option>
+                        <option value="10"id="10">October</option>
+                        <option value="11" id="11">November</option>
+                        <option value="12" id="12">December</option>
                     </select>
                 </div>
                 <div class="side-widget space50">
