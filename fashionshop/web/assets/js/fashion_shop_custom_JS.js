@@ -2753,7 +2753,7 @@ $(document).ready(function () {
             $('.shipping-address').prop("style", false);
         }
     });
-    $('#btnCheckoutPlaceOrder').on("click", function (e) {
+    $('body').on("click","#btnCheckoutPlaceOrder", function (e) {
         e.preventDefault();
         var errorHead = "<div class=\"alert alert-danger\"><strong>";
         var errorFoot = "</strong></div>";
@@ -2915,7 +2915,7 @@ $(document).ready(function () {
     $('input[name=note]').keydown(function () {
         $('#error-checkout-note').text("");
     });
-    $('.discount-code #discount-order').on("click", function () {
+    $('.discount-code').on("click","#discount-order", function () {
         $("#fs-checkout-discountvou-error").text("");
         $(".cart-table").remove(".foot");
         $(".cart-table").add("<tfoot class=\"foot\"></tfoot>");
@@ -3037,7 +3037,7 @@ $(document).ready(function () {
     });
 
     //Add to cart in product-detail.jsp
-    $("#fs-product-detail-add-to-cart").on("click", function () {
+    $("body").on("click","#fs-product-detail-add-to-cart", function () {
         var colorID = $(".fs-product-color .fs-product-selected").find("img").attr("fs-color");
         var sizeID = $("#fs-product-size .fs-product-selected").attr("fs-size");
         var productID = $(".fs-product-detail-name").attr("fs-product-id");
@@ -3102,7 +3102,7 @@ $(document).ready(function () {
     });
 
     //Add to cart in modal.jsp
-    $(".fs-modal-btn-addtobag").on("click", function () {
+    $("body").on("click",".fs-modal-btn-addtobag", function () {
         var errorHead = "<div class=\"alert alert-danger\"><strong>";
         var errorHeadSuccess = "<div class=\"alert alert-success\"><strong>";
         var errorFoot = "</strong></div>";
