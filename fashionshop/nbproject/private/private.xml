@@ -23,10 +23,6 @@
             <file>file:/C:/Users/vinh.an/Downloads/Compressed/fashionshop_23_05_eeeeeerrrrrorrrrr/fashionshop/web/assets/js/fashion_shop_custom_JS.js</file>
             <file>file:/C:/Users/vinh.an/Downloads/Compressed/fashionshop_23_05_eeeeeerrrrrorrrrr/fashionshop/src/java/spring/interceptor/LoginInterceptor.java</file>
         </group>
-        <group name="fashionshop2017">
-            <file>file:/D:/PJ/fashionshop2017/fashionshop2017/fashionshop/src/java/spring/client/controller/UserController.java</file>
-            <file>file:/D:/PJ/fashionshop2017/fashionshop2017/fashionshop/src/java/spring/client/controller/GeneralController.java</file>
-            <file>file:/D:/PJ/fashionshop2017/fashionshop2017/fashionshop/src/java/spring/interceptor/CheckCookieUser.java</file>
-        </group>
+        <group name="fashionshop2017"/>
     </open-files>
 </project-private>
