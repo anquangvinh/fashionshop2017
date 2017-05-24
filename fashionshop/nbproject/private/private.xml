@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>web/assets/admin/dist/js/fashion_shop_custom_JS.js</url>
+            <bookmark id="1">
+                <name/>
+                <line>4120</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group name="project">
+            <file>file:/C:/Users/Phan/Documents/Git%20fashion_shop/fashionshop2017/fashionshop/src/java/spring/ejb/BlogsSBLocal.java</file>
+            <file>file:/C:/Users/Phan/Documents/Git%20fashion_shop/fashionshop2017/fashionshop/web/WEB-INF/views/client/blocks/header.jsp</file>
+            <file>file:/C:/Users/Phan/Documents/Git%20fashion_shop/fashionshop2017/fashionshop/web/WEB-INF/views/client/pages/blog.jsp</file>
+            <file>file:/C:/Users/Phan/Documents/Git%20fashion_shop/fashionshop2017/fashionshop/src/java/spring/admin/controller/Product_Controller.java</file>
+            <file>file:/C:/Users/Phan/Documents/Git%20fashion_shop/fashionshop2017/fashionshop/src/java/spring/client/controller/BlogController.java</file>
+            <file>file:/C:/Users/Phan/Documents/Git%20fashion_shop/fashionshop2017/fashionshop/src/java/spring/ejb/BlogsSB.java</file>
+            <file>file:/C:/Users/Phan/Documents/Git%20fashion_shop/fashionshop2017/fashionshop/src/java/spring/admin/controller/Blog_Controller.java</file>
+            <file>file:/C:/Users/Phan/Documents/Git%20fashion_shop/fashionshop2017/fashionshop/web/WEB-INF/views/client/pages/blog-categories.jsp</file>
+        </group>
     </open-files>
 </project-private>
