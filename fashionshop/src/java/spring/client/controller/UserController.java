@@ -75,15 +75,15 @@ public class UserController {
             @RequestParam(value = "address", required = false) String address,
             RedirectAttributes redirectAttributes,
             ModelMap model, HttpSession session) {
-          
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy"); 
+
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         Date newBirthday = new Date();
         try {
             newBirthday = df.parse(birthday);
         } catch (ParseException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
         Users newUser = new Users();
         newUser.setEmail(email);
@@ -151,7 +151,10 @@ public class UserController {
     @RequestMapping(value = "change-password/{userID}", method = RequestMethod.POST)
     public String changePass(@PathVariable("userID") int userID, @RequestParam("password") String password,
             @RequestParam("repassword") String repassword, @RequestParam("oldpassword") String oldpassword,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            HttpServletResponse response,
+            HttpServletRequest request
+    ) {
         Users findOldUserID = usersStateLessBean.getUserByID(userID);
 
         if (!findOldUserID.getPassword().equals(sharedFunc.encodePassword(oldpassword))) {
@@ -248,7 +251,9 @@ public class UserController {
     @RequestMapping(value = "account-information/{userID}", method = RequestMethod.POST)
     public String accountinfo(@PathVariable("userID") int userID,
             @ModelAttribute("updateUser") Users updateUser,
-            RedirectAttributes redirectAttributes, @RequestParam("upImage") MultipartFile image, HttpSession session) {
+            RedirectAttributes redirectAttributes, @RequestParam("upImage") MultipartFile image,
+            HttpSession session, HttpServletRequest request,
+            HttpServletResponse response) {
         Users oldUser = usersStateLessBean.getUserByID(userID); // thong tin user chua chinh sua
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
         try {
@@ -325,29 +330,28 @@ public class UserController {
         int error = usersStateLessBean.addWishlist(wishList, userID, productID);
         if (error == 1) {
             return "1"; // thanh cong
-        } 
-        else {
+        } else {
             return "0"; // loi
         }
     }
-    
+
     @ResponseBody
     @RequestMapping(value = "ajax/deleteWishList/{wishID}", method = RequestMethod.POST)
-    public String deleteWL(@PathVariable("wishID") int wishID, ModelMap model){
+    public String deleteWL(@PathVariable("wishID") int wishID, ModelMap model) {
         WishList findwishID = usersStateLessBean.findWishID(wishID);
-        if(findwishID != null){
+        if (findwishID != null) {
             usersStateLessBean.deleteWishLish(wishID);
         }
         return "1";
     }
-    
+
     @ResponseBody
     @RequestMapping(value = "ajax/deleteWishListt", method = RequestMethod.POST)
-    public String deleteWLL(@RequestParam("productID") int productID,@RequestParam("userID") int userID, ModelMap model){
-            usersStateLessBean.deleteWL(productID, userID);
+    public String deleteWLL(@RequestParam("productID") int productID, @RequestParam("userID") int userID, ModelMap model) {
+        usersStateLessBean.deleteWL(productID, userID);
         return "1";
     }
-    
+
     private UsersStateLessBeanLocal lookupUsersStateLessBeanLocal() {
         try {
             Context c = new InitialContext();
