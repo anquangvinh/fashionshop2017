@@ -222,3 +222,11 @@ tr.shown td.details-control{
     margin:auto;
 }
 
+.fs-flot-pie-chart {
+    display: block;
+    height: 500px;
+}
+
+#fs-category-flot-pie-chart .legend table {
+    font-size: 16px !important;
+}

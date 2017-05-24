@@ -112,27 +112,24 @@
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="active">
                             <a href="#fs-menu-tab-1" data-toggle="tab">
-                                Product Description
+                                Customer Review
                             </a>
                         </li>
                         <li>
                             <a href="#fs-menu-tab-2" data-toggle="tab">
-                                Customer Review
+                                Product Description
                             </a>
                         </li>
                     </ul>
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div class="tab-pane active" id="fs-menu-tab-1">
-                            ${targetProduct.productDescription}
-                        </div>
-                        <div class="tab-pane" id="fs-menu-tab-2">
                             <div class="reviews-tab">
                                 <div class="row">
                                     <div class="col-xs-5 col-sm-3 col-sm-offset-3">
                                         <div class="rating-block text-center">
                                             <h4>Average user rating</h4>
-                                            <h2 class="bold padding-bottom-7">${ratingAVR} <small>/ 5</small></h2>
+                                            <h2 class="bold padding-bottom-7"><fmt:formatNumber type="number" minFractionDigits="1" maxFractionDigits="1" value="${ratingAVR}" /> <small>/ 5</small></h2>
                                             <select id="fs-rating-star-result" name="fs-rating-star-result" data-current-rating="${ratingAVR}">
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -208,7 +205,7 @@
                                 </div>	
                                 <div class="sep"></div>
                                 <div class="fs-display-none" id="fs-number-of-rating" fs-nort="${numberOfRating}"></div>
-                                <c:forEach items="${targetProduct.productRatingList}" var="review" varStatus="no">
+                                <c:forEach items="${targetProduct.productRatingListVisible}" var="review" varStatus="no">
                                     <p>
                                         <b>${review.user.firstName} ${review.user.lastName}</b>, <fmt:formatDate value="${review.ratingDate}" pattern="dd MMM, yyyy" timeZone="US"/>
                                     </p>
@@ -271,6 +268,10 @@
                                 </c:choose>
                             </div>
                         </div>
+                        <div class="tab-pane" id="fs-menu-tab-2">
+                            ${targetProduct.productDescription}
+                        </div>
+
                     </div>
                 </div>
                 <div class="clearfix space40"></div>

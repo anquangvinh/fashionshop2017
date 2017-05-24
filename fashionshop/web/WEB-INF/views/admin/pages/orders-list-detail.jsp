@@ -56,7 +56,7 @@
                         <th class="text-center" style="width: 200px;">Order Note</th>
                         <td colspan="2" style="padding-left: 20px;">
                             <c:choose>
-                                <c:when test="${order.note == null}">
+                                <c:when test="${order.note == null || order.note.trim().length() == 0}" >
                                     --
                                 </c:when>
                                 <c:otherwise>
@@ -131,11 +131,6 @@
                         </c:forEach>
                     </tbody>
                     <tfoot>
-                        <c:if test="${order.status == 2}">
-                            <tr>
-                                <td colspan="9" align="center"><a style="width: 100%;" href="admin/orders/ordersdetailadd/${order.ordersID}.html" type="button" class="btn btn-primary"><b>ADD</b></a></td>
-                            </tr>
-                        </c:if>
                         <tr>
                             <td colspan="7" align="right"><b>Order Discount</b></td>
                             <td class="text-center fs-valign-middle">
@@ -160,8 +155,11 @@
             </div>
 
             <div class="col-lg-12" align="right">
-                <button onclick="window.location = 'admin/orders/invoice/${order.ordersID}.html';" class="btn btn-primary">INVOICE</button>
-                <button onclick="window.location = 'admin/orders/list.html'" class="btn btn-primary">BACK TO ORDER LIST</button>
+                <c:if test="${order.status == 2}">
+                    <a href="admin/orders/ordersdetailadd/${order.ordersID}.html" type="button" class="btn btn-primary"><b>ADD PRODUCT</b></a>
+                </c:if>
+                <button onclick="window.location = 'admin/orders/invoice/${order.ordersID}.html';" class="btn btn-primary"><b>INVOICE</b></button>
+                <button onclick="window.location = 'admin/orders/list.html'" class="btn btn-primary"><b>BACK TO ORDER LIST</b></button>
             </div>
             <!-- /.col-lg-12 -->
         </div>

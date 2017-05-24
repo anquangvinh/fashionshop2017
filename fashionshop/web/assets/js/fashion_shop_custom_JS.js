@@ -50,7 +50,105 @@ $(document).ready(function () {
         });
     });
 
+    $("#fs-search-content").on("change", "#fs-filter-product-by-category", function () {
+        var cateID = $(this).val();
+        var searchedKeyword = $("#fs-searched-keyword").text();
+        if (cateID == 0) {
+            $("#fs-filter-product-by-sub-category").attr("disabled", true);
+            $("#fs-filter-product-by-sub-category").html("<option value=\"0\">-- Please select sub-category --</option>");
+            $.ajax({
+                url: "ajax/filterSearchedProduct.html",
+                method: "POST",
+                data: {cateID: 0, subCateID: 0, searchedKeyword: searchedKeyword},
+                beforeSend: function () {
+                    $("#fs-ajax-loading").css("display", "block");
+                },
+                success: function (response) {
+                    if (response == "") {
+                        $("#fs-search-content-change-here").html("<h4>Sorry!, Nothing was Found...</h4>");
+                        $("#fs-ajax-loading").css("display", "none");
+                    } else {
+                        setTimeout(function () {
+                            $("#fs-search-content-change-here").html(response);
+                            $("#fs-ajax-loading").css("display", "none");
+                        }, 300);
+                    }
 
+                }
+            });
+
+        } else {
+            
+            $("#fs-filter-product-by-sub-category").html("<option value=\"0\">-- Please select sub-category --</option>");
+            //lấy dữ liệu cho subcategory
+            $.ajax({
+                url: "ajax/getSubCategory.html",
+                method: "POST",
+                data: {cateID: cateID},
+                dataType: 'JSON',
+                success: function (response) {
+                    $.each(response, function (i, item) {
+                        var subCateOption = "<option value=\"" + item.subCateID + "\">" + item.subCateName + "</option>";
+                        $("#fs-filter-product-by-sub-category").append(subCateOption);
+                    });
+                    $("#fs-filter-product-by-sub-category").attr("disabled", false);
+                    $("#fs-filter-product-by-sub-category").focus();
+                }
+            });
+
+            //search
+            $.ajax({
+                url: "ajax/filterSearchedProduct.html",
+                method: "POST",
+                data: {cateID: cateID, subCateID: 0, searchedKeyword: searchedKeyword},
+                beforeSend: function () {
+                    $("#fs-ajax-loading").css("display", "block");
+                },
+                success: function (response) {
+                    if (response == "") {
+                        $("#fs-search-content-change-here").html("<h4>Sorry!, Nothing was Found...</h4>");
+                        $("#fs-ajax-loading").css("display", "none");
+                    } else {
+                        setTimeout(function () {
+                            $("#fs-search-content-change-here").html(response);
+                            $("#fs-ajax-loading").css("display", "none");
+                        }, 300);
+
+                    }
+
+                }
+            });
+        }
+    });
+
+    $("#fs-search-content").on("change", "#fs-filter-product-by-sub-category", function () {
+        var subCateID = $(this).val();
+        var searchedKeyword = $("#fs-searched-keyword").text();
+        var cateID = $("#fs-filter-product-by-category").val();
+
+        //search
+        $.ajax({
+            url: "ajax/filterSearchedProduct.html",
+            method: "POST",
+            data: {cateID: cateID, subCateID: subCateID, searchedKeyword: searchedKeyword},
+            beforeSend: function () {
+                $("#fs-ajax-loading").css("display", "block");
+            },
+            success: function (response) {
+                if (response == "") {
+                    $("#fs-search-content-change-here").html("<h4>Sorry!, Nothing was Found...</h4>");
+                    $("#fs-ajax-loading").css("display", "none");
+                } else {
+                    setTimeout(function () {
+                        $("#fs-search-content-change-here").html(response);
+                        $("#fs-ajax-loading").css("display", "none");
+                    }, 300);
+
+                }
+
+            }
+        });
+    });
     /* --------------- PRODUCT INDEX -------------------- */
     /* LOAD IMG TO RECENT VIEW FROM LOCALSTORAGE */
     // Check browser support
@@ -156,66 +254,59 @@ $(document).ready(function () {
                 el.find(".owl-item").eq(0).addClass("synced");
             }
         });
-    }
-    ;
 
-    function syncPosition(el) {
-        var current = this.currentItem;
-        $(".sync2")
-                .find(".owl-item")
-                .removeClass("synced")
-                .eq(current)
-                .addClass("synced");
-        if ($(".sync2").data("owlCarousel") != undefined) {
-            center(current);
-        }
-        ;
-    }
-    ;
-
-    $(".sync2").on("click", ".owl-item", function (e) {
-        e.preventDefault();
-        var number = $(this).data("owlItem");
-        sync1.trigger("owl.goTo", number);
-    });
-
-    function center(number) {
-        var sync2visible = sync2.data("owlCarousel").owl.visibleItems;
-        var num = number;
-        var found = false;
-        for (var i in sync2visible) {
-            if (num == sync2visible[i]) {
-                found = true;
+        function syncPosition(el) {
+            var current = this.currentItem;
+            $(".sync2")
+                    .find(".owl-item")
+                    .removeClass("synced")
+                    .eq(current)
+                    .addClass("synced");
+            if ($(".sync2").data("owlCarousel") != undefined) {
+                center(current);
             }
         }
-        ;
 
-        if (found == false) {
-            if (num > sync2visible[sync2visible.length - 1]) {
-                sync2.trigger("owl.goTo", num - sync2visible.length + 2)
-            } else {
-                if (num - 1 == -1) {
-                    num = 0;
+        $(".sync2").on("click", ".owl-item", function (e) {
+            e.preventDefault();
+            var number = $(this).data("owlItem");
+            sync1.trigger("owl.goTo", number);
+        });
+
+        function center(number) {
+            var sync2visible = sync2.data("owlCarousel").owl.visibleItems;
+            var num = number;
+            var found = false;
+            for (var i in sync2visible) {
+                if (num == sync2visible[i]) {
+                    found = true;
                 }
-                sync2.trigger("owl.goTo", num);
             }
-        } else if (num == sync2visible[sync2visible.length - 1]) {
-            sync2.trigger("owl.goTo", sync2visible[1]);
-        } else if (num == sync2visible[0]) {
-            sync2.trigger("owl.goTo", num - 1);
+
+            if (found == false) {
+                if (num > sync2visible[sync2visible.length - 1]) {
+                    sync2.trigger("owl.goTo", num - sync2visible.length + 2)
+                } else {
+                    if (num - 1 == -1) {
+                        num = 0;
+                    }
+                    sync2.trigger("owl.goTo", num);
+                }
+            } else if (num == sync2visible[sync2visible.length - 1]) {
+                sync2.trigger("owl.goTo", sync2visible[1])
+            } else if (num == sync2visible[0]) {
+                sync2.trigger("owl.goTo", num - 1)
+            }
         }
-        ;
+
+        // prettyPhoto
+        // ---------------------------------------------------------------------------------------
+        $("a[rel^='prettyPhoto']").prettyPhoto({
+            theme: 'facebook',
+            slideshow: 5000,
+            autoplay_slideshow: true
+        });
     }
-    ;
-
-    // prettyPhoto
-    // ---------------------------------------------------------------------------------------
-    $("a[rel^='prettyPhoto']").prettyPhoto({
-        theme: 'facebook',
-        slideshow: 5000,
-        autoplay_slideshow: true
-    });
-
 
     /* AJAX CALL MODAL */
     $("body").on("click", ".fs-product-modal", function () {
@@ -599,7 +690,7 @@ $(document).ready(function () {
                     setTimeout(function () {
                         $("#fs-ajax-loading-2").css("display", "none");
                         $("#fs-form-rating-review").empty();
-                        $("#fs-form-rating-review").html("<h3>Thank you for your review! </h3>");
+                        $("#fs-form-rating-review").html("<h3>Thank you for your review! We need to this before display here!. </h3>");
                         $.notify({
                             icon: 'glyphicon glyphicon-ok-sign',
                             title: '<strong>Thank you!</strong>',
@@ -617,7 +708,7 @@ $(document).ready(function () {
                                 enter: 'animated fadeInRight',
                                 exit: 'animated fadeOutRight'
                             },
-                            template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                            template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-4 alert alert-{0}" role="alert">' +
                                     '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
                                     '<span data-notify="icon"></span> ' +
                                     '<span data-notify="title">{1}</span> ' +
@@ -647,7 +738,7 @@ $(document).ready(function () {
                             enter: 'animated fadeInRight',
                             exit: 'animated fadeOutRight'
                         },
-                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-3 alert alert-{0}" role="alert">' +
+                        template: '<div data-notify="container" class="col-xs-11 col-sm-6 col-md-5 col-lg-4 alert alert-{0}" role="alert">' +
                                 '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
                                 '<span data-notify="icon"></span> ' +
                                 '<span data-notify="title">{1}</span> ' +
@@ -745,9 +836,7 @@ $(document).ready(function () {
                                             "                </div>\n" +
                                             "                <div class=\"product-overlay\">\n" +
                                             "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                            "                     <a class=\"likeitem fa fa-heart-o fs-wl-add-cate-a\" \n" +
-                                            "                       fs-userID=\"" + userID + "\" \n" +
-                                            "                       fs-productID=\"" + prod.productID + "\"></a>\n" +
+                                            "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
                                             "                </div>\n" +
                                             "          </div>\n" +
                                             "      <div class=\"product-info\">\n" +
@@ -779,9 +868,7 @@ $(document).ready(function () {
                                             "                </div>\n" +
                                             "                <div class=\"product-overlay\">\n" +
                                             "                     <a href=\"#\" class=\"addcart fa fa-shopping-cart\"></a>\n" +
-                                            "                     <a class=\"likeitem fa fa-heart-o fs-wl-add-cate-a\" \n" +
-                                            "                       fs-userID=\"" + userID + "\" \n" +
-                                            "                       fs-productID=\"" + prod.productID + "\"></a>\n" +
+                                            "                     <a href=\"#\" class=\"likeitem fa fa-heart-o\"></a>\n" +
                                             "                </div>\n" +
                                             "          </div>\n" +
                                             "      <div class=\"product-info\">\n" +
@@ -1195,7 +1282,6 @@ $(document).ready(function () {
                                                         "              title=\"" + color.color + "\"/>";
                                             });
                                         }
-
                                         if (prod.productDiscount == 0) {
                                             result += "<div class=\"col-md-4 col-sm-6\">\n" +
                                                     "     <div class=\"product-item\">\n" +
@@ -1281,11 +1367,11 @@ $(document).ready(function () {
     /* FILTER PRODUCT BY COLOR */
     $("#fs-shop-content").on("change", ".fs-color-checkbox", function () {
         if (this.checked) { //Check
-            colorFilterArr.push($(this).val());
+            sizeFilterArr.push($(this).val());
         } else { //Bỏ Check
-            var index = colorFilterArr.indexOf($(this).val());
+            var index = sizeFilterArr.indexOf($(this).val());
             if (index > -1) {
-                colorFilterArr.splice(index, 1);
+                sizeFilterArr.splice(index, 1);
             }
         }
 
@@ -1330,7 +1416,6 @@ $(document).ready(function () {
                             $("#fs-ajax-loading").css("display", "none");
                             if (response.length == 0) {
                                 $("#fs-change-data-here").html("<div class='col-xs-12'><h1>Nothing To Show!</h1></div>");
-
                                 //change productPageInfo
                                 var from = 0;
                                 var to = 0;
@@ -1343,12 +1428,12 @@ $(document).ready(function () {
 
                                 //Change pagination
                                 var pagination = "<li><span class=\"fs-page-number fs-page-number-active\" fs-page-number=\"1\" fs-category=\"" + cateID + "\">1</span></li>";
+
                                 if (numberOfPages > 1) {
                                     for (var i = 2; i <= numberOfPages; i++) {
                                         pagination += "<li><span class=\"fs-page-number\" fs-page-number=\"" + i + "\" fs-category=\"" + cateID + "\">" + i + "</span></li>";
                                     }
                                 }
-
                                 $(".fs-ul-page-nav").html(pagination);
 
                                 //change productPageInfo
@@ -1832,7 +1917,6 @@ $(document).ready(function () {
         } else {
             //Khong có session
             $("#loginModal").modal("show");
-
         }
 
 
@@ -3070,22 +3154,6 @@ $(document).ready(function () {
     $(".fs-modal-close").on("click", function () {
         $('#error-cart-product-modal').html("");
     });
-
-    //    var orderUrl = window.location.href;
-    //    if (orderUrl.includes("order-history")) {
-    //        window.onbeforeunload = function () {
-    //            $.ajax({
-    //                url: "orders/ajax/getSession.html",
-    //                method: "GET",
-    //                dataType: 'html',
-    //                success: function (response) {
-    //                    if (response == "0") {
-    //                        $("#loginModal").modal('show');
-    //                    }
-    //                }
-    //            });
-    //        }
-    //    }
     /*==========================END NGAN - ORDER==================================*/
 
     /*===========================DUONG - USER===================================*/
@@ -4586,9 +4654,8 @@ $(document).ready(function () {
 
     /*===========================END DUONG - USER===================================*/
 
-    /*========================================END DUONG - USER====================================================*/
-
     /*========================================THANH - BLOG====================================================*/
+    $("select#monthblogSelect").selectBoxIt();
     var mincount = 2;
     var maxcount = 4;
     $(".image-gallery-ul li").slice(2).hide();
@@ -4599,6 +4666,19 @@ $(document).ready(function () {
             maxcount = maxcount + 2;
         }
     });
+
+    $('#monthblogSelect').on("change", function () {
+        var searchTextBlog = $('input[name=searchBlog]').val().trim();
+        var selectBlogMonth = $('select[name=monthblogSelect]').val();
+        if (selectBlogMonth != "0") {
+            if (searchTextBlog == "") {
+                window.location = 'blog/'+selectBlogMonth+'.html';
+            } else {
+                window.location = 'blog-categories/'+searchTextBlog+'/'+selectBlogMonth+'.html';
+            }
+        }
+    });
+
     /*========================================END THANH - BLOG====================================================*/
 
 });

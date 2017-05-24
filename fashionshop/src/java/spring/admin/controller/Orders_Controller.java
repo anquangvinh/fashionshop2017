@@ -6,6 +6,8 @@
 package spring.admin.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,7 +56,7 @@ public class Orders_Controller {
         model.addAttribute("orderList", orderStateLessBean.getAllOrder());
         return "admin/pages/orders-list";
     }
-    
+
     @RequestMapping(value = "list/{status}")
     public String ordersListByStatus(ModelMap model, @PathVariable("status") Integer status) {
         model.addAttribute("orderStatus", status);
@@ -64,6 +66,8 @@ public class Orders_Controller {
 
     @RequestMapping(value = "orderchart")
     public String ordersChart(ModelMap model) {
+        DecimalFormat df = new DecimalFormat("#.#");
+        df.setRoundingMode(RoundingMode.FLOOR);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String date = sdf.format(new Date());
         SimpleDateFormat sdfMonth = new SimpleDateFormat("MM-yyyy");
@@ -78,7 +82,7 @@ public class Orders_Controller {
             }
         }
         model.addAttribute("thisYear", thisYear);
-        model.addAttribute("avgOrdersRevenueInYear", (totalRevenue/12));
+        model.addAttribute("avgOrdersRevenueInYear", df.format(totalRevenue / 12));
         model.addAttribute("thisMonth", thisMonth);
         model.addAttribute("avgOrderPerUserByMonth", orderStateLessBean.averageOrdersPerUserByMonth(date));
         model.addAttribute("totalOrders", orderStateLessBean.countOrders());
@@ -220,8 +224,8 @@ public class Orders_Controller {
     @RequestMapping(value = "ajax/orderLineMoneyChart", method = RequestMethod.GET)
     public String getLineRevenueForChart(@RequestParam("month") Integer month,
               @RequestParam("year") Integer year) {
-        List<Orders> orderList = orderStateLessBean.getAllOrderByMonth(month,year);
-        List<Integer> dayOrderedList = orderStateLessBean.getAllDayOrderedByMonth(month,year);
+        List<Orders> orderList = orderStateLessBean.getAllOrderByMonth(month, year);
+        List<Integer> dayOrderedList = orderStateLessBean.getAllDayOrderedByMonth(month, year);
         List<RevenueOrderChart> totalRevenueSubcateChartList = new ArrayList<>();
         for (Integer day : dayOrderedList) {
             String label = String.valueOf(year) + "-" + String.valueOf(month) + "-" + day;
@@ -244,7 +248,7 @@ public class Orders_Controller {
             return "Error!" + e.getMessage();
         }
     }
-    
+
     @ResponseBody
     @RequestMapping(value = "ajax/getMonthOrderedByYear", method = RequestMethod.GET)
     public String getMonthOrderedByYear(@RequestParam("year") Integer year) {

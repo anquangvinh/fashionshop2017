@@ -35,11 +35,10 @@ public interface BlogsSBLocal {
     boolean editBlogs(Blogs targetBlogs);
 
     List<Blogs> findBlogsByTitle(String blogTitle, List<Integer> monthList);
-
-//    BlogCategories findBlogCategoryByBlogCateName(String blogCateName);
+    List<Blogs> findBlogsByTitleAndMonth(String blogTitle, int month);
+    
     int deleteBlog(Blogs blog);
-    
-      public Integer getAllNumberBlogsInCate(int blogCateID);
-    
+
+    public Integer getAllNumberBlogsInCate(int blogCateID);
 
 }
