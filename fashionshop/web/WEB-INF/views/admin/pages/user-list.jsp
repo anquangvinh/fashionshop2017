@@ -26,6 +26,7 @@
                             <td align="center">No</td>
                             <td align="center">Status</td>
                             <td align="center">Role</td>
+                            <td align="center">Avata</td>
                             <td align="center">Email</td>
                             <!--                            <td align="center">First Name</td>
                                                         <td align="center">Last Name</td>-->
@@ -69,6 +70,9 @@
                                         ${users.role.roleName}
                                     </td>
                                 </c:if>
+                                    <td class="center" align="center">
+                                        <img src="assets/images/avatar/${users.avatar}" width="50px">
+                                    </td>
                                 <td class="center" align="center">${users.email}</td>
                                 <!--                                <td class="center" align="center"></${users.firstName}</td>
                                                                 <td class="center" align="center"></${users.lastName}</td>-->
