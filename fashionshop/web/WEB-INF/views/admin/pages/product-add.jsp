@@ -147,7 +147,7 @@
 
                                 <div class="form-group col-xs-12" style="margin-top: 20px">
                                     <button type="button" class="btn btn-warning fs-add-more-size" title="Add More Size">
-                                        <i class="fa fa-plus" aria-hidden="true"></i> Add More Size
+                                        <i class="fa fa-plus" aria-hidden="true"></i> Add Size
                                     </button>
                                 </div>            
                             </div>
