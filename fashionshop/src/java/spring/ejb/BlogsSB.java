@@ -52,14 +52,14 @@ public class BlogsSB implements BlogsSBLocal {
 
     @Override
     public List<Blogs> getAllBlogsByMonth(int month) {
-        Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE FUNCTION('MONTH',b.postedDate) = FUNCTION('MONTH',:month)", Blogs.class);
+        Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE FUNCTION('MONTH',b.postedDate) = FUNCTION('MONTH',:month) AND b.status = 0", Blogs.class);
         q.setParameter("month", "1990-" + String.valueOf(month) + "-20");
         return q.getResultList();
     }
 
     @Override
     public List<Blogs> getListBlogsByCategory(int blogCateID) {
-        Query q = em.createQuery("SELECT b FROM Blogs b WHERE b.blogCategory.blogCateID = :blogCateID", Blogs.class);
+        Query q = em.createQuery("SELECT b FROM Blogs b WHERE b.blogCategory.blogCateID = :blogCateID AND b.status = 0", Blogs.class);
         q.setParameter("blogCateID", blogCateID);
         return q.getResultList();
     }
@@ -101,7 +101,7 @@ public class BlogsSB implements BlogsSBLocal {
         String adSearchMonthFoot = "-15')";
         String orString = "OR";
         if (monthList == null) {
-            Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE b.blogTitle LIKE :blogTitle ", Blogs.class);
+            Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE b.blogTitle LIKE :blogTitle AND b.status = 0", Blogs.class);
             q.setParameter("blogTitle", "%" + blogTitle + "%");
             return q.getResultList();
         } else if (monthList.size() == 1) {
@@ -139,7 +139,7 @@ public class BlogsSB implements BlogsSBLocal {
     @Override
     public List<Blogs> findBlogsByTitleAndMonth(String blogTitle, int month) {
         try {
-            Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE b.blogTitle LIKE :blogTitle AND FUNCTION('MONTH',b.postedDate) = FUNCTION('MONTH',:month)", Blogs.class);
+            Query q = getEntityManager().createQuery("SELECT b FROM Blogs b WHERE b.blogTitle LIKE :blogTitle AND FUNCTION('MONTH',b.postedDate) = FUNCTION('MONTH',:month) AND b.status = 0", Blogs.class);
             q.setParameter("blogTitle", "%" + blogTitle + "%");
             q.setParameter("month", "2017-"+ String.valueOf(month) +"-15");
             return q.getResultList();

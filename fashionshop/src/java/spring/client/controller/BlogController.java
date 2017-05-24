@@ -82,7 +82,9 @@ public class BlogController {
         if (searchBlog == null || searchBlog.equals("")) {
             return "redirect:/blog.html";
         } else {
-            List<Blogs> getBlogsListBySearch = blogsSB.findBlogsByTitle(searchBlog, null);
+            String temp = Normalizer.normalize(searchBlog, Normalizer.Form.NFD); //pattern.matcher(temp).replaceAll("").replaceAll(" ", "%")
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+            List<Blogs> getBlogsListBySearch = blogsSB.findBlogsByTitle(pattern.matcher(temp).replaceAll("").replaceAll(" ", "%"), null);
             model.addAttribute("searchBlog", searchBlog);
             model.addAttribute("getBlogsListByCate", getBlogsListBySearch);
         }
