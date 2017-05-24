@@ -80,7 +80,7 @@
             $(document).ready(function () {
                 function checkEmailLogin(email) {
                     email = $("#fs-email-login-admin").val().trim();
-                    var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
+                    var pattern = new RegExp(/^[A-Za-z][A-Za-z0-9]+([._][A-Za-z0-9]+)*[@][A-Za-z]+[.][A-Za-z]{2,4}([.][A-Za-z]{2,4})?$/);
                     if (email == "") {
                         $("#fs-email-login-admin-error").text("Email cannot be empty!");
                         $("#fs-email-login-admin").focus();

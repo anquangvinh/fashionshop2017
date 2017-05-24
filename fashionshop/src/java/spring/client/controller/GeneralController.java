@@ -105,6 +105,8 @@ public class GeneralController {
             return "2";
         } else if (error == 3) {
             return "4";
+        }else if(error == 4){
+          return "5";
         } else {
             return "3";
         }
